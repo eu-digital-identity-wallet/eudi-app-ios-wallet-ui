@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -30,11 +30,11 @@ struct QuickPinView<Router: RouterHost>: View {
       navigationTitle: viewModel.viewState.navigationTitle,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content(
+      QuickPinViewContainer(
         viewState: viewModel.viewState,
+        contentCaption: viewModel.contentCaption,
         uiPinInputField: $viewModel.uiPinInputField,
-        onShowCancellationModal: { viewModel.onShowCancellationModal() },
-        onButtonClick: { viewModel.onButtonClick() }
+        onShowCancellationModal: { viewModel.onShowCancellationModal() }
       )
     }
     .dialogCompat(
@@ -52,70 +52,90 @@ struct QuickPinView<Router: RouterHost>: View {
         Text(.quickPinUpdateCancellationCaption)
       }
     )
+    .task {
+      await viewModel.initialize()
+    }
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: QuickPinState,
-  uiPinInputField: Binding<String>,
-  onShowCancellationModal: @escaping () -> Void,
-  onButtonClick: @escaping () -> Void
-) -> some View {
+private struct QuickPinViewContainer: View {
 
-  ContentHeaderView(
-    config: ContentHeaderConfig(
-      appIconAndTextData: AppIconAndTextData(
-        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-        appText: ThemeManager.shared.image.euditext
+  let viewState: QuickPinState
+  let contentCaption: LocalizableStringKey?
+  @Binding var uiPinInputField: String
+  let onShowCancellationModal: () -> Void
+
+  var body: some View {
+    content()
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    ContentHeaderView(
+      config: ContentHeaderConfig(
+        appIconAndTextData: AppIconAndTextData(
+          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
+        )
       )
     )
-  )
 
-  ContentTitleView(
-    title: viewState.title,
-    accessibilityTitle: QuickPinLocators.quickPinTitle,
-    caption: viewState.caption
-  )
+    VSpacer.small()
 
-  VSpacer.large()
-
-  pinView(
-    uiPinInputField: uiPinInputField,
-    quickPinSize: viewState.quickPinSize,
-    pinError: viewState.pinError
-  )
-
-  Spacer()
-}
-
-@MainActor
-@ViewBuilder
-private func pinView(
-  uiPinInputField: Binding<String>,
-  quickPinSize: Int,
-  pinError: LocalizableStringKey?
-) -> some View {
-  VStack(spacing: .zero) {
-
-    PinTextFieldView(
-      numericText: uiPinInputField,
-      maxDigits: quickPinSize,
-      isSecureEntry: true,
-      canFocus: .constant(true),
-      shouldUseFullScreen: false,
-      hasError: pinError != nil
+    ContentTitleView(
+      title: viewState.title,
+      accessibilityTitle: QuickPinLocators.quickPinTitle,
+      titleWeight: .bold,
+      caption: contentCaption,
+      captionWeight: .semibold
     )
 
-    VSpacer.mediumSmall()
+    if viewState.config.isUpdateFlow {
+      VSpacer.small()
+    } else {
+      VSpacer.extraLarge()
+    }
 
-    if let error = pinError {
-      HStack {
-        Text(error)
-          .typography(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.error)
-        Spacer()
+    pinView()
+
+    Spacer()
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func pinView() -> some View {
+    let hasError = viewState.pinError != nil || viewState.isLockedOut
+
+    VStack(spacing: .zero) {
+
+      PinTextFieldView(
+        pinTitle: viewState.pinTextFieldTitle,
+        numericText: $uiPinInputField,
+        maxDigits: viewState.quickPinSize,
+        isSecureEntry: true,
+        canFocus: .constant(!viewState.isLockedOut),
+        shouldUseFullScreen: false,
+        hasError: hasError,
+        isDisabled: viewState.isLockedOut
+      )
+
+      VSpacer.mediumSmall()
+
+      if let lockoutMessage = viewState.lockoutMessage {
+        HStack {
+          Text(lockoutMessage)
+            .typography(Theme.shared.font.bodySmall)
+            .foregroundColor(Theme.shared.color.red)
+            .multilineTextAlignment(.leading)
+          Spacer()
+        }
+      } else if let error = viewState.pinError {
+        HStack {
+          Text(error)
+            .typography(Theme.shared.font.bodySmall)
+            .foregroundColor(Theme.shared.color.red)
+          Spacer()
+        }
       }
     }
   }
@@ -124,27 +144,29 @@ private func pinView(
 #Preview {
   let viewState = QuickPinState(
     config: QuickPinUiConfig(flow: .setWithActivation),
-    navigationTitle: .quickPinEnterPin,
+    navigationTitle: .quickPinNavigationEnterPin,
     title: .quickPinSetTitle,
     caption: .quickPinSetCaptionOne,
-    button: .quickPinNextButton,
+    pinTextFieldTitle: .quickPinEnterPin,
+    buttonImage: Theme.shared.image.chevronRight,
     successTitle: .quickPinSetTitle,
     successCaption: .quickPinSetSuccess,
     successButton: .quickPinSetSuccessButton,
     successNavigationType: .push(screen: .featureDashboardModule(.dashboard)),
     isCancellable: false,
     pinError: nil,
-    isButtonActive: true,
     step: .firstInput,
-    quickPinSize: 6
+    quickPinSize: 6,
+    isLockedOut: false,
+    lockoutMessage: nil
   )
 
   ContentScreenView {
-    content(
+    QuickPinViewContainer(
       viewState: viewState,
+      contentCaption: viewState.caption,
       uiPinInputField: .constant("PinInput Field"),
-      onShowCancellationModal: {},
-      onButtonClick: {}
+      onShowCancellationModal: {}
     )
   }
 }

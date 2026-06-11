@@ -1,5 +1,13 @@
 # EUDI iOS Wallet reference application
 
+[![License: EUPL 1.2](https://img.shields.io/badge/License-EUPL%201.2-blue.svg)](https://joinup.ec.europa.eu/software/page/eupl)
+[![Swift](https://img.shields.io/badge/Swift-6.0-F05138.svg?logo=swift)](https://swift.org)
+[![SwiftUI](https://img.shields.io/badge/SwiftUI-enabled-007AFF.svg?logo=swift)](https://developer.apple.com/xcode/swiftui/)
+[![iOS](https://img.shields.io/badge/iOS-17%2B-000000.svg?logo=apple)](https://developer.apple.com/ios/)
+[![SonarCloud](https://img.shields.io/badge/SonarCloud-enabled-F3702A.svg?logo=sonarcloud)](https://sonarcloud.io)
+[![Dependency Check](https://img.shields.io/badge/Dependency--Check-enabled-005A9C.svg)](https://owasp.org/www-project-dependency-check/)
+[![Gitleaks](https://img.shields.io/badge/Gitleaks-enabled-orange.svg)](https://github.com/gitleaks/gitleaks)
+
 :heavy_exclamation_mark: **Important!** Before you proceed, please read
 the [EUDI Wallet Reference Implementation project description](https://github.com/eu-digital-identity-wallet/.github/blob/main/profile/reference-implementation.md)
 
@@ -8,10 +16,14 @@ the [EUDI Wallet Reference Implementation project description](https://github.co
 ## Table of contents
 
 * [Overview](#overview)
+* [Specifications Employed](#specifications-employed)
 * [Important things to know](#important-things-to-know)
 * [How to use the application](#how-to-use-the-application)
 * [How to build - Quick start guide](#how-to-build---quick-start-guide)
 * [Application configuration](#application-configuration)
+* [Production go-live guide](#production-go-live-guide)
+* [Release automation](#release-automation)
+* [Package structure](#package-structure)
 * [Demo videos](#demo-videos)
 * [Disclaimer](#disclaimer)
 * [How to contribute](#how-to-contribute)
@@ -31,7 +43,7 @@ The EUDI Wallet Reference Implementation is the application that allows users to
 
 The EUDIW project provides an iOS app through this repository. Please refer to the repositories listed in the following sections for more detailed information on how to get started, contribute, and engage with the EUDI Wallet Reference Implementation.
  
-# 💡 Specifications Employed
+## Specifications Employed
 
 The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) and a list of available libraries to facilitate remote presentation, proximity, and issuing test/demo functionality following the specification of the [ARF](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework), including:
  
@@ -68,20 +80,26 @@ The issuer, verifier service, and verifier app authentication are based on the E
 The main purpose of the reference implementation is to showcase the ecosystem and act as a technical example of how to integrate and use all of the available components.
 
 If you're planning to use this application in production, we recommend reviewing the following steps:
-- Configure the application properly by following the guide [here](wiki/configuration.md)
-- The Pin storage configuration matches your security requirements, or provide your own by following this guide [Pin Storage Configuration](wiki/configuration.md#pin-storage-configuration)
+- Configure the application properly by following the guide [here](wiki/CONFIGURATION.md)
+- Follow the production go-live guide [here](wiki/GO_LIVE.md) before creating a release candidate.
+- Review the go-live guide's out-of-scope section [here](wiki/GO_LIVE.md#out-of-scope) and design the required Member State onboarding, enrollment, and operational processes around the app.
+- The Pin storage configuration matches your security requirements, or provide your own by following this guide [Pin Storage Configuration](wiki/CONFIGURATION.md#pin-storage-configuration)
 - The application meets the OWASP MASVS industry standard. Please refer to the following links for further information on the controls you must implement to ensure maximum compliance:
     - [OWASP MASVS](https://mas.owasp.org/MASVS/)
 
+Do not treat `Release Dev` or `Release Demo` as production-ready artifacts. They use demo services,
+demo/development trust anchors, and reference-implementation defaults that an implementer must
+replace before launch.
+
 ## How to use the application
 
-Minimum device requirements
+### Minimum device requirements
 
 - Any device that supports iOS 17.0
 
 ### Prerequisites
 
-To complete the flows described below, you must build and run the application with Xcode. Alternatively, you can download the Android app [here](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui/releases).
+To complete the flows described below, you must build and run the iOS application with Xcode. If your organization provides a TestFlight, App Store, or MDM-distributed iOS build, install that approved build instead.
 
 You will also need to download the EUDI Verifier app. More information can be found [here](https://github.com/eu-digital-identity-wallet/eudi-app-multiplatform-verifier-ui)
 
@@ -115,13 +133,13 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
 
 1. Go to the browser application on your device and enter "https://verifier.eudiw.dev"
 2. Expand the Person Identification Data (PID) card and select:
-    1. "Attributes by" → "Specific attributes".
-    2. "Format" → Choose the format of your choice.
+    1. "Attributes by" -> "Specific attributes".
+    2. "Format" -> Choose the format of your choice.
 3. Tap "Next", then select "Select Attributes".
 4. Choose the fields you want to request from the Wallet (e.g., "Family Name" and "Given Name").
 5. Review your presentation request, tap "Next", and then select "Open with your Wallet".
 6. When prompted to open the wallet app, tap "Open".
-7. You will be redirected to the app’s "Request" screen, where you can select or deselect which attributes to share with the Verifier. You must select at least one attribute to proceed.
+7. You will be redirected to the app's "Request" screen, where you can select or deselect which attributes to share with the Verifier. You must select at least one attribute to proceed.
 8. Tap "Share".
 9. Enter the PIN you set up during the initial steps.
 10. Upon successful submission, tap "Close".
@@ -145,44 +163,43 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
 
 ## How to build - Quick start guide
 
-[This document](wiki/how_to_build.md) describes how you can build the application and deploy the issuing and verification services locally.
+[This document](wiki/HOW_TO_BUILD.md) describes how you can build the application and deploy the issuing and verification services locally.
 
 ## Application configuration
 
-You can find instructions on how to configure the application [here](wiki/configuration.md)
+You can find instructions on how to configure the application [here](wiki/CONFIGURATION.md)
+
+## Production go-live guide
+
+Member State teams, wallet providers, and integrators preparing a live deployment should follow the
+production go-live guide [here](wiki/GO_LIVE.md). It explains how to create a production scheme and
+configuration, replace demo endpoints and trust anchors, configure WalletKit and RQES, harden the
+iOS app, align with OWASP MASVS, and collect release/security evidence.
+
+## Release automation
+
+Fastlane lane reference is generated in [fastlane/README.md](fastlane/README.md). Human-maintained
+usage notes, required environment variables, and release-lane cautions are documented in
+[fastlane/USAGE.md](fastlane/USAGE.md).
 
 ## Package structure
 
-*logic-resources*: All app resources reside here (images, etc.)
-
-*logic-core*: Wallet core logic.
-
-*logic-analytics*: Access to analytics providers. Capabilities for test monitoring analytics (i.e., crashes) can be added here (no functionality right now)
-
-*logic-business*: App business logic.
-
-*logic-storage*: Persistent storage cache.
-
-*logic-authentication*: PinStorage and System Biometrics Logic.
-
-*logic-ui*: Common UI components.
-
-*feature-common*: Code that is common to all features.
-
-*feature-dashboard*: The application's main screen.
-
-*feature-startup*: The initial screen of the app.
-
-*feature-presentation*: Online authentication feature.
-
-*feature-issuance*: Document issuance feature.
-
-*feature-proximity*: Proximity scenarios feature.
-
-*logic-assembly*: This module has access to all the above modules and assembles navigation and DI graphs.
-
 ```mermaid
 graph TD;
+
+  logic-test --> logic-business
+  logic-test --> logic-core
+  logic-test --> logic-analytics
+  logic-test --> logic-resources
+  logic-test --> logic-storage
+  logic-test --> logic-ui
+  logic-test --> logic-api
+  logic-test --> logic-authentication
+
+  logic-test --> feature-test
+  
+  feature-test --> feature-common
+
   logic-business --> logic-authentication
   logic-core --> logic-authentication
   logic-analytics --> logic-authentication
@@ -202,11 +219,8 @@ graph TD;
   logic-business --> logic-analytics
 
   feature-common --> feature-issuance
-
   feature-common --> feature-proximity
-
   feature-common --> feature-presentation
-
   feature-common --> feature-dashboard
 
   logic-storage --> feature-common
@@ -232,6 +246,8 @@ graph TD;
   logic-resources --> logic-ui
 
   logic-core --> logic-ui
+
+  logic-assembly --> app
 
 ```
 
@@ -272,7 +288,7 @@ involved, follow the guidelines found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### License details
 
-Copyright (c) 2025 European Commission
+Copyright (c) 2026 European Commission
 
 Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
 Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work

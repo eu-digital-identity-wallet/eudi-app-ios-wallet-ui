@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import logic_ui
 public enum TabViewLocators: String, LocatorType {
   case home
   case documents
-  case transactions
+  case history
 
   public var id: String {
     switch self {
@@ -26,8 +26,8 @@ public enum TabViewLocators: String, LocatorType {
       return "home_tab"
     case .documents:
       return "documents_tab"
-    case .transactions:
-      return "transactions_tab"
+    case .history:
+      return "history_tab"
     }
   }
 

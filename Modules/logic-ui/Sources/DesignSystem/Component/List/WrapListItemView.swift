@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -96,7 +96,7 @@ public struct WrapListItemView: View {
           case .text(let mainText):
             Text(mainText)
               .typography(Theme.shared.font.headlineMedium)
-              .foregroundStyle(Theme.shared.color.onSurface)
+              .foregroundStyle(Theme.shared.color.primaryLabel)
               .fontWeight(listItem.mainStyle == .plain ? .medium : .bold)
               .lineLimit(nil)
               .multilineTextAlignment(.leading)
@@ -123,7 +123,7 @@ public struct WrapListItemView: View {
               HStack(spacing: SPACING_SMALL) {
                 Text(text)
                   .font(Theme.shared.font.bodySmall.font)
-                  .foregroundColor(Theme.shared.color.onSurfaceVariant)
+                  .foregroundColor(Theme.shared.color.secondaryLabel)
                   .lineLimit(1)
                   .multilineTextAlignment(.trailing)
                   .gone(if: text.toString.isEmpty)
@@ -245,7 +245,7 @@ public struct WrapListItemView: View {
           mainContent: .text(.custom("Another Item")),
           overlineText: .custom("Overline Texr"),
           supportingText: .custom("Additional Info"),
-          overlineTextColor: Theme.shared.color.error,
+          overlineTextColor: Theme.shared.color.red,
           leadingIcon: LeadingIcon(image: Image(systemName: "heart"))
         )
       )

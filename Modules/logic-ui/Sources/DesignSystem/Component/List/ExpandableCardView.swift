@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -24,7 +24,7 @@ public struct ExpandableCardView<Content: View>: View {
   private let content: () -> Content
 
   public init(
-    backgroundColor: Color = Theme.shared.color.surfaceContainer,
+    backgroundColor: Color = Theme.shared.color.groupedBackground,
     header: ListItemData,
     mainTextVerticalPadding: CGFloat? = nil,
     isLoading: Bool = false,

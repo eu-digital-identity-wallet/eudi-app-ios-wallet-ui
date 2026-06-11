@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -35,7 +35,7 @@ struct TransactionDetailsView<Router: RouterHost>: View {
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content(
+      TransactionDetailsViewContainer(
         state: viewModel.viewState,
         onReportModal: viewModel.onReportModal,
         onShowDeleteModal: viewModel.onShowDeleteModal
@@ -47,78 +47,88 @@ struct TransactionDetailsView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  state: TransactionDetailsViewState,
-  onReportModal: @escaping () -> Void,
-  onShowDeleteModal: @escaping () -> Void
-) -> some View {
-  ScrollView {
-    VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
+private struct TransactionDetailsViewContainer: View {
 
-      if let transactionDetailsCardData = state.transactionDetailsUi?.transactionDetailsCardData {
-        TransactionCardView(
-          transactionDetailsCardData: transactionDetailsCardData,
-          isLoading: state.isLoading
-        )
-      }
+  let state: TransactionDetailsViewState
+  let onReportModal: () -> Void
+  let onShowDeleteModal: () -> Void
 
-      if let transactionDetailsDataSharedList = state.transactionDetailsUi?.items, !transactionDetailsDataSharedList.isEmpty {
-        VStack(alignment: .leading, spacing: SPACING_SMALL) {
-          Text(.transactionDetailsDataShare)
-            .typography(Theme.shared.font.bodySmall)
-            .fontWeight(.semibold)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-            .shimmer(isLoading: state.isLoading)
+  var body: some View {
+    content()
+  }
 
-          ForEach(transactionDetailsDataSharedList) { item in
-            WrapExpandableListView(
-              header: .init(
-                mainContent: .text(.custom(item.title)),
-                supportingText: .viewDetails
-              ),
-              items: item.listItems,
-              hideSensitiveContent: false,
-              isLoading: state.isLoading
-            )
-          }
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    ScrollView {
+      VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
+
+        if let transactionDetailsCardData = state.transactionDetailsUi?.transactionDetailsCardData {
+          TransactionCardView(
+            transactionDetailsCardData: transactionDetailsCardData,
+            isLoading: state.isLoading
+          )
         }
 
-        VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+        if let transactionDetailsDataSharedList = state.transactionDetailsUi?.items, !transactionDetailsDataSharedList.isEmpty {
           VStack(alignment: .leading, spacing: SPACING_SMALL) {
-            Text(.transactionDetailsRequestDeletionMessage)
-              .font(Theme.shared.font.bodyLarge.font)
-              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            Text(.transactionDetailsDataShare)
+              .typography(Theme.shared.font.bodySmall)
+              .fontWeight(.semibold)
+              .foregroundStyle(Theme.shared.color.secondaryLabel)
               .shimmer(isLoading: state.isLoading)
 
-            WrapButtonView(
-              style: .error,
-              title: .transactionDetailsRequestDeletionButton,
-              isLoading: state.isLoading,
-              isEnabled: false,
-              onAction: onShowDeleteModal()
-            )
+            ForEach(transactionDetailsDataSharedList) { item in
+              WrapExpandableListView(
+                header: .init(
+                  mainContent: .text(.custom(item.title)),
+                  supportingText: .viewDetails
+                ),
+                items: item.listItems,
+                backgroundColor: Theme.shared.color.groupedElevatedBackground,
+                hideSensitiveContent: false,
+                isLoading: state.isLoading
+              )
+            }
           }
+          .zIndex(1)
 
-          VStack(alignment: .leading, spacing: SPACING_SMALL) {
-            Text(.transactionDetailsReportTransactionMessage)
-              .font(Theme.shared.font.bodyLarge.font)
-              .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-              .shimmer(isLoading: state.isLoading)
+          VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+            VStack(alignment: .leading, spacing: SPACING_SMALL) {
+              Text(.transactionDetailsRequestDeletionMessage)
+                .font(Theme.shared.font.bodyLarge.font)
+                .foregroundStyle(Theme.shared.color.secondaryLabel)
+                .shimmer(isLoading: state.isLoading)
 
-            WrapButtonView(
-              style: .secondary,
-              title: .transactionDetailsReportTransactionButton,
-              isLoading: state.isLoading,
-              isEnabled: false,
-              onAction: onShowDeleteModal()
-            )
+              WrapButtonView(
+                style: .error,
+                title: .transactionDetailsRequestDeletionButton,
+                isLoading: state.isLoading,
+                isEnabled: false,
+                onAction: onShowDeleteModal()
+              )
+            }
+
+            VStack(alignment: .leading, spacing: SPACING_SMALL) {
+              Text(.transactionDetailsReportTransactionMessage)
+                .font(Theme.shared.font.bodyLarge.font)
+                .foregroundStyle(Theme.shared.color.secondaryLabel)
+                .shimmer(isLoading: state.isLoading)
+
+              WrapButtonView(
+                style: .secondary,
+                title: .transactionDetailsReportTransactionButton,
+                isLoading: state.isLoading,
+                isEnabled: false,
+                onAction: onShowDeleteModal()
+              )
+            }
           }
+          .zIndex(0)
         }
       }
+      .padding(Theme.shared.dimension.padding)
+      .padding(.bottom)
     }
-    .padding(Theme.shared.dimension.padding)
-    .padding(.bottom)
   }
 }

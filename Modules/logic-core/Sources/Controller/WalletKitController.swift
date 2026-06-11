@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -92,6 +92,8 @@ public protocol WalletKitController: Sendable {
 
   func storeFailedReIssuedDocuments(ids: [String]) async throws
   func removeAllFailedReIssuedDocuments() async throws
+
+  func refreshUsageCounters() async throws
 }
 
 final actor WalletKitControllerImpl: WalletKitController {
@@ -169,7 +171,10 @@ final actor WalletKitControllerImpl: WalletKitController {
         credentialPolicy: rule.policy,
         batchSize: rule.numberOfCredentials
       )
-      return docType.copy(credentialOptions: credentialOptions)
+      return docType.copy(
+        credentialOptions: credentialOptions,
+        keyOptions: walletKitConfig.keyOptions
+      )
     }
 
     return try await wallet.issueDocumentsByOfferUrl(
@@ -222,7 +227,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     await self.sessionCoordinatorHolder.clear()
   }
 
-  func fetchAllDocuments() -> [any DocClaimsDecodable] {
+  func fetchAllDocuments() async -> [any DocClaimsDecodable] {
     return fetchIssuedDocuments() + fetchDeferredDocuments().transformToDeferredDecodables()
   }
 
@@ -272,13 +277,18 @@ final actor WalletKitControllerImpl: WalletKitController {
       credentialOptions: .init(
         credentialPolicy: rule.policy,
         batchSize: rule.numberOfCredentials
-      )
+      ),
+      keyOptions: walletKitConfig.keyOptions
     )
     return documents
   }
 
   func reIssueDocument(identifier: String, isBackgroundOperation: Bool) async throws -> WalletStorage.Document {
-    return try await wallet.reissueDocument(documentId: identifier, backgroundOnly: isBackgroundOperation)
+    return try await wallet.reissueDocument(
+      documentId: identifier,
+      keyOptions: walletKitConfig.keyOptions,
+      backgroundOnly: isBackgroundOperation
+    )
   }
 
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable {
@@ -294,7 +304,8 @@ final actor WalletKitControllerImpl: WalletKitController {
       credentialOptions: .init(
         credentialPolicy: rule.policy,
         batchSize: rule.numberOfCredentials
-      )
+      ),
+      keyOptions: walletKitConfig.keyOptions
     )
     if result.isDeferred {
       return result.transformToDeferredDecodable()
@@ -340,7 +351,8 @@ final actor WalletKitControllerImpl: WalletKitController {
       credentialOptions: .init(
         credentialPolicy: rule.policy,
         batchSize: rule.numberOfCredentials
-      )
+      ),
+      keyOptions: walletKitConfig.keyOptions
     )
   }
 
@@ -502,6 +514,10 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func removeAllFailedReIssuedDocuments() async throws {
     try await failedReIssuedDocStorageController.deleteAll()
+  }
+
+  func refreshUsageCounters() async throws {
+    try await wallet.refreshUsageCounters()
   }
 }
 

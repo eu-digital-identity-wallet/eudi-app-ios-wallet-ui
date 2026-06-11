@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -14,30 +14,37 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import SwiftUI
 import logic_resources
 
 struct SettingMenuItemUIModel: Identifiable {
 
   let id: String
   let title: LocalizableStringKey
+  let icon: Image?
   let showDivider: Bool
   let isShareLink: Bool
   let isToggle: Bool
+  let toggleBinding: Binding<Bool>?
   let action: () -> Void
 
   init(
     id: String = UUID().uuidString,
     title: LocalizableStringKey,
+    icon: Image? = nil,
     showDivider: Bool = true,
     isShareLink: Bool = false,
     isToggle: Bool = false,
-    action: @autoclosure @escaping () -> Void
+    toggleBinding: Binding<Bool>? = nil,
+    action: @escaping () -> Void
   ) {
     self.id = id
     self.title = title
+    self.icon = icon
     self.showDivider = showDivider
     self.isShareLink = isShareLink
     self.isToggle = isToggle
+    self.toggleBinding = toggleBinding
     self.action = action
   }
 }

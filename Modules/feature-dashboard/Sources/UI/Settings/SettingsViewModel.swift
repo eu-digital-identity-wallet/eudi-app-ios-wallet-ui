@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -13,19 +13,34 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import SwiftUI
 import logic_ui
 import logic_core
+import logic_authentication
 import feature_common
 
 @Copyable
 struct SettingsViewState: ViewState {
   let items: [SettingMenuItemUIModel]
+  let isBiometryEnabled: Bool
   let appVersion: String?
   let logsUrl: URL?
   let changelogUrl: URL?
 }
 
+@Observable
 final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsViewState> {
+  var isBatchCounterEnabled: Bool = false {
+    didSet {
+      guard !isHydratingBatchCounter, oldValue != isBatchCounterEnabled else { return }
+      updateBatchCounter(isBatchCounterEnabled)
+    }
+  }
+
+  var biometryError: SystemBiometryError?
+
+  @ObservationIgnored
+  private var isHydratingBatchCounter = false
 
   private let interactor: SettingsInteractor
   private let walletKitController: WalletKitController
@@ -41,6 +56,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       router: router,
       initialState: .init(
         items: [],
+        isBiometryEnabled: false,
         appVersion: nil,
         logsUrl: nil,
         changelogUrl: nil
@@ -66,26 +82,94 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     )
   }
 
+  func onBiometrySettings() {
+    Task { await interactor.openBiometrySettings {} }
+  }
+
+  private func setBiometryEnabled(_ isEnabled: Bool) {
+    setState { $0.copy(isBiometryEnabled: isEnabled) }
+    Task {
+      switch await interactor.authenticateBiometry() {
+      case .authenticated:
+        await interactor.setBiometrySelection(isEnabled: isEnabled)
+        setState { $0.copy(isBiometryEnabled: isEnabled) }
+      case .failure(let error):
+        setState { $0.copy(isBiometryEnabled: !isEnabled) }
+        if error != .biometricError {
+          self.biometryError = error
+        }
+      }
+    }
+  }
+
   private func buildUi() async {
 
     let appVersion = await interactor.getAppVersion()
     let logsUrl = await interactor.retrieveLogFileUrl()
     let changelogUrl = await interactor.retrieveChangeLogUrl()
+    let isBiometryAvailable = await interactor.isBiometryAvailable()
+    let isBiometryEnabled = await interactor.isBiometryEnabled()
 
-    var items: [SettingMenuItemUIModel] = [
+    isHydratingBatchCounter = true
+    isBatchCounterEnabled = await interactor.isBatchCounterEnabled()
+    isHydratingBatchCounter = false
+
+    var items: [SettingMenuItemUIModel] = []
+
+    if isBiometryAvailable {
+      items.append(
+        .init(
+          title: .loginWithBiometrics,
+          icon: Theme.shared.image.faceIdMenu,
+          isToggle: true,
+          toggleBinding: Binding(
+            get: { [weak self] in
+              self?.viewState.isBiometryEnabled ?? false
+            },
+            set: { _ in }
+          ),
+          action: { [weak self] in
+            guard let self else { return }
+            self.setBiometryEnabled(!self.viewState.isBiometryEnabled)
+          }
+        )
+      )
+    }
+
+    items.append(
+      .init(
+        title: .batchIssuanceCounter,
+        icon: Theme.shared.image.batchCounter,
+        showDivider: true,
+        isToggle: true,
+        toggleBinding: Binding(
+          get: { [weak self] in
+            self?.isBatchCounterEnabled ?? false
+          },
+          set: { [weak self] newValue in
+            self?.isBatchCounterEnabled = newValue
+          }
+        ),
+        action: {}
+      )
+    )
+
+    items.append(
       .init(
         title: .retrieveLogs,
+        icon: Theme.shared.image.retrieveLogs,
         isShareLink: true,
-        action: {}()
+        action: {}
       )
-    ]
+    )
 
     if let changelogUrl = await interactor.retrieveChangeLogUrl() {
       items.append(
         .init(
           title: .changelog,
+          icon: Theme.shared.image.changelog,
           showDivider: false,
-          action: changelogUrl.open()
+          action: { changelogUrl.open() }
         )
       )
     }
@@ -93,10 +177,17 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     setState {
       $0.copy(
         items: items,
+        isBiometryEnabled: isBiometryEnabled,
         appVersion: appVersion,
         logsUrl: logsUrl,
         changelogUrl: changelogUrl
       )
+    }
+  }
+
+  private func updateBatchCounter(_ isEnabled: Bool) {
+    Task {
+      await interactor.setBatchCounter(isEnabled: isEnabled)
     }
   }
 }

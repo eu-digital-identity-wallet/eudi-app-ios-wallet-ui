@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -29,9 +29,9 @@ struct StartupView<Router: RouterHost>: View {
     ContentScreenView(
       padding: .zero,
       canScroll: false,
-      background: Theme.shared.color.surface
+      background: Theme.shared.color.background
     ) {
-      content(
+      StartupViewContainer(
         viewState: viewModel.viewState,
         screenWidth: getScreenRect().width
       )
@@ -42,20 +42,27 @@ struct StartupView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: StartupState,
-  screenWidth: CGFloat
-) -> some View {
-  ZStack {
-    Theme.shared.image.logo
-      .resizable()
-      .aspectRatio(contentMode: .fit)
-      .frame(width: screenWidth / 2.5)
+private struct StartupViewContainer: View {
+
+  let viewState: StartupState
+  let screenWidth: CGFloat
+
+  var body: some View {
+    content()
   }
-  .frame(maxWidth: .infinity, maxHeight: .infinity)
-  .ignoresSafeArea(.all)
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    ZStack {
+      Theme.shared.image.logo
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .frame(width: screenWidth / 2.5)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .ignoresSafeArea(.all)
+  }
 }
 
 #Preview {
@@ -67,8 +74,8 @@ private func content(
   ContentScreenView(
     padding: .zero,
     canScroll: false,
-    background: Theme.shared.color.primary
+    background: Theme.shared.color.accent
   ) {
-    content(viewState: viewState, screenWidth: 1080)
+    StartupViewContainer(viewState: viewState, screenWidth: 1080)
   }
 }

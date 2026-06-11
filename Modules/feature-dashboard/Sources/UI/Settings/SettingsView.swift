@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_ui
 import logic_resources
+import logic_business
 
 struct SettingsView<Router: RouterHost>: View {
   @State private var viewModel: SettingsViewModel<Router>
@@ -30,73 +31,107 @@ struct SettingsView<Router: RouterHost>: View {
       navigationTitle: .settings,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content(
+      SettingsViewContainer(
         viewState: viewModel.viewState
       )
     }
     .task {
       await viewModel.initialize()
     }
+    .alert(item: $viewModel.biometryError) { error in
+      Alert(
+        title: Text(.genericErrorTitle),
+        message: Text(error.errorDescription.orEmpty),
+        primaryButton: .default(Text(.biometryOpenSettings)) {
+          viewModel.onBiometrySettings()
+        },
+        secondaryButton: .cancel {}
+      )
+    }
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: SettingsViewState
-) -> some View {
-  VStack(spacing: SPACING_MEDIUM_SMALL) {
-    ForEach(viewState.items) { item in
-      if item.isShareLink {
-        if let fileUrl = viewState.logsUrl {
-          ShareLink(item: fileUrl) {
+private struct SettingsViewContainer: View {
+
+  let viewState: SettingsViewState
+
+  var body: some View {
+    content()
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    VStack(spacing: SPACING_MEDIUM_SMALL) {
+      ForEach(viewState.items) { item in
+        if item.isShareLink {
+          if let fileUrl = viewState.logsUrl {
+            ShareLink(item: fileUrl) {
+              TappableCellView(
+                title: .retrieveLogs,
+                icon: item.icon,
+                showDivider: item.showDivider,
+                useOverlay: false,
+                action: {}
+              )
+            }
+          }
+        } else if item.isToggle {
+          if let toggleBinding = item.toggleBinding {
             TappableCellView(
-              title: .retrieveLogs,
+              title: item.title,
+              icon: item.icon,
               showDivider: item.showDivider,
+              isToggle: true,
+              isOn: toggleBinding,
               useOverlay: false,
-              action: {}()
+              action: item.action
             )
           }
+        } else {
+          TappableCellView(
+            title: item.title,
+            icon: item.icon,
+            showDivider: item.showDivider,
+            action: item.action
+          )
         }
-      } else {
-        TappableCellView(
-          title: item.title,
-          showDivider: item.showDivider,
-          action: item.action()
-        )
+      }
+
+      Spacer()
+
+      if let version = viewState.appVersion {
+        Text(version)
+          .typography(Theme.shared.font.bodyMedium)
+          .frame(maxWidth: .infinity, alignment: .center)
       }
     }
-
-    Spacer()
-
-    if let version = viewState.appVersion {
-      Text(version)
-        .typography(Theme.shared.font.bodyMedium)
-        .frame(maxWidth: .infinity, alignment: .center)
-    }
+    .padding(.bottom, SPACING_LARGE_MEDIUM)
   }
-  .padding(.bottom, SPACING_LARGE_MEDIUM)
 }
 
 #Preview {
-  let viewSate = SettingsViewState(
+  let viewState = SettingsViewState(
     items: [
       .init(
+        title: .loginWithBiometrics,
+        isToggle: true,
+        action: {}
+      ),
+      .init(
         title: .changeQuickPinOption,
-        action: {}()
+        action: {}
       )
     ],
+    isBiometryEnabled: true,
     appVersion: "",
     logsUrl: URL(string: "https://www.example.com"),
     changelogUrl: URL(string: "https://www.example.com")
   )
   ContentScreenView(
-    padding: .zero,
-    canScroll: false,
-    background: Theme.shared.color.surface
+    canScroll: true,
+    navigationTitle: .settings
   ) {
-    content(
-      viewState: viewSate
-    )
+    SettingsViewContainer(viewState: viewState)
   }
 }

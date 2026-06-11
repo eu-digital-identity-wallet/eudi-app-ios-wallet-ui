@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -111,16 +111,18 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
           )
         }
 
+        items.sort(by: compare)
         return items
       }
 
-      let orderedPairs: [(String, [AddDocumentUIModel])] = grouped.sorted { lhs, rhs in
-        let lhsOrder = lhs.value.map(\.order).max() ?? Int.min
-        let rhsOrder = rhs.value.map(\.order).max() ?? Int.min
+      let orderedPairs: [(String, [AddDocumentUIModel])] = grouped
+        .sorted { lhs, rhs in
+          let lhsOrder = lhs.value.map(\.order).max() ?? Int.min
+          let rhsOrder = rhs.value.map(\.order).max() ?? Int.min
 
-        if lhsOrder != rhsOrder { return lhsOrder > rhsOrder }
-        return lhs.key.localizedCompare(rhs.key) == .orderedAscending
-      }
+          if lhsOrder != rhsOrder { return lhsOrder > rhsOrder }
+          return lhs.key.localizedCompare(rhs.key) == .orderedAscending
+        }
 
       let ordered = OrderedDictionary<String, [AddDocumentUIModel]>(
         uniqueKeysWithValues: orderedPairs

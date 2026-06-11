@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -49,13 +49,17 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     let isRevoked = await walletController.isDocumentRevoked(with: documentId)
 
     let documentIsLowOnCredentials = await walletController.isDocumentLowOnCredentials(document: document)
-    let info = getCredentialsUsageCount(
-      credentialsUsageCounts: document?.credentialsUsageCounts,
-      documentIsLowOnCredentials: documentIsLowOnCredentials
-    )
     let issuerDetailsCard = document?.transformToIssuerDetailsCardDataUi(isRevoked: isRevoked)
 
-    return .success(documentDetails, issuerDetailsCard, info, isBookmarked, isRevoked)
+    if isBatchCounterEnabled() {
+      let info = getCredentialsUsageCount(
+        credentialsUsageCounts: document?.credentialsUsageCounts,
+        documentIsLowOnCredentials: documentIsLowOnCredentials
+      )
+      return .success(documentDetails, issuerDetailsCard, info, isBookmarked, isRevoked)
+    }
+
+    return .success(documentDetails, issuerDetailsCard, nil, isBookmarked, isRevoked)
   }
 
   func reIssueDocument(identifier: String) async -> DocumentDetailsReIssuancePartialState {
@@ -138,6 +142,10 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       totalCredentials: totalCredentials,
       title: .documentDetailsDocumentCredentialsText([availableCredentials.string, totalCredentials.string])
     )
+  }
+
+  private func isBatchCounterEnabled() -> Bool {
+    prefsController.getBool(forKey: .batchCounter)
   }
 }
 

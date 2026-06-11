@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -24,7 +24,7 @@ final actor WalletKitTransactionLogControllerImpl: TransactionLogger {
     self.transactionLogStorageController = transactionLogStorageController
   }
 
-  func log(transaction: EudiWalletKit.TransactionLog) async throws {
+  func log(transaction: MdocDataModel18013.TransactionLog) async throws {
     do {
 
       let jsonResultData = try JSONEncoder().encode(transaction)

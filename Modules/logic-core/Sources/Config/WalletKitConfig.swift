@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -39,6 +39,11 @@ protocol WalletKitConfig: Sendable {
    * User authentication required accessing core's secure storage
    */
   var userAuthenticationRequired: Bool { get }
+
+  /**
+   * KeyOptions for creating & accessing attestation keys
+   */
+  var keyOptions: KeyOptions? { get }
 
   /**
    * The name of the file to be created to store logs
@@ -84,6 +89,14 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var userAuthenticationRequired: Bool {
     false
+  }
+
+  var keyOptions: KeyOptions? {
+    KeyOptions(
+      curve: .P256,
+      secureAreaName: SecureEnclaveSecureArea.name,
+      accessControl: []
+    )
   }
 
   var issuersConfig: [String: VciConfig] {
@@ -138,7 +151,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var vpConfig: OpenId4VpConfiguration {
-    .init(clientIdSchemes: [.x509SanDns, .x509Hash])
+    .init(
+      clientIdSchemes: [.x509SanDns, .x509Hash],
+      allowPresentingPartialClaims: true
+    )
   }
 
   var trustedReaderRootCertificates: [x5chain] {
@@ -271,7 +287,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
 private extension WalletKitConfigImpl {
   func loadCertificate(_ name: String) -> SecCertificate? {
-    guard let data = Data(name: name, ext: "der") else { return nil }
+    guard
+      let url = Bundle.main.url(forResource: name, withExtension: "der"),
+      let data = try? Data(contentsOf: url)
+    else { return nil }
     return SecCertificateCreateWithData(nil, data as CFData)
   }
 }

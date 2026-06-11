@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -108,6 +108,7 @@ actor NetworkManagerImpl: NetworkManager {
   }
 
   nonisolated func log(request: URLRequest, responseData: Data? = nil) {
+    #if DEBUG
     print("1️⃣ Request: " + (request.url?.absoluteString ?? "") )
     print("2️⃣ Request Http Method: " + (request.httpMethod ?? "") )
     print("3️⃣ Request HttpBody: " + ((try? request.httpBody?.toJSONString(prettyPrinted: true)).orEmpty) )
@@ -119,5 +120,6 @@ actor NetworkManagerImpl: NetworkManager {
     if let responseData {
       print("✅ Response Body: " + ((try? responseData.toJSONString(prettyPrinted: true)).orEmpty) )
     }
+    #endif
   }
 }

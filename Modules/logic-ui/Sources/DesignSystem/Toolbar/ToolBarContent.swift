@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -24,6 +24,8 @@ public extension ToolBarContent {
     public let image: Image?
     public let hasIndicator: Bool?
     public let disabled: Bool
+    public let tintColor: Color?
+    public let isBorderedProminent: Bool
     public let callback: (() -> Void)?
 
     public init(
@@ -32,6 +34,8 @@ public extension ToolBarContent {
       accessibilityLocator: LocatorType,
       hasIndicator: Bool? = nil,
       disabled: Bool = false,
+      tintColor: Color? = nil,
+      isBorderedProminent: Bool = false,
       callback: (() -> Void)? = nil
     ) {
       self.title = title
@@ -39,6 +43,8 @@ public extension ToolBarContent {
       self.image = image
       self.hasIndicator = hasIndicator
       self.disabled = disabled
+      self.tintColor = tintColor
+      self.isBorderedProminent = isBorderedProminent
       self.callback = callback
     }
   }
@@ -96,6 +102,14 @@ private struct ActionView: View {
         Button(action: callback) {
           content
         }
+        .if(action.isBorderedProminent) { view in
+          view.buttonStyle(.borderedProminent)
+        }
+        .tint(
+          action.isBorderedProminent
+            ? (action.tintColor ?? Theme.shared.color.accent)
+            : action.tintColor
+        )
         .disabled(disabled)
         .accessibilityElement()
         .accessibilityLocator(
@@ -104,7 +118,7 @@ private struct ActionView: View {
         .overlay(alignment: .topTrailing) {
           if let hasIndicator = action.hasIndicator, hasIndicator {
             Circle()
-              .foregroundStyle(Theme.shared.color.primary)
+              .foregroundStyle(Theme.shared.color.accent)
               .frame(width: 10)
               .offset(x: 2, y: 2)
           }

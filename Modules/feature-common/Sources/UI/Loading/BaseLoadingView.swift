@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -62,8 +62,7 @@ private func content(
     content(
       contentHeaderConfig: .init(
         appIconAndTextData: AppIconAndTextData(
-          appIcon: Theme.shared.image.logoEuDigitalIndentityWallet,
-          appText: Theme.shared.image.euditext
+          appIcon: Theme.shared.image.logoEuDigitalIndentityWallet
         )
       )
     )

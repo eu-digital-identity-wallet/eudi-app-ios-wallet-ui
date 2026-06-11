@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -608,6 +608,199 @@ final class TestFilterValidator: EudiTest {
       }
     case .completion:
       XCTFail("Expected a filter update result but received completion.")
+    }
+  }
+
+  func testApplyFilters_WhenSingleSelectionGroupHasNoSelectedFilter_ThenEmitsEmptyList() async {
+    // Given: SingleSelectionFilterGroup whose every filter is unselected
+    let unselectedFilters: [FilterItem] = [
+      FilterItem(id: "1", name: "PID", selected: false,
+                 filterableAction: Filter<TestAttributes>(predicate: { $0.name == $1.name })),
+      FilterItem(id: "2", name: "mDL", selected: false,
+                 filterableAction: Filter<TestAttributes>(predicate: { $0.name == $1.name }))
+    ]
+    let group = SingleSelectionFilterGroup(
+      id: "single_no_selection",
+      name: "Empty Single Selection",
+      filters: unselectedFilters,
+      filterType: .other
+    )
+    let filters = Filters(filterGroups: [group], sortOrder: .ascending)
+    var stream = filterValidator.getFilterResultStream().makeAsyncIterator()
+
+    // When
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
+    await filterValidator.applyFilters(sortOrder: .ascending)
+
+    guard let partial = await stream.next() else {
+      return XCTFail("Expected a .success but got no events")
+    }
+
+    // Then: applySingleSelectionFilter falls through to return .init(items: [])
+    switch partial {
+    case .success(.filterApplyResult(let filteredList, _, _)):
+      XCTAssertTrue(filteredList.items.isEmpty)
+    default:
+      XCTFail("Unexpected result: \(partial)")
+    }
+  }
+
+  func testApplyFilters_WhenReversibleSingleSelectionHasNoSelectedFilter_ThenReturnsOriginalList() async {
+    // Given: ReversibleSingleSelectionFilterGroup with everything unselected.
+    // applyReversibleSingleSelectionFilter should return the original list unchanged.
+    let unselectedFilters: [FilterItem] = [
+      FilterItem(id: "1", name: "PID", selected: false,
+                 filterableAction: Filter<TestAttributes>(predicate: { $0.name == $1.name })),
+      FilterItem(id: "2", name: "mDL", selected: false,
+                 filterableAction: Filter<TestAttributes>(predicate: { $0.name == $1.name }))
+    ]
+    let group = ReversibleSingleSelectionFilterGroup(
+      id: "rev_single_none",
+      name: "Reversible Single Empty",
+      filters: unselectedFilters,
+      filterType: .other
+    )
+    let filters = Filters(filterGroups: [group], sortOrder: .ascending)
+    var stream = filterValidator.getFilterResultStream().makeAsyncIterator()
+
+    // When
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
+    await filterValidator.applyFilters(sortOrder: .ascending)
+
+    guard let partial = await stream.next() else {
+      return XCTFail("Expected a .success but got no events")
+    }
+
+    // Then: result == initial list
+    switch partial {
+    case .success(.filterApplyResult(let filteredList, _, _)):
+      XCTAssertEqual(filteredList.items.count, filterableList.items.count)
+    default:
+      XCTFail("Unexpected result: \(partial)")
+    }
+  }
+
+  func testApplyFilters_WhenReversibleMultipleSelectionHasNoSelectedFilter_ThenReturnsOriginalList() async {
+    // Given: ReversibleMultipleSelectionFilterGroup with everything unselected.
+    // applyReversibleMultipleSelectionFilter returns the original list unchanged.
+    let group = ReversibleMultipleSelectionFilterGroup(
+      id: "rev_multi_none",
+      name: "Reversible Multi Empty",
+      filters: filterItemsMultipleNoSelections,
+      filterableAction: FilterMultipleAction<TestAttributes>(predicate: { $1.name == $0.name }),
+      filterType: .other
+    )
+    let filters = Filters(filterGroups: [group], sortOrder: .ascending)
+    var stream = filterValidator.getFilterResultStream().makeAsyncIterator()
+
+    // When
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
+    await filterValidator.applyFilters(sortOrder: .ascending)
+
+    guard let partial = await stream.next() else {
+      return XCTFail("Expected a .success but got no events")
+    }
+
+    // Then
+    switch partial {
+    case .success(.filterApplyResult(let filteredList, _, _)):
+      XCTAssertEqual(filteredList.items.count, filterableList.items.count)
+    default:
+      XCTFail("Unexpected result: \(partial)")
+    }
+  }
+
+  func testInitializeValidator_WhenCalledTwiceWithReversibleSingle_ThenMergesSelections() async {
+    // Given: same ReversibleSingleSelectionFilterGroup twice, exercises the
+    // `case var reversibleSingleGroup as ReversibleSingleSelectionFilterGroup`
+    // branch inside mergeFilters.
+    let filters = filtersWithReversibleSingleSelection
+    var stream = filterValidator.getFilterResultStream().makeAsyncIterator()
+
+    // When
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
+    await filterValidator.applyFilters(sortOrder: .ascending)
+
+    guard let partial = await stream.next() else {
+      return XCTFail("Expected a .success but got no events")
+    }
+
+    switch partial {
+    case .success(.filterApplyResult(_, let updatedFilters, _)):
+      XCTAssertEqual(updatedFilters.filterGroups.count, filters.filterGroups.count)
+    default:
+      XCTFail("Unexpected result: \(partial)")
+    }
+  }
+
+  func testInitializeValidator_WhenCalledTwiceWithReversibleMultiple_ThenMergesSelections() async {
+    // Given: same ReversibleMultipleSelectionFilterGroup twice, exercises the
+    // `case var reversibleMultipleGroup as ReversibleMultipleSelectionFilterGroup`
+    // branch inside mergeFilters.
+    let filters = filtersWithReversibleMultipleSelection
+    var stream = filterValidator.getFilterResultStream().makeAsyncIterator()
+
+    // When
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
+    await filterValidator.applyFilters(sortOrder: .ascending)
+
+    guard let partial = await stream.next() else {
+      return XCTFail("Expected a .success but got no events")
+    }
+
+    switch partial {
+    case .success(.filterApplyResult(_, let updatedFilters, _)):
+      XCTAssertEqual(updatedFilters.filterGroups.count, filters.filterGroups.count)
+    default:
+      XCTFail("Unexpected result: \(partial)")
+    }
+  }
+
+  func testUpdateDateFilters_WhenFilterIdMatchesTransactionDateRange_ThenStartAndEndDatesAreSet() async {
+    // Given: a SingleSelectionFilterGroup containing the date-range filter id.
+    // updateDateFilters must set startDate/endDate on the matching filter
+    // rather than toggling its selected flag.
+    let start = Date(timeIntervalSince1970: 1_000_000)
+    let end = Date(timeIntervalSince1970: 2_000_000)
+    let dateRangeFilter = FilterItem(
+      id: FilterIds.FILTER_BY_TRANSACTION_DATE_RANGE,
+      name: "Date Range",
+      selected: false,
+      filterableAction: Filter<TestAttributes>(predicate: { _, _ in true })
+    )
+    let group = SingleSelectionFilterGroup(
+      id: FilterIds.FILTER_BY_TRANSACTION_DATE_GROUP_ID,
+      name: "Date Group",
+      filters: [dateRangeFilter],
+      filterType: .other
+    )
+    let filters = Filters(filterGroups: [group], sortOrder: .ascending)
+    var stream = filterValidator.getFilterResultStream().makeAsyncIterator()
+
+    // When
+    await filterValidator.initializeValidator(filters: filters, filterableList: filterableList)
+    await filterValidator.updateDateFilters(
+      filterGroupId: group.id,
+      filterId: FilterIds.FILTER_BY_TRANSACTION_DATE_RANGE,
+      startDate: start,
+      endDate: end
+    )
+
+    guard let partial = await stream.next() else {
+      return XCTFail("Expected a .success but got no events")
+    }
+
+    switch partial {
+    case .success(.filterUpdateResult(let updatedFilters)):
+      let updatedFilter = updatedFilters.filterGroups.first?.filters.first {
+        $0.id == FilterIds.FILTER_BY_TRANSACTION_DATE_RANGE
+      }
+      XCTAssertEqual(updatedFilter?.startDate, start)
+      XCTAssertEqual(updatedFilter?.endDate, end)
+    default:
+      XCTFail("Unexpected result: \(partial)")
     }
   }
 }

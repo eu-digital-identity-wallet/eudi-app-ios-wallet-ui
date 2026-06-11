@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -70,8 +70,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
         initialized: false,
         contentHeaderConfig: .init(
           appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
           )
         )
       )
@@ -99,8 +98,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
           initialized: true,
           contentHeaderConfig: .init(
             appIconAndTextData: AppIconAndTextData(
-              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-              appText: ThemeManager.shared.image.euditext
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
             ),
             description: .dataSharingTitle,
             mainText: .issuanceRequest,
@@ -266,17 +264,9 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
 
   func toolbarContent() -> ToolBarContent {
     .init(
-      trailingActions: [
-        .init(
-          title: .issueButton,
-          accessibilityLocator: DocumentOfferLocators.issueButton
-        ) {
-          self.onIssueDocuments()
-        }
-      ],
       leadingActions: [
         .init(
-          title: .cancelButton,
+          image: Theme.shared.image.xmark,
           accessibilityLocator: DocumentOfferLocators.cancelButton
         ) {
           self.onPop()

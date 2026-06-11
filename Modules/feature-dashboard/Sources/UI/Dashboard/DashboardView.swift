@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -44,35 +44,22 @@ struct DashboardView<Router: RouterHost>: View {
         )
       ]
     ) {
-      content(
+      DashboardViewContainer(
+        selectedTab: $viewModel.selectedTab,
+        isRevokedModalShowing: $viewModel.isRevokedModalShowing,
         tabView: { tab in
           switch tab {
           case .documents:
-            viewModel.viewState.documentTab
+            viewModel.viewState.documentTab.eraseToAnyView()
           case .home:
-            viewModel.viewState.homeTab
-          case .transactions:
-            viewModel.viewState.transactionTab
+            viewModel.viewState.homeTab.eraseToAnyView()
+          case .history:
+            viewModel.viewState.historyTab.eraseToAnyView()
           }
         },
-        selectedTab: $viewModel.selectedTab
+        revokedDocuments: viewModel.viewState.revokedDocuments,
+        onDocumentDetails: { viewModel.onDocumentDetails(documentId: $0) }
       )
-    }
-    .sheetDialog(isPresented: $viewModel.isRevokedModalShowing) {
-      VStack(spacing: .zero) {
-
-        ContentTitleView(
-          title: .revokedModalTitle,
-          caption: .revokedModalDescription
-        )
-
-        revokedNotificationList(
-          state: viewModel.viewState,
-          onDocumentDetails: {
-            viewModel.onDocumentDetails(documentId: $0)
-          }
-        )
-      }
     }
     .onChange(of: scenePhase) {
       viewModel.setPhase(with: scenePhase)
@@ -86,95 +73,117 @@ struct DashboardView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  @ViewBuilder tabView: @escaping (SelectedTab) -> some View,
-  selectedTab: Binding<SelectedTab>
-) -> some View {
-  TabView(selection: selectedTab) {
+private struct DashboardViewContainer: View {
 
-    tabView(.home)
-      .tabItem {
-        Label(
-          LocalizableStringKey.home.toString,
-          systemImage: "house.fill"
-        )
-        .accessibilityLocator(
-          TabViewLocators.home,
-          label: LocalizableStringKey.home.toString
-        )
-      }
-      .tag(SelectedTab.home)
+  @Binding var selectedTab: SelectedTab
+  @Binding var isRevokedModalShowing: Bool
+  let tabView: (SelectedTab) -> AnyView
+  let revokedDocuments: [String: String]
+  let onDocumentDetails: (String) -> Void
 
-    tabView(.documents)
-      .tabItem {
-        Label(
-          .documents,
-          systemImage: "doc.fill"
-        )
-        .accessibilityLocator(
-          TabViewLocators.documents,
-          label: LocalizableStringKey.documents.toString
-        )
-      }
-      .tag(SelectedTab.documents)
+  var body: some View {
+    content()
+      .sheetDialog(isPresented: $isRevokedModalShowing) {
+        VStack(spacing: .zero) {
 
-    tabView(.transactions)
-      .tabItem {
-        Label(
-          .transactions,
-          systemImage: "arrow.left.arrow.right"
-        )
-        .accessibilityLocator(
-          TabViewLocators.transactions,
-          label: LocalizableStringKey.transactions.toString
-        )
+          ContentTitleView(
+            title: .revokedModalTitle,
+            caption: .revokedModalDescription
+          )
+
+          revokedNotificationList()
+        }
       }
-      .tag(SelectedTab.transactions)
   }
-}
 
-@MainActor
-@ViewBuilder
-private func revokedNotificationList<Router: RouterHost>(
-  state: DashboardState<Router>,
-  onDocumentDetails: @escaping (String) -> Void
-) -> some View {
-  VStack(spacing: SPACING_SMALL) {
-    ForEach(state.revokedDocuments.sorted(by: >), id: \.key) { key, value in
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    TabView(selection: $selectedTab) {
 
-      HStack {
-        Text(.custom(key))
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.onSurface)
+      tabView(.home)
+        .tabItem {
+          Label(
+            LocalizableStringKey.home.toString,
+            systemImage: "house.fill"
+          )
+          .accessibilityLocator(
+            TabViewLocators.home,
+            label: LocalizableStringKey.home.toString
+          )
+        }
+        .tag(SelectedTab.home)
 
-        Spacer()
+      tabView(.documents)
+        .tabItem {
+          Label(
+            .documents,
+            systemImage: "doc.fill"
+          )
+          .accessibilityLocator(
+            TabViewLocators.documents,
+            label: LocalizableStringKey.documents.toString
+          )
+        }
+        .tag(SelectedTab.documents)
 
-        Theme.shared.image.chevronRight
-          .renderingMode(.template)
-          .foregroundStyle(Theme.shared.color.primary)
-      }
-      .padding()
-      .background(Theme.shared.color.surfaceContainer)
-      .clipShape(.rect(cornerRadius: 8))
-      .onTapGesture {
-        onDocumentDetails(value)
+      tabView(.history)
+        .tabItem {
+          Label(
+            .historyTitle,
+            systemImage: "clock.fill"
+          )
+          .accessibilityLocator(
+            TabViewLocators.history,
+            label: LocalizableStringKey.historyTitle.toString
+          )
+        }
+        .tag(SelectedTab.history)
+    }
+    .tint(Theme.shared.color.accent)
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func revokedNotificationList() -> some View {
+    VStack(spacing: SPACING_SMALL) {
+      ForEach(revokedDocuments.sorted(by: >), id: \.key) { key, value in
+
+        HStack {
+          Text(.custom(key))
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundColor(Theme.shared.color.primaryLabel)
+
+          Spacer()
+
+          Theme.shared.image.chevronRight
+            .renderingMode(.template)
+            .foregroundStyle(Theme.shared.color.accent)
+        }
+        .padding()
+        .background(Theme.shared.color.groupedBackground)
+        .clipShape(.rect(cornerRadius: 8))
+        .onTapGesture {
+          onDocumentDetails(value)
+        }
       }
     }
+    .padding(.vertical)
   }
-  .padding(.vertical)
 }
 
 #Preview {
   ContentScreenView(
     padding: .zero,
     canScroll: false,
-    background: Theme.shared.color.surface
+    background: Theme.shared.color.background
   ) {
-    content(
-      tabView: {_ in EmptyView().eraseToAnyView()},
-      selectedTab: .constant(.home)
+    DashboardViewContainer(
+      selectedTab: .constant(.home),
+      isRevokedModalShowing: .constant(false),
+      tabView: { _ in EmptyView().eraseToAnyView() },
+      revokedDocuments: [:],
+      onDocumentDetails: { _ in }
     )
   }
 }

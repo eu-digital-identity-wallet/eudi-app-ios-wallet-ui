@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -28,9 +28,12 @@ struct DocumentTabView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    content(
+    DocumentTabViewContainer(
       state: viewModel.viewState,
       searchQuery: $viewModel.searchQuery,
+      isFilterModalShowing: $viewModel.isFilterModalShowing,
+      isDeleteDeferredModalShowing: $viewModel.isDeleteDeferredModalShowing,
+      isSuccededDocumentsModalShowing: $viewModel.isSuccededDocumentsModalShowing,
       onAction: { item in
         switch item.value.state {
         case .issued, .revoked:
@@ -38,57 +41,24 @@ struct DocumentTabView<Router: RouterHost>: View {
         case .pending, .failed:
           viewModel.onDeleteDeferredDocument(with: item)
         }
-      }
-    )
-    .sheet(isPresented: $viewModel.isFilterModalShowing) {
-      FiltersListView(sections: viewModel.viewState.filterUIModel) {
-        viewModel.resetFilters()
-      } applyFiltersAction: {
-        viewModel.fetch()
-      } revertFilters: {
-        viewModel.revertFilters()
-      }
-      updateFiltersCallback: { sectionID, filterID in
-        viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
-      }
-    }
-    .dialogCompat(
-      .issuanceDetailsDeletionTitle([viewModel.viewState.pendingDocumentTitle]),
-      isPresented: $viewModel.isDeleteDeferredModalShowing,
-      actions: {
-        Button(.no, role: .cancel) {}
-        Button(.yes, role: .destructive) {
-          viewModel.deleteDeferredDocument()
-        }
       },
-      message: {
-        Text(.issuanceDetailsDeletionCaption([viewModel.viewState.pendingDocumentTitle]))
-      }
+      onDocumentDetails: { viewModel.onDocumentDetails(documentId: $0) },
+      onResetFilters: viewModel.resetFilters,
+      onApplyFilters: viewModel.fetch,
+      onRevertFilters: viewModel.revertFilters,
+      onUpdateFilters: { sectionID, filterID in
+        viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
+      },
+      onDeleteDeferredDocument: viewModel.deleteDeferredDocument
     )
-    .sheetDialog(isPresented: $viewModel.isSuccededDocumentsModalShowing) {
-      VStack(spacing: .zero) {
-
-        ContentTitleView(
-          title: .deferredDocumentsIssuedModalTitle,
-          caption: .defferedDocumentsIssuedModalCaption
-        )
-
-        deferredSuccessList(
-          state: viewModel.viewState,
-          onDocumentDetails: {
-            viewModel.onDocumentDetails(documentId: $0)
-          }
-        )
-      }
-    }
     .onChange(of: scenePhase) {
       viewModel.setPhase(with: scenePhase)
     }
     .onAppear {
-      viewModel.onCreate()
+      viewModel.onAppear()
     }
     .onDisappear {
-      viewModel.onPause()
+      viewModel.onDisappear()
     }
     .onReceive(NotificationCenter.default.publisher(for: NSNotification.DocumentTabRefresh)) { _ in
       viewModel.handleRefreshotification()
@@ -96,101 +66,157 @@ struct DocumentTabView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  state: DocumentTabState,
-  searchQuery: Binding<String>,
-  onAction: @escaping (DocumentTabUIModel) -> Void
-) -> some View {
-  VStack {
-    if state.documents.isEmpty && !searchQuery.wrappedValue.isEmpty {
-      ContentUnavailableView(
-        title: .noResults,
-        description: .noResultsDocumentsDescription
+private struct DocumentTabViewContainer: View {
+
+  let state: DocumentTabState
+  @Binding var searchQuery: String
+  @Binding var isFilterModalShowing: Bool
+  @Binding var isDeleteDeferredModalShowing: Bool
+  @Binding var isSuccededDocumentsModalShowing: Bool
+  let onAction: (DocumentTabUIModel) -> Void
+  let onDocumentDetails: (String) -> Void
+  let onResetFilters: () -> Void
+  let onApplyFilters: () -> Void
+  let onRevertFilters: () -> Void
+  let onUpdateFilters: (String, String) -> Void
+  let onDeleteDeferredDocument: () -> Void
+
+  var body: some View {
+    content()
+      .sheet(isPresented: $isFilterModalShowing) {
+        FiltersListView(sections: state.filterUIModel) {
+          onResetFilters()
+        } applyFiltersAction: {
+          onApplyFilters()
+        } revertFilters: {
+          onRevertFilters()
+        }
+        updateFiltersCallback: { sectionID, filterID in
+          onUpdateFilters(sectionID, filterID)
+        }
+      }
+      .dialogCompat(
+        .issuanceDetailsDeletionTitle([state.pendingDocumentTitle]),
+        isPresented: $isDeleteDeferredModalShowing,
+        actions: {
+          Button(.no, role: .cancel) {}
+          Button(.yes, role: .destructive) {
+            onDeleteDeferredDocument()
+          }
+        },
+        message: {
+          Text(.issuanceDetailsDeletionCaption([state.pendingDocumentTitle]))
+        }
       )
-    } else if !state.documents.isEmpty {
+      .sheetDialog(isPresented: $isSuccededDocumentsModalShowing) {
+        VStack(spacing: .zero) {
 
-      ScrollView {
-        LazyVStack(alignment: .leading, spacing: .zero) {
+          ContentTitleView(
+            title: .deferredDocumentsIssuedModalTitle,
+            caption: .defferedDocumentsIssuedModalCaption
+          )
 
-          ForEach(state.documents.keys.sorted(by: { $0.order < $1.order }), id: \.self) { category in
+          deferredSuccessList()
+        }
+      }
+  }
 
-            WrapTextView(
-              text: category.title,
-              textConfig: TextConfig(
-                font: Theme.shared.font.bodySmall.font,
-                color: Theme.shared.color.onSurface,
-                textAlign: .leading,
-                fontWeight: .semibold
-              )
-            )
-            .padding(.horizontal, SPACING_MEDIUM)
-            .padding(.top, SPACING_SMALL)
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    VStack {
+      if state.documents.isEmpty && !searchQuery.isEmpty {
+        ContentUnavailableView(
+          title: .noResults,
+          description: .noResultsDocumentsDescription
+        )
+      } else if !state.documents.isEmpty {
 
-            ForEach(state.documents[category] ?? []) { item in
-              WrapCardView {
-                WrapListItemView(listItem: item.listItem) {
-                  onAction(item)
+        ScrollView {
+          LazyVStack(alignment: .leading, spacing: .zero) {
+
+            ForEach(state.documents.keys.sorted(by: { $0.order < $1.order }), id: \.self) { category in
+
+              VStack(alignment: .leading, spacing: SPACING_SMALL) {
+
+                WrapTextView(
+                  text: category.title,
+                  textConfig: TextConfig(
+                    font: Theme.shared.font.bodySmall.font,
+                    color: Theme.shared.color.secondaryLabel,
+                    textAlign: .leading,
+                    fontWeight: .semibold
+                  )
+                )
+                .padding(.horizontal, SPACING_MEDIUM)
+                .padding(.top, SPACING_SMALL)
+
+                WrapCardView {
+                  VStack(spacing: .zero) {
+                    let categoryDocuments = state.documents[category] ?? []
+                    WrapListItemsView(
+                      listItems: categoryDocuments.map(\.listItem)
+                    ) { listItem in
+                      if let item = categoryDocuments.first(where: { $0.listItem.id == listItem.id }) {
+                        onAction(item)
+                      }
+                    }
+                  }
                 }
+                .padding(.horizontal, SPACING_MEDIUM)
               }
-              .padding(.horizontal, SPACING_MEDIUM)
-              .padding(.top, SPACING_SMALL)
             }
           }
+          .padding(.bottom, SPACING_MEDIUM)
         }
-        .padding(.bottom, SPACING_MEDIUM)
-      }
-      .shimmer(isLoading: state.isLoading)
-      .scrollIndicators(.hidden)
+        .shimmer(isLoading: state.isLoading)
+        .scrollIndicators(.hidden)
 
-    } else if !state.isLoading {
-      ContentUnavailableView(
-        title: .noResults,
-        description: .noResultsDocumentsDescription
-      )
-    } else {
-      ContentLoaderView(showLoader: .constant(true))
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-  }
-  .searchable(
-    searchText: searchQuery,
-    placeholder: .searchDocuments,
-    backgroundColor: Theme.shared.color.background
-  )
-  .background(Theme.shared.color.background)
-}
-
-@MainActor
-@ViewBuilder
-private func deferredSuccessList(
-  state: DocumentTabState,
-  onDocumentDetails: @escaping (String) -> Void
-) -> some View {
-  VStack(spacing: SPACING_SMALL) {
-    ForEach(state.succededIssuedDocuments) { item in
-
-      HStack {
-        Text(.custom(item.value.title))
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.onSurface)
-
-        Spacer()
-
-        Theme.shared.image.chevronRight
-          .renderingMode(.template)
-          .foregroundStyle(Theme.shared.color.primary)
-      }
-      .padding()
-      .background(Theme.shared.color.surfaceContainer)
-      .clipShape(.rect(cornerRadius: 8))
-      .onTapGesture {
-        onDocumentDetails(item.value.id)
+      } else if !state.isLoading {
+        ContentUnavailableView(
+          title: .noResults,
+          description: .noResultsDocumentsDescription
+        )
+      } else {
+        ContentLoaderView(showLoader: .constant(true))
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
     }
+    .searchable(
+      searchText: $searchQuery,
+      placeholder: .searchDocuments,
+      backgroundColor: Theme.shared.color.background
+    )
+    .background(Theme.shared.color.background)
   }
-  .padding(.vertical)
+
+  @MainActor
+  @ViewBuilder
+  private func deferredSuccessList() -> some View {
+    VStack(spacing: SPACING_SMALL) {
+      ForEach(state.succededIssuedDocuments) { item in
+
+        HStack {
+          Text(.custom(item.value.title))
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundColor(Theme.shared.color.primaryLabel)
+
+          Spacer()
+
+          Theme.shared.image.chevronRight
+            .renderingMode(.template)
+            .foregroundStyle(Theme.shared.color.accent)
+        }
+        .padding()
+        .background(Theme.shared.color.groupedBackground)
+        .clipShape(.rect(cornerRadius: 8))
+        .onTapGesture {
+          onDocumentDetails(item.value.id)
+        }
+      }
+    }
+    .padding(.vertical)
+  }
 }
 
 #Preview {
@@ -198,16 +224,24 @@ private func deferredSuccessList(
     isLoading: false,
     documents: [:],
     filterUIModel: [],
-    phase: .active,
+    lifecycle: .active,
     pendingDeletionDocument: nil,
     succededIssuedDocuments: [],
     failedDocuments: [],
-    isPaused: false,
     hasDefaultFilters: false
   )
-  content(
+  DocumentTabViewContainer(
     state: state,
     searchQuery: .constant(""),
-    onAction: { _ in }
+    isFilterModalShowing: .constant(false),
+    isDeleteDeferredModalShowing: .constant(false),
+    isSuccededDocumentsModalShowing: .constant(false),
+    onAction: { _ in },
+    onDocumentDetails: { _ in },
+    onResetFilters: {},
+    onApplyFilters: {},
+    onRevertFilters: {},
+    onUpdateFilters: { _, _ in },
+    onDeleteDeferredDocument: {}
   )
 }

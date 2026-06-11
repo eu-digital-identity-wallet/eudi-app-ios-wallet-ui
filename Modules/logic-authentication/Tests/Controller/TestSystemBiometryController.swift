@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -275,25 +275,33 @@ final class TestSystemBiometryController: EudiTest {
   }
   
   func testBiometryType_ReturnsContextBiometryType() async {
-    
+
     var type: LABiometryType = .none
-    
+
     // Given
     context.stubBiometryType = .faceID
     type = await biometryController.getBiometryType()
     // Then
     XCTAssertEqual(type, .faceID)
-    
+
     // Given
     context.stubBiometryType = .touchID
     type = await biometryController.getBiometryType()
     // Then
     XCTAssertEqual(type, .touchID)
-    
+
     // Given
     context.stubBiometryType = .none
     type = await biometryController.getBiometryType()
     // Then
     XCTAssertEqual(type, .none)
+  }
+
+  func testOpenSettings_WhenCalled_ThenDoesNotCrash() async {
+    // Exercises the body of openSettings(action:): URL resolution and the
+    // dispatch into UIApplication.shared.open. The completion-handler
+    // `action()` branch fires only when the real Settings app opens, so it
+    // remains uncovered in unit tests by design.
+    await biometryController.openSettings(action: {})
   }
 }

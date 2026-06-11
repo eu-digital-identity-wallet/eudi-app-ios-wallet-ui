@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -16,6 +16,7 @@
 import SwiftUI
 import logic_resources
 import logic_ui
+import feature_common
 
 struct RequestAuthorizationView: View {
 
@@ -28,23 +29,22 @@ struct RequestAuthorizationView: View {
   var body: some View {
     NavigationStack {
       VStack(alignment: .center) {
-        if let documents = viewModel.viewState.documents {
-          contentView(documents: documents)
+        if !viewModel.viewState.items.isEmpty, viewModel.viewState.errorMessage == nil {
+          contentView(viewState: viewModel.viewState)
         } else {
           noDocumentsFound()
         }
       }
       .navigationDestination(isPresented: $viewModel.showBiometryView) {
-        ProviderBiometryView(
-          with: .init(
-            config: viewModel.createBiometryConfig(),
-            onDismiss: { viewModel.showBiometryView = false }
+        CommonRouter.resolve(
+          module: .biometry(config: viewModel.createBiometryConfig()),
+          host: ProviderBiometryRouter(
+            onPop: viewModel.handleBiometryAuthenticated
           )
         )
       }
       .shimmer(isLoading: viewModel.viewState.isLoading)
-      .frame(maxWidth: .infinity)
-      .padding()
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
       .task {
         await viewModel.loadRequest()
       }
@@ -53,37 +53,47 @@ struct RequestAuthorizationView: View {
 
   @ViewBuilder
   private func contentView(
-    documents: [AuthorizationUIDocument]
+    viewState: RequestAuthorizationViewState
   ) -> some View {
-    ScrollView {
-      VStack(spacing: .zero) {
-        ContentHeaderView(
-          config: viewModel.viewState.contentHeaderConfig
-        )
+    VStack(spacing: SPACING_SMALL) {
+      ScrollView {
+        VStack(spacing: .zero) {
+          ContentHeaderView(
+            config: viewState.contentHeaderConfig
+          )
 
-        VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-
-          ForEach(documents, id: \.self) { document in
-            WrapCardView {
-              WrapListItemView(
-                listItem: .init(
-                  mainContent: .text(.custom(document.name))
+          VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+            ForEach(viewState.items.indices, id: \.self) { index in
+              let section = viewState.items[index]
+              WrapExpandableListView(
+                header: .init(
+                  mainContent: .text(.custom(section.section.title)),
+                  supportingText: .viewDetails
                 ),
-                mainTextVerticalPadding: SPACING_SMALL
+                items: section.section.listItems,
+                backgroundColor: Theme.shared.color.groupedElevatedBackground,
+                hideSensitiveContent: false,
+                isLoading: viewState.isLoading
+              )
+              .accessibilityElement()
+              .combineChilrenAccessibility(
+                locator: BaseRequestLocators.requestedDocument(index.string)
               )
             }
-          }
 
-          Text(.shareDataReview)
-            .typography(Theme.shared.font.bodyMedium)
-            .foregroundColor(Theme.shared.color.onSurface)
-            .multilineTextAlignment(.leading)
+            Text(.shareDataReview)
+              .typography(Theme.shared.font.bodyMedium)
+              .foregroundColor(Theme.shared.color.primaryLabel)
+              .multilineTextAlignment(.leading)
+          }
+          .padding(.horizontal, Theme.shared.dimension.padding)
+          .padding(.top, SPACING_MEDIUM)
+          .padding(.bottom, SPACING_SMALL)
         }
-        .shimmer(isLoading: viewModel.viewState.isLoading)
+        .shimmer(isLoading: viewState.isLoading)
       }
-    }
-    .safeAreaInset(edge: .bottom) {
-      actionButtons()
+
+      actionButtonsFooter()
     }
   }
 
@@ -107,7 +117,18 @@ struct RequestAuthorizationView: View {
         Spacer()
       }
       .padding(.horizontal, Theme.shared.dimension.padding)
+      .padding(.top, Theme.shared.dimension.padding)
     }
+  }
+
+  @ViewBuilder
+  private func actionButtonsFooter() -> some View {
+    VStack(spacing: .zero) {
+      actionButtons()
+        .padding(.horizontal, Theme.shared.dimension.padding)
+        .padding(.bottom, SPACING_MEDIUM)
+    }
+    .background(Theme.shared.color.background)
   }
 
   @ViewBuilder

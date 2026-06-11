@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -17,14 +17,11 @@ import logic_ui
 
 public enum QuickPinLocators: String, LocatorType {
   case quickPinTitle
-  case confirmButton
 
   public var id: String {
     switch self {
     case .quickPinTitle:
       return "pin_screen_title"
-    case .confirmButton:
-      return "pin_screen_button"
     }
   }
 
@@ -32,8 +29,6 @@ public enum QuickPinLocators: String, LocatorType {
     switch self {
     case .quickPinTitle:
       return .isStaticText
-    case .confirmButton:
-      return .isButton
     }
   }
 }

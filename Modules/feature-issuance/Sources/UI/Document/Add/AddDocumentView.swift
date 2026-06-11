@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -23,11 +23,8 @@ struct AddDocumentView<Router: RouterHost>: View {
 
   @State private var viewModel: AddDocumentViewModel<Router>
 
-  private var contentSize: CGFloat = 0.0
-
   init(with viewModel: AddDocumentViewModel<Router>) {
     self._viewModel = State(wrappedValue: viewModel)
-    self.contentSize = getScreenRect().width / 2.0
   }
 
   var body: some View {
@@ -39,28 +36,13 @@ struct AddDocumentView<Router: RouterHost>: View {
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      if viewModel.viewState.addDocumentCellModels.isEmpty {
-        noDocumentsFound()
-      } else {
-        content(
-          viewState: viewModel.viewState
-        ) { issuerId, configIds, identifier in
-          viewModel.onClick(
-            issuerId: issuerId,
-            configIds: configIds,
-            docTypeIdentifier: identifier
-          )
-        }
-      }
-
-      if viewModel.viewState.showFooterScanner {
-
-        VSpacer.extraSmall()
-
-        scanFooter(
-          viewState: viewModel.viewState,
-          contentSize: contentSize,
-          action: viewModel.onScanClick()
+      AddDocumentViewContainer(
+        viewState: viewModel.viewState
+      ) { issuerId, configIds, identifier in
+        viewModel.onClick(
+          issuerId: issuerId,
+          configIds: configIds,
+          docTypeIdentifier: identifier
         )
       }
     }
@@ -70,152 +52,96 @@ struct AddDocumentView<Router: RouterHost>: View {
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: AddDocumentViewState,
-  action: @escaping (String, [String], DocumentTypeIdentifier) -> Void
-) -> some View {
+private struct AddDocumentViewContainer: View {
 
-  ScrollView {
-    LazyVStack(spacing: SPACING_MEDIUM_SMALL) {
+  let viewState: AddDocumentViewState
+  let action: (String, [String], DocumentTypeIdentifier) -> Void
 
-      Text(.chooseFromListTitle)
-        .typography(Theme.shared.font.bodyLarge)
-        .foregroundStyle(Theme.shared.color.onSurface)
-        .accessibilityLocator(AddDocumentLocators.subtitle)
+  var body: some View {
+    if viewState.addDocumentCellModels.isEmpty {
+      noDocumentsFound()
+    } else {
+      content()
+    }
+  }
 
-      ForEach(viewState.addDocumentCellModels.elements, id: \.key) { pair in
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    ScrollView {
+      LazyVStack(spacing: SPACING_MEDIUM_SMALL) {
 
-        let issuer = pair.key
-        let models = pair.value
+        Text(.chooseFromListTitle)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundStyle(Theme.shared.color.primaryLabel)
+          .accessibilityLocator(AddDocumentLocators.subtitle)
 
-        Section(
-          header: WrapTextView(
-            text: .custom(issuer),
-            textConfig: TextConfig(
-              font: Theme.shared.font.bodySmall.font,
-              color: Theme.shared.color.onSurface,
-              textAlign: .leading,
-              fontWeight: .semibold
-            )
-          )
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .shimmer(isLoading: viewState.isLoading)
-          .padding(.top, SPACING_MEDIUM_SMALL)
-        ) {
-          ForEach(models, id: \.id) { cell in
-            WrapCardView {
-              WrapListItemView(
-                listItem: cell.listItem,
-                locator: AddDocumentLocators.attestation(
-                  "\(cell.issuerId)_\(cell.docTypeIdentifier)"
-                ),
-                isLoading: cell.isLoading,
-                action: { action(cell.issuerId, cell.configIds, cell.docTypeIdentifier) }
+        ForEach(viewState.addDocumentCellModels.elements, id: \.key) { pair in
+
+          let issuer = pair.key
+          let models = pair.value
+
+          Section(
+            header: WrapTextView(
+              text: .custom(issuer),
+              textConfig: TextConfig(
+                font: Theme.shared.font.bodySmall.font,
+                color: Theme.shared.color.primaryLabel,
+                textAlign: .leading,
+                fontWeight: .semibold
               )
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .shimmer(isLoading: viewState.isLoading)
+            .padding(.top, SPACING_MEDIUM_SMALL)
+          ) {
+            ForEach(models, id: \.id) { cell in
+              WrapCardView {
+                WrapListItemView(
+                  listItem: cell.listItem,
+                  locator: AddDocumentLocators.attestation(
+                    "\(cell.issuerId)_\(cell.docTypeIdentifier)"
+                  ),
+                  isLoading: cell.isLoading,
+                  action: { action(cell.issuerId, cell.configIds, cell.docTypeIdentifier) }
+                )
+              }
             }
           }
         }
       }
+      .padding(.horizontal, Theme.shared.dimension.padding)
+      .padding(.bottom)
+    }
+    .disabled(viewState.addDocumentCellModels.allSatisfy { $0.value.isEmpty })
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func noDocumentsFound() -> some View {
+    VStack(spacing: .zero) {
+      Text(.chooseFromListTitle)
+        .typography(Theme.shared.font.bodyLarge)
+        .foregroundStyle(Theme.shared.color.primaryLabel)
+
+      Spacer()
+      ContentEmptyView(
+        title: .issuanceAddDocumentNoOptions
+      )
+      Spacer()
     }
     .padding(.horizontal, Theme.shared.dimension.padding)
-    .padding(.bottom)
   }
-  .disabled(viewState.addDocumentCellModels.allSatisfy { $0.value.isEmpty })
-}
-
-@MainActor
-@ViewBuilder
-private func noDocumentsFound() -> some View {
-  VStack(spacing: .zero) {
-    Text(.chooseFromListTitle)
-      .typography(Theme.shared.font.bodyLarge)
-      .foregroundStyle(Theme.shared.color.onSurface)
-
-    Spacer()
-    ContentEmptyView(
-      title: .issuanceAddDocumentNoOptions
-    )
-    Spacer()
-  }
-  .padding(.horizontal, Theme.shared.dimension.padding)
-}
-
-@MainActor
-@ViewBuilder
-private func scanFooter(
-  viewState: AddDocumentViewState,
-  contentSize: CGFloat,
-  action: @escaping @autoclosure () -> Void
-) -> some View {
-  VStack(spacing: SPACING_MEDIUM) {
-
-    Spacer()
-
-    HStack {
-
-      Spacer()
-
-      VStack(alignment: .center, spacing: SPACING_MEDIUM) {
-
-        Text(.or)
-          .typography(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.onSurfaceVariant)
-
-        Theme.shared.image.scanDocumentImage
-      }
-
-      Spacer()
-    }
-
-    WrapButtonView(
-      style: .custom(
-        textColor: Theme.shared.color.primary,
-        backgroundColor: Theme.shared.color.surfaceContainerLowest,
-        borderColor: Theme.shared.color.primary,
-        useBorder: true
-      ),
-      title: .scanQrCode,
-      isLoading: viewState.isLoading,
-      onAction: action()
-    )
-    .combineChilrenAccessibility(
-      locator: AddDocumentLocators.primaryButton
-    )
-
-    Spacer()
-
-  }
-  .frame(maxWidth: .infinity, maxHeight: contentSize)
-  .padding([.horizontal, .bottom])
-  .background(Theme.shared.color.surfaceContainer)
-  .roundedCorner(SPACING_MEDIUM, corners: [.topLeft, .topRight])
 }
 
 #Preview {
   let viewState = AddDocumentViewState(
     addDocumentCellModels: AddDocumentUIModel.mocks,
     error: nil,
-    config: IssuanceFlowUiConfig(flow: .noDocument),
-    showFooterScanner: true
+    config: IssuanceFlowUiConfig(flow: .noDocument)
   )
 
-  content(
+  AddDocumentViewContainer(
     viewState: viewState
   ) { _, _, _ in }
-}
-
-#Preview {
-  let viewState = AddDocumentViewState(
-    addDocumentCellModels: AddDocumentUIModel.mocks,
-    error: nil,
-    config: IssuanceFlowUiConfig(flow: .noDocument),
-    showFooterScanner: true
-  )
-  scanFooter(
-    viewState: viewState,
-    contentSize: 500,
-    action: {}()
-  )
 }

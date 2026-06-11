@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -49,11 +49,11 @@ public struct TransactionTabUIModel: Identifiable, Sendable, Equatable, Filterab
       mainContent: .text(.custom(name)),
       overlineText: self.status.statusTitle,
       supportingText: self.formattedTransactionDate(),
-      supportingTextColor: Theme.shared.color.onSurface,
-      overlineTextColor: self.status == .completed ? Theme.shared.color.success : Theme.shared.color.error,
+      supportingTextColor: Theme.shared.color.primaryLabel,
+      overlineTextColor: self.status == .completed ? Theme.shared.color.green : Theme.shared.color.red,
       trailingContent: .textWithIcon(
         Theme.shared.image.chevronRight,
-        Theme.shared.color.onSurfaceVariant,
+        Theme.shared.color.secondaryLabel,
         self.transactionType.typeTitle
       )
     )
@@ -99,7 +99,7 @@ public enum TransactionType: Sendable, Equatable {
 }
 
 extension TransactionLogItem {
-  func transformToTransactionUI() -> TransactionTabUIModel {
+  func transformToTransactionUI() -> TransactionTabUIModel? {
     switch self.transactionLogData {
     case .presentation(let logData):
       return .init(
@@ -111,14 +111,7 @@ extension TransactionLogItem {
         transactionType: .presentation
       )
     case .issuance, .signing, .deletion:
-      return .init(
-        id: self.id,
-        name: "",
-        status: .completed,
-        transactionDate: "",
-        transactionCategory: .category(for: ""),
-        transactionType: .presentation
-      )
+      return nil
     }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -15,13 +15,14 @@
  */
 import logic_ui
 import logic_authentication
+import logic_resources
 import Observation
 
 @Copyable
 struct BiometryState: ViewState {
   let config: UIConfig.Biometry
   let areBiometricsEnabled: Bool
-  let pinError: String?
+  let pinError: LocalizableStringKey?
   let throttlePinInput: Bool
   let scenePhase: ScenePhase
   let pendingNavigation: UIConfig.ThreeWayNavigationType?
@@ -30,6 +31,8 @@ struct BiometryState: ViewState {
   let isCancellable: Bool
   let quickPinSize: Int
   let contentHeaderConfig: ContentHeaderConfig
+  let isLockedOut: Bool
+  let lockoutMessage: LocalizableStringKey?
 }
 
 @Observable
@@ -37,11 +40,16 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
 
   @ObservationIgnored
   private let AUTO_VERIFY_ON_APPEAR_DELAY = 250
+
   @ObservationIgnored
   private let PIN_INPUT_DEBOUNCE = 250
 
   var uiPinInputField: String = "" {
     didSet {
+      guard !viewState.isLockedOut else { return }
+      if !uiPinInputField.isEmpty && viewState.pinError != nil {
+        setState { $0.copy(pinError: nil) }
+      }
       debouncedPinInputField.send(uiPinInputField)
     }
   }
@@ -52,6 +60,9 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
 
   @ObservationIgnored
   private var debouncedPinInputField = CurrentValueSubject<String, Never>("")
+
+  @ObservationIgnored
+  private var lockoutTickTask: Task<Void, Never>?
 
   init(
     router: Router,
@@ -78,17 +89,22 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
         quickPinSize: 6,
         contentHeaderConfig: .init(
           appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
           )
-        )
+        ),
+        isLockedOut: false,
+        lockoutMessage: nil
       )
     )
 
     self.subscribeToPinInput()
   }
 
-  func onAppearBiometry() async {
+  deinit {
+    lockoutTickTask?.cancel()
+  }
+
+  func initialize() async {
 
     let biometricsImage = await interactor.getBiometricsImage()
     let isBiometryEnabled = await interactor.isBiometryEnabled()
@@ -98,6 +114,11 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
         areBiometricsEnabled: isBiometryEnabled,
         biometryImage: biometricsImage
       )
+    }
+
+    let lockoutState = await interactor.getPinLockoutState()
+    if case .active(let remaining, _) = lockoutState {
+      startLockoutTick(initialRemaining: remaining)
     }
 
     if viewState.config.shouldInitializeBiometricOnCreate, viewState.areBiometricsEnabled, !viewState.autoBiometryInitiated {
@@ -118,6 +139,8 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
     Task {
       switch await interactor.authenticate() {
       case .authenticated:
+        await interactor.resetPinThrottle()
+        stopLockoutTick()
         self.authenticated()
       case .failure(let error):
         if error != .biometricError {
@@ -161,16 +184,22 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
   }
 
   private func processPin(value: String) {
+    guard !viewState.isLockedOut, value.count == viewState.quickPinSize else { return }
     Task {
-      if value.count == viewState.quickPinSize {
-        switch await interactor.isPinValid(with: uiPinInputField) {
-        case .success:
-          self.authenticated()
-        case .failure(let error):
-          setState { $0.copy(pinError: error.errorMessage) }
+      switch await interactor.isPinValid(with: uiPinInputField) {
+      case .success:
+        await interactor.resetPinThrottle()
+        stopLockoutTick()
+        self.authenticated()
+      case .failure(let error):
+        let lockoutState = await interactor.recordPinFailure()
+        switch lockoutState {
+        case .active(let remaining, _):
+          startLockoutTick(initialRemaining: remaining)
+        case .idle:
+          setState { $0.copy(pinError: .custom(error.errorMessage)) }
+          uiPinInputField = ""
         }
-      } else {
-        setState { $0.copy(pinError: nil) }
       }
     }
   }
@@ -213,5 +242,63 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
     }
 
     return nil
+  }
+
+  private func startLockoutTick(initialRemaining: TimeInterval) {
+
+    lockoutTickTask?.cancel()
+
+    let initialRemainingSeconds = Int(ceil(initialRemaining))
+
+    guard initialRemainingSeconds > 0 else {
+      stopLockoutTick()
+      return
+    }
+
+    uiPinInputField = ""
+    setState {
+      $0
+        .copy(
+          isLockedOut: true,
+          lockoutMessage: buildLockoutMessage(remainingSeconds: initialRemainingSeconds)
+        )
+        .copy(pinError: nil)
+    }
+
+    lockoutTickTask = Task { @MainActor [weak self] in
+      while !Task.isCancelled {
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        guard let self else { return }
+        let state = await self.interactor.getPinLockoutState()
+        guard !Task.isCancelled else { return }
+        switch state {
+        case .active(let remaining, _):
+          self.setState {
+            $0.copy(lockoutMessage: self.buildLockoutMessage(remainingSeconds: Int(ceil(remaining))))
+          }
+        case .idle:
+          self.stopLockoutTick()
+          return
+        }
+      }
+    }
+  }
+
+  private func stopLockoutTick() {
+    lockoutTickTask?.cancel()
+    lockoutTickTask = nil
+    setState {
+      $0
+        .copy(isLockedOut: false)
+        .copy(lockoutMessage: nil)
+    }
+  }
+
+  private func buildLockoutMessage(remainingSeconds: Int) -> LocalizableStringKey {
+    let safeRemaining = max(0, remainingSeconds)
+    let minutes = safeRemaining / 60
+    let seconds = safeRemaining % 60
+    let mmss = String(format: "%02d:%02d", minutes, seconds)
+    return LocalizableStringKey.quickPinLockedOut(["\(interactor.maxFailedPinAttempts)", mmss])
   }
 }

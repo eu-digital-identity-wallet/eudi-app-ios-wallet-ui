@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -31,44 +31,54 @@ struct SideMenuView<Router: RouterHost>: View {
       navigationTitle: .myEuWallet,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content(
+      SideMenuViewContainer(
         viewState: viewModel.viewState
       )
     }
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(viewState: SideMenuViewState) -> some View {
-  VStack(spacing: SPACING_MEDIUM_SMALL) {
-    ForEach(viewState.items) { item in
-      TappableCellView(
-        title: item.title,
-        showDivider: item.showDivider,
-        action: item.action()
-      )
-    }
+private struct SideMenuViewContainer: View {
 
-    Spacer()
+  let viewState: SideMenuViewState
+
+  var body: some View {
+    content()
   }
-  .padding(.bottom, SPACING_LARGE_MEDIUM)
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    VStack(spacing: SPACING_MEDIUM_SMALL) {
+      ForEach(viewState.items) { item in
+        TappableCellView(
+          title: item.title,
+          icon: item.icon,
+          showDivider: item.showDivider,
+          action: item.action
+        )
+      }
+
+      Spacer()
+    }
+    .padding(.bottom, SPACING_LARGE_MEDIUM)
+  }
 }
 
 #Preview {
-  let viewSate = SideMenuViewState(
+  let viewState = SideMenuViewState(
     items: [
       .init(
         title: .changeQuickPinOption,
+        icon: Theme.shared.image.changePin,
         action: {}()
       )
     ]
   )
   ContentScreenView(
-    padding: .zero,
-    canScroll: false,
-    background: Theme.shared.color.surface
+    canScroll: true,
+    navigationTitle: .myEuWallet
   ) {
-    content(viewState: viewSate)
+    SideMenuViewContainer(viewState: viewState)
   }
 }

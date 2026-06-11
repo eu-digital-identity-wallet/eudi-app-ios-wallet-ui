@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -28,24 +28,33 @@ struct QuickPinState: ViewState {
   let config: QuickPinUiConfig
   let navigationTitle: LocalizableStringKey
   let title: LocalizableStringKey
-  let caption: LocalizableStringKey
-  let button: LocalizableStringKey
+  let caption: LocalizableStringKey?
+  let pinTextFieldTitle: LocalizableStringKey
+  let buttonImage: Image
   let successTitle: LocalizableStringKey
   let successCaption: LocalizableStringKey
   let successButton: LocalizableStringKey
   let successNavigationType: UIConfig.DeepLinkNavigationType
   let isCancellable: Bool
   let pinError: LocalizableStringKey?
-  let isButtonActive: Bool
   let step: QuickPinStep
   let quickPinSize: Int
+  let isLockedOut: Bool
+  let lockoutMessage: LocalizableStringKey?
 }
 
 @Observable
 final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinState> {
 
+  @ObservationIgnored
+  private let PIN_INPUT_DEBOUNCE = 250
+
   var uiPinInputField: String = "" {
     didSet {
+      guard !viewState.isLockedOut else { return }
+      if !uiPinInputField.isEmpty && viewState.pinError != nil {
+        setState { $0.copy(pinError: nil) }
+      }
       debouncedPinInputField.send(uiPinInputField)
     }
   }
@@ -53,8 +62,12 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
 
   @ObservationIgnored
   private let interactor: QuickPinInteractor
+
   @ObservationIgnored
   private var debouncedPinInputField = CurrentValueSubject<String, Never>("")
+
+  @ObservationIgnored
+  private var lockoutTickTask: Task<Void, Never>?
 
   init(
     router: Router,
@@ -103,10 +116,11 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       router: router,
       initialState: .init(
         config: config,
-        navigationTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinConfirmPin,
+        navigationTitle: config.isSetFlow ? .quickPinNavigationEnterPin : .quickPinUpdateTitle,
         title: config.isSetFlow ? .quickPinSetTitle : .quickPinUpdateTitle,
-        caption: config.isSetFlow ? .quickPinSetCaptionOne : .quickPinUpdateCaptionOne,
-        button: .quickPinNextButton,
+        caption: .quickPinSetCaptionOne,
+        pinTextFieldTitle: config.isSetFlow ? .quickPinEnterPin : .quickPinUpdateCaptionOne,
+        buttonImage: Theme.shared.image.chevronRight,
         successTitle: config.isSetFlow
         ? .walletIsSecured
         : .successTitlePunctuated,
@@ -115,42 +129,33 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
         successNavigationType: successNavigation,
         isCancellable: config.isUpdateFlow,
         pinError: nil,
-        isButtonActive: false,
         step: config.isSetFlow ? .firstInput : .validate,
-        quickPinSize: 6
+        quickPinSize: 6,
+        isLockedOut: false,
+        lockoutMessage: nil
       )
     )
 
     self.subscribeToPinInput()
   }
 
-  func onButtonClick() {
-    Task {
-      switch viewState.step {
-      case .validate:
-        await onValidate()
-      case .firstInput:
-        setState {
-          $0
-            .copy(
-              navigationTitle: .quickPinConfirmPin,
-              caption: viewState.config.isSetFlow ? .quickPinSetCaptionTwo : .quickPinUpdateCaptionThree,
-              button: .quickPinConfirmButton,
-              step: .retryInput(uiPinInputField)
-            )
-            .copy(pinError: nil)
-        }
-        uiPinInputField = ""
-      case .retryInput(let previousPin):
-        guard previousPin == uiPinInputField else {
-          setState {
-            $0.copy(pinError: .quickPinDoNotMatch)
-          }
-          return
-        }
-        await onSuccess()
-      }
+  deinit {
+    lockoutTickTask?.cancel()
+  }
+
+  func initialize() async {
+    guard case .validate = viewState.step else { return }
+    let state = await interactor.getPinLockoutState()
+    if case .active(let remaining, _) = state {
+      startLockoutTick(initialRemaining: remaining)
     }
+  }
+
+  var contentCaption: LocalizableStringKey? {
+    if viewState.config.isUpdateFlow {
+      return nil
+    }
+    return viewState.caption
   }
 
   func onShowCancellationModal() {
@@ -163,49 +168,132 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
   }
 
   func toolbarContent() -> ToolBarContent? {
-    var leadingActions: [ToolBarContent.Action] = []
-    if viewState.isCancellable {
-      leadingActions.append(
+    guard showsLeadingBackButton else { return nil }
+    return .init(
+      leadingActions: [
         .init(
           image: Theme.shared.image.chevronLeft,
           accessibilityLocator: ToolbarLocators.chevronLeft
         ) {
-          self.onShowCancellationModal()
-        })
-    }
-
-    return .init(
-      trailingActions: [
-        .init(
-          title: viewState.button,
-          accessibilityLocator: QuickPinLocators.confirmButton,
-          disabled: !viewState.isButtonActive
-        ) {
-          self.onButtonClick()
+          self.onLeadingBack()
         }
-      ],
-      leadingActions: leadingActions
+      ]
     )
+  }
+
+  private var showsLeadingBackButton: Bool {
+    if viewState.isCancellable {
+      return true
+    }
+    if viewState.config.isSetFlow, case .retryInput = viewState.step {
+      return true
+    }
+    return false
+  }
+
+  private func onLeadingBack() {
+    if viewState.isCancellable {
+      onShowCancellationModal()
+      return
+    }
+    guard viewState.config.isSetFlow, case .retryInput = viewState.step else { return }
+    setState {
+      $0
+        .copy(
+          navigationTitle: .quickPinNavigationEnterPin,
+          pinTextFieldTitle: .quickPinEnterPin,
+          step: .firstInput
+        )
+        .copy(pinError: nil)
+    }
+    uiPinInputField = ""
+  }
+
+  private func subscribeToPinInput() {
+    debouncedPinInputField
+      .dropFirst()
+      .debounce(for: .milliseconds(PIN_INPUT_DEBOUNCE), scheduler: RunLoop.main)
+      .removeDuplicates()
+      .sink { [weak self] value in
+        guard let self = self else { return }
+        self.processPin(value: value)
+      }.store(in: &cancellables)
+  }
+
+  private func processPin(value: String) {
+    guard !viewState.isLockedOut, value.count == viewState.quickPinSize else { return }
+    Task {
+      switch viewState.step {
+      case .validate:
+        await onValidate()
+      case .firstInput:
+        advanceToRetryInput()
+      case .retryInput(let previousPin):
+        await confirmRetry(previousPin: previousPin)
+      }
+    }
   }
 
   private func onValidate() async {
     switch await interactor.isPinValid(pin: uiPinInputField) {
     case .success:
+      await interactor.resetPinThrottle()
+      stopLockoutTick()
       setState {
         $0
           .copy(
-            caption: .quickPinUpdateCaptionTwo,
-            button: .quickPinNextButton,
+            pinTextFieldTitle: .quickPinUpdateCaptionTwo,
+            buttonImage: Theme.shared.image.chevronRight,
             step: .firstInput
           )
           .copy(pinError: nil)
       }
       uiPinInputField = ""
     case .failure(let error):
-      setState {
-        $0.copy(pinError: .custom(error.errorMessage))
+      let lockoutState = await interactor.recordPinFailure()
+      switch lockoutState {
+      case .active(let remaining, _):
+        startLockoutTick(initialRemaining: remaining)
+      case .idle:
+        setState { $0.copy(pinError: .custom(error.errorMessage)) }
+        uiPinInputField = ""
       }
     }
+  }
+
+  private func advanceToRetryInput() {
+    if viewState.config.isUpdateFlow {
+      setState {
+        $0
+          .copy(
+            navigationTitle: .quickPinConfirmPin,
+            title: .quickPinUpdateTitle,
+            pinTextFieldTitle: .quickPinUpdateCaptionThree,
+            step: .retryInput(uiPinInputField)
+          )
+          .copy(pinError: nil)
+      }
+    } else {
+      setState {
+        $0
+          .copy(
+            navigationTitle: .quickPinConfirmPin,
+            pinTextFieldTitle: .quickPinSetCaptionTwo,
+            step: .retryInput(uiPinInputField)
+          )
+          .copy(pinError: nil)
+      }
+    }
+    uiPinInputField = ""
+  }
+
+  private func confirmRetry(previousPin: String) async {
+    guard previousPin == uiPinInputField else {
+      setState { $0.copy(pinError: .quickPinDoNotMatch) }
+      uiPinInputField = ""
+      return
+    }
+    await onSuccess()
   }
 
   private func onSuccess() async {
@@ -241,21 +329,58 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
     )
   }
 
-  private func subscribeToPinInput() {
-    debouncedPinInputField
-      .dropFirst()
-      .removeDuplicates()
-      .sink { [weak self] value in
-        guard let self = self else { return }
-        self.processPin(value: value)
-      }.store(in: &cancellables)
-  }
+  private func startLockoutTick(initialRemaining: TimeInterval) {
+    lockoutTickTask?.cancel()
+    let initialRemainingSeconds = Int(ceil(initialRemaining))
+    guard initialRemainingSeconds > 0 else {
+      stopLockoutTick()
+      return
+    }
 
-  private func processPin(value: String) {
+    uiPinInputField = ""
     setState {
       $0
+        .copy(
+          isLockedOut: true,
+          lockoutMessage: buildLockoutMessage(remainingSeconds: initialRemainingSeconds)
+        )
         .copy(pinError: nil)
-        .copy(isButtonActive: value.count == viewState.quickPinSize)
     }
+
+    lockoutTickTask = Task { @MainActor [weak self] in
+      while !Task.isCancelled {
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        guard let self else { return }
+        let state = await self.interactor.getPinLockoutState()
+        guard !Task.isCancelled else { return }
+        switch state {
+        case .active(let remaining, _):
+          self.setState {
+            $0.copy(lockoutMessage: self.buildLockoutMessage(remainingSeconds: Int(ceil(remaining))))
+          }
+        case .idle:
+          self.stopLockoutTick()
+          return
+        }
+      }
+    }
+  }
+
+  private func stopLockoutTick() {
+    lockoutTickTask?.cancel()
+    lockoutTickTask = nil
+    setState {
+      $0
+        .copy(isLockedOut: false)
+        .copy(lockoutMessage: nil)
+    }
+  }
+
+  private func buildLockoutMessage(remainingSeconds: Int) -> LocalizableStringKey {
+    let safeRemaining = max(0, remainingSeconds)
+    let minutes = safeRemaining / 60
+    let seconds = safeRemaining % 60
+    let mmss = String(format: "%02d:%02d", minutes, seconds)
+    return LocalizableStringKey.quickPinLockedOut(["\(interactor.maxFailedPinAttempts)", mmss])
   }
 }

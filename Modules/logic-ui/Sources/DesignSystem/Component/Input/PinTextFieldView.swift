@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -19,10 +19,12 @@ import logic_resources
 public struct PinTextFieldView: View {
 
   // MARK: - Properties
+  private let pinTitle: LocalizableStringKey?
   private let maxDigits: Int
   private let isSecureEntry: Bool
   private let shouldUseFullScreen: Bool
   private let hasError: Bool
+  private let isDisabled: Bool
 
   @State private var stateForDigit: [FieldState]
   @State private var currentIndex: Int = 0
@@ -53,25 +55,35 @@ public struct PinTextFieldView: View {
   }
 
   public init(
+    pinTitle: LocalizableStringKey? = nil,
     numericText: Binding<String>,
     maxDigits: Int,
     isSecureEntry: Bool,
     canFocus: Binding<Bool> = .constant(true),
     shouldUseFullScreen: Bool = false,
-    hasError: Bool = false
+    hasError: Bool = false,
+    isDisabled: Bool = false
   ) {
+    self.pinTitle = pinTitle
     self._numericText = numericText
     self._canFocus = canFocus
     self.maxDigits = maxDigits
     self.isSecureEntry = isSecureEntry
     self.shouldUseFullScreen = shouldUseFullScreen
     self.hasError = hasError
+    self.isDisabled = isDisabled
 
     self.stateForDigit = Array(repeating: FieldState.inactive, count: maxDigits)
   }
 
   public var body: some View {
-    VStack(spacing: 15) {
+    VStack(alignment: .leading, spacing: SPACING_SMALL) {
+      if let pinTitle {
+        Text(pinTitle)
+          .typography(Theme.shared.font.bodyLarge)
+          .foregroundColor(Theme.shared.color.primaryLabel)
+      }
+
       ZStack {
         pinDots
         backgroundField
@@ -88,7 +100,7 @@ public struct PinTextFieldView: View {
             RoundedRectangle(cornerRadius: 5.0)
               .stroke(
                 hasError ?
-                Theme.shared.color.error :
+                Theme.shared.color.red :
                   stateForDigit[index].color
               )
           )
@@ -120,8 +132,8 @@ public struct PinTextFieldView: View {
         .frame(width: size, height: size, alignment: .center)
         .foregroundColor(
           hasError
-          ? Theme.shared.color.error
-          : Theme.shared.color.onSurface
+          ? Theme.shared.color.red
+          : Theme.shared.color.primaryLabel
         )
     } else {
       Text(input)
@@ -137,7 +149,7 @@ public struct PinTextFieldView: View {
     HStack {
       Divider()
         .frame(width: 1, height: height)
-        .background(Theme.shared.color.onSurface)
+        .background(Theme.shared.color.primaryLabel)
     }
     .opacity(toggleLine ? 1 : 0)
     .onReceive(timer) { _ in
@@ -175,7 +187,13 @@ public struct PinTextFieldView: View {
     .textContentType(.oneTimeCode)
     .frame(width: self.isInEditMode ? 0 : nil, height: nil)
     .focused($focused)
-    .if(canFocus) { view in
+    .disabled(isDisabled)
+    .onChange(of: isDisabled) { _, newValue in
+      if newValue {
+        self.focused = false
+      }
+    }
+    .if(canFocus && !isDisabled) { view in
       view
         .onAppearDelayed {
           self.focused = true
@@ -230,9 +248,9 @@ extension PinTextFieldView {
     var color: Color {
       return switch self {
       case .inactive:
-        Theme.shared.color.outlineVariant
+        Theme.shared.color.separator
       case .active:
-        Theme.shared.color.primary
+        Theme.shared.color.accent
       }
     }
   }

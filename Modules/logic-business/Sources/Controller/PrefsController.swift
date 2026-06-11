@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -30,39 +30,60 @@ public protocol PrefsController: Sendable {
 final class PrefsControllerImpl: PrefsController {
 
   public func setValue(_ value: Any?, forKey: Prefs.Key) {
-    UserDefaults.standard.setValue(value, forKey: forKey.rawValue)
+    SharedPrefs.userDefaults.setValue(value, forKey: forKey.rawValue)
   }
 
   public func getString(forKey: Prefs.Key) -> String? {
-    return UserDefaults.standard.string(forKey: forKey.rawValue)
+    return SharedPrefs.userDefaults.string(forKey: forKey.rawValue)
   }
 
   public func getOptionalString(forKey: Prefs.Key) -> String {
-    return UserDefaults.standard.string(forKey: forKey.rawValue) ?? ""
+    return SharedPrefs.userDefaults.string(forKey: forKey.rawValue) ?? ""
   }
 
   public func getFloat(forKey: Prefs.Key) -> Float {
-    return UserDefaults.standard.float(forKey: forKey.rawValue)
+    return SharedPrefs.userDefaults.float(forKey: forKey.rawValue)
   }
 
   public func getBool(forKey: Prefs.Key) -> Bool {
-    return UserDefaults.standard.bool(forKey: forKey.rawValue)
+    return SharedPrefs.userDefaults.bool(forKey: forKey.rawValue)
   }
 
   public func remove(forKey: Prefs.Key) {
-    UserDefaults.standard.removeObject(forKey: forKey.rawValue)
+    SharedPrefs.userDefaults.removeObject(forKey: forKey.rawValue)
   }
 
   public func getValue(forKey: Prefs.Key) -> Any? {
-    return UserDefaults.standard.value(forKey: forKey.rawValue)
+    return SharedPrefs.userDefaults.value(forKey: forKey.rawValue)
   }
 
   public func getInt(forKey: Prefs.Key) -> Int {
-    return UserDefaults.standard.integer(forKey: forKey.rawValue)
+    return SharedPrefs.userDefaults.integer(forKey: forKey.rawValue)
   }
 
   public func getUserLocale() -> String {
     return getString(forKey: .language) ?? "en_GB"
+  }
+}
+
+private enum SharedPrefs {
+  private static let didRegisterDefaults: Void = {
+    let defaults = [Prefs.Key.batchCounter.rawValue: true]
+    if let suiteName = Bundle.getAppGroupIdentifier(),
+       let sharedDefaults = UserDefaults(suiteName: suiteName) {
+      sharedDefaults.register(defaults: defaults)
+    } else {
+      UserDefaults.standard.register(defaults: defaults)
+    }
+  }()
+
+  static var userDefaults: UserDefaults {
+    _ = didRegisterDefaults
+    guard let suiteName = Bundle.getAppGroupIdentifier(),
+          let sharedDefaults = UserDefaults(suiteName: suiteName) else {
+      return .standard
+    }
+    return sharedDefaults
   }
 }
 
@@ -74,5 +95,6 @@ public extension Prefs {
     case cachedDeepLink
     case runAtLeastOnce
     case language
+    case batchCounter
   }
 }

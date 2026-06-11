@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -22,7 +22,7 @@ import Observation
 struct DashboardState<Router: RouterHost>: ViewState {
   let homeTab: HomeTabView<Router>?
   let documentTab: DocumentTabView<Router>?
-  let transactionTab: TransactionTabView<Router>?
+  let historyTab: TransactionTabView<Router>?
   let toolBarContent: ToolBarContent
   let navigationTitle: LocalizableStringKey
   let revokedDocuments: [String: String]
@@ -32,7 +32,7 @@ struct DashboardState<Router: RouterHost>: ViewState {
 enum SelectedTab {
   case home
   case documents
-  case transactions
+  case history
 }
 
 @Observable
@@ -69,7 +69,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       initialState: .init(
         homeTab: nil,
         documentTab: nil,
-        transactionTab: nil,
+        historyTab: nil,
         toolBarContent: .init(
           trailingActions: nil,
           leadingActions: nil
@@ -194,7 +194,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
             }
           )
         ),
-        transactionTab: TransactionTabView(
+        historyTab: TransactionTabView(
           with: .init(
             router: router,
             interactor: transactionTabInteractor,

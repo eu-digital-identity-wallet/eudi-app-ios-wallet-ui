@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -17,20 +17,14 @@ import SwiftUI
 
 public struct AppIconAndTextData {
   public let appIcon: Image
-  public let appText: Image
   public let appIconSize: CGFloat
-  public let appTextSize: CGFloat
 
   public init(
     appIcon: Image,
-    appText: Image,
-    appIconSize: CGFloat = 60,
-    appTextSize: CGFloat = 60
+    appIconSize: CGFloat = 46
   ) {
     self.appIcon = appIcon
-    self.appText = appText
     self.appIconSize = appIconSize
-    self.appTextSize = appTextSize
   }
 }
 
@@ -44,16 +38,10 @@ public struct AppIconAndTextView: View {
   }
 
   public var body: some View {
-    HStack(spacing: SPACING_SMALL) {
-      appIconAndTextData.appIcon
-        .resizable()
-        .scaledToFit()
-        .frame(width: appIconAndTextData.appIconSize, height: appIconAndTextData.appIconSize)
-      appIconAndTextData.appText
-        .resizable()
-        .scaledToFit()
-        .frame(width: appIconAndTextData.appTextSize, height: appIconAndTextData.appTextSize)
-    }
-    .frame(maxWidth: .infinity, alignment: .center)
+    appIconAndTextData.appIcon
+      .resizable()
+      .scaledToFit()
+      .frame(height: appIconAndTextData.appIconSize)
+      .frame(maxWidth: .infinity, minHeight: 60, alignment: .center)
   }
 }

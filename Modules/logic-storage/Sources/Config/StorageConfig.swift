@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -48,8 +48,7 @@ final class StorageConfigImpl: StorageConfig {
   }
 
   var storeURL: URL {
-
-    let base = FileManager.default.urls(
+    let base = sharedContainerURL ?? FileManager.default.urls(
       for: .applicationSupportDirectory,
       in: .userDomainMask
     ).first ?? FileManager.default.temporaryDirectory
@@ -71,5 +70,19 @@ final class StorageConfigImpl: StorageConfig {
 
   var modelConfiguration: ModelConfiguration {
     ModelConfiguration(url: storeURL)
+  }
+}
+
+private extension StorageConfigImpl {
+  var sharedContainerURL: URL? {
+    let identifier = appGroupIdentifier
+    guard !identifier.isEmpty else { return nil }
+    return FileManager.default.containerURL(
+      forSecurityApplicationGroupIdentifier: identifier
+    )
+  }
+
+  var appGroupIdentifier: String {
+    Bundle.getAppGroupIdentifier() ?? ""
   }
 }

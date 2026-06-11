@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -217,22 +217,6 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
           filterType: .orderBy
         ),
         SingleSelectionFilterGroup(
-          id: FilterIds.FILTER_SORT_GROUP_ID,
-          name: LocalizableStringKey.sortBy.toString,
-          filters: [
-            FilterItem(
-              id: FilterIds.ORDER_BY_DESCENDING,
-              name: LocalizableStringKey.transactionDate.toString,
-              selected: true,
-              isDefault: true,
-              filterableAction: Sort<TransactionFilterableAttributes, Date>(predicate: { attribute in
-                attribute.creationDate
-              })
-            )
-          ],
-          filterType: .orderBy
-        ),
-        SingleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_TRANSACTION_DATE_GROUP_ID,
           name: LocalizableStringKey.filterByDate.toString,
           filters: [
@@ -336,7 +320,22 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
           filterType: .other
         )
       ],
-      sortOrder: SortOrderType.descending
+      sortOrder: SortOrderType.descending,
+      sort: FilterSort(
+        id: FilterIds.FILTER_SORT_GROUP_ID,
+        name: LocalizableStringKey.sortBy.toString,
+        filters: [
+          FilterItem(
+            id: FilterIds.FILTER_SORT_DEFAULT,
+            name: LocalizableStringKey.transactionDate.toString,
+            selected: true,
+            isDefault: true,
+            filterableAction: Sort<TransactionFilterableAttributes, Date>(predicate: { attribute in
+              attribute.creationDate
+            })
+          )
+        ]
+      )
     )
   }
 
@@ -353,9 +352,11 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
       return nil
     }
 
-    let filterableItems = transactions.map { transaction in
+    let filterableItems: [FilterableItem] = transactions.compactMap { transaction in
 
-      let transactionPayload = transaction.transformToTransactionUI()
+      guard let transactionUi = transaction.transformToTransactionUI() else {
+        return nil
+      }
 
       switch transaction.transactionLogData {
       case .presentation(let logData):
@@ -380,8 +381,9 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
         if !credentialsTrimmed.isEmpty {
           tags.append(contentsOf: credentialsTrimmed)
         }
+
         return FilterableItem(
-          payload: transactionPayload,
+          payload: transactionUi,
           attributes: TransactionFilterableAttributes(
             sortingKey: logData.relyingParty.name.lowercased(),
             searchTags: tags,
@@ -392,37 +394,42 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
           )
         )
       case .issuance, .signing, .deletion:
-        return FilterableItem(
-          payload: transactionPayload,
-          attributes: TransactionFilterableAttributes(
-            sortingKey: "",
-            searchTags: []
-          )
-        )
+        // Unreachable in practice: transformToTransactionUI() above already
+        // returns nil for non-presentation log data, so this arm only exists to
+        // keep the switch exhaustive against TransactionLogData.
+        return nil
       }
     }
 
-    return FilterableList(items: filterableItems)
+    return !filterableItems.isEmpty ? FilterableList(items: filterableItems) : nil
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
-    filters.filterGroups.map { filteredGroup in
-      FilterUISection(
-        id: filteredGroup.id,
-        filters: filteredGroup.filters.map { filter in
-          FilterUIItem(
-            id: filter.id,
-            title: filter.name,
-            selected: filter.selected,
-            startDate: filter.startDate,
-            endDate: filter.endDate,
-            filterAction: filter.filterableAction,
-            filterSectionType: filter.filterElementType
+    var sections: [FilterUISection] = []
+
+    sections.append(contentsOf:
+      filters.filterGroups
+        .filter { $0.id != FilterIds.ASCENDING_DESCENDING_GROUP }
+        .map { filteredGroup in
+          FilterUISection(
+            id: filteredGroup.id,
+            filters: filteredGroup.filters.map { filter in
+              FilterUIItem(
+                id: filter.id,
+                title: filter.name,
+                selected: filter.selected,
+                startDate: filter.startDate,
+                endDate: filter.endDate,
+                filterAction: filter.filterableAction,
+                filterSectionType: filter.filterElementType
+              )
+            },
+            sectionTitle: filteredGroup.name
           )
-        },
-        sectionTitle: filteredGroup.name
-      )
-    }
+        }
+    )
+
+    return sections
   }
 
   private func addRelyingPartyName(transactions: FilterableList) -> [FilterItem] {

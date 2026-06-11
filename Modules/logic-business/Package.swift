@@ -18,8 +18,8 @@ let package = Package(
       from: "4.0.0"
     ),
     .package(
-      url: "https://github.com/marmelroy/PhoneNumberKit",
-      from: "4.2.0"
+      url: "https://github.com/PhoneNumberKit/PhoneNumberKit",
+      from: "5.0.0"
     ),
     .package(
       url: "https://github.com/nsagora/peppermint",
@@ -39,11 +39,11 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
-      from: "0.0.4"
+      from: "0.0.5"
     ),
     .package(
       url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git",
-      exact: "0.3.9"
+      exact: "0.4.3"
     ),
     .package(name: "logic-test", path: "./logic-test")
   ],

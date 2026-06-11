@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -21,18 +21,35 @@ public enum QuickPinPartialState: Sendable {
 }
 
 public protocol QuickPinInteractor: Sendable {
+  var maxFailedPinAttempts: Int { get }
+
   func setPin(newPin: String) async
   func isPinValid(pin: String) async -> QuickPinPartialState
   func changePin(currentPin: String, newPin: String) async -> QuickPinPartialState
   func hasPin() async -> Bool
+
+  func getPinLockoutState() async -> PinLockoutState
+  func recordPinFailure() async -> PinLockoutState
+  func resetPinThrottle() async
 }
 
 final actor QuickPinInteractorImpl: QuickPinInteractor {
 
   private let pinStorageController: PinStorageController
+  private let pinThrottleController: PinThrottleController
+  private let authenticationConfig: AuthenticationConfig
 
-  init(pinStorageController: PinStorageController) {
+  public let maxFailedPinAttempts: Int
+
+  init(
+    pinStorageController: PinStorageController,
+    pinThrottleController: PinThrottleController,
+    authenticationConfig: AuthenticationConfig
+  ) {
     self.pinStorageController = pinStorageController
+    self.pinThrottleController = pinThrottleController
+    self.authenticationConfig = authenticationConfig
+    self.maxFailedPinAttempts = authenticationConfig.maxFailedPinAttempts
   }
 
   public func setPin(newPin: String) {
@@ -57,7 +74,19 @@ final actor QuickPinInteractorImpl: QuickPinInteractor {
   }
 
   public func hasPin() -> Bool {
-    pinStorageController.retrievePin()?.isEmpty == false
+    pinStorageController.hasPin()
+  }
+
+  public func getPinLockoutState() -> PinLockoutState {
+    pinThrottleController.getState()
+  }
+
+  public func recordPinFailure() -> PinLockoutState {
+    pinThrottleController.recordFailure()
+  }
+
+  public func resetPinThrottle() {
+    pinThrottleController.recordSuccess()
   }
 
   private func isCurrentPinValid(pin: String) -> Bool {

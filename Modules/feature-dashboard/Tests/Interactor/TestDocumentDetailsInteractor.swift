@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -57,6 +57,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -84,6 +85,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -108,6 +110,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -135,6 +138,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: false)
     stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -154,7 +158,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
       )
       XCTAssertEqual(
         issuerDocumentDetailsCard?.dateTextColor,
-        Theme.shared.color.onSurfaceVariant
+        Theme.shared.color.secondaryLabel
       )
       XCTAssertEqual(
         issuerDocumentDetailsCard?.expandedDateText,
@@ -176,6 +180,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     stubIsBookmarked(for: documentId, isBookmarked: false)
     stubIsRevoked(for: documentId, isRevoked: true)
     stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
 
     // When
     let result = await interactor.fetchStoredDocument(documentId: documentId)
@@ -194,7 +199,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
       )
       XCTAssertEqual(
         issuerDocumentDetailsCard?.dateTextColor,
-        Theme.shared.color.error
+        Theme.shared.color.red
       )
       XCTAssertNil(issuerDocumentDetailsCard?.expandedDateText)
       XCTAssertTrue(isRevoked)
@@ -398,13 +403,83 @@ final class TestDocumentDetailsInteractor: EudiTest {
     // Given
     let documentId = "nonexistentId"
     stubDeleteBookmarkFailure(for: documentId)
-    
+
     // When / Then
     do {
       try await interactor.delete(documentId)
       XCTFail("Expected failure but succeeded")
     } catch {
       XCTAssertEqual(error.localizedDescription, WalletCoreError.unableFetchDocument.localizedDescription)
+    }
+  }
+
+  func testReIssueDocument_WhenWalletKitControllerSucceeds_ThenReturnsSuccess() async {
+    // Given
+    let identifier = Constants.euPidModelId
+    stub(walletKitController) { mock in
+      when(mock.reIssueDocument(identifier: equal(to: identifier), isBackgroundOperation: equal(to: false)))
+        .thenReturn(Constants.issuedPendingDocument)
+    }
+
+    // When
+    let result = await interactor.reIssueDocument(identifier: identifier)
+
+    // Then
+    switch result {
+    case .success:
+      XCTAssertTrue(true)
+    case .failure:
+      XCTFail("Expected success, got failure")
+    }
+  }
+
+  func testReIssueDocument_WhenWalletKitControllerThrows_ThenReturnsFailure() async {
+    // Given
+    let identifier = "nonexistentId"
+    stub(walletKitController) { mock in
+      when(mock.reIssueDocument(identifier: equal(to: identifier), isBackgroundOperation: equal(to: false)))
+        .thenThrow(WalletCoreError.unableFetchDocument)
+    }
+
+    // When
+    let result = await interactor.reIssueDocument(identifier: identifier)
+
+    // Then
+    switch result {
+    case .success:
+      XCTFail("Expected failure, got success")
+    case .failure(let error):
+      XCTAssertEqual(
+        error.localizedDescription,
+        WalletCoreError.unableFetchDocument.localizedDescription
+      )
+    }
+  }
+
+  func testDeleteDocument_WhenForcePidActivationDisabled_ThenSkipsClearAllAndPerformsDelete() async {
+    // Given: forcePidActivation=false flips the shouldDeleteAllDocuments
+    // short-circuit so the `if` branch is skipped and the function proceeds
+    // straight to `walletController.deleteDocument(...)`. Returns
+    // .success(shouldReboot: false).
+    stub(configLogic) { mock in
+      when(mock.forcePidActivation.get).thenReturn(false)
+    }
+    let documentId = Constants.euPidModelId
+    stub(walletKitController) { mock in
+      when(mock.deleteDocument(with: equal(to: documentId), status: equal(to: DocumentStatus.issued)))
+        .thenDoNothing()
+    }
+
+    // When
+    let result = await interactor.deleteDocument(with: documentId, and: .mDocPid)
+
+    // Then
+    switch result {
+    case .success(let shouldReboot):
+      XCTAssertFalse(shouldReboot)
+      verify(walletKitController).deleteDocument(with: equal(to: documentId), status: equal(to: DocumentStatus.issued))
+    case .failure:
+      XCTFail("Expected success without reboot, got failure")
     }
   }
 }
@@ -525,6 +600,13 @@ extension TestDocumentDetailsInteractor {
   func stubConfigLogic() {
     stub(configLogic) { mock in
       when(mock.forcePidActivation.get).thenReturn(true)
+    }
+  }
+  
+  
+  func stubIsBatchCounterEnabled(_ enabled: Bool = true) {
+    stub(prefsController) { stub in
+      when(stub.getBool(forKey: Prefs.Key.batchCounter)).thenReturn(enabled)
     }
   }
 }

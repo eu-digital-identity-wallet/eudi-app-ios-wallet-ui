@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -27,11 +27,19 @@ struct BiometryView<Router: RouterHost>: View {
   }
 
   var body: some View {
+    let config = viewModel.viewState.config
+    let isEmbeddedPresentation = !config.displayNavigationBar
+
     ContentScreenView(
-      navigationTitle: viewModel.viewState.config.navigationTitle,
-      toolbarContent: viewModel.toolbarContent()
+      padding: isEmbeddedPresentation ? .zero : Theme.shared.dimension.padding,
+      navigationTitle: config.displayNavigationBar
+        ? config.navigationTitle
+        : nil,
+      toolbarContent: config.displayNavigationBar
+        ? viewModel.toolbarContent()
+        : nil
     ) {
-      content(
+      BiometryViewContainer(
         viewState: viewModel.viewState,
         uiPinInputField: $viewModel.uiPinInputField,
         onBiometry: viewModel.onBiometry
@@ -50,87 +58,125 @@ struct BiometryView<Router: RouterHost>: View {
         self.viewModel.setPhase(with: scenePhase)
       }
     }
+    .if(isEmbeddedPresentation) {
+      $0
+        .frame(maxWidth: .infinity)
+        .padding()
+        .toolbar(.hidden, for: .navigationBar)
+    }
     .task {
-      await self.viewModel.onAppearBiometry()
+      await self.viewModel.initialize()
     }
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: BiometryState,
-  uiPinInputField: Binding<String>,
-  onBiometry: @escaping () -> Void
-) -> some View {
+private struct BiometryViewContainer: View {
 
-  if viewState.config.displayLogo {
-    ContentHeaderView(
-      config: viewState.contentHeaderConfig
-    )
+  let viewState: BiometryState
+  @Binding var uiPinInputField: String
+  let onBiometry: () -> Void
+
+  var body: some View {
+    content()
   }
 
-  ContentTitleView(
-    title: viewState.config.title,
-    accessibilityTitle: BiometryLocators.biometryScreenTitle,
-    titleWeight: .bold,
-    caption: viewState.areBiometricsEnabled
-    ? viewState.config.caption
-    : viewState.config.quickPinOnlyCaption,
-    accessibilityCaption: BiometryLocators.biometryScreenPinText,
-    titleColor: Theme.shared.color.onSurface,
-    topSpacing: viewState.isCancellable ? .withToolbar : .withoutToolbar
-  )
-
-  VSpacer.large()
-
-  pinView(
-    uiPinInputField: uiPinInputField,
-    quickPinSize: viewState.quickPinSize,
-    areBiometricsEnabled: viewState.areBiometricsEnabled,
-    pinError: viewState.pinError)
-
-  Spacer()
-
-  if viewState.areBiometricsEnabled, let image = viewState.biometryImage {
-    HStack {
-      Spacer()
-      image
-        .onTapGesture {
-          onBiometry()
-        }
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    if viewState.config.displayLogo {
+      ContentHeaderView(
+        config: viewState.contentHeaderConfig
+      )
     }
-    .padding(.horizontal)
-  }
-}
 
-@MainActor
-@ViewBuilder
-private func pinView(
-  uiPinInputField: Binding<String>,
-  quickPinSize: Int,
-  areBiometricsEnabled: Bool,
-  pinError: String?
-) -> some View {
-  VStack(spacing: .zero) {
-
-    PinTextFieldView(
-      numericText: uiPinInputField,
-      maxDigits: quickPinSize,
-      isSecureEntry: true,
-      canFocus: .constant(!areBiometricsEnabled),
-      shouldUseFullScreen: false,
-      hasError: pinError != nil
+    ContentTitleView(
+      title: viewState.config.title,
+      accessibilityTitle: BiometryLocators.biometryScreenTitle,
+      titleWeight: .bold,
+      caption: biometryTitleCaption(),
+      accessibilityCaption: BiometryLocators.biometryScreenPinText,
+      titleColor: Theme.shared.color.primaryLabel,
+      topSpacing: viewState.config.displayNavigationBar && viewState.isCancellable
+        ? .withToolbar
+        : .withoutToolbar
     )
 
-    VSpacer.mediumSmall()
+    VSpacer.small()
 
-    if let error = pinError {
+    pinView()
+
+    Spacer()
+
+    if viewState.areBiometricsEnabled, let image = viewState.biometryImage {
       HStack {
-        Text(error)
-          .typography(Theme.shared.font.bodyMedium)
-          .foregroundColor(Theme.shared.color.error)
         Spacer()
+        image
+          .onTapGesture {
+            onBiometry()
+          }
+      }
+      .padding(.horizontal)
+    }
+  }
+
+  @MainActor
+  private func biometryTitleCaption() -> LocalizableStringKey? {
+    guard
+      viewState.config.pinTextFieldTitle == nil,
+      !viewState.config.isPreAuthorization
+    else {
+      return nil
+    }
+    return viewState.areBiometricsEnabled
+      ? viewState.config.caption
+      : viewState.config.quickPinOnlyCaption
+  }
+
+  @MainActor
+  private func biometryPinTitle() -> LocalizableStringKey? {
+    if let pinTextFieldTitle = viewState.config.pinTextFieldTitle {
+      return pinTextFieldTitle
+    }
+    return viewState.areBiometricsEnabled
+      ? viewState.config.caption
+      : viewState.config.quickPinOnlyCaption
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func pinView() -> some View {
+    let hasError = viewState.pinError != nil || viewState.isLockedOut
+
+    VStack(spacing: .zero) {
+
+      PinTextFieldView(
+        pinTitle: biometryPinTitle(),
+        numericText: $uiPinInputField,
+        maxDigits: viewState.quickPinSize,
+        isSecureEntry: true,
+        canFocus: .constant(!viewState.areBiometricsEnabled && !viewState.isLockedOut),
+        shouldUseFullScreen: false,
+        hasError: hasError,
+        isDisabled: viewState.isLockedOut
+      )
+
+      VSpacer.mediumSmall()
+
+      if let lockoutMessage = viewState.lockoutMessage {
+        HStack {
+          Text(lockoutMessage)
+            .typography(Theme.shared.font.bodySmall)
+            .foregroundColor(Theme.shared.color.red)
+            .multilineTextAlignment(.leading)
+          Spacer()
+        }
+      } else if let error = viewState.pinError {
+        HStack {
+          Text(error)
+            .typography(Theme.shared.font.bodySmall)
+            .foregroundColor(Theme.shared.color.red)
+          Spacer()
+        }
       }
     }
   }
@@ -159,16 +205,18 @@ private func pinView(
     quickPinSize: 6,
     contentHeaderConfig: .init(
       appIconAndTextData: AppIconAndTextData(
-        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-        appText: ThemeManager.shared.image.euditext
+        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
       )
-    )
+    ),
+    isLockedOut: false,
+    lockoutMessage: nil
   )
 
   ContentScreenView {
-    content(
+    BiometryViewContainer(
       viewState: viewState,
       uiPinInputField: .constant("uiPinInputField"),
-      onBiometry: {})
+      onBiometry: {}
+    )
   }
 }

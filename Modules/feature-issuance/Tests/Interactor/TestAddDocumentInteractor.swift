@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -382,6 +382,101 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
+  func testFetchScopedDocuments_WhenExtraDocumentFilterTypeIsSet_ThenNonMatchingDocsFilteredOut() async {
+    // Given: extraDocument(filterType: .mDocPid) keeps only documents whose
+    // docTypeIdentifier matches; everything else hits the `continue` on line 64.
+    let pidDoc = ScopedDocument(
+      name: "PID Doc", issuer: "issuer.dev", order: 0, configId: "pid",
+      isPid: true, docTypeIdentifier: .mDocPid
+    )
+    let unrelatedDoc = ScopedDocument(
+      name: "MDL Doc", issuer: "issuer.dev", order: 1, configId: "mdl",
+      isPid: false, docTypeIdentifier: .other(formatType: "mDL")
+    )
+    stubGetScopedDocumentsSuccess(with: [pidDoc, unrelatedDoc])
+
+    // When
+    let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: .mDocPid))
+
+    // Then: the .mDL doc was skipped; only PID-bucket remains
+    switch result {
+    case .success(let documents):
+      let allModels = documents.values.flatMap { $0 }
+      XCTAssertTrue(allModels.allSatisfy { $0.docTypeIdentifier == .mDocPid })
+    default:
+      XCTFail("Expected success, got \(result)")
+    }
+  }
+
+  func testIssueDocument_WhenWalletReturnsEmptyDocs_ThenReturnsFailure() async {
+    // Given: walletController.issueDocuments returns an empty array, hitting
+    // the `guard !docs.isEmpty` failure branch (lines 155-157).
+    let issuerId = "issuer.dev"
+    let configIds = ["empty"]
+    let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
+    stub(walletKitController) { mock in
+      when(mock.issueDocuments(
+        issuerId: equal(to: issuerId),
+        identifiers: equal(to: configIds),
+        docTypeIdentifier: equal(to: identifier)
+      )).thenReturn([])
+    }
+
+    // When
+    let result = await interactor.issueDocument(
+      issuerId: issuerId, configIds: configIds, docTypeIdentifier: identifier
+    )
+
+    // Then
+    switch result {
+    case .failure(let error):
+      XCTAssertEqual(error as? WalletCoreError, .unableToIssueAndStore)
+    default:
+      XCTFail("Expected .failure, got \(result)")
+    }
+  }
+
+  func testIssueDocument_WhenDeferredDocHasNilMetadata_ThenReturnsFailure() async {
+    // Given: a deferred doc with metadata: nil so `DocMetadata(from: doc.metadata)?
+    // .configurationIdentifier` evaluates to nil, the guard on lines 166-168 fails,
+    // and `error = .unableToIssueAndStore` is set before the loop continues.
+    let issuerId = "issuer.dev"
+    let configIds = ["deferred-orphan"]
+    let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
+    let deferredDocNoMeta = Document(
+      id: "deferred-orphan",
+      docType: "type",
+      docDataFormat: .sdjwt,
+      data: Data(),
+      docKeyInfo: nil,
+      createdAt: Date(),
+      metadata: nil,
+      displayName: "Orphan",
+      status: .deferred
+    )
+
+    stub(walletKitController) { mock in
+      when(mock.issueDocuments(
+        issuerId: equal(to: issuerId),
+        identifiers: equal(to: configIds),
+        docTypeIdentifier: equal(to: identifier)
+      )).thenReturn([deferredDocNoMeta])
+    }
+
+    // When
+    let result = await interactor.issueDocument(
+      issuerId: issuerId, configIds: configIds, docTypeIdentifier: identifier
+    )
+
+    // Then
+    switch result {
+    case .failure(let error):
+      XCTAssertEqual(error as? WalletCoreError, .unableToIssueAndStore)
+    default:
+      XCTFail("Expected .failure, got \(result)")
+    }
+  }
+
   func testFetchScopedDocuments_WhenDocumentsReturned_ThenReturnsSuccessMocks() async throws {
     // Given
     let issuerId = "issuer.dev"

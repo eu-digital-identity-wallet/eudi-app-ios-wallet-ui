@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -20,7 +20,7 @@ import Observation
 
 @Copyable
 struct RequestAuthorizationViewState: ViewState {
-  let documents: [AuthorizationUIDocument]?
+  let items: [AuthorizationUIRequestItem]
   let errorMessage: String?
   let isLoading: Bool
   let contentHeaderConfig: ContentHeaderConfig
@@ -42,18 +42,24 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     self.context = context
     super.init(
       initialState: .init(
-        documents: nil,
+        items: [],
         errorMessage: nil,
         isLoading: true,
         contentHeaderConfig: .init(
           appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-            appText: ThemeManager.shared.image.euditext
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
           ),
           description: .dataSharingTitle
         )
       )
     )
+  }
+
+  func handleBiometryAuthenticated() {
+    showBiometryView = false
+    Task {
+      await acceptVerification()
+    }
   }
 
   func loadRequest() async {
@@ -66,12 +72,11 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
 
       setState {
         $0.copy(
-          documents: uiModel.document,
+          items: uiModel.documents.toRequestItems(),
           isLoading: false,
           contentHeaderConfig: .init(
             appIconAndTextData: AppIconAndTextData(
-              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-              appText: ThemeManager.shared.image.euditext
+              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
             ),
             description: .dataSharingTitle,
             mainText: .dataSharingRequest,
@@ -119,24 +124,17 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     context?.cancel()
   }
 
-  func createBiometryConfig() -> UIConfig.AuthorizeAction {
-    UIConfig.AuthorizeAction(
-      displayLogo: true,
+  func createBiometryConfig() -> UIConfig.Biometry {
+    UIConfig.Biometry(
+      navigationTitle: .biometryConfirmRequest,
       caption: .requestDataShareBiometryCaption,
       quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-      navigationBackType: .pop,
-      onAuthResult: { [weak self] result in
-        guard let self = self else { return }
-
-        switch result {
-        case .success:
-          Task {
-            await self.acceptVerification()
-          }
-        case .cancelled, .error:
-          break
-        }
-      }
+      pinTextFieldTitle: .enterYourPin,
+      navigationSuccessType: .pop,
+      navigationBackType: nil,
+      isPreAuthorization: false,
+      shouldInitializeBiometricOnCreate: true,
+      displayNavigationBar: false
     )
   }
 }

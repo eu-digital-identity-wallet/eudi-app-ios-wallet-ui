@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -31,13 +31,13 @@ public enum ButtonViewStyle {
   var textColor: Color {
     switch self {
     case .primary:
-      Theme.shared.color.onPrimary
+      Theme.shared.color.white
     case .secondary:
-      Theme.shared.color.primary
+      Theme.shared.color.accent
     case .error:
-      Theme.shared.color.error
+      Theme.shared.color.red
     case .success:
-      Theme.shared.color.surfaceContainerLowest
+      Theme.shared.color.white
     case .custom(let textColor, _, _, _):
       textColor
     }
@@ -45,11 +45,11 @@ public enum ButtonViewStyle {
   var backgroundColor: Color {
     switch self {
     case .primary:
-      Theme.shared.color.primary
+      Theme.shared.color.accent
     case .secondary:
-        .clear
+      Theme.shared.color.tertiaryFill
     case .error:
-      Theme.shared.color.background
+      Theme.shared.color.red.opacity(0.14)
     case .success:
       Theme.shared.color.success
     case .custom(_, let background, _, _):
@@ -71,9 +71,9 @@ public enum ButtonViewStyle {
     case .primary, .success:
         .clear
     case .secondary:
-      Theme.shared.color.primary
+      Theme.shared.color.accent
     case .error:
-      Theme.shared.color.error
+      Theme.shared.color.red
     case .custom(_, _, let borderColor, _):
       borderColor
     }

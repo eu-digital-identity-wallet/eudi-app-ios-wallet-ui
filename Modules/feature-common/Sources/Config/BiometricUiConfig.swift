@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -24,10 +24,12 @@ public extension UIConfig {
     public let title: LocalizableStringKey?
     public let caption: LocalizableStringKey
     public let quickPinOnlyCaption: LocalizableStringKey
+    public let pinTextFieldTitle: LocalizableStringKey?
     public let navigationSuccessType: ThreeWayNavigationType
     public let navigationBackType: ThreeWayNavigationType?
     public let isPreAuthorization: Bool
     public let shouldInitializeBiometricOnCreate: Bool
+    public let displayNavigationBar: Bool
 
     public var log: String {
       return "navigationTitle: \(navigationTitle.toString)" +
@@ -36,7 +38,8 @@ public extension UIConfig {
       " onSuccessNav: \(navigationSuccessType.key)" +
       " onBackNav: \(navigationBackType?.key ?? "none")" +
       " isPreAuthorization: \(isPreAuthorization)" +
-      " shouldInitializeBiometricOnCreate: \(shouldInitializeBiometricOnCreate)"
+      " shouldInitializeBiometricOnCreate: \(shouldInitializeBiometricOnCreate)" +
+      " displayNavigationBar: \(displayNavigationBar)"
     }
 
     public init(
@@ -45,20 +48,24 @@ public extension UIConfig {
       title: LocalizableStringKey? = nil,
       caption: LocalizableStringKey,
       quickPinOnlyCaption: LocalizableStringKey,
+      pinTextFieldTitle: LocalizableStringKey? = nil,
       navigationSuccessType: ThreeWayNavigationType,
       navigationBackType: ThreeWayNavigationType?,
       isPreAuthorization: Bool,
-      shouldInitializeBiometricOnCreate: Bool
+      shouldInitializeBiometricOnCreate: Bool,
+      displayNavigationBar: Bool = true
     ) {
       self.navigationTitle = navigationTitle
       self.displayLogo = displayLogo
       self.title = title
       self.caption = caption
       self.quickPinOnlyCaption = quickPinOnlyCaption
+      self.pinTextFieldTitle = pinTextFieldTitle
       self.navigationSuccessType = navigationSuccessType
       self.navigationBackType = navigationBackType
       self.isPreAuthorization = isPreAuthorization
       self.shouldInitializeBiometricOnCreate = shouldInitializeBiometricOnCreate
+      self.displayNavigationBar = displayNavigationBar
     }
   }
 }

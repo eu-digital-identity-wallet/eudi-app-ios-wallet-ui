@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -87,7 +87,7 @@ extension DocClaimsDecodable {
       }
     )
     return .init(
-      id: UUID().uuidString,
+      id: self.id,
       value: .init(
         id: self.id,
         heading: self.issuerName,
@@ -103,6 +103,7 @@ extension DocClaimsDecodable {
         documentCategory: categories.first(where: { $1.contains(self.documentTypeIdentifier) })?.key ?? .Other
       ),
       listItem: .init(
+        id: self.id,
         mainContent: .text(.custom(displayName.orEmpty)),
         overlineText: .custom(issuerName),
         supportingText: supportingText(state, expiresAt),
@@ -152,16 +153,16 @@ extension DocClaimsDecodable {
     _ state: DocumentTabUIModel.Value.State
   ) -> Color {
     if hasExpired {
-      return Theme.shared.color.error
+      return Theme.shared.color.red
     }
 
     switch state {
     case .issued:
-      return Theme.shared.color.onSurfaceVariant
+      return Theme.shared.color.secondaryLabel
     case .pending:
       return Theme.shared.color.warning
     case .failed, .revoked:
-      return Theme.shared.color.error
+      return Theme.shared.color.red
     }
   }
 
@@ -170,7 +171,7 @@ extension DocClaimsDecodable {
     documentIsLowOnCredentials: Bool
   ) -> Color {
     if hasExpired {
-      return Theme.shared.color.error
+      return Theme.shared.color.red
     }
 
     if documentIsLowOnCredentials {
@@ -179,11 +180,11 @@ extension DocClaimsDecodable {
 
     switch state {
     case .issued:
-      return Theme.shared.color.onSurfaceVariant
+      return Theme.shared.color.secondaryLabel
     case .pending:
       return Theme.shared.color.warning
     case .failed, .revoked:
-      return Theme.shared.color.error
+      return Theme.shared.color.red
     }
   }
 

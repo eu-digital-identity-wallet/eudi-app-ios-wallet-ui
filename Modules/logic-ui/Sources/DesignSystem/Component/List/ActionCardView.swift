@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -41,15 +41,15 @@ public struct ActionCard: View {
           .resizable()
           .scaledToFit()
           .frame(width: 64, height: 64)
-          .foregroundStyle(Theme.shared.color.primary)
+          .foregroundStyle(Theme.shared.color.accent)
 
         Text(title)
           .typography(Theme.shared.font.labelLarge)
-          .foregroundStyle(Theme.shared.color.primary)
+          .foregroundStyle(Theme.shared.color.accent)
       }
       .frame(maxWidth: .infinity, minHeight: 180)
       .padding(.vertical, SPACING_MEDIUM)
-      .background(Theme.shared.color.surfaceContainer)
+      .background(Theme.shared.color.groupedBackground)
       .cornerRadius(SPACING_MEDIUM)
     }
     .ifLet(locator) { view, locator in
@@ -74,5 +74,5 @@ public struct ActionCard: View {
   }
   .padding()
   .frame(maxWidth: .infinity, maxHeight: .infinity)
-  .background(Color.white)
+  .background(Theme.shared.color.background)
 }

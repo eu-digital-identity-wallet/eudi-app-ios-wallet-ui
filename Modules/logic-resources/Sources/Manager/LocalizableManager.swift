@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -114,6 +114,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "quick_pin_set_success")
     case .loginTitle:
       bundle.localizedString(forKey: "login_title")
+    case .loginWithBiometrics:
+      bundle.localizedString(forKey: "login_with_biometrics")
     case .loginCaptionQuickPinOnly:
       bundle.localizedString(forKey: "login_caption_quick_pin_only")
     case .loginCaption:
@@ -122,6 +124,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "quick_pin_set_success_button")
     case .quickPinDoNotMatch:
       bundle.localizedString(forKey: "quick_pin_dont_match")
+    case .quickPinLockedOut(let args):
+      bundle.localizedStringWithArguments(forKey: "quick_pin_locked_out", arguments: args)
     case .quickPinUpdateTitle:
       bundle.localizedString(forKey: "quick_pin_update_title")
     case .quickPinUpdateCaptionOne:
@@ -236,8 +240,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "items_not_found_in_storage")
     case .home:
       bundle.localizedString(forKey: "home")
-    case .transactions:
-      bundle.localizedString(forKey: "transactions")
+    case .historyTitle:
+      bundle.localizedString(forKey: "history")
     case .documents:
       bundle.localizedString(forKey: "documents")
     case .authenticateAuthoriseTransactions:
@@ -306,6 +310,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "scanner_qr_caption_presentation")
     case .quickPinEnterPin:
       bundle.localizedString(forKey: "quick_pin_enter_a_pin")
+    case .quickPinNavigationEnterPin:
+      bundle.localizedString(forKey: "quick_pin_navigation_enter_a_pin")
     case .quickPinConfirmPin:
       bundle.localizedString(forKey: "quick_pin_confirm_pin")
     case .biometryConfirmRequest:
@@ -408,6 +414,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "start_date")
     case .endDate:
       bundle.localizedString(forKey: "end_date")
+    case .resetDates:
+      bundle.localizedString(forKey: "reset_dates")
     case .relyingParty:
       bundle.localizedString(forKey: "relying_party")
     case .signedDocuments:
@@ -490,6 +498,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "pid_combined")
     case .documentData:
       bundle.localizedString(forKey: "document_data")
+    case .documentDetailsShow:
+      bundle.localizedString(forKey: "document_details_show")
+    case .documentDetailsHide:
+      bundle.localizedString(forKey: "document_details_hide")
     case .issuanceSuccessHeaderDescription:
       bundle.localizedString(forKey: "issuance_success_header_description")
     case .documentDetailsReIssueButton:
@@ -508,10 +520,14 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "document_details_issuer_card_revoked_message_text")
     case .documentDetailsIssuerCardIssuedActionButtonText:
       bundle.localizedString(forKey: "document_details_issuer_card_issued_action_btn_text")
+    case .batchIssuanceCounter:
+      bundle.localizedString(forKey: "batch_issuance_counter")
     case .documentProviderExtensionAcceptButton:
       bundle.localizedString(forKey: "document_provider_extension_accept_button")
     case .documentProviderExtensionRejectButton:
       bundle.localizedString(forKey: "document_provider_extension_reject_button")
+    case .enterYourPin:
+      bundle.localizedString(forKey: "enter_your_pin")
     }
   }
 }

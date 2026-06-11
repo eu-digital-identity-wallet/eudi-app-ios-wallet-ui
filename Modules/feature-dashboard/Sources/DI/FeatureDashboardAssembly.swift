@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -16,6 +16,7 @@
 import Swinject
 import logic_business
 import logic_core
+import feature_common
 
 public final class FeatureDashboardAssembly: Assembly {
 
@@ -36,7 +37,9 @@ public final class FeatureDashboardAssembly: Assembly {
     container.register(SettingsInteractor.self) { r in
       SettingsInteractorImpl(
         walletController: r.force(WalletKitController.self),
-        configLogic: r.force(ConfigLogic.self)
+        configLogic: r.force(ConfigLogic.self),
+        biometryInteractor: r.force(BiometryInteractor.self),
+        prefsController: r.force(PrefsController.self)
       )
     }
 
@@ -50,6 +53,7 @@ public final class FeatureDashboardAssembly: Assembly {
     container.register(DocumentTabInteractor.self) { r in
       DocumentTabInteractorImpl(
         walletKitController: r.force(WalletKitController.self),
+        prefsController: r.force(PrefsController.self),
         filterValidator: r.force(FilterValidator.self),
         configLogic: r.force(ConfigLogic.self)
       )

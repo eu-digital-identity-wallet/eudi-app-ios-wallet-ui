@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import logic_ui
+import logic_resources
 
 public struct DocumentSuccessView<Router: RouterHost, RequestItem: Sendable>: View {
 
@@ -30,11 +31,11 @@ public struct DocumentSuccessView<Router: RouterHost, RequestItem: Sendable>: Vi
     ContentScreenView(
       padding: .zero,
       canScroll: true,
-      navigationTitle: viewModel.viewState.navigationTitle,
-      toolbarContent: viewModel.toolbarContent()
+      navigationTitle: viewModel.viewState.navigationTitle
     ) {
       content(
-        viewState: viewModel.viewState
+        viewState: viewModel.viewState,
+        onDone: viewModel.onDone
       )
     }
   }
@@ -43,7 +44,8 @@ public struct DocumentSuccessView<Router: RouterHost, RequestItem: Sendable>: Vi
 @MainActor
 @ViewBuilder
 private func content<RequestItem: Sendable>(
-  viewState: DocumentSuccessState<RequestItem>
+  viewState: DocumentSuccessState<RequestItem>,
+  onDone: @escaping () -> Void
 ) -> some View {
   ScrollView {
 
@@ -64,6 +66,31 @@ private func content<RequestItem: Sendable>(
     }
     .padding(.horizontal, Theme.shared.dimension.padding)
   }
+  .safeAreaInset(edge: .bottom) {
+    doneButton(
+      isLoading: viewState.isLoading,
+      onDone: onDone
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func doneButton(
+  isLoading: Bool,
+  onDone: @escaping () -> Void
+) -> some View {
+  WrapButtonView(
+    style: .primary,
+    title: .doneButton,
+    isLoading: isLoading,
+    onAction: onDone()
+  )
+  .combineChilrenAccessibility(
+    locator: DocumentSuccessLocators.doneButton
+  )
+  .padding(.horizontal, SPACING_MEDIUM)
+  .padding(.bottom, SPACING_LARGE_MEDIUM)
 }
 
 @MainActor
@@ -71,7 +98,7 @@ private func content<RequestItem: Sendable>(
 private func documents<RequestItem: Sendable>(
   viewState: DocumentSuccessState<RequestItem>,
   ignoreTrainingContent: Bool = true,
-  backgroundColor: Color = Theme.shared.color.tertiary,
+  backgroundColor: Color = Theme.shared.color.successBackground,
   onSelectionChanged: @escaping @Sendable (String) -> Void
 ) -> some View {
   if !viewState.items.isEmpty {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -27,7 +27,7 @@ private extension Constants {
   
   static let pkb64 = "pQECIAEhWCBoHIiBQnDRMLUT4yOLqJ1l8mrfNIgrjNnFq4RyZgxSmiJYIGD/Sabu6GejaR4eTiym1JkyjnBNcJ+f59pN+lCEyhVyI1ggC6EPCKyGci++LGWUX3fXpPFW6pYO8pyyKLMKs1qF0jo="
   static let kcSks = KeyChainSecureKeyStorage(serviceName: "name", accessGroup: "Group")
-  static let pk = CoseKeyPrivate(privateKeyId: pkb64, index: 0, secureArea: SoftwareSecureArea.create(storage: kcSks))
+  static let pk = CoseKeyPrivate(privateKeyId: pkb64, index: 0, secureArea: SoftwareSecureArea.create(storage: kcSks), curve: .P256)
   static let dr = try! DeviceResponse(data: Constants.sampleCborData.bytes)
 }
 
@@ -210,9 +210,9 @@ extension Constants {
     
     func waitForDisconnect() async throws {}
     
-    var transactionLog: EudiWalletKit.TransactionLog
+    var transactionLog: TransactionLog
     
-    func startQrEngagement(secureAreaName: String?, crv: MdocDataModel18013.CoseEcCurve) async throws -> String {
+    func startQrEngagement(secureAreaName: String?, keyOptions: MdocDataModel18013.KeyOptions) async throws -> String {
       ""
     }
     
@@ -298,6 +298,7 @@ extension Constants {
   
   static let mockPresentationSession = PresentationSession(
     presentationService: MockPresentationService(
+      zkpDocumentIds: nil,
       transactionLog: mockTransactionLog,
       flow: .other
     ),

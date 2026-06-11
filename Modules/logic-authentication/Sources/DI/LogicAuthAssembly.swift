@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -22,6 +22,11 @@ public final class LogicAuthAssembly: Assembly {
 
   public func assemble(container: Container) {
 
+    container.register(AuthenticationConfig.self) { _ in
+      AuthenticationConfigImpl()
+    }
+    .inObjectScope(ObjectScope.container)
+
     container.register(PinStorageProvider.self) { r in
       KeychainPinStorageProvider(keyChainController: r.force(KeyChainController.self))
     }
@@ -29,6 +34,19 @@ public final class LogicAuthAssembly: Assembly {
 
     container.register(PinStorageController.self) { r in
       PinStorageControllerImpl(provider: r.force(PinStorageProvider.self))
+    }
+    .inObjectScope(ObjectScope.graph)
+
+    container.register(PinThrottleProvider.self) { r in
+      KeychainPinThrottleProvider(
+        keyChainController: r.force(KeyChainController.self),
+        authenticationConfig: r.force(AuthenticationConfig.self)
+      )
+    }
+    .inObjectScope(ObjectScope.graph)
+
+    container.register(PinThrottleController.self) { r in
+      PinThrottleControllerImpl(provider: r.force(PinThrottleProvider.self))
     }
     .inObjectScope(ObjectScope.graph)
 

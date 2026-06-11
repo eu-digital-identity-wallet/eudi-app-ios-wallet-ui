@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -19,6 +19,8 @@ import logic_resources
 
 struct TransactionTabView<Router: RouterHost>: View {
 
+  @Environment(\.scenePhase) private var scenePhase
+
   @State private var viewModel: TransactionTabViewModel<Router>
 
   public init(with viewModel: TransactionTabViewModel<Router>) {
@@ -26,12 +28,10 @@ struct TransactionTabView<Router: RouterHost>: View {
   }
 
   var body: some View {
-    content(
+    TransactionTabViewContainer(
       state: viewModel.viewState,
       searchQuery: $viewModel.searchQuery,
-      onAction: {
-        viewModel.onTransactionDetails(transactionId: $0)
-      }
+      onAction: { viewModel.onTransactionDetails(transactionId: $0) }
     )
     .sheet(isPresented: $viewModel.isFilterModalShowing) {
       FiltersListView(
@@ -54,91 +54,101 @@ struct TransactionTabView<Router: RouterHost>: View {
         viewModel.updateDateFilters(sectionID: sectionID, filterID: filterID, startDate: startDate, endDate: endDate)
       }
     }
+    .onChange(of: scenePhase) {
+      viewModel.setPhase(with: scenePhase)
+    }
     .onAppear {
-      viewModel.onCreate()
+      viewModel.onAppear()
     }
     .onDisappear {
-      viewModel.onPause()
+      viewModel.onDisappear()
     }
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  state: TransactionTabState,
-  searchQuery: Binding<String>,
-  onAction: @escaping (String) -> Void
-) -> some View {
-  VStack {
-    if state.transactions.isEmpty && !searchQuery.wrappedValue.isEmpty {
-      ContentUnavailableView(
-        title: .noResults,
-        description: .noResultsTransactionsDescription
-      )
-    } else if !state.transactions.isEmpty {
+private struct TransactionTabViewContainer: View {
 
-      ScrollView {
-        LazyVStack(alignment: .leading, spacing: .zero) {
-          ForEach(
-            state.transactions.keys.sorted(by: {
-              state.sortIsDescending
-              ? $0.order < $1.order
-              : $0.order > $1.order
-            }),
-            id: \.self
-          ) { category in
+  let state: TransactionTabState
+  @Binding var searchQuery: String
+  let onAction: (String) -> Void
 
-            VStack(alignment: .leading, spacing: SPACING_SMALL) {
+  var body: some View {
+    content()
+  }
 
-              WrapTextView(
-                text: category.title,
-                textConfig: TextConfig(
-                  font: Theme.shared.font.bodySmall.font,
-                  color: Theme.shared.color.onSurface,
-                  textAlign: .leading,
-                  fontWeight: .semibold
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    VStack {
+      if state.transactions.isEmpty && !searchQuery.isEmpty {
+        ContentUnavailableView(
+          title: .noResults,
+          description: .noResultsTransactionsDescription
+        )
+      } else if !state.transactions.isEmpty {
+
+        ScrollView {
+          LazyVStack(alignment: .leading, spacing: .zero) {
+            ForEach(
+              state.transactions.keys.sorted(by: {
+                state.sortIsDescending
+                ? $0.order < $1.order
+                : $0.order > $1.order
+              }),
+              id: \.self
+            ) { category in
+
+              VStack(alignment: .leading, spacing: SPACING_SMALL) {
+
+                WrapTextView(
+                  text: category.title,
+                  textConfig: TextConfig(
+                    font: Theme.shared.font.bodySmall.font,
+                    color: Theme.shared.color.secondaryLabel,
+                    textAlign: .leading,
+                    fontWeight: .semibold
+                  )
                 )
-              )
-              .padding(.horizontal, SPACING_MEDIUM)
-              .padding(.top, SPACING_SMALL)
+                .padding(.horizontal, SPACING_MEDIUM)
+                .padding(.top, SPACING_SMALL)
 
-              WrapCardView {
-                VStack(spacing: .zero) {
-                  WrapListItemsView(
-                    listItems: state.transactions[category]?.map { transaction in
-                      transaction.listItem
-                    } ?? []
-                  ) { item in
-                    onAction(item.id)
+                WrapCardView {
+                  VStack(spacing: .zero) {
+                    WrapListItemsView(
+                      listItems: state.transactions[category]?.map { transaction in
+                        transaction.listItem
+                      } ?? []
+                    ) { item in
+                      onAction(item.id)
+                    }
                   }
                 }
+                .padding(.horizontal, SPACING_MEDIUM)
               }
-              .padding(.horizontal, SPACING_MEDIUM)
             }
           }
+          .padding(.bottom, SPACING_MEDIUM)
         }
-        .padding(.bottom, SPACING_MEDIUM)
-      }
-      .shimmer(isLoading: state.isLoading)
-      .scrollIndicators(.hidden)
+        .shimmer(isLoading: state.isLoading)
+        .scrollIndicators(.hidden)
 
-    } else if !state.isLoading {
-      ContentUnavailableView(
-        title: .noResults,
-        description: .noResultsTransactionsDescription
-      )
-    } else {
-      ContentLoaderView(showLoader: .constant(true))
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+      } else if !state.isLoading {
+        ContentUnavailableView(
+          title: .noResults,
+          description: .noResultsTransactionsDescription
+        )
+      } else {
+        ContentLoaderView(showLoader: .constant(true))
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+      }
     }
+    .searchable(
+      searchText: $searchQuery,
+      placeholder: .searchTransactions,
+      backgroundColor: Theme.shared.color.background
+    )
+    .background(Theme.shared.color.background)
   }
-  .searchable(
-    searchText: searchQuery,
-    placeholder: .searchTransactions,
-    backgroundColor: Theme.shared.color.background
-  )
-  .background(Theme.shared.color.background)
 }
 
 #Preview {
@@ -146,14 +156,14 @@ private func content(
     isLoading: false,
     transactions: [:],
     filterUIModel: [],
-    isPaused: false,
+    lifecycle: .active,
     hasDefaultFilters: false,
     dateHasChanged: false,
     sortIsDescending: true,
     minStartDate: Date(),
     maxEndDate: Date()
   )
-  content(
+  TransactionTabViewContainer(
     state: state,
     searchQuery: .constant(""),
     onAction: { _ in }

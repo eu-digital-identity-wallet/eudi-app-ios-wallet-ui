@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -28,84 +28,89 @@ struct GenericSuccessView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView {
-      content(viewState: viewModel.viewState) { button in
-        viewModel.onButtonClicked(with: button)
-      }
+      GenericSuccessViewContainer(
+        viewState: viewModel.viewState,
+        onButtonClicked: { button in
+          viewModel.onButtonClicked(with: button)
+        }
+      )
     }
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: GenericSuccessState,
-  onButtonClicked: @escaping (UIConfig.Success.Button) -> Void
-) -> some View {
+private struct GenericSuccessViewContainer: View {
 
-  ContentHeaderView(
-    config: ContentHeaderConfig(
-      appIconAndTextData: AppIconAndTextData(
-        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet,
-        appText: ThemeManager.shared.image.euditext
+  let viewState: GenericSuccessState
+  let onButtonClicked: (UIConfig.Success.Button) -> Void
+
+  var body: some View {
+    content()
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    ContentHeaderView(
+      config: ContentHeaderConfig(
+        appIconAndTextData: AppIconAndTextData(
+          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
+        )
       )
     )
-  )
 
-  VSpacer.jumbo()
-
-  VStack {
-
-    ZStack(alignment: .center) {
-      getCenteredIcon(config: viewState.config)
-    }
-
-    VSpacer.large()
-
-    ContentTitleView(
-      title: viewState.config.title.value,
-      accessibilityTitle: GenericSuccessLocators.successTitle,
-      titleFont: Theme.shared.font.displayLarge,
-      caption: viewState.config.subtitle,
-      titleColor: viewState.config.title.color,
-      textAlignment: .center,
-      topSpacing: .withoutToolbar
-    )
-
-    Spacer()
+    VSpacer.jumbo()
 
     VStack {
-      ForEach(viewState.config.buttons, id: \.id) { button in
-        WrapButtonView(
-          style: button.style == .primary ? .primary : .secondary,
-          title: button.title,
-          onAction: onButtonClicked(button)
-        )
-        .ignoreChilrenAccessibility(
-          locator: GenericSuccessLocators.successPrimaryButton
-        )
+
+      ZStack(alignment: .center) {
+        getCenteredIcon()
+      }
+
+      VSpacer.large()
+
+      ContentTitleView(
+        title: viewState.config.title.value,
+        accessibilityTitle: GenericSuccessLocators.successTitle,
+        titleFont: Theme.shared.font.displayLarge,
+        caption: viewState.config.subtitle,
+        titleColor: viewState.config.title.color,
+        textAlignment: .center,
+        topSpacing: .withoutToolbar
+      )
+
+      Spacer()
+
+      VStack {
+        ForEach(viewState.config.buttons, id: \.id) { button in
+          WrapButtonView(
+            style: button.style == .primary ? .primary : .secondary,
+            title: button.title,
+            onAction: onButtonClicked(button)
+          )
+          .ignoreChilrenAccessibility(
+            locator: GenericSuccessLocators.successPrimaryButton
+          )
+        }
       }
     }
   }
-}
 
-@MainActor
-@ViewBuilder
-private func getCenteredIcon(
-  config: UIConfig.Success
-) -> some View {
+  @MainActor
+  @ViewBuilder
+  private func getCenteredIcon() -> some View {
+    let imageData: (image: Image, color: Color) = switch viewState.config.visualKind {
+    case .defaultIcon:
+      (Theme.shared.image.checkmarkCircleFill, Theme.shared.color.success)
+    case .customIcon(let image, let color):
+      (image, color)
+    }
 
-  let imageData: (image: Image, color: Color) = switch config.visualKind {
-  case .defaultIcon:
-    (Theme.shared.image.checkmarkCircleFill, Theme.shared.color.success)
-  case .customIcon(let image, let color):
-    (image, color)
+    imageData.image
+      .resizable()
+      .scaledToFit()
+      .foregroundColor(imageData.color)
+      .frame(height: UIScreen.main.bounds.width / 2.5)
   }
-
-  imageData.image
-    .resizable()
-    .scaledToFit()
-    .foregroundColor(imageData.color)
-    .frame(height: UIScreen.main.bounds.width / 2.5)
 }
 
 #Preview {
@@ -125,7 +130,7 @@ private func getCenteredIcon(
   )
 
   ContentScreenView {
-    content(
+    GenericSuccessViewContainer(
       viewState: viewState,
       onButtonClicked: { _ in }
     )

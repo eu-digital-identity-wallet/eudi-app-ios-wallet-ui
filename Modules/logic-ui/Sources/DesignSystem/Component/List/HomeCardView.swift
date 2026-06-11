@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -52,7 +52,7 @@ public struct HomeCardView: View {
         VStack(alignment: .leading, spacing: SPACING_MEDIUM_LARGE) {
           Text(text)
             .typography(Theme.shared.font.headlineSmall)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .foregroundStyle(Theme.shared.color.primaryLabel)
             .lineLimit(nil)
         }
 
@@ -77,23 +77,18 @@ public struct HomeCardView: View {
       }
 
       if let learnMoreAction, let learnMoreText {
-        Button(action: learnMoreAction) {
-          Label {
-            Text(learnMoreText)
-              .typography(Theme.shared.font.bodyLarge)
-              .fontWeight(.semibold)
-          } icon: {
-            Theme.shared.image.infoCircle
-          }
-          .foregroundStyle(Theme.shared.color.primary)
-          .padding(SPACING_SMALL)
-        }
-        .buttonStyle(PlainButtonStyle())
+        WrapButtonView(
+          style: .secondary,
+          title: learnMoreText,
+          icon: Theme.shared.image.infoCircle,
+          gravity: .center,
+          onAction: learnMoreAction()
+        )
         .padding(.top, SPACING_MEDIUM)
       }
     }
     .padding(SPACING_MEDIUM)
-    .background(Theme.shared.color.surfaceContainer)
+    .background(Theme.shared.color.groupedBackground)
     .cornerRadius(13)
   }
 }

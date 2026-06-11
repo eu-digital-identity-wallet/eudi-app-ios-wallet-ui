@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -18,6 +18,7 @@ import logic_resources
 
 public struct TappableCellView: View {
   public let title: LocalizableStringKey
+  public let icon: Image?
   public let showDivider: Bool
   public let useOverlay: Bool
   public let action: () -> Void
@@ -27,13 +28,15 @@ public struct TappableCellView: View {
 
   public init(
     title: LocalizableStringKey,
+    icon: Image? = nil,
     showDivider: Bool,
     isToggle: Bool = false,
     isOn: Binding<Bool> = .constant(false),
     useOverlay: Bool = true,
-    action: @autoclosure @escaping () -> Void
+    action: @escaping () -> Void = {}
   ) {
     self.title = title
+    self.icon = icon
     self.useOverlay = useOverlay
     self.action = action
     self.showDivider = showDivider
@@ -43,21 +46,36 @@ public struct TappableCellView: View {
 
   public var body: some View {
     VStack(spacing: SPACING_MEDIUM_SMALL) {
-      HStack {
+      HStack(alignment: .center, spacing: SPACING_MEDIUM) {
+        if let icon {
+          icon
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 24, height: 24)
+            .foregroundStyle(Theme.shared.color.accent)
+        }
+
         Text(title)
           .typography(Theme.shared.font.bodyLarge)
-          .foregroundColor(Theme.shared.color.onSurface)
-          .lineLimit(1)
+          .foregroundColor(Theme.shared.color.primaryLabel)
           .minimumScaleFactor(0.8)
+          .frame(maxWidth: .infinity, alignment: .leading)
 
         if isToggle {
-          Toggle("", isOn: $isOn)
-            .labelsHidden()
-            .frame(maxWidth: .infinity, alignment: .topTrailing)
+          Toggle(
+            "",
+            isOn: Binding(
+              get: { isOn },
+              set: { newValue in
+                isOn = newValue
+                action()
+              }
+            )
+          )
+          .labelsHidden()
         } else {
           Theme.shared.image.chevronRight
-            .frame(maxWidth: .infinity, alignment: .topTrailing)
-            .foregroundColor(Theme.shared.color.onSurface)
+            .foregroundColor(Theme.shared.color.tertiaryLabel)
         }
       }
       if showDivider {
@@ -80,7 +98,7 @@ public struct TappableCellView: View {
     title: .addDocumentTitle,
     showDivider: true,
     useOverlay: true,
-    action: {}()
+    action: {}
   )
   .padding()
 }

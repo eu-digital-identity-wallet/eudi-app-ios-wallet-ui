@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,89 +36,97 @@ struct ScannerView<Router: RouterHost>: View {
       navigationTitle: viewModel.viewState.title,
       toolbarContent: viewModel.toolbarContent()
     ) {
-      content(
+      ScannerViewContainer(
         viewState: viewModel.viewState,
         cameraSurfaceSize: cameraSurfaceSize,
         onError: viewModel.onError,
-        onErrorClick: viewModel.onErrorClick) { scanResult in
+        onErrorClick: viewModel.onErrorClick,
+        onResult: { scanResult in
           viewModel.onResult(scanResult: scanResult)
         }
+      )
     }
   }
 }
 
-@MainActor
-@ViewBuilder
-private func content(
-  viewState: ScannerState,
-  cameraSurfaceSize: CGFloat,
-  onError: @escaping () -> Void,
-  onErrorClick: @escaping () -> Void,
-  onResult: @escaping (_ scanResult: String) -> Void
-) -> some View {
-  VStack(spacing: SPACING_LARGE_MEDIUM) {
-    ContentCaptionView(
-      caption: viewState.caption
-    )
-    .padding(.horizontal, Theme.shared.dimension.padding)
+private struct ScannerViewContainer: View {
 
+  let viewState: ScannerState
+  let cameraSurfaceSize: CGFloat
+  let onError: () -> Void
+  let onErrorClick: () -> Void
+  let onResult: (String) -> Void
+
+  var body: some View {
+    content()
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func content() -> some View {
+    VStack(spacing: SPACING_LARGE_MEDIUM) {
+      ContentCaptionView(
+        caption: viewState.caption
+      )
+      .padding(.horizontal, Theme.shared.dimension.padding)
+
+      ZStack {
+        CodeScannerView(
+          codeTypes: [.qr],
+          scanMode: .continuous,
+          scanInterval: 1.0,
+          showViewfinder: true,
+          shouldVibrateOnSuccess: false
+        ) { response in
+          switch response {
+          case .success(let result):
+            onResult(result.string)
+          case .failure:
+            onError()
+          }
+        }
+
+        if let error = viewState.error {
+          ContentEmptyView(
+            title: error,
+            iconColor: Theme.shared.color.white,
+            textColor: Theme.shared.color.white,
+            onClick: { onErrorClick() }
+          )
+          .padding()
+        }
+        informativeText()
+      }
+      .animation(.easeInOut, value: viewState.showInformativeText)
+    }
+    .ignoresSafeArea(.all, edges: .bottom)
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func informativeText() -> some View {
     ZStack {
-      CodeScannerView(
-        codeTypes: [.qr],
-        scanMode: .continuous,
-        scanInterval: 1.0,
-        showViewfinder: true,
-        shouldVibrateOnSuccess: false
-      ) { response in
-        switch response {
-        case .success(let result):
-          onResult(result.string)
-        case .failure:
-          onError()
+      VStack {
+        HStack(spacing: SPACING_MEDIUM) {
+
+          Theme.shared.image.errorIndicator
+            .renderingMode(.template)
+            .foregroundStyle(Theme.shared.color.primaryLabel)
+
+          Text(viewState.informativeTest)
+            .typography(Theme.shared.font.bodyLarge)
+            .foregroundStyle(Theme.shared.color.primaryLabel)
+            .multilineTextAlignment(.center)
         }
       }
-
-      if let error = viewState.error {
-        ContentEmptyView(
-          title: error,
-          iconColor: Theme.shared.color.white,
-          textColor: Theme.shared.color.white,
-          onClick: { onErrorClick() }
-        )
-        .padding()
-      }
-      informativeText(viewState: viewState)
+      .padding()
+      .background(Theme.shared.color.secondaryBackground)
+      .clipShape(Theme.shared.shape.highCornerRadiusShape)
+      .opacity(viewState.showInformativeText ? 1.0 : 0.0)
     }
-    .animation(.easeInOut, value: viewState.showInformativeText)
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    .padding(.bottom, SPACING_LARGE)
   }
-  .ignoresSafeArea(.all, edges: .bottom)
-}
-
-@MainActor
-@ViewBuilder
-private func informativeText(viewState: ScannerState) -> some View {
-  ZStack {
-    VStack {
-      HStack(spacing: SPACING_MEDIUM) {
-
-        Theme.shared.image.errorIndicator
-          .renderingMode(.template)
-          .foregroundStyle(Theme.shared.color.onSurface)
-
-        Text(viewState.informativeTest)
-          .typography(Theme.shared.font.bodyLarge)
-          .foregroundStyle(Theme.shared.color.onSurface)
-          .multilineTextAlignment(.center)
-
-      }
-    }
-    .padding()
-    .background(Theme.shared.color.surfaceContainer)
-    .clipShape(Theme.shared.shape.highCornerRadiusShape)
-    .opacity(viewState.showInformativeText ? 1.0 : 0.0)
-  }
-  .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-  .padding(.bottom, SPACING_LARGE)
 }
 
 #Preview {
@@ -135,7 +143,7 @@ private func informativeText(viewState: ScannerState) -> some View {
   )
 
   ContentScreenView {
-    content(
+    ScannerViewContainer(
       viewState: viewState,
       cameraSurfaceSize: .zero,
       onError: {},

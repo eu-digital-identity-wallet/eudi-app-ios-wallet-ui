@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 European Commission
+ * Copyright (c) 2026 European Commission
  *
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
  * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
@@ -54,7 +54,7 @@ public enum DeferredPartialState: Sendable {
 }
 
 public protocol DocumentTabInteractor: Sendable {
-  func fetchDocuments(failedDocuments: [String]) async -> DocumentsPartialState
+  func fetchDocuments(failedDocuments: [String], shouldRefreshCounters: Bool) async -> DocumentsPartialState
   func hasDeferredDocuments() async -> Bool
   func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState
   func requestDeferredIssuance() async -> DeferredPartialState
@@ -72,6 +72,7 @@ public protocol DocumentTabInteractor: Sendable {
 final actor DocumentTabInteractorImpl: DocumentTabInteractor {
 
   private let walletKitController: WalletKitController
+  private let prefsController: PrefsController
   private let filterValidator: FilterValidator
   private let configLogic: ConfigLogic
 
@@ -79,10 +80,12 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
 
   init(
     walletKitController: WalletKitController,
+    prefsController: PrefsController,
     filterValidator: FilterValidator,
     configLogic: ConfigLogic
   ) {
     self.walletKitController = walletKitController
+    self.prefsController = prefsController
     self.filterValidator = filterValidator
     self.configLogic = configLogic
   }
@@ -174,9 +177,12 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
     await filterValidator.updateLists(sortOrder: sortOrder, filterableList: filterableList)
   }
 
-  func fetchDocuments(failedDocuments: [String]) async -> DocumentsPartialState {
+  func fetchDocuments(failedDocuments: [String], shouldRefreshCounters: Bool) async -> DocumentsPartialState {
 
-    let documents = await fetchFilteredDocuments(failedDocuments: failedDocuments)
+    let documents = await fetchFilteredDocuments(
+      failedDocuments: failedDocuments,
+      shouldRefreshCounters: shouldRefreshCounters
+    )
 
     guard let documents = documents else {
       return .failure(WalletCoreError.unableFetchDocuments)
@@ -188,7 +194,8 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
   func deleteDeferredDocument(with id: String) async -> DeleteDeferredPartialState {
     do {
       try await walletKitController.deleteDocument(with: id, status: .deferred)
-      return await walletKitController.fetchAllDocuments().isEmpty && configLogic.forcePidActivation ? .noDocuments : .success
+      return await walletKitController.fetchAllDocuments().isEmpty
+      && configLogic.forcePidActivation ? .noDocuments : .success
     } catch {
       return .failure(error)
     }
@@ -213,7 +220,13 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
           issued.append(
             document.transformToDocumentTabUi(
               categories: categories,
-              isRevoked: isRevoked
+              isRevoked: isRevoked,
+              usageCount: isBatchCounterEnabled()
+              ? getCredentialsUsageCount(
+                credentialsUsageCounts: document.credentialsUsageCounts,
+                isDeferred: (document is DeferrredDocument) == true
+              )
+              : nil
             )
           )
         }
@@ -251,38 +264,6 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
             )
           ],
           filterType: .orderBy
-        ),
-        SingleSelectionFilterGroup(
-          id: FilterIds.FILTER_SORT_GROUP_ID,
-          name: LocalizableStringKey.sortBy.toString,
-          filters: [
-            FilterItem(
-              id: FilterIds.FILTER_SORT_DEFAULT,
-              name: LocalizableStringKey.defaultLabel.toString,
-              selected: true,
-              isDefault: true,
-              filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
-                attribute.sortingKey
-              })
-            ),
-            FilterItem(
-              id: FilterIds.FILTER_SORT_DATE_ISSUED,
-              name: LocalizableStringKey.dateIssued.toString,
-              selected: false,
-              filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
-                attribute.issuedDate
-              })
-            ),
-            FilterItem(
-              id: FilterIds.FILTER_SORT_EXPIRY_DATE,
-              name: LocalizableStringKey.expiryDate.toString,
-              selected: false,
-              filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
-                attribute.expiryDate
-              })
-            )
-          ],
-          filterType: .other
         ),
         SingleSelectionFilterGroup(
           id: FilterIds.FILTER_BY_PERIOD_GROUP_ID,
@@ -392,11 +373,47 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
           filterType: .other
         )
       ],
-      sortOrder: SortOrderType.ascending
+      sortOrder: SortOrderType.ascending,
+      sort: FilterSort(
+        id: FilterIds.FILTER_SORT_GROUP_ID,
+        name: LocalizableStringKey.sortBy.toString,
+        filters: [
+          FilterItem(
+            id: FilterIds.FILTER_SORT_DEFAULT,
+            name: LocalizableStringKey.defaultLabel.toString,
+            selected: true,
+            isDefault: true,
+            filterableAction: Sort<DocumentFilterableAttributes, String>(predicate: { attribute in
+              attribute.sortingKey
+            })
+          ),
+          FilterItem(
+            id: FilterIds.FILTER_SORT_DATE_ISSUED,
+            name: LocalizableStringKey.dateIssued.toString,
+            selected: false,
+            filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
+              attribute.issuedDate
+            })
+          ),
+          FilterItem(
+            id: FilterIds.FILTER_SORT_EXPIRY_DATE,
+            name: LocalizableStringKey.expiryDate.toString,
+            selected: false,
+            filterableAction: Sort<DocumentFilterableAttributes, Date>(predicate: { attribute in
+              attribute.expiryDate
+            })
+          )
+        ]
+      )
     )
   }
 
-  private func fetchFilteredDocuments(failedDocuments: [String]) async -> FilterableList? {
+  private func fetchFilteredDocuments(failedDocuments: [String], shouldRefreshCounters: Bool) async -> FilterableList? {
+
+    if shouldRefreshCounters {
+      try? await walletKitController.refreshUsageCounters()
+    }
+
     let documents = await self.walletKitController.fetchAllDocuments()
     let revokedDocuments = try? await self.walletKitController.fetchRevokedDocuments()
 
@@ -413,10 +430,12 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
         categories: self.walletKitController.getDocumentCategories(),
         isRevoked: isRevoked,
         documentIsLowOnCredentials: documentIsLowOnCredentials,
-        usageCount: getCredentialsUsageCount(
+        usageCount: isBatchCounterEnabled()
+        ? getCredentialsUsageCount(
           credentialsUsageCounts: document.credentialsUsageCounts,
           isDeferred: (document is DeferrredDocument) == true
         )
+        : nil
       )
 
       let documentSearchTags: [String] = {
@@ -461,21 +480,29 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
   }
 
   private func filterUISection(filters: Filters) -> [FilterUISection] {
-    filters.filterGroups.map { filteredGroup in
-      FilterUISection(
-        id: filteredGroup.id,
-        filters: filteredGroup.filters.map { filter in
-          FilterUIItem(
-            id: filter.id,
-            title: filter.name,
-            selected: filter.selected,
-            filterAction: filter.filterableAction,
-            filterSectionType: filter.filterElementType
+    var sections: [FilterUISection] = []
+
+    sections.append(contentsOf:
+      filters.filterGroups
+        .filter { $0.id != FilterIds.ASCENDING_DESCENDING_GROUP }
+        .map { filteredGroup in
+          FilterUISection(
+            id: filteredGroup.id,
+            filters: filteredGroup.filters.map { filter in
+              FilterUIItem(
+                id: filter.id,
+                title: filter.name,
+                selected: filter.selected,
+                filterAction: filter.filterableAction,
+                filterSectionType: filter.filterElementType
+              )
+            },
+            sectionTitle: filteredGroup.name
           )
-        },
-        sectionTitle: filteredGroup.name
-      )
-    }
+        }
+    )
+
+    return sections
   }
 
   private func addCategoriesFilter(documents: FilterableList) -> [FilterItem] {
@@ -521,5 +548,9 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
     }
 
     return filterItems
+  }
+
+  private func isBatchCounterEnabled() -> Bool {
+    prefsController.getBool(forKey: .batchCounter)
   }
 }
