@@ -110,8 +110,8 @@ public enum MainContent: Sendable, Equatable {
 }
 
 public enum TrailingContent: Sendable, Equatable {
-  case textWithIcon(Image, Color = Color.accentColor, LocalizableStringKey = .custom(""))
-  case icon(Image, Color = Color.accentColor)
+  case textWithIcon(Image, Color = Theme.shared.color.accent, LocalizableStringKey = .custom(""))
+  case icon(Image, Color = Theme.shared.color.accent)
   case checkbox(Bool, Bool, @Sendable (Bool) -> Void)
   case empty
 

@@ -75,7 +75,7 @@ public struct TappableCellView: View {
           .labelsHidden()
         } else {
           Theme.shared.image.chevronRight
-            .foregroundColor(Theme.shared.color.tertiaryLabel)
+            .foregroundColor(Theme.shared.color.accent)
         }
       }
       if showDivider {
