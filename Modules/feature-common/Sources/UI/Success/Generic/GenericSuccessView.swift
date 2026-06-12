@@ -27,7 +27,10 @@ struct GenericSuccessView<Router: RouterHost>: View {
     }
 
   var body: some View {
-    ContentScreenView {
+    ContentScreenView(
+      padding: .zero,
+      canScroll: true
+    ) {
       GenericSuccessViewContainer(
         viewState: viewModel.viewState,
         onButtonClicked: { button in
@@ -50,36 +53,40 @@ private struct GenericSuccessViewContainer: View {
   @MainActor
   @ViewBuilder
   private func content() -> some View {
-    ContentHeaderView(
-      config: ContentHeaderConfig(
-        appIconAndTextData: AppIconAndTextData(
-          appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
+    VStack(spacing: .zero) {
+      ContentHeaderView(
+        config: ContentHeaderConfig(
+          appIconAndTextData: AppIconAndTextData(
+            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
+          )
         )
       )
-    )
 
-    VSpacer.jumbo()
+      VSpacer.jumbo()
 
-    VStack {
+      VStack {
 
-      ZStack(alignment: .center) {
-        getCenteredIcon()
+        ZStack(alignment: .center) {
+          getCenteredIcon()
+        }
+
+        VSpacer.large()
+
+        ContentTitleView(
+          title: viewState.config.title.value,
+          accessibilityTitle: GenericSuccessLocators.successTitle,
+          titleFont: Theme.shared.font.displayLarge,
+          caption: viewState.config.subtitle,
+          titleColor: viewState.config.title.color,
+          textAlignment: .center,
+          topSpacing: .withoutToolbar
+        )
+
+        Spacer()
       }
-
-      VSpacer.large()
-
-      ContentTitleView(
-        title: viewState.config.title.value,
-        accessibilityTitle: GenericSuccessLocators.successTitle,
-        titleFont: Theme.shared.font.displayLarge,
-        caption: viewState.config.subtitle,
-        titleColor: viewState.config.title.color,
-        textAlignment: .center,
-        topSpacing: .withoutToolbar
-      )
-
-      Spacer()
-
+    }
+    .padding(.horizontal, Theme.shared.dimension.padding)
+    .safeAreaInset(edge: .bottom) {
       VStack {
         ForEach(viewState.config.buttons, id: \.id) { button in
           WrapButtonView(
@@ -92,6 +99,8 @@ private struct GenericSuccessViewContainer: View {
           )
         }
       }
+      .padding(.horizontal, SPACING_MEDIUM)
+      .padding(.bottom, SPACING_LARGE_MEDIUM)
     }
   }
 
