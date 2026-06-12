@@ -136,6 +136,37 @@ The three groups:
 > is a **semantic** role (falls back to the UIKit separator). The visible hairline dividers across the
 > UI use `separator`, so edit that one to recolor dividers.
 
+### Navigation bar title color (`navigationBarColorScheme`)
+
+The navigation bar renders its **title and bar-button items** in either light or dark *content*. By
+default iOS picks this from the system light/dark setting — which means with a **dark-toned
+`background` in light mode** the title would come out black and disappear against your color. To control
+this, the theme exposes one appearance setting alongside the color roles:
+
+```swift
+// ColorManagerProtocol
+var navigationBarColorScheme: ColorScheme? { get }   // nil = system default
+```
+
+It is set where the theme is configured, in
+[`ThemeConfiguration`](../Modules/logic-resources/Sources/Manager/ThemeConfiguration.swift):
+
+```swift
+self.color = color ?? ColorManager(bundle: .assetsBundle, navigationBarColorScheme: .dark)
+```
+
+| Value | Effect |
+| --- | --- |
+| `nil` | **System default** — the bar follows light/dark mode automatically (use this for a light theme). |
+| `.dark` | Forces **light** title/buttons — pair with a **dark** `background`. |
+| `.light` | Forces **dark** title/buttons — pair with a **light** `background`. |
+
+[`ContentScreenView`](../Modules/logic-ui/Sources/DesignSystem/Component/Content/ContentScreenView.swift)
+applies this to every screen, so setting it once covers the whole app. A single screen can override it
+with the `toolbarColorScheme:` parameter (an explicit value wins over the theme; otherwise the theme
+value is used). Match this to your `background`: a dark palette uses `.dark`, a light palette leaves it
+`nil`.
+
 ### The override mechanism
 
 For **system** and **semantic** colors, `ColorManager` looks up a colorset whose name matches the

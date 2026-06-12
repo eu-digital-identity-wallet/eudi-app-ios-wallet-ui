@@ -29,7 +29,12 @@ public struct ContentScreenView<Content: View>: View {
   private let navigationTitle: LocalizableStringKey?
   private let isLoading: Bool
   private let toolbarContent: ToolBarContent?
+  private let toolbarColorScheme: ColorScheme?
   private let notificationActions: [NotificationAction]
+
+  private var resolvedToolbarColorScheme: ColorScheme? {
+    toolbarColorScheme ?? Theme.shared.color.navigationBarColorScheme
+  }
 
   public init(
     padding: CGFloat = Theme.shared.dimension.padding,
@@ -41,6 +46,7 @@ public struct ContentScreenView<Content: View>: View {
     navigationTitle: LocalizableStringKey? = nil,
     isLoading: Bool = false,
     toolbarContent: ToolBarContent? = nil,
+    toolbarColorScheme: ColorScheme? = nil,
     notificationActions: [NotificationAction] = [],
     @ViewBuilder content: () -> Content
   ) {
@@ -54,6 +60,7 @@ public struct ContentScreenView<Content: View>: View {
     self.navigationTitle = navigationTitle
     self.isLoading = isLoading
     self.toolbarContent = toolbarContent
+    self.toolbarColorScheme = toolbarColorScheme
     self.notificationActions = notificationActions
   }
 
@@ -76,6 +83,7 @@ public struct ContentScreenView<Content: View>: View {
       $0.navigationTitle(navigationTitle!)
     }
     .navigationBarTitleDisplayMode(.inline)
+    .toolbarColorScheme(resolvedToolbarColorScheme, for: .navigationBar)
     .if(toolbarContent != nil) {
       $0.toolbar {
         toolbarContent

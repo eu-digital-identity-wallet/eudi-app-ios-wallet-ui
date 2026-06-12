@@ -63,6 +63,14 @@ public protocol ColorManagerProtocol: Sendable {
   var tertiaryFill: Color { get }
   var quaternaryFill: Color { get }
   var accent: Color { get }
+
+  // MARK: - Appearance
+
+  /// The color scheme the navigation bar content (title, buttons) should adopt.
+  /// `nil` keeps the system default (adapts to light/dark mode); set `.dark` to
+  /// force light content (e.g. for a dark themed background) or `.light` to
+  /// force dark content.
+  var navigationBarColorScheme: ColorScheme? { get }
 }
 
 final class ColorManager: ColorManagerProtocol {
@@ -161,10 +169,18 @@ final class ColorManager: ColorManagerProtocol {
   public var quaternaryFill: Color { color(for: .quaternaryFill) }
   public var accent: Color { color(for: .accent) }
 
+  // MARK: - Appearance
+
+  public let navigationBarColorScheme: ColorScheme?
+
   // MARK: - Lifecycle
 
-  init(bundle: Bundle = .assetsBundle) {
+  init(
+    bundle: Bundle = .assetsBundle,
+    navigationBarColorScheme: ColorScheme? = nil
+  ) {
     self.bundle = bundle
+    self.navigationBarColorScheme = navigationBarColorScheme
   }
 
   // MARK: - Resolution

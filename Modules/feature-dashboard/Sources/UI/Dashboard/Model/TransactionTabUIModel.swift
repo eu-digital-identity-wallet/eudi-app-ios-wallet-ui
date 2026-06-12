@@ -53,7 +53,7 @@ public struct TransactionTabUIModel: Identifiable, Sendable, Equatable, Filterab
       overlineTextColor: self.status == .completed ? Theme.shared.color.green : Theme.shared.color.red,
       trailingContent: .textWithIcon(
         Theme.shared.image.chevronRight,
-        Theme.shared.color.secondaryLabel,
+        Theme.shared.color.accent,
         self.transactionType.typeTitle
       )
     )

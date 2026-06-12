@@ -180,7 +180,7 @@ extension DocClaimsDecodable {
 
     switch state {
     case .issued:
-      return Theme.shared.color.secondaryLabel
+      return Theme.shared.color.accent
     case .pending:
       return Theme.shared.color.warning
     case .failed, .revoked:
