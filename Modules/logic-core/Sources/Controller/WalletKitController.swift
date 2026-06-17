@@ -160,6 +160,21 @@ final actor WalletKitControllerImpl: WalletKitController {
     )
   }
 
+  /// Resolves the credential options to use for an existing document.
+  ///
+  /// Issuer-defined reuse policies persisted at issuance time take precedence, so we first try the
+  /// options stored on the document (`getDocumentCredentialOptions`). When the document has no
+  /// persisted options, we fall back to the local `documentIssuanceConfig` rule.
+  private func resolveCredentialOptions(
+    documentId: String,
+    documentTypeIdentifier: DocumentTypeIdentifier?
+  ) async -> CredentialOptions {
+    if let persisted = try? await wallet.getDocumentCredentialOptions(documentId: documentId) {
+      return persisted
+    }
+    return walletKitConfig.documentIssuanceConfig.rule(for: documentTypeIdentifier).credentialOptions
+  }
+
   func issueDocumentsByOfferUrl(
     offerUri: String,
     docTypes: [OfferedDocModel],
@@ -167,12 +182,8 @@ final actor WalletKitControllerImpl: WalletKitController {
   ) async throws -> [WalletStorage.Document] {
     let docTypes = docTypes.map { docType in
       let rule = walletKitConfig.documentIssuanceConfig.rule(for: docType.documentTypeIdentifier)
-      let credentialOptions: CredentialOptions = .init(
-        credentialPolicy: rule.policy,
-        batchSize: rule.numberOfCredentials
-      )
       return docType.copy(
-        credentialOptions: credentialOptions,
+        credentialOptions: rule.credentialOptions,
         keyOptions: walletKitConfig.keyOptions
       )
     }
@@ -274,18 +285,20 @@ final actor WalletKitControllerImpl: WalletKitController {
     let documents = try await wallet.issueDocuments(
       issuerName: issuerId,
       docTypeIdentifiers: identifiers.map { .identifier($0) },
-      credentialOptions: .init(
-        credentialPolicy: rule.policy,
-        batchSize: rule.numberOfCredentials
-      ),
+      credentialOptions: rule.credentialOptions,
       keyOptions: walletKitConfig.keyOptions
     )
     return documents
   }
 
   func reIssueDocument(identifier: String, isBackgroundOperation: Bool) async throws -> WalletStorage.Document {
+    let credentialOptions = await resolveCredentialOptions(
+      documentId: identifier,
+      documentTypeIdentifier: fetchDocument(with: identifier)?.documentTypeIdentifier
+    )
     return try await wallet.reissueDocument(
       documentId: identifier,
+      credentialOptions: credentialOptions,
       keyOptions: walletKitConfig.keyOptions,
       backgroundOnly: isBackgroundOperation
     )
@@ -297,14 +310,14 @@ final actor WalletKitControllerImpl: WalletKitController {
     else {
       throw WalletCoreError.missingMetadata
     }
-    let rule = walletKitConfig.documentIssuanceConfig.rule(for: doc.documentTypeIdentifier)
+    let credentialOptions = await resolveCredentialOptions(
+      documentId: doc.id,
+      documentTypeIdentifier: doc.documentTypeIdentifier
+    )
     let result = try await wallet.requestDeferredIssuance(
       issuerName: metadata.credentialIssuerIdentifier,
       deferredDoc: doc,
-      credentialOptions: .init(
-        credentialPolicy: rule.policy,
-        batchSize: rule.numberOfCredentials
-      ),
+      credentialOptions: credentialOptions,
       keyOptions: walletKitConfig.keyOptions
     )
     if result.isDeferred {
@@ -343,15 +356,15 @@ final actor WalletKitControllerImpl: WalletKitController {
     else {
       throw WalletCoreError.missingMetadata
     }
-    let rule = walletKitConfig.documentIssuanceConfig.rule(for: pendingDoc.documentTypeIdentifier)
+    let credentialOptions = await resolveCredentialOptions(
+      documentId: pendingDoc.id,
+      documentTypeIdentifier: pendingDoc.documentTypeIdentifier
+    )
     return try await wallet.resumePendingIssuance(
       issuerName: metadata.credentialIssuerIdentifier,
       pendingDoc: pendingDoc,
       webUrl: webUrl,
-      credentialOptions: .init(
-        credentialPolicy: rule.policy,
-        batchSize: rule.numberOfCredentials
-      ),
+      credentialOptions: credentialOptions,
       keyOptions: walletKitConfig.keyOptions
     )
   }
