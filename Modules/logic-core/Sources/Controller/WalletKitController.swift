@@ -54,6 +54,7 @@ public protocol WalletKitController: Sendable {
     identifier: String,
     isBackgroundOperation: Bool
   ) async throws -> WalletStorage.Document
+  func getDocumentCredentialOptions(with id: String) async -> CredentialOptions?
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable
   func resolveOfferUrlDocTypes(offerUri: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
@@ -169,10 +170,17 @@ final actor WalletKitControllerImpl: WalletKitController {
     documentId: String,
     documentTypeIdentifier: DocumentTypeIdentifier?
   ) async -> CredentialOptions {
-    if let persisted = try? await wallet.getDocumentCredentialOptions(documentId: documentId) {
+    if let persisted = await getDocumentCredentialOptions(with: documentId) {
       return persisted
     }
     return walletKitConfig.documentIssuanceConfig.rule(for: documentTypeIdentifier).credentialOptions
+  }
+
+  /// The credential options persisted on a document at issuance time, or `nil` when the document
+  /// has no stored options. These carry the issuer-enforced reuse policy (batch size and reissue
+  /// triggers) resolved by WalletKit 0.32.0.
+  func getDocumentCredentialOptions(with id: String) async -> CredentialOptions? {
+    return try? await wallet.getDocumentCredentialOptions(documentId: id)
   }
 
   func issueDocumentsByOfferUrl(

@@ -62,15 +62,10 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
   private func checkReIssuance() async throws {
 
-    let issuedDocuments = await walletKitController.fetchIssuedDocuments()
-      .filter {
-        let remainingUsage = $0.credentialsUsageCounts?.remaining ?? -1
-        let belowMinCount = remainingUsage <= reIssuanceRule.minNumberOfCredentials
-        let hasOneTimeUsePolicy = $0.credentialPolicy == .oneTimeUse
-        let expiresWithinThreshold = $0.validUntil?.isWithinNextHours(reIssuanceRule.minExpirationHours) ?? false
-
-        return (belowMinCount && hasOneTimeUsePolicy) || expiresWithinThreshold
-      }
+    var issuedDocuments: [any DocClaimsDecodable] = []
+    for document in await walletKitController.fetchIssuedDocuments() where await shouldReIssue(document) {
+      issuedDocuments.append(document)
+    }
 
     guard !issuedDocuments.isEmpty else { return }
 
@@ -104,6 +99,26 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
         await notifyDocumentDetails(with: removedIds)
       }
     }
+  }
+
+  /// Decides whether a document should be reissued.
+  ///
+  /// Reissue thresholds follow the issuer-enforced reuse policy persisted on the document
+  /// (WalletKit 0.32.0 `CredentialOptions`). When a document has no persisted triggers we fall
+  /// back to the local `ReIssuanceRule`. `reissueTriggerLifetimeLeft` is treated in hours, to match
+  /// the configured `minExpirationHours`.
+  private func shouldReIssue(_ document: any DocClaimsDecodable) async -> Bool {
+    let credentialOptions = await walletKitController.getDocumentCredentialOptions(with: document.id)
+
+    let unusedThreshold = credentialOptions?.reissueTriggerUnused ?? reIssuanceRule.minNumberOfCredentials
+    let lifetimeHoursThreshold = credentialOptions?.reissueTriggerLifetimeLeft ?? reIssuanceRule.minExpirationHours
+
+    let remainingUsage = document.credentialsUsageCounts?.remaining ?? -1
+    let belowMinCount = remainingUsage <= unusedThreshold
+    let hasOneTimeUsePolicy = document.credentialPolicy == .oneTimeUse
+    let expiresWithinThreshold = document.validUntil?.isWithinNextHours(lifetimeHoursThreshold) ?? false
+
+    return (belowMinCount && hasOneTimeUsePolicy) || expiresWithinThreshold
   }
 
   private func storeFailedDocuments(with ids: [String]) async throws {
