@@ -103,6 +103,7 @@ private struct SettingsViewContainer: View {
       if let version = viewState.appVersion {
         Text(version)
           .typography(Theme.shared.font.bodyMedium)
+          .foregroundStyle(Theme.shared.color.primaryLabel)
           .frame(maxWidth: .infinity, alignment: .center)
       }
     }
