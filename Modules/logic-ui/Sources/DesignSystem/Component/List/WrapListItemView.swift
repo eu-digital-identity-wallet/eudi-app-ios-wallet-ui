@@ -279,7 +279,7 @@ public struct WrapListItemView: View {
           mainContent: .text(.custom("Another Item")),
           trailingContent: .textWithIcon(
             Image(systemName: "plus"),
-            Color.accentColor,
+            Color.blue,
             LocalizableStringKey.custom("Signing")
           )
         )
