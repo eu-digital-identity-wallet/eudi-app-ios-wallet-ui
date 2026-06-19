@@ -161,11 +161,6 @@ final actor WalletKitControllerImpl: WalletKitController {
     )
   }
 
-  /// Resolves the credential options to use for an existing document.
-  ///
-  /// Issuer-defined reuse policies persisted at issuance time take precedence, so we first try the
-  /// options stored on the document (`getDocumentCredentialOptions`). When the document has no
-  /// persisted options, we fall back to the local `documentIssuanceConfig` rule.
   private func resolveCredentialOptions(
     documentId: String,
     documentTypeIdentifier: DocumentTypeIdentifier?
@@ -176,9 +171,6 @@ final actor WalletKitControllerImpl: WalletKitController {
     return walletKitConfig.documentIssuanceConfig.rule(for: documentTypeIdentifier).credentialOptions
   }
 
-  /// The credential options persisted on a document at issuance time, or `nil` when the document
-  /// has no stored options. These carry the issuer-enforced reuse policy (batch size and reissue
-  /// triggers) resolved by WalletKit 0.32.0.
   func getDocumentCredentialOptions(with id: String) async -> CredentialOptions? {
     return try? await wallet.getDocumentCredentialOptions(documentId: id)
   }

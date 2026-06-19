@@ -29,14 +29,9 @@ struct DocumentIssuanceConfig {
   }
 }
 
-/// ARF Annex II (ETSI TS 119 472-3) credential reuse methods.
-/// Each method maps to a WalletKit `CredentialPolicy` used when building `CredentialOptions`.
 enum CredentialReuseMethod {
-  /// Once-Only: the credential is deleted after a single use. Maps to `.oneTimeUse`.
   case onceOnly
-  /// Limited-Time: the credential is reused within a time window. Maps to `.rotateUse` with a batch size of 1.
   case limitedTime
-  /// Rotating-Batch: credentials rotate across a batch. Maps to `.rotateUse`.
   case rotatingBatch
 
   var credentialPolicy: CredentialPolicy {
@@ -53,8 +48,6 @@ struct DocumentIssuanceRule {
   let reuseMethod: CredentialReuseMethod
   let numberOfCredentials: Int
 
-  /// Builds the WalletKit `CredentialOptions` for this rule. Used as a fallback when a
-  /// document has no persisted credential options (`getDocumentCredentialOptions`).
   var credentialOptions: CredentialOptions {
     CredentialOptions(
       credentialPolicy: reuseMethod.credentialPolicy,

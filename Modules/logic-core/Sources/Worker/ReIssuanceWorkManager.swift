@@ -101,12 +101,6 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
     }
   }
 
-  /// Decides whether a document should be reissued.
-  ///
-  /// Reissue thresholds follow the issuer-enforced reuse policy persisted on the document
-  /// (WalletKit 0.32.0 `CredentialOptions`). When a document has no persisted triggers we fall
-  /// back to the local `ReIssuanceRule`. `reissueTriggerLifetimeLeft` is treated in hours, to match
-  /// the configured `minExpirationHours`.
   private func shouldReIssue(_ document: any DocClaimsDecodable) async -> Bool {
     let credentialOptions = await walletKitController.getDocumentCredentialOptions(with: document.id)
 
