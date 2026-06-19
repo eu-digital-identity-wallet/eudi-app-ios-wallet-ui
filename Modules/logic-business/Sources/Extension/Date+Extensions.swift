@@ -38,6 +38,16 @@ public extension Date {
     return self >= Date() && self <= futureDate
   }
 
+  func isWithinNextSeconds(_ seconds: Int) -> Bool {
+    let calendar = Calendar.current
+
+    guard let futureDate = calendar.date(byAdding: .second, value: seconds, to: Date()) else {
+      return false
+    }
+
+    return self >= Date() && self <= futureDate
+  }
+
   func isBeyondNextDays(_ days: Int) -> Bool {
     let calendar = Calendar.current
 

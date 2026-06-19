@@ -23,7 +23,14 @@ public protocol ReIssuanceWorkManager: Sendable {
 
 final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
-  private let reIssuanceRule: ReIssuanceRule
+  /// Fallback re-issuance thresholds used when neither the document's persisted `CredentialOptions`
+  /// nor the local `documentIssuanceConfig` rule specify a trigger.
+  /// `defaultReissueTriggerUnused` is a credential count; `defaultReissueTriggerLifetimeLeft` is in
+  /// seconds (14 hours), matching the unit of `CredentialOptions.reissueTriggerLifetimeLeft`.
+  private let defaultReissueTriggerUnused = 2
+  private let defaultReissueTriggerLifetimeLeft = 14 * 60 * 60
+
+  private let documentIssuanceConfig: DocumentIssuanceConfig
   private let walletKitController: WalletKitController
 
   private let initialDelay: TimeInterval = 30
@@ -31,7 +38,7 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
   private var isRunning = false
 
   init(configLogic: WalletKitConfig, walletKitController: WalletKitController) {
-    self.reIssuanceRule = configLogic.documentIssuanceConfig.reIssuanceRule
+    self.documentIssuanceConfig = configLogic.documentIssuanceConfig
     self.walletKitController = walletKitController
   }
 
@@ -49,7 +56,7 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
       while await self.isRunning {
         try? await self.checkReIssuance()
-        try? await Task.sleep(seconds: self.reIssuanceRule.backgroundIntervalSeconds)
+        try? await Task.sleep(seconds: self.documentIssuanceConfig.reIssuanceBackgroundInterval.backgroundIntervalSeconds)
       }
     }
   }
@@ -103,14 +110,19 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
   private func shouldReIssue(_ document: any DocClaimsDecodable) async -> Bool {
     let credentialOptions = await walletKitController.getDocumentCredentialOptions(with: document.id)
+    let configOptions = documentIssuanceConfig.rule(for: document.documentTypeIdentifier)
 
-    let unusedThreshold = credentialOptions?.reissueTriggerUnused ?? reIssuanceRule.minNumberOfCredentials
-    let lifetimeHoursThreshold = credentialOptions?.reissueTriggerLifetimeLeft ?? reIssuanceRule.minExpirationHours
+    let unusedThreshold = credentialOptions?.reissueTriggerUnused
+      ?? configOptions.reissueTriggerUnused
+      ?? defaultReissueTriggerUnused
+    let lifetimeSecondsThreshold = credentialOptions?.reissueTriggerLifetimeLeft
+      ?? configOptions.reissueTriggerLifetimeLeft
+      ?? defaultReissueTriggerLifetimeLeft
 
     let remainingUsage = document.credentialsUsageCounts?.remaining ?? -1
     let belowMinCount = remainingUsage <= unusedThreshold
     let hasOneTimeUsePolicy = document.credentialPolicy == .oneTimeUse
-    let expiresWithinThreshold = document.validUntil?.isWithinNextHours(lifetimeHoursThreshold) ?? false
+    let expiresWithinThreshold = document.validUntil?.isWithinNextSeconds(lifetimeSecondsThreshold) ?? false
 
     return (belowMinCount && hasOneTimeUsePolicy) || expiresWithinThreshold
   }

@@ -17,11 +17,11 @@ import EudiWalletKit
 import Foundation
 
 struct DocumentIssuanceConfig {
-  let defaultRule: DocumentIssuanceRule
-  let documentSpecificRules: [DocumentTypeIdentifier: DocumentIssuanceRule]
-  let reIssuanceRule: ReIssuanceRule
+  let defaultRule: CredentialOptions
+  let documentSpecificRules: [DocumentTypeIdentifier: CredentialOptions]
+  let reIssuanceBackgroundInterval: ReIssuanceBackgroundInterval
 
-  func rule(for documentIdentifier: DocumentTypeIdentifier?) -> DocumentIssuanceRule {
+  func rule(for documentIdentifier: DocumentTypeIdentifier?) -> CredentialOptions {
     guard let documentIdentifier, let rule = documentSpecificRules[documentIdentifier] else {
       return defaultRule
     }
@@ -29,35 +29,6 @@ struct DocumentIssuanceConfig {
   }
 }
 
-enum CredentialReuseMethod {
-  case onceOnly
-  case limitedTime
-  case rotatingBatch
-
-  var credentialPolicy: CredentialPolicy {
-    switch self {
-    case .onceOnly:
-      return .oneTimeUse
-    case .limitedTime, .rotatingBatch:
-      return .rotateUse
-    }
-  }
-}
-
-struct DocumentIssuanceRule {
-  let reuseMethod: CredentialReuseMethod
-  let numberOfCredentials: Int
-
-  var credentialOptions: CredentialOptions {
-    CredentialOptions(
-      credentialPolicy: reuseMethod.credentialPolicy,
-      batchSize: reuseMethod == .limitedTime ? 1 : numberOfCredentials
-    )
-  }
-}
-
-struct ReIssuanceRule {
-  let minNumberOfCredentials: Int
-  let minExpirationHours: Int
+struct ReIssuanceBackgroundInterval {
   let backgroundIntervalSeconds: TimeInterval
 }

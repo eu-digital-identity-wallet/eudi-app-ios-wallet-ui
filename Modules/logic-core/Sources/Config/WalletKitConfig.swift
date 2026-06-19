@@ -258,45 +258,41 @@ struct WalletKitConfigImpl: WalletKitConfig {
     return switch configLogic.appBuildVariant {
     case .DEMO:
       DocumentIssuanceConfig(
-        defaultRule: DocumentIssuanceRule(
-          reuseMethod: .limitedTime,
-          numberOfCredentials: 1
+        defaultRule: CredentialOptions(
+          credentialPolicy: .rotateUse,
+          batchSize: 1
         ),
         documentSpecificRules: [
-          DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
-            reuseMethod: .onceOnly,
-            numberOfCredentials: 10
+          DocumentTypeIdentifier.mDocPid: CredentialOptions(
+            credentialPolicy: .oneTimeUse,
+            batchSize: 10
           ),
-          DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
-            reuseMethod: .onceOnly,
-            numberOfCredentials: 10
+          DocumentTypeIdentifier.sdJwtPid: CredentialOptions(
+            credentialPolicy: .oneTimeUse,
+            batchSize: 10
           )
         ],
-        reIssuanceRule: ReIssuanceRule(
-          minNumberOfCredentials: 2,
-          minExpirationHours: 14,
+        reIssuanceBackgroundInterval: ReIssuanceBackgroundInterval(
           backgroundIntervalSeconds: 300
         )
       )
     case .DEV:
       DocumentIssuanceConfig(
-        defaultRule: DocumentIssuanceRule(
-          reuseMethod: .limitedTime,
-          numberOfCredentials: 1
+        defaultRule: CredentialOptions(
+          credentialPolicy: .rotateUse,
+          batchSize: 1
         ),
         documentSpecificRules: [
-          DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
-            reuseMethod: .onceOnly,
-            numberOfCredentials: 60
+          DocumentTypeIdentifier.mDocPid: CredentialOptions(
+            credentialPolicy: .oneTimeUse,
+            batchSize: 60
           ),
-          DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
-            reuseMethod: .onceOnly,
-            numberOfCredentials: 60
+          DocumentTypeIdentifier.sdJwtPid: CredentialOptions(
+            credentialPolicy: .oneTimeUse,
+            batchSize: 60
           )
         ],
-        reIssuanceRule: ReIssuanceRule(
-          minNumberOfCredentials: 2,
-          minExpirationHours: 14,
+        reIssuanceBackgroundInterval: ReIssuanceBackgroundInterval(
           backgroundIntervalSeconds: 300
         )
       )
