@@ -40,6 +40,14 @@ public struct BaseRequestView<Router: RouterHost>: View {
           Task {
             await viewModel.onSelectionChanged(id: id)
           }
+        },
+        onCombinationSelected: { index in
+          viewModel.onCombinationSelected(index: index)
+        },
+        onCombinationItemClick: { index, id in
+          Task {
+            await viewModel.onCombinationItemClick(combinationIndex: index, id: id)
+          }
         }
       )
     }
@@ -86,6 +94,8 @@ private struct BaseRequestViewContainer: View {
   let viewState: RequestViewState
   let onShare: () -> Void
   let onSelectionChanged: (String) -> Void
+  var onCombinationSelected: (Int) -> Void = { _ in }
+  var onCombinationItemClick: (Int, String) -> Void = { _, _ in }
 
   var body: some View {
     content()
@@ -119,23 +129,10 @@ private struct BaseRequestViewContainer: View {
         ZStack {
           VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
-            ForEach(viewState.items.indices, id: \.self) { index in
-              let section = viewState.items[index]
-              WrapExpandableListView(
-                header: .init(
-                  mainContent: .text(.custom(section.section.title)),
-                  supportingText: .viewDetails
-                ),
-                items: section.section.listItems,
-                backgroundColor: Theme.shared.color.groupedElevatedBackground,
-                hideSensitiveContent: false,
-                isLoading: viewState.isLoading,
-                onItemClick: { onSelectionChanged($0.groupId) }
-              )
-              .accessibilityElement()
-              .combineChilrenAccessibility(
-                locator: BaseRequestLocators.requestedDocument(index.string)
-              )
+            if viewState.combinations.count > 1 {
+              combinationsContent()
+            } else {
+              singleCombinationContent()
             }
 
             Text(.shareDataReview)
@@ -154,6 +151,66 @@ private struct BaseRequestViewContainer: View {
     .safeAreaInset(edge: .bottom) {
       shareButton()
     }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func singleCombinationContent() -> some View {
+    ForEach(viewState.items.indices, id: \.self) { index in
+      documentSection(
+        viewState.items[index],
+        onItemClick: { onSelectionChanged($0) }
+      )
+      .accessibilityElement()
+      .combineChilrenAccessibility(
+        locator: BaseRequestLocators.requestedDocument(index.string)
+      )
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func combinationsContent() -> some View {
+    ForEach(viewState.combinations.indices, id: \.self) { index in
+      WrapSelectableCardView(
+        title: .requestCombinationTitle(["\(index + 1)", "\(viewState.combinations.count)"]),
+        isSelected: index == viewState.selectedCombinationIndex,
+        onSelected: { onCombinationSelected(index) },
+        content: {
+          VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+            ForEach(viewState.combinations[index].indices, id: \.self) { sectionIndex in
+              documentSection(
+                viewState.combinations[index][sectionIndex],
+                onItemClick: { onCombinationItemClick(index, $0) }
+              )
+            }
+          }
+        }
+      )
+      .accessibilityElement()
+      .combineChilrenAccessibility(
+        locator: BaseRequestLocators.requestedDocument(index.string)
+      )
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func documentSection(
+    _ section: RequestDataUiModel,
+    onItemClick: @escaping (String) -> Void
+  ) -> some View {
+    WrapExpandableListView(
+      header: .init(
+        mainContent: .text(.custom(section.section.title)),
+        supportingText: .viewDetails
+      ),
+      items: section.section.listItems,
+      backgroundColor: Theme.shared.color.groupedElevatedBackground,
+      hideSensitiveContent: false,
+      isLoading: viewState.isLoading,
+      onItemClick: { onItemClick($0.groupId) }
+    )
   }
 
   @MainActor
@@ -200,6 +257,8 @@ private struct BaseRequestViewContainer: View {
     errorTitle: nil,
     showMissingCredentials: false,
     items: RequestDataUiModel.mockData(),
+    combinations: [RequestDataUiModel.mockData()],
+    selectedCombinationIndex: 0,
     trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
     relyingParty: .custom("relying party"),
     isTrusted: true,

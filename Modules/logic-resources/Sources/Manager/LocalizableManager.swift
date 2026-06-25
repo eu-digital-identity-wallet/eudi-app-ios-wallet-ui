@@ -60,6 +60,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "request_data_info_notice")
     case .requestDataTitle(let args):
       bundle.localizedStringWithArguments(forKey: "request_data_share_title", arguments: args)
+    case .requestCombinationTitle(let args):
+      bundle.localizedStringWithArguments(forKey: "request_combination_title", arguments: args)
     case .documentAdded:
       bundle.localizedString(forKey: "document_added")
     case .requestDataSheetCaption:

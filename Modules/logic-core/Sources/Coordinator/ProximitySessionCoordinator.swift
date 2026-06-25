@@ -89,7 +89,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
   }
 
   public func requestReceived() async throws -> PresentationRequest {
-    guard session.disclosedDocuments.isEmpty == false else {
+    guard session.disclosedDocumentSets.contains(where: { !$0.isEmpty }) else {
       throw session.uiError ?? .init(description: "Failed to Find knonw documents to send")
     }
     return createRequest()
@@ -119,7 +119,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
 
   private func createRequest() -> PresentationRequest {
     PresentationRequest(
-      items: session.disclosedDocuments,
+      itemSets: session.disclosedDocumentSets,
       relyingParty: session.readerCertIssuer ?? LocalizableStringKey.unknownVerifier.toString,
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableStringKey.requestDataInfoNotice.toString,
       isTrusted: session.readerCertIssuerValid == true

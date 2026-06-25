@@ -111,7 +111,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
+              parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
               cacheIssuerMetadata: true
             ),
@@ -123,7 +123,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
+              parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
               cacheIssuerMetadata: true
             ),
@@ -138,7 +138,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
+              parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
               cacheIssuerMetadata: true
             ),
@@ -150,7 +150,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
+              parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
               cacheIssuerMetadata: true
             ),

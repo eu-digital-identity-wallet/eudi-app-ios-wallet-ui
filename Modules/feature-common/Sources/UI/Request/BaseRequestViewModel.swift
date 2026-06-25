@@ -24,7 +24,14 @@ public struct RequestViewState: ViewState {
   public let error: ContentErrorView.Config?
   public let errorTitle: LocalizableStringKey?
   public let showMissingCredentials: Bool
+  /// Sections of the currently selected credential combination (also the source the share/response
+  /// logic reads). Mirrors `combinations[selectedCombinationIndex]`.
   public let items: [RequestDataUiModel]
+  /// All selectable credential combinations. More than one means the verifier request (DCQL) can be
+  /// satisfied by several combinations and the user picks one; a single entry is the common case.
+  public let combinations: [[RequestDataUiModel]]
+  /// Index into `combinations` of the user's current selection.
+  public let selectedCombinationIndex: Int
   public let trustedRelyingPartyInfo: LocalizableStringKey
   public let relyingParty: LocalizableStringKey
   public let isTrusted: Bool
@@ -50,6 +57,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         errorTitle: nil,
         showMissingCredentials: true,
         items: RequestDataUiModel.mockData(),
+        combinations: [],
+        selectedCombinationIndex: 0,
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: .unknownVerifier,
         isTrusted: false,
@@ -153,16 +162,48 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     relyingParty: LocalizableStringKey,
     isTrusted: Bool
   ) {
+    onReceivedCombinations(
+      with: [items],
+      title: title,
+      relyingParty: relyingParty,
+      isTrusted: isTrusted
+    )
+  }
+
+  /// Receives one or more selectable credential combinations. The first combination is selected by
+  /// default. When `combinations` holds more than one entry the view renders selectable option cards.
+  public func onReceivedCombinations(
+    with combinations: [[RequestDataUiModel]],
+    title: LocalizableStringKey,
+    relyingParty: LocalizableStringKey,
+    isTrusted: Bool
+  ) {
+    let selectedItems = combinations.first ?? []
     setState {
       $0.copy(
         isLoading: false,
-        items: items,
+        items: selectedItems,
+        combinations: combinations,
+        selectedCombinationIndex: 0,
         relyingParty: relyingParty,
         isTrusted: isTrusted,
-        allowShare: canShare(with: items),
+        allowShare: canShare(with: selectedItems),
         initialized: true
       )
       .copy(error: nil)
+    }
+  }
+
+  func onCombinationSelected(index: Int) {
+    guard viewState.combinations.indices.contains(index) else { return }
+    let selectedItems = viewState.combinations[index]
+    setState {
+      $0.copy(
+        showMissingCredentials: false,
+        items: selectedItems,
+        selectedCombinationIndex: index,
+        allowShare: canShare(with: selectedItems)
+      )
     }
   }
 
@@ -174,6 +215,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         errorTitle: nil,
         showMissingCredentials: true,
         items: RequestDataUiModel.mockData(),
+        combinations: [],
+        selectedCombinationIndex: 0,
         trustedRelyingPartyInfo: .requestDataVerifiedEntityMessage,
         relyingParty: .unknownVerifier,
         isTrusted: false,
@@ -216,7 +259,15 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   }
 
   func onSelectionChanged(id: String) async {
-    if viewState.showMissingCredentials {
+    await onCombinationItemClick(combinationIndex: viewState.selectedCombinationIndex, id: id)
+  }
+
+  /// Handles a row tap (expand/collapse or checkbox toggle) within a specific combination.
+  /// Edits that combination's data and, when it is the selected one, keeps `items` in sync.
+  func onCombinationItemClick(combinationIndex: Int, id: String) async {
+    guard viewState.combinations.indices.contains(combinationIndex) else { return }
+
+    if viewState.items.hasSelectableClaims() && viewState.showMissingCredentials {
       itemsChanged = true
       setState {
         $0.copy(
@@ -224,17 +275,23 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         )
       }
     } else {
-      let items = viewState.items.map { item in
+      let updatedItems = viewState.combinations[combinationIndex].map { item in
         var updatedItem = item
         updatedItem.toggleSelection(id: id)
         return updatedItem
       }
 
+      var combinations = viewState.combinations
+      combinations[combinationIndex] = updatedItems
+
+      let isSelectedCombination = combinationIndex == viewState.selectedCombinationIndex
+
       setState {
         $0.copy(
           showMissingCredentials: false,
-          items: items,
-          allowShare: canShare(with: items)
+          items: isSelectedCombination ? updatedItems : $0.items,
+          combinations: combinations,
+          allowShare: isSelectedCombination ? canShare(with: updatedItems) : $0.allowShare
         )
       }
     }

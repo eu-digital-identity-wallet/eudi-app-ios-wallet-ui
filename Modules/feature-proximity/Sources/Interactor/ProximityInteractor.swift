@@ -120,7 +120,8 @@ final actor ProximityInteractorImpl: ProximityInteractor {
     do {
       let response = try await sessionCoordinatorHolder.getActiveProximityCoordinator().requestReceived()
       let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
-      let documents = response.items.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
+      // Proximity (ISO 18013-5 BLE) always yields a single credential combination.
+      let documents = (response.itemSets.first ?? []).filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
       guard !documents.isEmpty else { return .failure(WalletCoreError.unableFetchDocuments) }
       return .success(
         documents.toUiModels(
