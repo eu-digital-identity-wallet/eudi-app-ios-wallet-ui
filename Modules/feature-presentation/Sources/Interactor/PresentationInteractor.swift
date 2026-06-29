@@ -17,8 +17,6 @@ import logic_core
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel: Sendable {
-  /// One entry per selectable credential combination. A single-element array means the
-  /// verifier request is satisfied by exactly one combination (the common case).
   var requestDataCombinations: [[RequestDataUiModel]]
   var relyingParty: String
   var dataRequestInfo: String
@@ -101,8 +99,10 @@ final actor PresentationInteractorImpl: PresentationInteractor {
           documentSet.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
         }
         .map { documentSet in
-          // Presentation discloses the whole selected combination; no per-claim checkboxes.
-          documentSet.toUiModels(with: self.walletKitController, claimsAreSelectable: false)
+          documentSet.toUiModels(
+            with: self.walletKitController,
+            claimsAreSelectable: false
+          )
         }
         .filter { !$0.isEmpty }
       guard !combinations.isEmpty else { return .failure(WalletCoreError.unableFetchDocuments) }

@@ -15,8 +15,6 @@
  */
 
 public struct PresentationRequest: Sendable, Equatable {
-  /// One entry per selectable credential combination produced by DCQL resolution.
-  /// Proximity (BLE) always yields a single combination; OpenID4VP DCQL may yield several.
   public let itemSets: [[DocElements]]
   public let relyingParty: String
   public let dataRequestInfo: String

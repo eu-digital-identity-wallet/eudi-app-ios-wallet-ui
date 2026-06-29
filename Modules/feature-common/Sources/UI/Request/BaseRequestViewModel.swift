@@ -24,13 +24,8 @@ public struct RequestViewState: ViewState {
   public let error: ContentErrorView.Config?
   public let errorTitle: LocalizableStringKey?
   public let showMissingCredentials: Bool
-  /// Sections of the currently selected credential combination (also the source the share/response
-  /// logic reads). Mirrors `combinations[selectedCombinationIndex]`.
   public let items: [RequestDataUiModel]
-  /// All selectable credential combinations. More than one means the verifier request (DCQL) can be
-  /// satisfied by several combinations and the user picks one; a single entry is the common case.
   public let combinations: [[RequestDataUiModel]]
-  /// Index into `combinations` of the user's current selection.
   public let selectedCombinationIndex: Int
   public let trustedRelyingPartyInfo: LocalizableStringKey
   public let relyingParty: LocalizableStringKey
@@ -170,8 +165,6 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     )
   }
 
-  /// Receives one or more selectable credential combinations. The first combination is selected by
-  /// default. When `combinations` holds more than one entry the view renders selectable option cards.
   public func onReceivedCombinations(
     with combinations: [[RequestDataUiModel]],
     title: LocalizableStringKey,

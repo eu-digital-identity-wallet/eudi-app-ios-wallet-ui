@@ -16,9 +16,6 @@
 import SwiftUI
 import logic_resources
 
-/// A card with a radio-style selectable header followed by arbitrary content.
-/// Used to present mutually exclusive options (e.g. credential combinations) where the user
-/// picks exactly one. The selected card is highlighted with an accent border.
 public struct WrapSelectableCardView<Content: View>: View {
 
   private let title: LocalizableStringKey

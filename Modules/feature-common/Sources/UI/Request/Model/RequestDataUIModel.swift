@@ -106,7 +106,6 @@ public extension Array where Element == RequestDataUiModel {
               newList.append($0)
             }
           default:
-            // Read-only row (claims not selectable) → always disclosed.
             newList.append($0)
           }
         case .nested(let item):
@@ -191,7 +190,6 @@ public extension Array where Element == RequestDataUiModel {
               newList.append($0)
             }
           default:
-            // Read-only row (claims not selectable) → always disclosed.
             newList.append($0)
           }
         case .nested(let item):
@@ -264,15 +262,12 @@ public extension Array where Element == RequestDataUiModel {
       return nil
     }
 
-    // No checkboxes at all → claims are not selectable (presentation): shareable as long as there
-    // are rows to disclose. Otherwise require at least one selected claim.
     if checkboxSelections.isEmpty {
       return !listItems.isEmpty
     }
     return checkboxSelections.contains(true)
   }
 
-  /// Whether any row exposes a checkbox, i.e. claims can be individually selected.
   func hasSelectableClaims() -> Bool {
 
     func getAllSingleItems(
