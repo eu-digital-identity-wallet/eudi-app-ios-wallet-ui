@@ -55,7 +55,7 @@ struct HomeTabView<Router: RouterHost>: View {
       Button(.cancelButton, role: .destructive) {}
         .accessibilityLocator(HomeTabViewLocators.cancelButton)
     } message: {
-      Text(.authenticateAuthoriseTransactions)
+      Text(.homeScreenAuthenticateDescription)
     }
     .dialogCompat(
       .bleDisabledModalTitle,

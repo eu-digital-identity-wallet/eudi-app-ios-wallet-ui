@@ -123,11 +123,7 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     credentialsUsageCounts: CredentialsUsageCounts?,
     documentIsLowOnCredentials: Bool
   ) -> DocumentCredentialsInfoUi? {
-    if let usageCounts = credentialsUsageCounts {
-      return documentCredentialsInfoUi(usageCounts: usageCounts)
-    } else {
-      return nil
-    }
+    documentCredentialsInfoUi(usageCounts: credentialsUsageCounts)
   }
 
   private func documentCredentialsInfoUi(
