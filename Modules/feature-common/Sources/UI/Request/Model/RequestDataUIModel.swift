@@ -519,7 +519,7 @@ private extension DocumentElementClaim {
               collapsed: .init(
                 groupId: id,
                 mainContent: .text(.custom(title)),
-                leadingIcon: .init(image: image),
+                leadingContent: .remoteImage(image: image),
                 isEnable: !status.isRequired,
                 trailingContent: trailingContent
               ),

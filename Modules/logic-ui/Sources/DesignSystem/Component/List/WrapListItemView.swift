@@ -61,24 +61,34 @@ public struct WrapListItemView: View {
   public var body: some View {
     HStack(alignment: .center, spacing: SPACING_MEDIUM) {
 
-      if let url = listItem.leadingIcon?.imageUrl {
-        RemoteImageView(
-          url: url,
-          icon: listItem.leadingIcon?.image,
-          width: Theme.shared.dimension.remoteImageIconSize,
-          height: Theme.shared.dimension.remoteImageIconSize
-        )
-        .if(listItem.isBlur) {
-          $0.blur(radius: 4, opaque: false)
-        }
-      } else if let icon = listItem.leadingIcon?.image {
-        icon
-          .resizable()
-          .aspectRatio(contentMode: .fit)
-          .frame(height: Theme.shared.dimension.remoteImageIconSize)
-          .if(listItem.isBlur) {
-            $0.blur(radius: 4, opaque: false)
+      if let leadingContent = listItem.leadingContent {
+        switch leadingContent {
+        case .remoteImage(let url, let image):
+          if let url {
+            RemoteImageView(
+              url: url,
+              icon: image,
+              width: Theme.shared.dimension.remoteImageIconSize,
+              height: Theme.shared.dimension.remoteImageIconSize
+            )
+            .if(listItem.isBlur) {
+              $0.blur(radius: 4, opaque: false)
+            }
+          } else if let image {
+            image
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(height: Theme.shared.dimension.remoteImageIconSize)
+              .if(listItem.isBlur) {
+                $0.blur(radius: 4, opaque: false)
+              }
           }
+        case .radioButton(let isSelected):
+          (isSelected ? Theme.shared.image.radioButtonSelected : Theme.shared.image.radioButtonUnselected)
+            .foregroundColor(
+              isSelected ? Theme.shared.color.accent : Theme.shared.color.secondaryLabel
+            )
+        }
       }
 
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
@@ -210,7 +220,7 @@ public struct WrapListItemView: View {
           mainContent: .text(.custom("Main Text")),
           overlineText: .custom("Overline Text"),
           supportingText: .custom("Valid until: 22 March 2030"),
-          leadingIcon: LeadingIcon(image: Image(systemName: "star")),
+          leadingContent: .remoteImage(image: Image(systemName: "star")),
           trailingContent: .icon(Image(systemName: "chevron.right"))
         ),
         action: {}
@@ -223,7 +233,7 @@ public struct WrapListItemView: View {
           mainContent: .text(.custom("Another Item")),
           overlineText: nil,
           supportingText: .custom("Additional Info"),
-          leadingIcon: nil
+          leadingContent: nil
         )
       )
     }
@@ -234,7 +244,7 @@ public struct WrapListItemView: View {
           mainContent: .text(.custom("Another Item")),
           overlineText: nil,
           supportingText: .custom("Additional Info"),
-          leadingIcon: LeadingIcon(image: Image(systemName: "heart"))
+          leadingContent: .remoteImage(image: Image(systemName: "heart"))
         )
       )
     }
@@ -246,7 +256,7 @@ public struct WrapListItemView: View {
           overlineText: .custom("Overline Texr"),
           supportingText: .custom("Additional Info"),
           overlineTextColor: Theme.shared.color.red,
-          leadingIcon: LeadingIcon(image: Image(systemName: "heart"))
+          leadingContent: .remoteImage(image: Image(systemName: "heart"))
         )
       )
     }
@@ -257,7 +267,7 @@ public struct WrapListItemView: View {
           mainContent: .text(.custom("Main Text")),
           overlineText: .custom("Overline Text"),
           supportingText: .custom("Valid until: 22 March 2030"),
-          leadingIcon: LeadingIcon(image: Image(systemName: "star")),
+          leadingContent: .remoteImage(image: Image(systemName: "star")),
           trailingContent: .checkbox(true, true) { _ in }
         ),
         action: { }

@@ -38,22 +38,15 @@ public struct WrapSelectableCardView<Content: View>: View {
   public var body: some View {
     WrapCardView(backgroundColor: Theme.shared.color.groupedBackground) {
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-        Button(action: onSelected) {
-          HStack(spacing: SPACING_MEDIUM_SMALL) {
-            (isSelected ? Theme.shared.image.radioButtonSelected : Theme.shared.image.radioButtonUnselected)
-              .foregroundColor(
-                isSelected
-                  ? Theme.shared.color.accent
-                  : Theme.shared.color.secondaryLabel
-              )
-            Text(title)
-              .typography(Theme.shared.font.titleSmall)
-              .foregroundColor(Theme.shared.color.primaryLabel)
-            Spacer()
-          }
-          .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
+        WrapListItemView(
+          listItem: .init(
+            mainContent: .text(title),
+            leadingContent: .radioButton(isSelected: isSelected)
+          ),
+          mainTextVerticalPadding: 0,
+          minHeight: false,
+          action: onSelected
+        )
 
         content()
       }
