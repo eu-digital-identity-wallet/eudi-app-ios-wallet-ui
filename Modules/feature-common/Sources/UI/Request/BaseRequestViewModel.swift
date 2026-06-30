@@ -260,7 +260,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   func onCombinationItemClick(combinationIndex: Int, id: String) async {
     guard viewState.combinations.indices.contains(combinationIndex) else { return }
 
-    if viewState.items.hasSelectableClaims() && viewState.showMissingCredentials {
+    if viewState.combinations[combinationIndex].hasSelectableClaims() && viewState.showMissingCredentials {
       itemsChanged = true
       setState {
         $0.copy(
