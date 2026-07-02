@@ -256,10 +256,12 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case documentDetailsReIssueButton
   case documentDetailsRemoveButton
   case documentDetailsExpiresOn([String])
+  case documentDetailsExpiredOn([String])
   case documentDetailsIssuedOn([String])
   case documentDetailsRevokedDocument
   case documentDetailsIssuerCardIssuedMessageText
   case documentDetailsIssuerCardRevokedMessageText
+  case documentDetailsIssuerCardExpiredMessageText
   case documentDetailsIssuerCardIssuedActionButtonText
   case batchIssuanceCounter
   case documentProviderExtensionAcceptButton

@@ -258,11 +258,11 @@ struct WalletKitConfigImpl: WalletKitConfig {
     return switch configLogic.appBuildVariant {
     case .DEMO:
       DocumentIssuanceConfig(
-        defaultRule: CredentialOptions(
+        defaultCredentialOptions: CredentialOptions(
           credentialPolicy: .rotateUse,
           batchSize: 1
         ),
-        documentSpecificRules: [
+        documentSpecificCredentialOptions: [
           DocumentTypeIdentifier.mDocPid: CredentialOptions(
             credentialPolicy: .oneTimeUse,
             batchSize: 10
@@ -272,17 +272,17 @@ struct WalletKitConfigImpl: WalletKitConfig {
             batchSize: 10
           )
         ],
-        reIssuanceBackgroundInterval: ReIssuanceBackgroundInterval(
+        reIssuanceBackgroundRule: ReIssuanceBackgroundRule(
           backgroundIntervalSeconds: 300
         )
       )
     case .DEV:
       DocumentIssuanceConfig(
-        defaultRule: CredentialOptions(
+        defaultCredentialOptions: CredentialOptions(
           credentialPolicy: .rotateUse,
           batchSize: 1
         ),
-        documentSpecificRules: [
+        documentSpecificCredentialOptions: [
           DocumentTypeIdentifier.mDocPid: CredentialOptions(
             credentialPolicy: .oneTimeUse,
             batchSize: 60
@@ -292,7 +292,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
             batchSize: 60
           )
         ],
-        reIssuanceBackgroundInterval: ReIssuanceBackgroundInterval(
+        reIssuanceBackgroundRule: ReIssuanceBackgroundRule(
           backgroundIntervalSeconds: 300
         )
       )

@@ -17,18 +17,18 @@ import EudiWalletKit
 import Foundation
 
 struct DocumentIssuanceConfig {
-  let defaultRule: CredentialOptions
-  let documentSpecificRules: [DocumentTypeIdentifier: CredentialOptions]
-  let reIssuanceBackgroundInterval: ReIssuanceBackgroundInterval
+  let defaultCredentialOptions: CredentialOptions
+  let documentSpecificCredentialOptions: [DocumentTypeIdentifier: CredentialOptions]
+  let reIssuanceBackgroundRule: ReIssuanceBackgroundRule
 
-  func rule(for documentIdentifier: DocumentTypeIdentifier?) -> CredentialOptions {
-    guard let documentIdentifier, let rule = documentSpecificRules[documentIdentifier] else {
-      return defaultRule
+  func credentialOptions(for documentIdentifier: DocumentTypeIdentifier?) -> CredentialOptions {
+    guard let documentIdentifier, let options = documentSpecificCredentialOptions[documentIdentifier] else {
+      return defaultCredentialOptions
     }
-    return rule
+    return options
   }
 }
 
-struct ReIssuanceBackgroundInterval {
+struct ReIssuanceBackgroundRule {
   let backgroundIntervalSeconds: TimeInterval
 }

@@ -56,7 +56,7 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
       while await self.isRunning {
         try? await self.checkReIssuance()
-        try? await Task.sleep(seconds: self.documentIssuanceConfig.reIssuanceBackgroundInterval.backgroundIntervalSeconds)
+        try? await Task.sleep(seconds: self.documentIssuanceConfig.reIssuanceBackgroundRule.backgroundIntervalSeconds)
       }
     }
   }
@@ -110,7 +110,7 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
   private func shouldReIssue(_ document: any DocClaimsDecodable) async -> Bool {
     let credentialOptions = await walletKitController.getDocumentCredentialOptions(with: document.id)
-    let configOptions = documentIssuanceConfig.rule(for: document.documentTypeIdentifier)
+    let configOptions = documentIssuanceConfig.credentialOptions(for: document.documentTypeIdentifier)
 
     let unusedThreshold = credentialOptions?.reissueTriggerUnused
       ?? configOptions.reissueTriggerUnused
@@ -121,10 +121,16 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
     let remainingUsage = document.credentialsUsageCounts?.remaining ?? -1
     let belowMinCount = remainingUsage <= unusedThreshold
-    let hasOneTimeUsePolicy = document.credentialPolicy == .oneTimeUse
     let expiresWithinThreshold = document.validUntil?.isWithinNextSeconds(lifetimeSecondsThreshold) ?? false
 
-    return (belowMinCount && hasOneTimeUsePolicy) || expiresWithinThreshold
+    switch document.credentialPolicy {
+    case .oneTimeUse:
+      return belowMinCount
+    case .rotateUse:
+      return belowMinCount || expiresWithinThreshold
+    @unknown default:
+      return belowMinCount || expiresWithinThreshold
+    }
   }
 
   private func storeFailedDocuments(with ids: [String]) async throws {

@@ -512,6 +512,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "document_details_remove_button")
     case .documentDetailsExpiresOn(let args):
       bundle.localizedStringWithArguments(forKey: "document_details_expires_on", arguments: args)
+    case .documentDetailsExpiredOn(let args):
+      bundle.localizedStringWithArguments(forKey: "document_details_expired_on", arguments: args)
     case .documentDetailsIssuedOn(let args):
       bundle.localizedStringWithArguments(forKey: "document_details_issued_on", arguments: args)
     case .documentDetailsRevokedDocument:
@@ -520,6 +522,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "document_details_issuer_card_issued_message_text")
     case .documentDetailsIssuerCardRevokedMessageText:
       bundle.localizedString(forKey: "document_details_issuer_card_revoked_message_text")
+    case .documentDetailsIssuerCardExpiredMessageText:
+      bundle.localizedString(forKey: "document_details_issuer_card_expired_message_text")
     case .documentDetailsIssuerCardIssuedActionButtonText:
       bundle.localizedString(forKey: "document_details_issuer_card_issued_action_btn_text")
     case .batchIssuanceCounter:

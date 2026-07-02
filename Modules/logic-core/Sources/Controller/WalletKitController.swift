@@ -168,7 +168,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     if let persisted = await getDocumentCredentialOptions(with: documentId) {
       return persisted
     }
-    return walletKitConfig.documentIssuanceConfig.rule(for: documentTypeIdentifier)
+    return walletKitConfig.documentIssuanceConfig.credentialOptions(for: documentTypeIdentifier)
   }
 
   func getDocumentCredentialOptions(with id: String) async -> CredentialOptions? {
@@ -181,7 +181,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document] {
     let docTypes = docTypes.map { docType in
-      let credentialOptions = walletKitConfig.documentIssuanceConfig.rule(for: docType.documentTypeIdentifier)
+      let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(for: docType.documentTypeIdentifier)
       return docType.copy(
         credentialOptions: credentialOptions,
         keyOptions: walletKitConfig.keyOptions
@@ -280,7 +280,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     identifiers: [String],
     docTypeIdentifier: DocumentTypeIdentifier
   ) async throws -> [WalletStorage.Document] {
-    let credentialOptions = walletKitConfig.documentIssuanceConfig.rule(for: docTypeIdentifier)
+    let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(for: docTypeIdentifier)
 
     let documents = try await wallet.issueDocuments(
       issuerName: issuerId,
