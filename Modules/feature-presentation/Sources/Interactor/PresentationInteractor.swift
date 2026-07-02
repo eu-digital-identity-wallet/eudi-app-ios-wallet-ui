@@ -17,7 +17,7 @@ import logic_core
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel: Sendable {
-  var requestDataCells: [RequestDataUiModel]
+  var requestDataCombinations: [[RequestDataUiModel]]
   var relyingParty: String
   var dataRequestInfo: String
   var isTrusted: Bool
@@ -94,13 +94,21 @@ final actor PresentationInteractorImpl: PresentationInteractor {
     do {
       let response = try await sessionCoordinatorHolder.getActiveRemoteCoordinator().requestReceived()
       let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
-      let documents = response.items.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
-      guard !documents.isEmpty else { return .failure(WalletCoreError.unableFetchDocuments) }
+      let combinations = response.itemSets
+        .map { documentSet in
+          documentSet.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
+        }
+        .map { documentSet in
+          documentSet.toUiModels(
+            with: self.walletKitController,
+            claimsAreSelectable: false
+          )
+        }
+        .filter { !$0.isEmpty }
+      guard !combinations.isEmpty else { return .failure(WalletCoreError.unableFetchDocuments) }
       return .success(
         .init(
-          requestDataCells: documents.toUiModels(
-            with: self.walletKitController
-          ),
+          requestDataCombinations: combinations,
           relyingParty: response.relyingParty,
           dataRequestInfo: response.dataRequestInfo,
           isTrusted: response.isTrusted

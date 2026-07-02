@@ -504,7 +504,7 @@ final class TestProximityInteractor: EudiTest {
   func testOnRequestReceived_WhenAllDocumentsAreRevoked_ThenVerifyFailureState() async {
     // Given
     let mockResponse = Self.mockPresentationRequest
-    let revokedDocIds = mockResponse.items.map { $0.docId }
+    let revokedDocIds = mockResponse.itemSets.flatMap { $0 }.map { $0.docId }
 
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(mockResponse)

@@ -39,8 +39,8 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
     switch result {
     case .success(let authenticationRequest):
-      self.onReceivedItems(
-        with: authenticationRequest.requestDataCells,
+      self.onReceivedCombinations(
+        with: authenticationRequest.requestDataCombinations,
         title: .requestDataTitle(
           [authenticationRequest.relyingParty]
         ),

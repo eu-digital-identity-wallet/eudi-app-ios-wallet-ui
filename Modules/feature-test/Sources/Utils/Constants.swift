@@ -216,11 +216,13 @@ extension Constants {
       ""
     }
     
-    func receiveRequest() async throws -> MdocDataTransfer18013.UserRequestInfo {
-      .init(
-        docDataFormats: [DocumentTypeIdentifier.mDocPid.rawValue : .cbor],
-        itemsRequested: RequestItems()
-      )
+    func receiveRequest() async throws -> [MdocDataTransfer18013.UserRequestInfo] {
+      [
+        .init(
+          docDataFormats: [DocumentTypeIdentifier.mDocPid.rawValue : .cbor],
+          itemsRequested: RequestItems()
+        )
+      ]
     }
     
     var flow: EudiWalletKit.FlowType
@@ -311,28 +313,30 @@ extension Constants {
 
 extension Constants {
   static let mockPresentationRequest = PresentationRequest(
-    items: [
-      .msoMdoc(
-        .init(
-          docId: isoMdlModelId,
-          docType: isoMdlDocType,
-          displayName: isoMdlName,
-          nameSpacedElements: [
-            .init(
-              nameSpace: "nameSpace",
-              elements: [
-                .init(
-                  elementIdentifier: "elementIdentifier",
-                  isOptional: false,
-                  stringValue: "value",
-                  docClaim: .init(name: "elementIdentifier", dataValue: .string("value"), stringValue: "value"),
-                  isValid: true
-                )
-              ]
-            )
-          ]
+    itemSets: [
+      [
+        .msoMdoc(
+          .init(
+            docId: isoMdlModelId,
+            docType: isoMdlDocType,
+            displayName: isoMdlName,
+            nameSpacedElements: [
+              .init(
+                nameSpace: "nameSpace",
+                elements: [
+                  .init(
+                    elementIdentifier: "elementIdentifier",
+                    isOptional: false,
+                    stringValue: "value",
+                    docClaim: .init(name: "elementIdentifier", dataValue: .string("value"), stringValue: "value"),
+                    isValid: true
+                  )
+                ]
+              )
+            ]
+          )
         )
-      )
+      ]
     ],
     relyingParty: "Relying Party",
     dataRequestInfo: "Data Request Info",

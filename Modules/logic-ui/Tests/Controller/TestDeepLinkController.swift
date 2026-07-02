@@ -549,8 +549,8 @@ private extension TestDeepLinkController {
       ""
     }
     
-    func receiveRequest() async throws -> MdocDataTransfer18013.UserRequestInfo {
-      .init(docDataFormats: [DocumentTypeIdentifier.mDocPid.rawValue : .cbor], itemsRequested: RequestItems())
+    func receiveRequest() async throws -> [MdocDataTransfer18013.UserRequestInfo] {
+      [.init(docDataFormats: [DocumentTypeIdentifier.mDocPid.rawValue : .cbor], itemsRequested: RequestItems())]
     }
     
     var flow: EudiWalletKit.FlowType

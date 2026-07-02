@@ -106,7 +106,7 @@ public extension Array where Element == RequestDataUiModel {
               newList.append($0)
             }
           default:
-            break
+            newList.append($0)
           }
         case .nested(let item):
           flatSelectedValues(currentList: item.expanded, newList: &newList)
@@ -190,7 +190,7 @@ public extension Array where Element == RequestDataUiModel {
               newList.append($0)
             }
           default:
-            break
+            newList.append($0)
           }
         case .nested(let item):
           newList.append($0)
@@ -255,24 +255,44 @@ public extension Array where Element == RequestDataUiModel {
       getAllSingleItems(all: $0.section.listItems, result: &listItems)
     }
 
-    let canShareDataRows = listItems
-      .map {
-        $0.collapsed.trailingContent
+    let checkboxSelections = listItems.compactMap { item -> Bool? in
+      if case .checkbox(_, let isSelected, _) = item.collapsed.trailingContent {
+        return isSelected
       }
-      .flatMap {
-        var selectedItems: [Bool] = []
-        switch $0 {
-        case .checkbox(_, let isSelected, _):
-          selectedItems.append(isSelected)
-        default:
-          break
-        }
-        return selectedItems
-      }
-      .filter { $0 }
-      .isEmpty
+      return nil
+    }
 
-    return !canShareDataRows
+    if checkboxSelections.isEmpty {
+      return !listItems.isEmpty
+    }
+    return checkboxSelections.contains(true)
+  }
+
+  func hasSelectableClaims() -> Bool {
+
+    func getAllSingleItems(
+      all: [PresentationExpandableListItem],
+      result: inout [PresentationExpandableListItem.SingleListItemData]
+    ) {
+      all.forEach { item in
+        switch item {
+        case .nested(let item):
+          getAllSingleItems(all: item.expanded, result: &result)
+        case .single(let item):
+          result.append(item)
+        }
+      }
+    }
+
+    var listItems: [PresentationExpandableListItem.SingleListItemData] = []
+    self.forEach {
+      getAllSingleItems(all: $0.section.listItems, result: &listItems)
+    }
+
+    return listItems.contains { item in
+      if case .checkbox = item.collapsed.trailingContent { return true }
+      return false
+    }
   }
 }
 
@@ -328,7 +348,13 @@ public extension RequestDataUiModel {
 }
 
 public extension Array where Element == DocElements {
-  func toUiModels(with walletKitController: WalletKitController) -> [RequestDataUiModel] {
+  /// - Parameter claimsAreSelectable: When `true` each claim row gets a checkbox so the user picks
+  ///   what to disclose (proximity). When `false` rows are read-only and the whole set is disclosed
+  ///   (presentation, where selection happens at the combination level).
+  func toUiModels(
+    with walletKitController: WalletKitController,
+    claimsAreSelectable: Bool = true
+  ) -> [RequestDataUiModel] {
     self.compactMap { element in
 
       var title: String {
@@ -388,7 +414,7 @@ public extension Array where Element == DocElements {
         section: .init(
           id: element.docId,
           title: title,
-          listItems: dataRows.toListItems()
+          listItems: dataRows.toListItems(claimsAreSelectable: claimsAreSelectable)
         )
       )
     }
@@ -422,25 +448,25 @@ private extension Array where Element == DocClaim {
 }
 
 private extension Array where Element == DocumentElementClaim {
-  func toListItems() -> [PresentationExpandableListItem] {
-    self.compactMap { $0.toListItem() }
+  func toListItems(claimsAreSelectable: Bool) -> [PresentationExpandableListItem] {
+    self.compactMap { $0.toListItem(claimsAreSelectable: claimsAreSelectable) }
   }
 }
 
 private extension DocumentElementClaim {
-  func toListItem() -> PresentationExpandableListItem? {
-    return self.toExpandableListItem()
+  func toListItem(claimsAreSelectable: Bool) -> PresentationExpandableListItem? {
+    return self.toExpandableListItem(claimsAreSelectable: claimsAreSelectable)
   }
 }
 
 private extension DocumentElementClaim {
-  func toExpandableListItem() -> PresentationExpandableListItem? {
+  func toExpandableListItem(claimsAreSelectable: Bool) -> PresentationExpandableListItem? {
     switch self {
     case .group(let id, let title, let items):
       return .nested(
         .init(
           collapsed: .init(groupId: id, mainContent: .text(.custom(title))),
-          expanded: items.compactMap { $0.toExpandableListItem() },
+          expanded: items.compactMap { $0.toExpandableListItem(claimsAreSelectable: claimsAreSelectable) },
           isExpanded: false
         )
       )
@@ -454,6 +480,11 @@ private extension DocumentElementClaim {
       let value,
       let status
     ):
+      // When claims are not selectable (presentation), rows are read-only: no checkbox is shown
+      // and the entire combination is disclosed.
+      let trailingContent: TrailingContent = claimsAreSelectable
+        ? .checkbox(!status.isRequired && status.isAvailable, status.isAvailable, { _ in })
+        : .empty
       switch value {
       case .string(let value):
         return .single(
@@ -463,11 +494,7 @@ private extension DocumentElementClaim {
               mainContent: .text(.custom(value)),
               overlineText: .custom(title),
               isEnable: !status.isRequired,
-              trailingContent: .checkbox(
-                !status.isRequired && status.isAvailable,
-                status.isAvailable,
-                { _ in }
-              )
+              trailingContent: trailingContent
             ),
             domainModel: self
           )
@@ -481,11 +508,7 @@ private extension DocumentElementClaim {
                 mainContent: .image(image),
                 overlineText: .custom(title),
                 isEnable: !status.isRequired,
-                trailingContent: .checkbox(
-                  !status.isRequired && status.isAvailable,
-                  status.isAvailable,
-                  { _ in }
-                )
+                trailingContent: trailingContent
               ),
               domainModel: self
             )
@@ -496,13 +519,9 @@ private extension DocumentElementClaim {
               collapsed: .init(
                 groupId: id,
                 mainContent: .text(.custom(title)),
-                leadingIcon: .init(image: image),
+                leadingContent: .remoteImage(image: image),
                 isEnable: !status.isRequired,
-                trailingContent: .checkbox(
-                  !status.isRequired && status.isAvailable,
-                  status.isAvailable,
-                  { _ in }
-                )
+                trailingContent: trailingContent
               ),
               domainModel: self
             )

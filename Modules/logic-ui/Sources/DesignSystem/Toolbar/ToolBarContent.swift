@@ -115,14 +115,6 @@ private struct ActionView: View {
         .accessibilityLocator(
           action.accessibilityLocator
         )
-        .overlay(alignment: .topTrailing) {
-          if let hasIndicator = action.hasIndicator, hasIndicator {
-            Circle()
-              .foregroundStyle(Theme.shared.color.accent)
-              .frame(width: 10)
-              .offset(x: 2, y: 2)
-          }
-        }
       } else {
         content
           .accessibilityElement()
@@ -140,6 +132,14 @@ private struct ActionView: View {
     }
     if let image = action.image {
       image
+        .overlay(alignment: .topTrailing) {
+          if let hasIndicator = action.hasIndicator, hasIndicator {
+            Circle()
+              .foregroundStyle(Theme.shared.color.accent)
+              .frame(width: 10)
+              .offset(x: 2, y: 2)
+          }
+        }
     }
   }
 }

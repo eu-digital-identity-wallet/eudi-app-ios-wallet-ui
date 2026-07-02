@@ -120,7 +120,7 @@ final actor ProximityInteractorImpl: ProximityInteractor {
     do {
       let response = try await sessionCoordinatorHolder.getActiveProximityCoordinator().requestReceived()
       let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
-      let documents = response.items.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
+      let documents = (response.itemSets.first ?? []).filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
       guard !documents.isEmpty else { return .failure(WalletCoreError.unableFetchDocuments) }
       return .success(
         documents.toUiModels(

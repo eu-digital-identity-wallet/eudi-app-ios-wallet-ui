@@ -158,20 +158,12 @@ private struct DocumentDetailsViewContainer: View {
             Button {
               toggleIsVisible()
             } label: {
-              HStack(spacing: SPACING_SMALL) {
-                (isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye)
-                  .resizable()
-                  .aspectRatio(contentMode: .fit)
-                  .frame(width: 24, height: 24)
-
-                Text(isVisible ? .documentDetailsShow : .documentDetailsHide)
-                  .typography(Theme.shared.font.bodyMedium)
-                  .fontWeight(.semibold)
-                  .frame(alignment: .leading)
-              }
-              .frame(alignment: .trailing)
-              .foregroundStyle(Theme.shared.color.accent)
-              .shimmer(isLoading: viewState.isLoading)
+              (isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 24, height: 24)
+                .foregroundStyle(Theme.shared.color.accent)
+                .shimmer(isLoading: viewState.isLoading)
             }
             .buttonStyle(.plain)
             .accessibilityLocator(isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye)

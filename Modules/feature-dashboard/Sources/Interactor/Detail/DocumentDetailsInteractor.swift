@@ -48,14 +48,10 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     let isBookmarked = await walletController.isDocumentBookmarked(with: documentId)
     let isRevoked = await walletController.isDocumentRevoked(with: documentId)
 
-    let documentIsLowOnCredentials = await walletController.isDocumentLowOnCredentials(document: document)
     let issuerDetailsCard = document?.transformToIssuerDetailsCardDataUi(isRevoked: isRevoked)
 
     if isBatchCounterEnabled() {
-      let info = getCredentialsUsageCount(
-        credentialsUsageCounts: document?.credentialsUsageCounts,
-        documentIsLowOnCredentials: documentIsLowOnCredentials
-      )
+      let info = documentCredentialsInfoUi(usageCounts: document?.credentialsUsageCounts)
       return .success(documentDetails, issuerDetailsCard, info, isBookmarked, isRevoked)
     }
 
@@ -117,17 +113,6 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
   func delete(_ identifier: String) async throws {
     try await walletController.removeBookmarkedDocument(with: identifier)
-  }
-
-  private func getCredentialsUsageCount(
-    credentialsUsageCounts: CredentialsUsageCounts?,
-    documentIsLowOnCredentials: Bool
-  ) -> DocumentCredentialsInfoUi? {
-    if let usageCounts = credentialsUsageCounts {
-      return documentCredentialsInfoUi(usageCounts: usageCounts)
-    } else {
-      return nil
-    }
   }
 
   private func documentCredentialsInfoUi(

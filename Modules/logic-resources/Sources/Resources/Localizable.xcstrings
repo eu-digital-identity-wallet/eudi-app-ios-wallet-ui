@@ -584,6 +584,17 @@
         }
       }
     },
+    "document_details_expired_on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expired on: %@"
+          }
+        }
+      }
+    },
     "document_details_hide" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -635,6 +646,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This document cannot be used for verification."
+          }
+        }
+      }
+    },
+    "document_details_issuer_card_expired_message_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This document has expired. You may reissue it."
           }
         }
       }
@@ -1023,6 +1045,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Home"
+          }
+        }
+      }
+    },
+    "home_screen_authenticate_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate by sharing your data in person (in close proximity) or online (website/service)."
           }
         }
       }
@@ -1862,6 +1895,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The document was successfully removed from your favorite list"
+          }
+        }
+      }
+    },
+    "request_combination_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Option %@ of %@"
           }
         }
       }

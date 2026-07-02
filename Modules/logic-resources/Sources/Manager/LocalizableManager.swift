@@ -60,6 +60,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "request_data_info_notice")
     case .requestDataTitle(let args):
       bundle.localizedStringWithArguments(forKey: "request_data_share_title", arguments: args)
+    case .requestCombinationTitle(let args):
+      bundle.localizedStringWithArguments(forKey: "request_combination_title", arguments: args)
     case .documentAdded:
       bundle.localizedString(forKey: "document_added")
     case .requestDataSheetCaption:
@@ -510,6 +512,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "document_details_remove_button")
     case .documentDetailsExpiresOn(let args):
       bundle.localizedStringWithArguments(forKey: "document_details_expires_on", arguments: args)
+    case .documentDetailsExpiredOn(let args):
+      bundle.localizedStringWithArguments(forKey: "document_details_expired_on", arguments: args)
     case .documentDetailsIssuedOn(let args):
       bundle.localizedStringWithArguments(forKey: "document_details_issued_on", arguments: args)
     case .documentDetailsRevokedDocument:
@@ -518,6 +522,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "document_details_issuer_card_issued_message_text")
     case .documentDetailsIssuerCardRevokedMessageText:
       bundle.localizedString(forKey: "document_details_issuer_card_revoked_message_text")
+    case .documentDetailsIssuerCardExpiredMessageText:
+      bundle.localizedString(forKey: "document_details_issuer_card_expired_message_text")
     case .documentDetailsIssuerCardIssuedActionButtonText:
       bundle.localizedString(forKey: "document_details_issuer_card_issued_action_btn_text")
     case .batchIssuanceCounter:
@@ -528,6 +534,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "document_provider_extension_reject_button")
     case .enterYourPin:
       bundle.localizedString(forKey: "enter_your_pin")
+    case .homeScreenAuthenticateDescription:
+      bundle.localizedString(forKey: "home_screen_authenticate_description")
     }
   }
 }

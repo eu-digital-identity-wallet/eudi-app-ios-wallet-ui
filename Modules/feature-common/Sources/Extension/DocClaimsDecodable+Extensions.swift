@@ -136,7 +136,7 @@ public extension DocClaimsDecodable {
         } else {
           collapsed = .init(
             mainContent: .text(.custom(title)),
-            leadingIcon: .init(image: Image(uiImage: uiImage)),
+            leadingContent: .remoteImage(image: Image(uiImage: uiImage)),
             isBlur: isSensitive
           )
         }

@@ -54,6 +54,7 @@ public protocol WalletKitController: Sendable {
     identifier: String,
     isBackgroundOperation: Bool
   ) async throws -> WalletStorage.Document
+  func getDocumentCredentialOptions(with id: String) async -> CredentialOptions?
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable
   func resolveOfferUrlDocTypes(offerUri: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
@@ -160,17 +161,27 @@ final actor WalletKitControllerImpl: WalletKitController {
     )
   }
 
+  private func resolveCredentialOptions(
+    documentId: String,
+    documentTypeIdentifier: DocumentTypeIdentifier?
+  ) async -> CredentialOptions {
+    if let persisted = await getDocumentCredentialOptions(with: documentId) {
+      return persisted
+    }
+    return walletKitConfig.documentIssuanceConfig.credentialOptions(for: documentTypeIdentifier)
+  }
+
+  func getDocumentCredentialOptions(with id: String) async -> CredentialOptions? {
+    return try? await wallet.getDocumentCredentialOptions(documentId: id)
+  }
+
   func issueDocumentsByOfferUrl(
     offerUri: String,
     docTypes: [OfferedDocModel],
     txCodeValue: String?
   ) async throws -> [WalletStorage.Document] {
     let docTypes = docTypes.map { docType in
-      let rule = walletKitConfig.documentIssuanceConfig.rule(for: docType.documentTypeIdentifier)
-      let credentialOptions: CredentialOptions = .init(
-        credentialPolicy: rule.policy,
-        batchSize: rule.numberOfCredentials
-      )
+      let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(for: docType.documentTypeIdentifier)
       return docType.copy(
         credentialOptions: credentialOptions,
         keyOptions: walletKitConfig.keyOptions
@@ -269,23 +280,25 @@ final actor WalletKitControllerImpl: WalletKitController {
     identifiers: [String],
     docTypeIdentifier: DocumentTypeIdentifier
   ) async throws -> [WalletStorage.Document] {
-    let rule = walletKitConfig.documentIssuanceConfig.rule(for: docTypeIdentifier)
+    let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(for: docTypeIdentifier)
 
     let documents = try await wallet.issueDocuments(
       issuerName: issuerId,
       docTypeIdentifiers: identifiers.map { .identifier($0) },
-      credentialOptions: .init(
-        credentialPolicy: rule.policy,
-        batchSize: rule.numberOfCredentials
-      ),
+      credentialOptions: credentialOptions,
       keyOptions: walletKitConfig.keyOptions
     )
     return documents
   }
 
   func reIssueDocument(identifier: String, isBackgroundOperation: Bool) async throws -> WalletStorage.Document {
+    let credentialOptions = await resolveCredentialOptions(
+      documentId: identifier,
+      documentTypeIdentifier: fetchDocument(with: identifier)?.documentTypeIdentifier
+    )
     return try await wallet.reissueDocument(
       documentId: identifier,
+      credentialOptions: credentialOptions,
       keyOptions: walletKitConfig.keyOptions,
       backgroundOnly: isBackgroundOperation
     )
@@ -297,14 +310,14 @@ final actor WalletKitControllerImpl: WalletKitController {
     else {
       throw WalletCoreError.missingMetadata
     }
-    let rule = walletKitConfig.documentIssuanceConfig.rule(for: doc.documentTypeIdentifier)
+    let credentialOptions = await resolveCredentialOptions(
+      documentId: doc.id,
+      documentTypeIdentifier: doc.documentTypeIdentifier
+    )
     let result = try await wallet.requestDeferredIssuance(
       issuerName: metadata.credentialIssuerIdentifier,
       deferredDoc: doc,
-      credentialOptions: .init(
-        credentialPolicy: rule.policy,
-        batchSize: rule.numberOfCredentials
-      ),
+      credentialOptions: credentialOptions,
       keyOptions: walletKitConfig.keyOptions
     )
     if result.isDeferred {
@@ -343,15 +356,15 @@ final actor WalletKitControllerImpl: WalletKitController {
     else {
       throw WalletCoreError.missingMetadata
     }
-    let rule = walletKitConfig.documentIssuanceConfig.rule(for: pendingDoc.documentTypeIdentifier)
+    let credentialOptions = await resolveCredentialOptions(
+      documentId: pendingDoc.id,
+      documentTypeIdentifier: pendingDoc.documentTypeIdentifier
+    )
     return try await wallet.resumePendingIssuance(
       issuerName: metadata.credentialIssuerIdentifier,
       pendingDoc: pendingDoc,
       webUrl: webUrl,
-      credentialOptions: .init(
-        credentialPolicy: rule.policy,
-        batchSize: rule.numberOfCredentials
-      ),
+      credentialOptions: credentialOptions,
       keyOptions: walletKitConfig.keyOptions
     )
   }

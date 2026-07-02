@@ -7298,6 +7298,16 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
 
+    public func getDocumentCredentialOptions(with p0: String) async -> CredentialOptions? {
+        return await cuckoo_manager.call(
+            "getDocumentCredentialOptions(with p0: String) async -> CredentialOptions?",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getDocumentCredentialOptions(with: p0)
+        )
+    }
+
     public func requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> any DocClaimsDecodable {
         return try await cuckoo_manager.callThrows(
             "requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> any DocClaimsDecodable",
@@ -7701,6 +7711,14 @@ return await cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<(String, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "reIssueDocument(identifier p0: String, isBackgroundOperation p1: Bool) async throws -> WalletStorage.Document",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getDocumentCredentialOptions<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(String), CredentialOptions?> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "getDocumentCredentialOptions(with p0: String) async -> CredentialOptions?",
                 parameterMatchers: matchers
             ))
         }
@@ -8119,6 +8137,18 @@ return await cuckoo_manager.call(
         
         
         @discardableResult
+        func getDocumentCredentialOptions<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), CredentialOptions?> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getDocumentCredentialOptions(with p0: String) async -> CredentialOptions?",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func requestDeferredIssuance<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(WalletStorage.Document), any DocClaimsDecodable> where M1.MatchedType == WalletStorage.Document {
             let matchers: [Cuckoo.ParameterMatcher<(WalletStorage.Document)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
@@ -8483,6 +8513,10 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
     
     public func reIssueDocument(identifier p0: String, isBackgroundOperation p1: Bool) async throws -> WalletStorage.Document {
         return DefaultValueRegistry.defaultValue(for: (WalletStorage.Document).self)
+    }
+    
+    public func getDocumentCredentialOptions(with p0: String) async -> CredentialOptions? {
+        return DefaultValueRegistry.defaultValue(for: (CredentialOptions?).self)
     }
     
     public func requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> any DocClaimsDecodable {
@@ -11741,6 +11775,22 @@ import logic_resources
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/WrapListItemsView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_proximity
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/WrapSelectableCardView.swift'
 
 import Cuckoo
 import SwiftUI

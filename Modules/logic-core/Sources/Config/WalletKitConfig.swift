@@ -111,7 +111,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
+              parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
               cacheIssuerMetadata: true
             ),
@@ -123,7 +123,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
+              parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
               cacheIssuerMetadata: true
             ),
@@ -138,7 +138,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
+              parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
               cacheIssuerMetadata: true
             ),
@@ -150,7 +150,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               clientId: "wallet-dev",
               keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
+              parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
               cacheIssuerMetadata: true
             ),
@@ -258,45 +258,41 @@ struct WalletKitConfigImpl: WalletKitConfig {
     return switch configLogic.appBuildVariant {
     case .DEMO:
       DocumentIssuanceConfig(
-        defaultRule: DocumentIssuanceRule(
-          policy: .rotateUse,
-          numberOfCredentials: 1
+        defaultCredentialOptions: CredentialOptions(
+          credentialPolicy: .rotateUse,
+          batchSize: 1
         ),
-        documentSpecificRules: [
-          DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
-            policy: .oneTimeUse,
-            numberOfCredentials: 10
+        documentSpecificCredentialOptions: [
+          DocumentTypeIdentifier.mDocPid: CredentialOptions(
+            credentialPolicy: .oneTimeUse,
+            batchSize: 10
           ),
-          DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
-            policy: .oneTimeUse,
-            numberOfCredentials: 10
+          DocumentTypeIdentifier.sdJwtPid: CredentialOptions(
+            credentialPolicy: .oneTimeUse,
+            batchSize: 10
           )
         ],
-        reIssuanceRule: ReIssuanceRule(
-          minNumberOfCredentials: 2,
-          minExpirationHours: 14,
+        reIssuanceBackgroundRule: ReIssuanceBackgroundRule(
           backgroundIntervalSeconds: 300
         )
       )
     case .DEV:
       DocumentIssuanceConfig(
-        defaultRule: DocumentIssuanceRule(
-          policy: .rotateUse,
-          numberOfCredentials: 1
+        defaultCredentialOptions: CredentialOptions(
+          credentialPolicy: .rotateUse,
+          batchSize: 1
         ),
-        documentSpecificRules: [
-          DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
-            policy: .oneTimeUse,
-            numberOfCredentials: 60
+        documentSpecificCredentialOptions: [
+          DocumentTypeIdentifier.mDocPid: CredentialOptions(
+            credentialPolicy: .oneTimeUse,
+            batchSize: 60
           ),
-          DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
-            policy: .oneTimeUse,
-            numberOfCredentials: 60
+          DocumentTypeIdentifier.sdJwtPid: CredentialOptions(
+            credentialPolicy: .oneTimeUse,
+            batchSize: 60
           )
         ],
-        reIssuanceRule: ReIssuanceRule(
-          minNumberOfCredentials: 2,
-          minExpirationHours: 14,
+        reIssuanceBackgroundRule: ReIssuanceBackgroundRule(
           backgroundIntervalSeconds: 300
         )
       )
