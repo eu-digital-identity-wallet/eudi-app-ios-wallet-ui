@@ -1,5 +1,5 @@
 {
-  "originHash" : "7b5df40ad9db4b60d4d3c2cad4f715eca70ff69b742affe2761dcce3a623e842",
+  "originHash" : "30e99df3afeff78a55e70eb6e6baad532d6b45fe78ec4d7b1370043392c8db69",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/leif-ibsen/BigInt",
       "state" : {
-        "revision" : "c2f49bee454760e433bafff17bfdc5b96f75d7c8",
-        "version" : "1.23.0"
+        "revision" : "7c7b1be2f6714ce03833879b0aab4b20293c0207",
+        "version" : "1.24.0"
       }
     },
     {
@@ -146,6 +146,15 @@
       }
     },
     {
+      "identity" : "eudi-lib-ios-openid4vp-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vp-swift.git",
+      "state" : {
+        "revision" : "1f1956b028e9819b6f6be29b60ccf2711c6788ad",
+        "version" : "0.35.0"
+      }
+    },
+    {
       "identity" : "eudi-lib-ios-rqes-csc-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-csc-swift.git",
@@ -173,15 +182,6 @@
       }
     },
     {
-      "identity" : "eudi-lib-ios-siop-openid4vp-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-siop-openid4vp-swift.git",
-      "state" : {
-        "revision" : "1f1956b028e9819b6f6be29b60ccf2711c6788ad",
-        "version" : "0.35.0"
-      }
-    },
-    {
       "identity" : "eudi-lib-ios-statium-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-statium-swift.git",
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "06cfb4ed88ceb2796e6263c9a5a2421eaa69dd2d",
-        "version" : "0.33.5"
+        "revision" : "e6b747de72590194e19217a254dd3c5207be05e6",
+        "version" : "0.34.0"
       }
     },
     {
@@ -285,8 +285,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/PhoneNumberKit/PhoneNumberKit",
       "state" : {
-        "revision" : "ebde4c008bad416588627d83ac07b991c204f72b",
-        "version" : "5.0.2"
+        "revision" : "c93fb1c3eef581fbd08acf99d4886dea12b5c1dc",
+        "version" : "5.0.3"
       }
     },
     {
@@ -375,8 +375,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-certificates.git",
       "state" : {
-        "revision" : "bde8ca32a096825dfce37467137c903418c1893d",
-        "version" : "1.19.1"
+        "revision" : "89fbc3714264cce8db8e4ec51b64e01c3e28c6c5",
+        "version" : "1.19.3"
       }
     },
     {
@@ -402,8 +402,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "2aed77ae5ec9a86d8fe42c12275e4c2653a286ee",
-        "version" : "1.13.1"
+        "revision" : "a878e7f8f46cfc0e1125e565b5c08e7d5272dc9a",
+        "version" : "1.14.0"
       }
     },
     {
