@@ -975,7 +975,7 @@ case .PROD:
 | `clientId` | Wallet client identifier known to the issuer or authorization server. | Use the registered production wallet client ID. |
 | `keyAttestationsConfig` | Wallet/key attestation provider used during issuance. | Use the production wallet attestation provider. |
 | `authFlowRedirectionURI` | Redirect URI used after authorization. | Must match production URL scheme registration and issuer client registration. |
-| `parUsage` | Pushed authorization request (PAR) usage policy, including whether the authorization code is DPoP-bound. | Prefer `.required(authorizationCodeDPoPBinding: true)` where the production profile requires PAR and sender-constrained authorization codes. |
+| `parUsage` | Pushed authorization request (PAR) usage policy. Use `.required(authorizationCodeDPoPBinding:)` to require PAR, optionally binding the authorization code to DPoP. | Prefer `.required(authorizationCodeDPoPBinding: true)` where the production profile requires PAR with sender-constrained authorization codes. |
 | `requireDpop` | Whether DPoP is required. | Prefer `true` where the production profile requires sender-constrained tokens. |
 | `cacheIssuerMetadata` | Whether issuer metadata is cached. | Enable only with a metadata refresh and incident strategy. |
 | `order` | Display/order preference for scoped issuance. | Use deterministic ordering approved by product owners. |
@@ -1060,13 +1060,14 @@ Production requirements:
 
 ## Document Issuance Rules
 
-Current code configures:
+Current code configures `documentIssuanceConfig` with:
 
-* Default credential policy: `.rotateUse`, `batchSize: 1`.
-* PID document-specific policy (mDoc and SD-JWT PID): `.oneTimeUse`.
+* Default credential options (`defaultCredentialOptions`): `credentialPolicy: .rotateUse`, `batchSize: 1`.
+* PID document-specific options (`documentSpecificCredentialOptions`): `credentialPolicy: .oneTimeUse`.
 * Current Demo PID batch size: `10`.
 * Current Dev PID batch size: `60`.
-* Background reissuance rule: `backgroundIntervalSeconds: 300`.
+* Background reissuance rule (`reIssuanceBackgroundRule`):
+  * `backgroundIntervalSeconds: 300`
 
 Production decisions:
 
