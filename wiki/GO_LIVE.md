@@ -525,7 +525,7 @@ For the complete lane usage notes, see [../fastlane/USAGE.md](../fastlane/USAGE.
 ## Dependency Governance
 
 * Use released versions, not snapshots or branch dependencies, unless formally approved.
-* Subscribe to security advisories for WalletKit, RQES UI, OpenID4VCI, SIOP OpenID4VP, ISO18013
+* Subscribe to security advisories for WalletKit, RQES UI, OpenID4VCI, OpenID4VP, ISO18013
   libraries, Wallet Storage, KeychainAccess, BluetoothKit, Swinject, and the Swift/Xcode toolchain.
 * Keep a dependency update SLA.
 * Keep `Package.resolved` committed and reviewed.
@@ -713,7 +713,7 @@ credential class before production.
 If per-document-type key policy is required (for example, stronger access control for PID than for
 low-assurance EAAs), follow the existing per-type pattern used by `documentIssuanceConfig` — extend
 `WalletKitConfig` with default and document-specific `KeyOptions`, then resolve in
-`WalletKitController` alongside the existing `rule(for:)` call sites.
+`WalletKitController` alongside the existing `credentialOptions(for:)` call sites.
 
 ## OpenID4VP Configuration
 
@@ -740,7 +740,7 @@ Production meaning:
 If using preregistered verifiers, add the relevant import and production entries:
 
 ```swift
-import SiopOpenID4VP
+import OpenID4VP
 
 var vpConfig: OpenId4VpConfiguration {
   .init(
@@ -960,7 +960,7 @@ case .PROD:
         clientId: "wallet-prod",
         keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
         authFlowRedirectionURI: URL(string: "eu.example.wallet://authorization")!,
-        requirePAR: true,
+        parUsage: .required(authorizationCodeDPoPBinding: true),
         requireDpop: true,
         cacheIssuerMetadata: true
       ),
@@ -975,7 +975,7 @@ case .PROD:
 | `clientId` | Wallet client identifier known to the issuer or authorization server. | Use the registered production wallet client ID. |
 | `keyAttestationsConfig` | Wallet/key attestation provider used during issuance. | Use the production wallet attestation provider. |
 | `authFlowRedirectionURI` | Redirect URI used after authorization. | Must match production URL scheme registration and issuer client registration. |
-| `requirePAR` | Whether pushed authorization requests are required. | Prefer `true` where the production profile requires PAR. |
+| `parUsage` | Pushed authorization request (PAR) usage policy, including whether the authorization code is DPoP-bound. | Prefer `.required(authorizationCodeDPoPBinding: true)` where the production profile requires PAR and sender-constrained authorization codes. |
 | `requireDpop` | Whether DPoP is required. | Prefer `true` where the production profile requires sender-constrained tokens. |
 | `cacheIssuerMetadata` | Whether issuer metadata is cached. | Enable only with a metadata refresh and incident strategy. |
 | `order` | Display/order preference for scoped issuance. | Use deterministic ordering approved by product owners. |
@@ -1017,13 +1017,13 @@ the following relative paths through `WalletAttestationRepository`:
 
 ```text
 wallet-instance-attestation/jwk
-wallet-unit-attestation/jwk-set
+key-attestation/jwk-set
 ```
 
 Current payload shape:
 
 * Wallet instance attestation sends a public key payload as `{"jwk": ...}`.
-* Wallet unit attestation sends `{"jwkSet": {"keys": [...]}, "nonce": ...}` when a nonce is
+* Wallet key attestation sends `{"jwkSet": {"keys": [...]}, "nonce": ...}` when a nonce is
   available.
 
 Important: these plain-JWK endpoints are suitable only for testing/reference integration unless your
@@ -1042,7 +1042,7 @@ Production implementers must not only change `walletProviderAttestationUrl`. If 
 contract changes from plain JWK submission to attestation-backed submission, update
 `WalletAttestationApi`, `WalletKitAttestationProviderImpl`, payload generation, response parsing,
 tests, and issuer compatibility checks together. The response should still provide the
-`walletInstanceAttestation` and `walletUnitAttestation` values expected by WalletKit after backend
+`walletInstanceAttestation` and `keyAttestation` values expected by WalletKit after backend
 validation.
 
 Production requirements:
@@ -1062,14 +1062,11 @@ Production requirements:
 
 Current code configures:
 
-* Default credential policy: `.rotateUse`, `numberOfCredentials: 1`.
-* PID document-specific policy: `.oneTimeUse`.
+* Default credential policy: `.rotateUse`, `batchSize: 1`.
+* PID document-specific policy (mDoc and SD-JWT PID): `.oneTimeUse`.
 * Current Demo PID batch size: `10`.
 * Current Dev PID batch size: `60`.
-* Reissuance rule:
-  * `minNumberOfCredentials: 2`
-  * `minExpirationHours: 14`
-  * `backgroundIntervalSeconds: 300`
+* Background reissuance rule: `backgroundIntervalSeconds: 300`.
 
 Production decisions:
 
@@ -1987,7 +1984,7 @@ Must provide:
 Must provide:
 
 * Wallet instance attestation.
-* Wallet unit/key attestation.
+* Wallet key attestation.
 * App/device risk policy.
 * App Attest verification where used.
 * Nonce and replay protection.

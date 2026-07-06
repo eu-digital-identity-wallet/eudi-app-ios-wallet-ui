@@ -35,9 +35,17 @@ Based on the Build Variant of the Wallet (e.g., Dev)
 struct WalletKitConfigImpl: WalletKitConfig {
 
   let configLogic: ConfigLogic
+  let transactionLoggerImpl: TransactionLogger
+  let walletKitAttestationProvider: WalletKitAttestationProvider
 
-  init(configLogic: ConfigLogic) {
+  init(
+    configLogic: ConfigLogic,
+    transactionLogger: TransactionLogger,
+    walletKitAttestationProvider: WalletKitAttestationProvider
+  ) {
     self.configLogic = configLogic
+    self.transactionLoggerImpl = transactionLogger
+    self.walletKitAttestationProvider = walletKitAttestationProvider
   }
 
   var issuersConfig: [String: VciConfig] {
@@ -51,7 +59,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 clientId: "your_demo_client_id_or_nil",
                 keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
                 authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
-                requirePAR: should_use_par_bool,
+                parUsage: .required(authorizationCodeDPoPBinding: should_bind_dpop_bool), // or .never
                 requireDpop: should_use_dpop_bool,
                 cacheIssuerMetadata: should_cache_metadata_bool
             ),
@@ -67,7 +75,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
                   clientId: "your_dev_client_id_or_nil",
                   keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
                   authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
-                  requirePAR: should_use_par_bool,
+                  parUsage: .required(authorizationCodeDPoPBinding: should_bind_dpop_bool), // or .never
                   requireDpop: should_use_dpop_bool,
                   cacheIssuerMetadata: should_cache_metadata_bool
               ),
@@ -162,17 +170,25 @@ protocol WalletKitConfig: Sendable {
 }
 ```
 
-The preregistered scheme is optional. If you want to use it, please add the following: the `SiopOpenID4VP` import and the `.preregistered` option in the `clientIdSchemes` array.
+The preregistered scheme is optional. If you want to use it, please add the following: the `OpenID4VP` import and the `.preregistered` option in the `clientIdSchemes` array.
 
 ```swift
-import SiopOpenID4VP
+import OpenID4VP
 
 struct WalletKitConfigImpl: WalletKitConfig {
 
   let configLogic: ConfigLogic
+  let transactionLoggerImpl: TransactionLogger
+  let walletKitAttestationProvider: WalletKitAttestationProvider
 
-  init(configLogic: ConfigLogic) {
+  init(
+    configLogic: ConfigLogic,
+    transactionLogger: TransactionLogger,
+    walletKitAttestationProvider: WalletKitAttestationProvider
+  ) {
     self.configLogic = configLogic
+    self.transactionLoggerImpl = transactionLogger
+    self.walletKitAttestationProvider = walletKitAttestationProvider
   }
 
   var vpConfig: OpenId4VpConfiguration {
@@ -189,7 +205,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
             )
           ]
         )
-      ]
+      ],
+      allowPresentingPartialClaims: true
     )
   }
 }
@@ -371,9 +388,9 @@ public extension DeepLink {
   enum Action: String, Equatable, Sendable {
 
     case openid4vp
-	case haip_vp
     case credential_offer
-	case haip_vci
+    case haip_vci
+    case haip_vp
     case rqes
     case external
 
@@ -383,10 +400,10 @@ public extension DeepLink {
     ) -> Action? {
       switch scheme {
       case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme),
-		_ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
+        _ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
         return .openid4vp
       case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme),
-		_ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme):
+        _ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
       case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
         return .rqes
@@ -405,9 +422,9 @@ public extension DeepLink {
   enum Action: String, Equatable, Sendable {
 
     case openid4vp
-	case haip_vp
     case credential_offer
-	case haip_vci
+    case haip_vci
+    case haip_vp
     case rqes
     case custom_my_offer
     case external
@@ -418,11 +435,11 @@ public extension DeepLink {
     ) -> Action? {
       switch scheme {
       case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme),
-		_ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
+        _ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
         return .openid4vp
       case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme),
-		_ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme),
-		_ where custom_my_offer.getSchemas(with: urlSchemaController).contains(scheme):
+        _ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme),
+        _ where custom_my_offer.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
       case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
         return .rqes

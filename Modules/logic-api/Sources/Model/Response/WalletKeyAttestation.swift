@@ -14,11 +14,11 @@
  * governing permissions and limitations under the Licence.
  */
 
-public struct WalletUnitAttestation: Sendable, Decodable {
+public struct WalletKeyAttestation: Sendable, Decodable {
 
-  public let walletUnitAttestation: String
+  public let keyAttestation: String
 
-  public init(walletUnitAttestation: String) {
-    self.walletUnitAttestation = walletUnitAttestation
+  public init(keyAttestation: String) {
+    self.keyAttestation = keyAttestation
   }
 }
