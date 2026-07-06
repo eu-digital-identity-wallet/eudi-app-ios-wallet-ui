@@ -2795,7 +2795,7 @@ import Cuckoo
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-api/Sources/Model/Response/WalletUnitAttestation.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-api/Sources/Model/Response/WalletKeyAttestation.swift'
 
 import Cuckoo
 @testable import logic_core
@@ -2922,14 +2922,14 @@ public class MockWalletAttestationRepository: WalletAttestationRepository, Cucko
     }
 
 
-    public func issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation {
+    public func issueWalletKeyAttestation(host p0: String, payload p1: Data) async throws -> WalletKeyAttestation {
         return try await cuckoo_manager.callThrows(
-            "issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation",
+            "issueWalletKeyAttestation(host p0: String, payload p1: Data) async throws -> WalletKeyAttestation",
             parameters: (p0, p1),
             escapingParameters: (p0, p1),
             errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.issueWalletUnitAttestation(host: p0, payload: p1)
+            defaultCall: await __defaultImplStub!.issueWalletKeyAttestation(host: p0, payload: p1)
         )
     }
 
@@ -2951,10 +2951,10 @@ public class MockWalletAttestationRepository: WalletAttestationRepository, Cucko
             self.cuckoo_manager = manager
         }
         
-        func issueWalletUnitAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(String, Data), WalletUnitAttestation,Swift.Error> where M1.MatchedType == String, M2.MatchedType == Data {
+        func issueWalletKeyAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(String, Data), WalletKeyAttestation,Swift.Error> where M1.MatchedType == String, M2.MatchedType == Data {
             let matchers: [Cuckoo.ParameterMatcher<(String, Data)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletAttestationRepository.self,
-                method: "issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation",
+                method: "issueWalletKeyAttestation(host p0: String, payload p1: Data) async throws -> WalletKeyAttestation",
                 parameterMatchers: matchers
             ))
         }
@@ -2981,10 +2981,10 @@ public class MockWalletAttestationRepository: WalletAttestationRepository, Cucko
         
         
         @discardableResult
-        func issueWalletUnitAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.__DoNotUse<(String, Data), WalletUnitAttestation> where M1.MatchedType == String, M2.MatchedType == Data {
+        func issueWalletKeyAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.__DoNotUse<(String, Data), WalletKeyAttestation> where M1.MatchedType == String, M2.MatchedType == Data {
             let matchers: [Cuckoo.ParameterMatcher<(String, Data)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
-                "issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation",
+                "issueWalletKeyAttestation(host p0: String, payload p1: Data) async throws -> WalletKeyAttestation",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -3009,8 +3009,8 @@ public class WalletAttestationRepositoryStub:WalletAttestationRepository, @unche
 
 
     
-    public func issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation {
-        return DefaultValueRegistry.defaultValue(for: (WalletUnitAttestation).self)
+    public func issueWalletKeyAttestation(host p0: String, payload p1: Data) async throws -> WalletKeyAttestation {
+        return DefaultValueRegistry.defaultValue(for: (WalletKeyAttestation).self)
     }
     
     public func issueWalletInstanceAttestation(host p0: String, payload p1: Data) async throws -> WalletInstanceAttestation {

@@ -61,7 +61,7 @@ final class WalletKitAttestationProviderImpl: WalletKitAttestationProvider {
 
     let encodedPayload = try JSONSerialization.data(withJSONObject: payload, options: [])
 
-    let response = try await repository.issueWalletUnitAttestation(host: self.baseUrl, payload: encodedPayload)
-    return response.walletUnitAttestation
+    let response = try await repository.issueWalletKeyAttestation(host: self.baseUrl, payload: encodedPayload)
+    return response.keyAttestation
   }
 }
