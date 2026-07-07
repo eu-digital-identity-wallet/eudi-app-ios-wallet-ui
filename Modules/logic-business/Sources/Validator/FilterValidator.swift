@@ -72,12 +72,19 @@ final actor FilterValidatorImpl: FilterValidator {
     filters: Filters,
     filterableList: FilterableList
   ) async {
+    let previousDefaultFilters = defaultFilters
     defaultFilters = filters
     var mergedFilterGroups: [FilterGroup] = []
 
     for newFilterGroup in filters.filterGroups {
       if let existingFilterGroup = appliedFilters.filterGroups.first(where: { $0.id == newFilterGroup.id }) {
-          mergedFilterGroups.append(mergeFilters(newFilterGroup: newFilterGroup, existingFilterGroup: existingFilterGroup))
+          mergedFilterGroups.append(
+            mergeFilters(
+              newFilterGroup: newFilterGroup,
+              existingFilterGroup: existingFilterGroup,
+              previousDefaultGroup: previousDefaultFilters.filterGroups.first(where: { $0.id == newFilterGroup.id })
+            )
+          )
       } else {
           mergedFilterGroups.append(newFilterGroup)
       }
@@ -335,17 +342,24 @@ final actor FilterValidatorImpl: FilterValidator {
 
   private func mergeFilters(
     newFilterGroup: FilterGroup,
-    existingFilterGroup: FilterGroup
+    existingFilterGroup: FilterGroup,
+    previousDefaultGroup: FilterGroup?
   ) -> FilterGroup {
-    let mergedFilters = newFilterGroup.filters.map { newFilter in
-      if let existingFilter = existingFilterGroup.filters.first(where: { $0.id == newFilter.id }) {
-        return newFilter.copy(
-          selected: existingFilter.selected,
-          startDate: existingFilter.startDate,
-          endDate: existingFilter.endDate
-        )
+    let mergedFilters = newFilterGroup.filters.map { newFilter -> FilterItem in
+      guard let existingFilter = existingFilterGroup.filters.first(where: { $0.id == newFilter.id }) else {
+        return newFilter
       }
-      return newFilter
+
+      let previousDefaultFilter = previousDefaultGroup?.filters.first(where: { $0.id == newFilter.id })
+      let userCustomizedDates = previousDefaultFilter.map {
+        existingFilter.startDate != $0.startDate || existingFilter.endDate != $0.endDate
+      } ?? true
+
+      return newFilter.copy(
+        selected: existingFilter.selected,
+        startDate: userCustomizedDates ? existingFilter.startDate : newFilter.startDate,
+        endDate: userCustomizedDates ? existingFilter.endDate : newFilter.endDate
+      )
     }
 
     switch newFilterGroup {
