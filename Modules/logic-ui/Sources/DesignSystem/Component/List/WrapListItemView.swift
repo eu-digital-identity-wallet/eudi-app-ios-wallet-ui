@@ -78,7 +78,10 @@ public struct WrapListItemView: View {
             image
               .resizable()
               .aspectRatio(contentMode: .fit)
-              .frame(height: Theme.shared.dimension.remoteImageIconSize)
+              .frame(
+                width: Theme.shared.dimension.remoteImageIconSize,
+                height: Theme.shared.dimension.remoteImageIconSize
+              )
               .if(listItem.isBlur) {
                 $0.blur(radius: 4, opaque: false)
               }
