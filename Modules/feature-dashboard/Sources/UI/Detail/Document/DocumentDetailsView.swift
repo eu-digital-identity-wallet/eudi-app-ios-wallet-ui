@@ -74,7 +74,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         )
 
         Button(.documentDetailsRemoveButton) {
-          viewModel.onDeleteDocument()
+          viewModel.onShowDeleteModal()
         }
 
         Button(.cancelButton, role: .cancel) {}
@@ -186,9 +186,10 @@ private struct DocumentDetailsViewContainer: View {
         .combineChilrenAccessibility(
           locator: DocumentDetailsLocators.deleteDocument
         )
-        .confirmationDialog(
-          .custom(""),
+        .alertView(
           isPresented: $isDeletionModalShowing,
+          title: .custom(""),
+          message: .deleteDocumentConfirmDialog,
           actions: {
             Button(.documentDetailsRemoveButton, role: .destructive) {
               onDeleteDocument()
@@ -196,13 +197,9 @@ private struct DocumentDetailsViewContainer: View {
             .accessibilityElement()
             .accessibilityIdentifier(DocumentDetailsLocators.confirmDialogDeleteButton.id)
 
-            Button(.cancelButton) {
-              onShowDeleteModal()
-            }
-            .accessibilityElement()
-            .accessibilityIdentifier(DocumentDetailsLocators.confirmDialogDeleteButton.id)
-          }, message: {
-            Text(.deleteDocumentConfirmDialog)
+            Button(.cancelButton, role: .cancel) {}
+              .accessibilityElement()
+              .accessibilityIdentifier(DocumentDetailsLocators.confirmDialogCancelButton.id)
           }
         )
 
