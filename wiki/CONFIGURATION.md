@@ -205,8 +205,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
             )
           ]
         )
-      ],
-      allowPresentingPartialClaims: true
+      ]
     )
   }
 }

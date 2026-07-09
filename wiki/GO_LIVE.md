@@ -722,8 +722,7 @@ Current code:
 ```swift
 var vpConfig: OpenId4VpConfiguration {
   .init(
-    clientIdSchemes: [.x509SanDns, .x509Hash],
-    allowPresentingPartialClaims: true
+    clientIdSchemes: [.x509SanDns, .x509Hash]
   )
 }
 ```
@@ -735,7 +734,6 @@ Production meaning:
 | `.x509SanDns` | Verifier client identity is bound to a DNS name in an X.509 certificate. | Use when verifier certificates and trust anchors are managed and audited. |
 | `.x509Hash` | Verifier identity is bound to a certificate hash. | Use when the verifier ecosystem requires hash-based certificate binding. |
 | `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add production verifier API URL, legal name, and client ID. |
-| `allowPresentingPartialClaims` | Whether the wallet can present a subset of requested claims. | Align with legal, UX, and relying-party policy. |
 
 If using preregistered verifiers, add the relevant import and production entries:
 
@@ -756,8 +754,7 @@ var vpConfig: OpenId4VpConfiguration {
           )
         ]
       )
-    ],
-    allowPresentingPartialClaims: true
+    ]
   )
 }
 ```
