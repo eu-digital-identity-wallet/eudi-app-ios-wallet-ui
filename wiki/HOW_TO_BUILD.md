@@ -172,7 +172,7 @@ var issuersConfig: [String: VciConfig] {
             clientId: "wallet-dev",
             keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-            requirePAR: true,
+            parUsage: .required(authorizationCodeDPoPBinding: true),
             requireDpop: true,
             cacheIssuerMetadata: true
           ),
@@ -187,7 +187,7 @@ var issuersConfig: [String: VciConfig] {
             clientId: "wallet-dev",
             keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-            requirePAR: true,
+            parUsage: .required(authorizationCodeDPoPBinding: true),
             requireDpop: true,
             cacheIssuerMetadata: true
           ),
@@ -201,7 +201,7 @@ var issuersConfig: [String: VciConfig] {
 }
 ```
 
-In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `requirePAR`, `requireDpop`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`). The snippet is trimmed to one issuer per variant for brevity; the live `WalletKitConfigImpl` returns **two** issuers per variant — the primary (`order: 1`) plus a backend issuer (`order: 0`): `https://issuer-backend.eudiw.dev` for `.DEMO` and `https://dev.issuer-backend.eudiw.dev` for `.DEV`.
+In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `parUsage`, `requireDpop`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`). The snippet is trimmed to one issuer per variant for brevity; the live `WalletKitConfigImpl` returns **two** issuers per variant — the primary (`order: 1`) plus a backend issuer (`order: 0`): `https://issuer-backend.eudiw.dev` for `.DEMO` and `https://dev.issuer-backend.eudiw.dev` for `.DEV`.
 
 ### Running with local services
 

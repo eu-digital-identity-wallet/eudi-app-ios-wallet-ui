@@ -74,7 +74,7 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         )
 
         Button(.documentDetailsRemoveButton) {
-          viewModel.onShowDeleteModal()
+          viewModel.onDeleteDocument()
         }
 
         Button(.cancelButton, role: .cancel) {}

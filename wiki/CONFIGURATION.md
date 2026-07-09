@@ -59,7 +59,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 clientId: "your_demo_client_id_or_nil",
                 keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
                 authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
-                parUsage: .required(authorizationCodeDPoPBinding: should_bind_dpop_bool), // or .never
+                parUsage: .required(authorizationCodeDPoPBinding: should_bind_par_dpop_bool),
                 requireDpop: should_use_dpop_bool,
                 cacheIssuerMetadata: should_cache_metadata_bool
             ),
@@ -75,7 +75,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
                   clientId: "your_dev_client_id_or_nil",
                   keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
                   authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
-                  parUsage: .required(authorizationCodeDPoPBinding: should_bind_dpop_bool), // or .never
+                  parUsage: .required(authorizationCodeDPoPBinding: should_bind_par_dpop_bool),
                   requireDpop: should_use_dpop_bool,
                   cacheIssuerMetadata: should_cache_metadata_bool
               ),
@@ -205,8 +205,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
             )
           ]
         )
-      ],
-      allowPresentingPartialClaims: true
+      ]
     )
   }
 }

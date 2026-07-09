@@ -176,8 +176,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var vpConfig: OpenId4VpConfiguration {
     .init(
-      clientIdSchemes: [.x509SanDns, .x509Hash],
-      allowPresentingPartialClaims: true
+      clientIdSchemes: [.x509SanDns, .x509Hash]
     )
   }
 

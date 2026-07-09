@@ -119,18 +119,31 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
       ?? configOptions.reissueTriggerLifetimeLeft
       ?? defaultReissueTriggerLifetimeLeft
 
-    let remainingUsage = document.credentialsUsageCounts?.remaining ?? -1
-    let belowMinCount = remainingUsage <= unusedThreshold
-    let expiresWithinThreshold = document.validUntil?.isWithinNextSeconds(lifetimeSecondsThreshold) ?? false
-
     switch document.credentialPolicy {
     case .oneTimeUse:
-      return belowMinCount
+      return isDueForUnusedCountReIssue(document, reissueTriggerUnused: unusedThreshold)
     case .rotateUse:
-      return belowMinCount || expiresWithinThreshold
+      return isDueForLifetimeReIssue(document, reissueTriggerLifetimeLeft: lifetimeSecondsThreshold)
     @unknown default:
-      return belowMinCount || expiresWithinThreshold
+      return isDueForLifetimeReIssue(document, reissueTriggerLifetimeLeft: lifetimeSecondsThreshold)
     }
+  }
+
+  private func isDueForLifetimeReIssue(
+    _ document: any DocClaimsDecodable,
+    reissueTriggerLifetimeLeft seconds: Int
+  ) -> Bool {
+    guard let validUntil = document.validUntil else { return true }
+    let expirationLimit = Date().addingTimeInterval(TimeInterval(seconds))
+    return validUntil <= expirationLimit
+  }
+
+  private func isDueForUnusedCountReIssue(
+    _ document: any DocClaimsDecodable,
+    reissueTriggerUnused threshold: Int
+  ) -> Bool {
+    let remainingUnused = document.credentialsUsageCounts?.remaining ?? 0
+    return remainingUnused <= threshold
   }
 
   private func storeFailedDocuments(with ids: [String]) async throws {

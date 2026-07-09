@@ -238,6 +238,8 @@ private struct BaseRequestViewContainer: View {
         config: viewState.contentHeaderConfig,
         accessibilityDescription: BaseRequestLocators.description
       )
+      .padding(.horizontal, Theme.shared.dimension.padding)
+
       VStack(spacing: .zero) {
         Spacer()
         ContentEmptyView(
