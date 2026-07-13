@@ -16,7 +16,7 @@
 import Foundation
 import logic_business
 import EudiWalletKit
-import Security
+import EudiEtsi1196x2
 
 protocol WalletKitConfig: Sendable {
 
@@ -31,9 +31,10 @@ protocol WalletKitConfig: Sendable {
   var vpConfig: OpenId4VpConfiguration { get }
 
   /**
-   * Reader Configuration
+   * Trust configuration: ETSI LoTE (List of Trusted Entities) trust sources,
+   * verification-context mappings and trust policies used for reader / issuer validation.
    */
-  var trustedReaderRootCertificates: [x5chain] { get }
+  var trustConfiguration: TrustConfiguration { get }
 
   /**
    * User authentication required accessing core's secure storage
@@ -180,20 +181,31 @@ struct WalletKitConfigImpl: WalletKitConfig {
     )
   }
 
-  var trustedReaderRootCertificates: [x5chain] {
-    let certificates = [
-      "pidissuerca02_cz",
-      "pidissuerca02_ee",
-      "pidissuerca02_eu",
-      "pidissuerca02_lu",
-      "pidissuerca02_nl",
-      "pidissuerca02_pt",
-      "pidissuerca02_ut",
-      "r45_staging"
+  var trustConfiguration: TrustConfiguration {
+    let loteLocations = SupportedLists<NSString>(
+      pidProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/PIDProviders.jwt",
+      walletProviders: nil,
+      wrpacProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/WRPACProviders.jwt",
+      wrprcProviders: nil,
+      pubEaaProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/PubEAAProviders.jwt",
+      qeaProviders: nil,
+      eaaProviders: [:]
+    )
+
+    let classifications: EtsiContextTypeMappings = [
+      DocumentTypeIdentifier.mDocPid.rawValue: .pid,
+      DocumentTypeIdentifier.sdJwtPid.rawValue: .pid
     ]
-    return certificates
-      .compactMap { loadCertificate($0) }
-      .map { [$0] }
+
+    return TrustConfiguration(
+      trustSource: .etsi(
+        EtsiTrustSource(
+          loteLocations: loteLocations,
+          contextTypeMappings: classifications
+        )
+      ),
+      defaultPolicy: .warning
+    )
   }
 
   var logFileName: String {
@@ -296,15 +308,5 @@ struct WalletKitConfigImpl: WalletKitConfig {
         )
       )
     }
-  }
-}
-
-private extension WalletKitConfigImpl {
-  func loadCertificate(_ name: String) -> SecCertificate? {
-    guard
-      let url = Bundle.main.url(forResource: name, withExtension: "der"),
-      let data = try? Data(contentsOf: url)
-    else { return nil }
-    return SecCertificateCreateWithData(nil, data as CFData)
   }
 }
