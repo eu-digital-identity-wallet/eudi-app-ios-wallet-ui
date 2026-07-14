@@ -66,7 +66,7 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       )
       return .success
     } catch {
-      return .failure(error)
+      return error.isIssuerNotTrusted ? .issuerNotTrusted : .failure(error)
     }
   }
 
@@ -152,5 +152,6 @@ public enum DocumentDetailsDeletionPartialState: Sendable {
 
 public enum DocumentDetailsReIssuancePartialState: Sendable {
   case success
+  case issuerNotTrusted
   case failure(Error)
 }

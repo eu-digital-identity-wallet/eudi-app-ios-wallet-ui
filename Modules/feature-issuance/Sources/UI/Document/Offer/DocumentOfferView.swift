@@ -46,6 +46,13 @@ struct DocumentOfferView<Router: RouterHost>: View {
         onIssueDocuments: viewModel.onIssueDocuments
       )
     }
+    .sheetDialog(isPresented: $viewModel.isIssuerNotTrustedSheetShowing) {
+      TrustBlockedSheetContent(
+        title: .issuanceBlockedTitle,
+        message: .issuanceBlockedMessage,
+        onClose: { viewModel.isIssuerNotTrustedSheetShowing = false }
+      )
+    }
     .task {
       await viewModel.initialize()
     }

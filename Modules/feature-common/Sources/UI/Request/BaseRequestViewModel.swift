@@ -41,6 +41,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
   var isRequestInfoModalShowing: Bool = false
   var isVerifiedEntityModalShowing: Bool = false
+  var isVerifierNotTrustedSheetShowing: Bool = false
   var itemsChanged: Bool = false
 
   public init(router: Router, originator: AppRoute) {
@@ -249,6 +250,20 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
   func onVerifiedEntityModal() {
     isVerifiedEntityModalShowing = !isVerifiedEntityModalShowing
+  }
+
+  open func stopPresentation() async {}
+  public func onVerifierNotTrusted() {
+    setState {
+      $0.copy(isLoading: false, initialized: true).copy(error: nil)
+    }
+    isVerifierNotTrustedSheetShowing = true
+    Task { await stopPresentation() }
+  }
+
+  func onVerifierNotTrustedClose() {
+    isVerifierNotTrustedSheetShowing = false
+    onPop()
   }
 
   func onSelectionChanged(id: String) async {

@@ -32,6 +32,8 @@ struct OfferCodeViewState: ViewState {
 @Observable
 final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeViewState> {
 
+  var isIssuerNotTrustedSheetShowing: Bool = false
+
   var codeInput: String = "" {
     didSet {
       debouncedCodeInput.send(codeInput)
@@ -90,6 +92,9 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
     case .success(let route):
       router.push(with: route)
     case .noPending: break
+    case .issuerNotTrusted:
+      setState { $0.copy(isLoading: false).copy(error: nil) }
+      isIssuerNotTrustedSheetShowing = true
     case .failure(let error):
       setState {
         $0.copy(
@@ -164,6 +169,9 @@ final class OfferCodeViewModel<Router: RouterHost>: ViewModel<Router, OfferCodeV
             )
           )
         )
+      case .issuerNotTrusted:
+        setState { $0.copy(isLoading: false).copy(error: nil) }
+        isIssuerNotTrustedSheetShowing = true
       case .failure(let error):
         setState {
           $0.copy(

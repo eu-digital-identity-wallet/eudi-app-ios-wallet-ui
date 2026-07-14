@@ -470,6 +470,14 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "revoked_modal_title")
     case .revokedModalDescription:
       bundle.localizedString(forKey: "revoked_modal_description")
+    case .issuanceBlockedTitle:
+      bundle.localizedString(forKey: "issuance_blocked_bottom_sheet_title")
+    case .issuanceBlockedMessage:
+      bundle.localizedString(forKey: "issuance_blocked_bottom_sheet_message")
+    case .presentationBlockedTitle:
+      bundle.localizedString(forKey: "request_blocked_bottom_sheet_title")
+    case .presentationBlockedMessage:
+      bundle.localizedString(forKey: "request_blocked_bottom_sheet_message")
     case .transactionDetailsRequestDeletionMessage:
       bundle.localizedString(forKey: "transaction_details_eequest_deletion_message")
     case .transactionDetailsRequestDeletionButton:

@@ -428,6 +428,8 @@ final class TestDocumentDetailsInteractor: EudiTest {
     switch result {
     case .success:
       XCTAssertTrue(true)
+    case .issuerNotTrusted:
+      XCTFail("Expected success, got issuerNotTrusted")
     case .failure:
       XCTFail("Expected success, got failure")
     }
@@ -448,6 +450,8 @@ final class TestDocumentDetailsInteractor: EudiTest {
     switch result {
     case .success:
       XCTFail("Expected failure, got success")
+    case .issuerNotTrusted:
+      XCTFail("Expected failure, got issuerNotTrusted")
     case .failure(let error):
       XCTAssertEqual(
         error.localizedDescription,

@@ -42,6 +42,10 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
 
     switch state {
     case .success(let items, let relyingParty, _, let isTrusted):
+      guard isTrusted else {
+        self.onVerifierNotTrusted()
+        return
+      }
       self.onReceivedItems(
         with: items,
         title: .requestDataTitle([relyingParty]),
@@ -121,6 +125,10 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   override func getPopRoute() -> AppRoute? {
     publisherTask?.cancel()
     return getOriginator()
+  }
+
+  override func stopPresentation() async {
+    await interactor.stopPresentation()
   }
 
   override func getTitle() -> LocalizableStringKey {

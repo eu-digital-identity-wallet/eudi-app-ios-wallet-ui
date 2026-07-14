@@ -39,6 +39,10 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
     switch result {
     case .success(let authenticationRequest):
+      guard authenticationRequest.isTrusted else {
+        self.onVerifierNotTrusted()
+        return
+      }
       self.onReceivedCombinations(
         with: authenticationRequest.requestDataCombinations,
         title: .requestDataTitle(
@@ -120,6 +124,10 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   override func getPopRoute() -> AppRoute? {
     return getOriginator()
+  }
+
+  override func stopPresentation() async {
+    await interactor.stopPresentation()
   }
 
   override func getTitle() -> LocalizableStringKey {
