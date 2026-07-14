@@ -204,7 +204,9 @@ struct WalletKitConfigImpl: WalletKitConfig {
           contextTypeMappings: classifications
         )
       ),
-      defaultPolicy: .warning
+      defaultPolicy: .warning,
+      requireSignedMetadata: true,
+      statusTrustPolicy: .warning
     )
   }
 
