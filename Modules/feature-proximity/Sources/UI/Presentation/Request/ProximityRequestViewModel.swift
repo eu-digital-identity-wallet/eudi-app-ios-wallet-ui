@@ -42,10 +42,6 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
 
     switch state {
     case .success(let items, let relyingParty, _, let isTrusted):
-      guard isTrusted else {
-        self.onVerifierNotTrusted()
-        return
-      }
       self.onReceivedItems(
         with: items,
         title: .requestDataTitle([relyingParty]),
@@ -68,6 +64,8 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
           )
         )
       }
+    case .verifierNotTrusted:
+      self.onVerifierNotTrusted()
     case .failure(let error):
       self.onEmptyDocuments(error: error.errorMessage)
     }

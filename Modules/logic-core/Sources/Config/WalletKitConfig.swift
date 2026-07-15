@@ -109,11 +109,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
           .init(
             config: .init(
               credentialIssuerURL: "https://issuer.eudiw.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: []
+                )
+              ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
               cacheIssuerMetadata: true
             ),
             order: 1
@@ -121,11 +128,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
           .init(
             config: .init(
               credentialIssuerURL: "https://issuer-backend.eudiw.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: []
+                )
+              ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
               cacheIssuerMetadata: true
             ),
             order: 0
@@ -136,11 +150,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
           .init(
             config: .init(
               credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: []
+                )
+              ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
               cacheIssuerMetadata: true
             ),
             order: 1
@@ -148,11 +169,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
           .init(
             config: .init(
               credentialIssuerURL: "https://dev.issuer-backend.eudiw.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: []
+                )
+              ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
               cacheIssuerMetadata: true
             ),
             order: 0
@@ -204,10 +232,26 @@ struct WalletKitConfigImpl: WalletKitConfig {
           contextTypeMappings: classifications
         )
       ),
-      defaultPolicy: .warning,
+      fallbackTrustSource: .staticList(
+        StaticListTrustSource(rootCertificates: staticRootCertificates)
+      ),
+      defaultPolicy: .enforce,
       requireSignedMetadata: true,
-      statusTrustPolicy: .warning
+      statusTrustPolicy: .enforce
     )
+  }
+
+  var staticRootCertificates: [Data] {
+    [
+      "pidissuerca02_cz",
+      "pidissuerca02_ee",
+      "pidissuerca02_eu",
+      "pidissuerca02_lu",
+      "pidissuerca02_nl",
+      "pidissuerca02_pt",
+      "pidissuerca02_ut",
+      "r45_staging"
+    ].compactMap { loadCertificate($0) }
   }
 
   var logFileName: String {
@@ -310,5 +354,14 @@ struct WalletKitConfigImpl: WalletKitConfig {
         )
       )
     }
+  }
+}
+
+private extension WalletKitConfigImpl {
+  func loadCertificate(_ name: String) -> Data? {
+    guard let url = Bundle.main.url(forResource: name, withExtension: "der") else {
+      return nil
+    }
+    return try? Data(contentsOf: url)
   }
 }

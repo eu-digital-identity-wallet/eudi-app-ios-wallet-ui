@@ -34,6 +34,7 @@ public enum ProximityResponsePreparationPartialState: Sendable {
 
 public enum ProximityRequestPartialState: Sendable {
   case success([RequestDataUiModel], relyingParty: String, dataRequestInfo: String, isTrusted: Bool)
+  case verifierNotTrusted
   case failure(Error)
 }
 
@@ -131,7 +132,7 @@ final actor ProximityInteractorImpl: ProximityInteractor {
         isTrusted: response.isTrusted
       )
     } catch {
-      return .failure(error)
+      return error.isIssuerNotTrusted ? .verifierNotTrusted : .failure(error)
     }
   }
 

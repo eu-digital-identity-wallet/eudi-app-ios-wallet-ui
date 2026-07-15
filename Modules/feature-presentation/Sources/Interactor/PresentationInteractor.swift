@@ -38,12 +38,18 @@ public enum RemoteSentResponsePartialState: Sendable {
   case failure(Error)
 }
 
+public enum PresentationRequestPartialState: Sendable {
+  case success(OnlineAuthenticationRequestSuccessModel)
+  case verifierNotTrusted
+  case failure(Error)
+}
+
 public protocol PresentationInteractor: Sendable {
   func getSessionStatePublisher() async -> RemotePublisherPartialState
   func getCoordinator() async -> PresentationCoordinatorPartialState
-  func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
+  func onDeviceEngagement() async -> PresentationRequestPartialState
   func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>
-  func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
+  func onRequestReceived() async -> PresentationRequestPartialState
   func onSendResponse() async -> RemoteSentResponsePartialState
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) async
   func storeDynamicIssuancePendingUrl(with url: URL) async
@@ -85,12 +91,12 @@ final actor PresentationInteractorImpl: PresentationInteractor {
     await self.sessionCoordinatorHolder.setActiveRemoteCoordinator(coordinator)
   }
 
-  public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
+  public func onDeviceEngagement() async -> PresentationRequestPartialState {
     try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().initialize()
     return await onRequestReceived()
   }
 
-  public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
+  public func onRequestReceived() async -> PresentationRequestPartialState {
     do {
       let response = try await sessionCoordinatorHolder.getActiveRemoteCoordinator().requestReceived()
       let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
@@ -115,7 +121,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
         )
       )
     } catch {
-      return .failure(error)
+      return error.isIssuerNotTrusted ? .verifierNotTrusted : .failure(error)
     }
   }
 
