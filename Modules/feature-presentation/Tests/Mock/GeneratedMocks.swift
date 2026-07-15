@@ -1420,9 +1420,9 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         )
     }
 
-    public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
+    public func onDeviceEngagement() async -> PresentationRequestPartialState {
         return await cuckoo_manager.call(
-            "onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>",
+            "onDeviceEngagement() async -> PresentationRequestPartialState",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1440,9 +1440,9 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         )
     }
 
-    public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
+    public func onRequestReceived() async -> PresentationRequestPartialState {
         return await cuckoo_manager.call(
-            "onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>",
+            "onRequestReceived() async -> PresentationRequestPartialState",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1513,10 +1513,10 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
             ))
         }
         
-        func onDeviceEngagement() -> Cuckoo.ProtocolStubFunction<(), Result<OnlineAuthenticationRequestSuccessModel, Error>> {
+        func onDeviceEngagement() -> Cuckoo.ProtocolStubFunction<(), PresentationRequestPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractor.self,
-                method: "onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>",
+                method: "onDeviceEngagement() async -> PresentationRequestPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -1529,10 +1529,10 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
             ))
         }
         
-        func onRequestReceived() -> Cuckoo.ProtocolStubFunction<(), Result<OnlineAuthenticationRequestSuccessModel, Error>> {
+        func onRequestReceived() -> Cuckoo.ProtocolStubFunction<(), PresentationRequestPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractor.self,
-                method: "onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>",
+                method: "onRequestReceived() async -> PresentationRequestPartialState",
                 parameterMatchers: matchers
             ))
         }
@@ -1607,10 +1607,10 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         
         
         @discardableResult
-        func onDeviceEngagement() -> Cuckoo.__DoNotUse<(), Result<OnlineAuthenticationRequestSuccessModel, Error>> {
+        func onDeviceEngagement() -> Cuckoo.__DoNotUse<(), PresentationRequestPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>",
+                "onDeviceEngagement() async -> PresentationRequestPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1631,10 +1631,10 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         
         
         @discardableResult
-        func onRequestReceived() -> Cuckoo.__DoNotUse<(), Result<OnlineAuthenticationRequestSuccessModel, Error>> {
+        func onRequestReceived() -> Cuckoo.__DoNotUse<(), PresentationRequestPartialState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>",
+                "onRequestReceived() async -> PresentationRequestPartialState",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1703,16 +1703,16 @@ public class PresentationInteractorStub:PresentationInteractor, @unchecked Senda
         return DefaultValueRegistry.defaultValue(for: (PresentationCoordinatorPartialState).self)
     }
     
-    public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
-        return DefaultValueRegistry.defaultValue(for: (Result<OnlineAuthenticationRequestSuccessModel, Error>).self)
+    public func onDeviceEngagement() async -> PresentationRequestPartialState {
+        return DefaultValueRegistry.defaultValue(for: (PresentationRequestPartialState).self)
     }
     
     public func onResponsePrepare(requestItems p0: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
         return DefaultValueRegistry.defaultValue(for: (Result<RequestItemConvertible, Error>).self)
     }
     
-    public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
-        return DefaultValueRegistry.defaultValue(for: (Result<OnlineAuthenticationRequestSuccessModel, Error>).self)
+    public func onRequestReceived() async -> PresentationRequestPartialState {
+        return DefaultValueRegistry.defaultValue(for: (PresentationRequestPartialState).self)
     }
     
     public func onSendResponse() async -> RemoteSentResponsePartialState {
