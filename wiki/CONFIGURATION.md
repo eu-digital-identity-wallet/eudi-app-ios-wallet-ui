@@ -122,26 +122,59 @@ final class WalletProviderAttestationConfigImpl: WalletProviderAttestationConfig
 }
 ```
 
-3. Trusted certificates
+3. Trust configuration
 
 Via the *WalletKitConfig* protocol inside the logic-core module.
 
 ```swift
 protocol WalletKitConfig: Sendable {
   /**
-   * Reader Configuration
+   * Trust configuration: ETSI LoTE (List of Trusted Entities) trust sources,
+   * verification-context mappings and trust policies used for reader / issuer validation.
    */
-  var trustedReaderRootCertificates: [x5chain] { get }
+  var trustConfiguration: TrustConfiguration { get }
 }
 ```
 
-The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can be located inside the logic-core module.
+The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can be located inside the logic-core module. The resulting `TrustConfiguration` is passed to `EudiWallet` as the `trustConfig` argument in `WalletKitController`.
 
-The reader/IACA trust-anchor certificates ship with this repo as DER files in [`Wallet/Certificate`](../Wallet/Certificate) (e.g. `pidissuerca02_eu.der`, `r45_staging.der`). The file names — without the `.der` extension — must match the `certificates` array in `WalletKitConfigImpl.trustedReaderRootCertificates`, which loads each via `loadCertificate(_:)`. Replace these with your production trust anchors before go-live.
+The primary trust source is an ETSI LoTE (List of Trusted Entities) source that fetches signed trusted lists (PID / WRPAC / PubEAA providers) at runtime. A static list of bundled root certificates is configured as the `fallbackTrustSource`. These fallback certificates ship with this repo as DER files in [`Wallet/Certificate`](../Wallet/Certificate) (e.g. `pidissuerca02_eu.der`, `r45_staging.der`). The file names — without the `.der` extension — must match the array in `WalletKitConfigImpl.staticRootCertificates`, which loads each via `loadCertificate(_:)`. Replace the LoTE endpoints and the fallback anchors with your production values before go-live.
 
 ```swift
-  var trustedReaderRootCertificates: [x5chain] {
-    let certificates = [
+  var trustConfiguration: TrustConfiguration {
+    let loteLocations = SupportedLists<NSString>(
+      pidProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/PIDProviders.jwt",
+      walletProviders: nil,
+      wrpacProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/WRPACProviders.jwt",
+      wrprcProviders: nil,
+      pubEaaProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/PubEAAProviders.jwt",
+      qeaProviders: nil,
+      eaaProviders: [:]
+    )
+
+    let classifications: EtsiContextTypeMappings = [
+      DocumentTypeIdentifier.mDocPid.rawValue: .pid,
+      DocumentTypeIdentifier.sdJwtPid.rawValue: .pid
+    ]
+
+    return TrustConfiguration(
+      trustSource: .etsi(
+        EtsiTrustSource(
+          loteLocations: loteLocations,
+          contextTypeMappings: classifications
+        )
+      ),
+      fallbackTrustSource: .staticList(
+        StaticListTrustSource(rootCertificates: staticRootCertificates)
+      ),
+      defaultPolicy: .warning,
+      requireSignedMetadata: true,
+      statusTrustPolicy: .warning
+    )
+  }
+
+  var staticRootCertificates: [Data] {
+    [
       "pidissuerca02_cz",
       "pidissuerca02_ee",
       "pidissuerca02_eu",
@@ -150,10 +183,7 @@ The reader/IACA trust-anchor certificates ship with this repo as DER files in [`
       "pidissuerca02_pt",
       "pidissuerca02_ut",
       "r45_staging"
-    ]
-    return certificates
-      .compactMap { loadCertificate($0) }
-      .map { [$0] }
+    ].compactMap { loadCertificate($0) }
   }
 ```
 

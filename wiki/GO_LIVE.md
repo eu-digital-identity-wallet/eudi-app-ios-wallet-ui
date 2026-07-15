@@ -33,7 +33,7 @@ certification or a replacement for a full security assessment.
 * [`EudiWalletConfiguration`](#eudiwalletconfiguration)
 * [OpenID4VP Configuration](#openid4vp-configuration)
 * [Digital Credentials API And Identity Document Provider](#digital-credentials-api-and-identity-document-provider)
-* [Reader Trust Store](#reader-trust-store)
+* [Trust Store](#trust-store)
 * [Issuer Configuration: `issuersConfig`](#issuer-configuration-issuersconfig)
 * [Wallet Provider Attestation](#wallet-provider-attestation)
 * [Document Issuance Rules](#document-issuance-rules)
@@ -548,7 +548,7 @@ It implements:
 protocol WalletKitConfig: Sendable {
   var issuersConfig: [String: VciConfig] { get }
   var vpConfig: OpenId4VpConfiguration { get }
-  var trustedReaderRootCertificates: [x5chain] { get }
+  var trustConfiguration: TrustConfiguration { get }
   var userAuthenticationRequired: Bool { get }
   var keyOptions: KeyOptions? { get }
   var logFileName: String { get }
@@ -566,14 +566,19 @@ Each property must be reviewed.
 `WalletKitController` creates the wallet with:
 
 ```swift
-EudiWalletConfiguration(
-  serviceName: configLogic.keyChainConfig.documentStorageServiceName,
-  accessGroup: configLogic.keyChainConfig.keychainAccessGroup,
-  userAuthenticationRequired: walletKitConfig.userAuthenticationRequired,
-  trustedReaderRootCertificates: walletKitConfig.trustedReaderRootCertificates,
-  deviceAuthMethod: .deviceSignature,
-  uiCulture: Locale.current.systemLanguageCode,
-  logFileName: walletKitConfig.logFileName
+EudiWallet(
+  eudiWalletConfig: EudiWalletConfiguration(
+    serviceName: configLogic.keyChainConfig.documentStorageServiceName,
+    accessGroup: configLogic.keyChainConfig.keychainAccessGroup,
+    userAuthenticationRequired: walletKitConfig.userAuthenticationRequired,
+    deviceAuthMethod: .deviceSignature,
+    uiCulture: Locale.current.systemLanguageCode,
+    logFileName: walletKitConfig.logFileName
+  ),
+  trustConfig: walletKitConfig.trustConfiguration,
+  openID4VpConfig: walletKitConfig.vpConfig,
+  openID4VciConfigurations: walletKitConfig.issuersConfig.mapValues { $0.config },
+  // ...
 )
 ```
 
@@ -584,7 +589,7 @@ Production meaning:
 | `serviceName` | Keychain service name used by WalletKit storage. | Must be stable across app updates and match extension access needs. |
 | `accessGroup` | Keychain access group. | Must match signed entitlements and extension sharing requirements. |
 | `userAuthenticationRequired` | Whether WalletKit secure storage requires local user authentication. | For LoA High PID and other high-assurance EAA/QEAA credentials, set this to `true` unless an approved remote high-assurance hardware-backed key protection design replaces local key use. Test all issuance, presentation, extension, and background behavior. |
-| `trustedReaderRootCertificates` | Trust anchors for proximity reader authentication and supported verification flows. | Replace demo anchors with production trust anchors only. |
+| `trustConfig` | Trust configuration (`TrustConfiguration`) for reader / issuer validation: ETSI LoTE trust sources, verification-context mappings, static fallback anchors, and trust policies. Passed as a separate `EudiWallet` argument, not inside `EudiWalletConfiguration`. | Replace demo LoTE endpoints and fallback anchors with production trust anchors, and review `defaultPolicy` / `statusTrustPolicy` before go-live. |
 | `deviceAuthMethod` | Device authentication method used by WalletKit. | Current value is `.deviceSignature`; confirm with WalletKit and assurance policy. |
 | `uiCulture` | Locale passed to WalletKit. | Confirm supported locales and fallback behavior. |
 | `logFileName` | WalletKit log file name. | Disable or heavily redact production logs unless support policy requires a controlled log export. |
@@ -893,13 +898,16 @@ Production validation:
 * Confirm the extension appears and can authorize or deny the request.
 * Delete or revoke the document and confirm registration is removed or no longer usable.
 
-## Reader Trust Store
+## Trust Store
 
-Current code loads DER certificates by resource name:
+Trust is configured through `WalletKitConfig.trustConfiguration`, which is passed to `EudiWallet` as
+the `trustConfig` argument. The primary trust source is an ETSI LoTE (List of Trusted Entities)
+source that fetches signed trusted lists at runtime; a static list of bundled DER certificates is
+configured as the `fallbackTrustSource`. The fallback certificates are loaded by resource name:
 
 ```swift
-var trustedReaderRootCertificates: [x5chain] {
-  let certificates = [
+var staticRootCertificates: [Data] {
+  [
     "pidissuerca02_cz",
     "pidissuerca02_ee",
     "pidissuerca02_eu",
@@ -908,16 +916,15 @@ var trustedReaderRootCertificates: [x5chain] {
     "pidissuerca02_pt",
     "pidissuerca02_ut",
     "r45_staging"
-  ]
-  return certificates
-    .compactMap { loadCertificate($0) }
-    .map { [$0] }
+  ].compactMap { loadCertificate($0) }
 }
 ```
 
 Production guidance:
 
-* Remove demo and staging trust anchors that are not part of the production trust framework.
+* Replace the demo LoTE endpoints in `trustConfiguration` with your production trusted-list locations.
+* Review `defaultPolicy`, `requireSignedMetadata`, and `statusTrustPolicy` for production assurance.
+* Remove demo and staging fallback trust anchors that are not part of the production trust framework.
 * Add only production IACA, reader root, verifier, or scheme certificates approved for launch.
 * Use clear file names, for example `ms_iaca_2026.der`.
 * Document certificate owner, fingerprint, serial number, validity period, source, and rotation plan.
