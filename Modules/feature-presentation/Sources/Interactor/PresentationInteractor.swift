@@ -40,7 +40,7 @@ public enum RemoteSentResponsePartialState: Sendable {
 
 public enum PresentationRequestPartialState: Sendable {
   case success(OnlineAuthenticationRequestSuccessModel)
-  case verifierNotTrusted
+  case notSecuredRequest
   case failure(Error)
 }
 
@@ -121,7 +121,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
         )
       )
     } catch {
-      return error.isIssuerNotTrusted ? .verifierNotTrusted : .failure(error)
+      return error.isIssuerNotTrusted ? .notSecuredRequest : .failure(error)
     }
   }
 

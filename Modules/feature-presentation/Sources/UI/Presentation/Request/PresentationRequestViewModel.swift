@@ -63,7 +63,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
           )
         )
       }
-    case .verifierNotTrusted:
+    case .notSecuredRequest:
       self.onVerifierNotTrusted()
     case .failure(let error):
       self.onEmptyDocuments(error: error.errorMessage)

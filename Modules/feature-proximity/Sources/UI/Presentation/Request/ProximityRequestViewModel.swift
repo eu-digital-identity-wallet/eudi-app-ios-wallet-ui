@@ -64,7 +64,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
           )
         )
       }
-    case .verifierNotTrusted:
+    case .notSecuredRequest:
       self.onVerifierNotTrusted()
     case .failure(let error):
       self.onEmptyDocuments(error: error.errorMessage)
