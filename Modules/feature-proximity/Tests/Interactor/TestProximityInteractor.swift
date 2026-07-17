@@ -18,6 +18,7 @@ import UIKit
 import logic_resources
 import logic_business
 import feature_common
+import EudiWalletKit
 @testable import logic_core
 @testable import feature_proximity
 @testable import logic_test
@@ -302,16 +303,16 @@ final class TestProximityInteractor: EudiTest {
   func testOnRequestReceived_WhenCoordinatorRequestReceivedThrowsError_ThenVerifyFailureState() async {
     // Given
     let expectedError = PresentationSessionError.conversionToRequestItemModel
-    
+
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenThrow(expectedError)
     }
-    
+
     stubFetchRevokedDocuments(with: [])
-    
+
     // When
     let state = await interactor.onRequestReceived()
-    
+
     // Then
     switch state {
     case .failure(let error):
@@ -319,6 +320,27 @@ final class TestProximityInteractor: EudiTest {
         error.localizedDescription,
         expectedError.localizedDescription
       )
+    default:
+      XCTFail("Wrong state \(state)")
+    }
+  }
+
+  func testOnRequestReceived_WhenCoordinatorRequestReceivedThrowsTrustError_ThenVerifyNotSecuredRequest() async {
+    // Given
+    stub(presentationSessionCoordinator) { mock in
+      when(mock.requestReceived())
+        .thenThrow(WalletError(description: "reader not trusted", code: .trustError))
+    }
+
+    stubFetchRevokedDocuments(with: [])
+
+    // When
+    let state = await interactor.onRequestReceived()
+
+    // Then
+    switch state {
+    case .notSecuredRequest:
+      XCTAssertTrue(true)
     default:
       XCTFail("Wrong state \(state)")
     }

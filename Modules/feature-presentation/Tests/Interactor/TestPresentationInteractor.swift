@@ -17,6 +17,7 @@ import XCTest
 import UIKit
 import logic_business
 import feature_common
+import EudiWalletKit
 @testable import logic_core
 @testable import feature_presentation
 @testable import logic_test
@@ -340,6 +341,27 @@ final class TestPresentationInteractor: EudiTest {
         error.localizedDescription,
         expectedError.localizedDescription
       )
+    default:
+      XCTFail("Wrong state \(state)")
+    }
+  }
+
+  func testOnRequestReceived_WhenCoordinatorRequestReceivedThrowsTrustError_ThenReturnsNotSecuredRequest() async {
+    // Given
+    stub(presentationCoordinator) { mock in
+      when(mock.requestReceived())
+        .thenThrow(WalletError(description: "verifier not trusted", code: .trustError))
+    }
+
+    stubFetchRevokedDocuments(with: [])
+
+    // When
+    let state = await interactor.onRequestReceived()
+
+    // Then
+    switch state {
+    case .notSecuredRequest:
+      XCTAssertTrue(true)
     default:
       XCTFail("Wrong state \(state)")
     }
