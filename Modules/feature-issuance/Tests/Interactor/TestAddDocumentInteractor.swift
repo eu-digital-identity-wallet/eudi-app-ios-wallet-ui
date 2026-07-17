@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
+import EudiWalletKit
 
 @testable import logic_core
 @testable import logic_test
@@ -197,6 +198,66 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
+  func testIssueDocument_whenWalletThrowsTrustError_thenReturnsIssuerNotTrusted() async {
+    // Given
+    let configIds = ["untrusted-doc"]
+    let issuerId = "issuer.dev"
+    let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
+
+    stub(walletKitController) { mock in
+      when(
+        mock.issueDocuments(
+          issuerId: equal(to: issuerId),
+          identifiers: equal(to: configIds),
+          docTypeIdentifier: equal(to: identifier)
+        )
+      ).thenThrow(WalletError(description: "issuer not trusted", code: .trustError))
+    }
+
+    // When
+    let result = await interactor.issueDocument(
+      issuerId: issuerId,
+      configIds: configIds,
+      docTypeIdentifier: identifier
+    )
+
+    // Then
+    switch result {
+    case .issuerNotTrusted:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Expected .issuerNotTrusted but got \(result)")
+    }
+  }
+
+  func testResumeDynamicIssuance_whenWalletThrowsTrustError_thenReturnsIssuerNotTrusted() async {
+    // Given
+    let pendingData = DynamicIssuancePendingData(
+      pendingDoc: Constants.issuedPendingDocument,
+      url: URL(string: "https://example.com")!
+    )
+
+    stub(walletKitController) { mock in
+      when(mock.getDynamicIssuancePendingData()).thenReturn(pendingData)
+
+      when(mock.resumePendingIssuance(
+        pendingDoc: any(),
+        webUrl: equal(to: pendingData.url)
+      )).thenThrow(WalletError(description: "issuer not trusted", code: .trustError))
+    }
+
+    // When
+    let result = await interactor.resumeDynamicIssuance()
+
+    // Then
+    switch result {
+    case .issuerNotTrusted:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Expected .issuerNotTrusted but got \(result)")
+    }
+  }
+
   func testResumeDynamicIssuance_whenDefferedPending_thenReturnDefferedSuccess() async {
     // Given
     let pendingDoc = Constants.defferedPendingDocument

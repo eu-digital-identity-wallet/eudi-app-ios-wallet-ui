@@ -16,7 +16,7 @@
 import Foundation
 import logic_business
 import EudiWalletKit
-import Security
+import EudiEtsi1196x2
 
 protocol WalletKitConfig: Sendable {
 
@@ -31,9 +31,10 @@ protocol WalletKitConfig: Sendable {
   var vpConfig: OpenId4VpConfiguration { get }
 
   /**
-   * Reader Configuration
+   * Trust configuration: ETSI LoTE (List of Trusted Entities) trust sources,
+   * verification-context mappings and trust policies used for reader / issuer validation.
    */
-  var trustedReaderRootCertificates: [x5chain] { get }
+  var trustConfiguration: TrustConfiguration { get }
 
   /**
    * User authentication required accessing core's secure storage
@@ -108,11 +109,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
           .init(
             config: .init(
               credentialIssuerURL: "https://issuer.eudiw.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: []
+                )
+              ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
               cacheIssuerMetadata: true
             ),
             order: 1
@@ -120,11 +128,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
           .init(
             config: .init(
               credentialIssuerURL: "https://issuer-backend.eudiw.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: []
+                )
+              ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
               cacheIssuerMetadata: true
             ),
             order: 0
@@ -135,11 +150,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
           .init(
             config: .init(
               credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: []
+                )
+              ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
               cacheIssuerMetadata: true
             ),
             order: 1
@@ -147,11 +169,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
           .init(
             config: .init(
               credentialIssuerURL: "https://dev.issuer-backend.eudiw.dev",
-              clientId: "wallet-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: []
+                )
+              ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
               parUsage: .required(authorizationCodeDPoPBinding: true),
               requireDpop: true,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
               cacheIssuerMetadata: true
             ),
             order: 0
@@ -180,8 +209,40 @@ struct WalletKitConfigImpl: WalletKitConfig {
     )
   }
 
-  var trustedReaderRootCertificates: [x5chain] {
-    let certificates = [
+  var trustConfiguration: TrustConfiguration {
+    let loteLocations = SupportedLists<NSString>(
+      pidProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/PIDProviders.jwt",
+      walletProviders: nil,
+      wrpacProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/WRPACProviders.jwt",
+      wrprcProviders: nil,
+      pubEaaProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/PubEAAProviders.jwt",
+      qeaProviders: nil,
+      eaaProviders: [:]
+    )
+
+    let classifications: EtsiContextTypeMappings = [
+      DocumentTypeIdentifier.mDocPid.rawValue: .pid,
+      DocumentTypeIdentifier.sdJwtPid.rawValue: .pid
+    ]
+
+    return TrustConfiguration(
+      trustSource: .etsi(
+        EtsiTrustSource(
+          loteLocations: loteLocations,
+          contextTypeMappings: classifications
+        )
+      ),
+      fallbackTrustSource: .staticList(
+        StaticListTrustSource(rootCertificates: staticRootCertificates)
+      ),
+      defaultPolicy: .warning,
+      requireSignedMetadata: true,
+      statusTrustPolicy: .warning
+    )
+  }
+
+  var staticRootCertificates: [Data] {
+    [
       "pidissuerca02_cz",
       "pidissuerca02_ee",
       "pidissuerca02_eu",
@@ -190,10 +251,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
       "pidissuerca02_pt",
       "pidissuerca02_ut",
       "r45_staging"
-    ]
-    return certificates
-      .compactMap { loadCertificate($0) }
-      .map { [$0] }
+    ].compactMap { loadCertificate($0) }
   }
 
   var logFileName: String {
@@ -300,11 +358,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
 }
 
 private extension WalletKitConfigImpl {
-  func loadCertificate(_ name: String) -> SecCertificate? {
-    guard
-      let url = Bundle.main.url(forResource: name, withExtension: "der"),
-      let data = try? Data(contentsOf: url)
-    else { return nil }
-    return SecCertificateCreateWithData(nil, data as CFData)
+  func loadCertificate(_ name: String) -> Data? {
+    guard let url = Bundle.main.url(forResource: name, withExtension: "der") else {
+      return nil
+    }
+    return try? Data(contentsOf: url)
   }
 }

@@ -63,6 +63,8 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
           )
         )
       }
+    case .notSecuredRequest:
+      self.onVerifierNotTrusted()
     case .failure(let error):
       self.onEmptyDocuments(error: error.errorMessage)
     }
@@ -120,6 +122,10 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   override func getPopRoute() -> AppRoute? {
     return getOriginator()
+  }
+
+  override func stopPresentation() async {
+    await interactor.stopPresentation()
   }
 
   override func getTitle() -> LocalizableStringKey {

@@ -200,7 +200,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
       }
 
     } catch {
-      return .failure(error)
+      return error.isIssuerNotTrusted ? .issuerNotTrusted : .failure(error)
     }
   }
 
@@ -226,7 +226,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
       }
 
     } catch {
-      return .failure(error)
+      return error.isIssuerNotTrusted ? .issuerNotTrusted : .failure(error)
     }
   }
 
@@ -258,6 +258,7 @@ public enum IssueResultPartialState: Sendable {
   case success([String])
   case deferredSuccess(ScopedDocument)
   case dynamicIssuance(RemoteSessionCoordinator)
+  case issuerNotTrusted
   case failure(Error)
 }
 
@@ -265,6 +266,7 @@ public enum IssueDynamicDocumentPartialState: Sendable {
   case success(String)
   case noPending
   case deferredSuccess
+  case issuerNotTrusted
   case failure(Error)
 }
 

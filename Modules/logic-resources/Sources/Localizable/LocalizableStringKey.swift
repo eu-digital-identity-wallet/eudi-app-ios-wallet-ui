@@ -237,6 +237,10 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case revoked
   case revokedModalTitle
   case revokedModalDescription
+  case issuanceBlockedTitle
+  case issuanceBlockedMessage
+  case presentationBlockedTitle
+  case presentationBlockedMessage
   case transactionDetailsRequestDeletionMessage
   case transactionDetailsRequestDeletionButton
   case transactionDetailsReportTransactionMessage

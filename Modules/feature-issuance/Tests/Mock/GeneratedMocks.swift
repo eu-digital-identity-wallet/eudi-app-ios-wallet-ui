@@ -1811,6 +1811,7 @@ import logic_resources
 import Cuckoo
 import logic_resources
 import OrderedCollections
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -1905,6 +1906,7 @@ import logic_resources
 import Cuckoo
 import Foundation
 import logic_resources
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6875,7 +6877,7 @@ import EudiWalletKit
 import Cuckoo
 import Foundation
 import EudiWalletKit
-import Security
+import EudiEtsi1196x2
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6921,12 +6923,12 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         }
     }
 
-    var trustedReaderRootCertificates: [x5chain] {
+    var trustConfiguration: TrustConfiguration {
         get {
             return cuckoo_manager.getter(
-                "trustedReaderRootCertificates",
+                "trustConfiguration",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.trustedReaderRootCertificates
+                defaultCall: __defaultImplStub!.trustConfiguration
             )
         }
     }
@@ -7017,8 +7019,8 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "vpConfig")
         }
         
-        var trustedReaderRootCertificates: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,[x5chain]> {
-            return .init(manager: cuckoo_manager, name: "trustedReaderRootCertificates")
+        var trustConfiguration: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,TrustConfiguration> {
+            return .init(manager: cuckoo_manager, name: "trustConfiguration")
         }
         
         var userAuthenticationRequired: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,Bool> {
@@ -7069,8 +7071,8 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "vpConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var trustedReaderRootCertificates: Cuckoo.VerifyReadOnlyProperty<[x5chain]> {
-            return .init(manager: cuckoo_manager, name: "trustedReaderRootCertificates", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var trustConfiguration: Cuckoo.VerifyReadOnlyProperty<TrustConfiguration> {
+            return .init(manager: cuckoo_manager, name: "trustConfiguration", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var userAuthenticationRequired: Cuckoo.VerifyReadOnlyProperty<Bool> {
@@ -7117,9 +7119,9 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
         }
     }
     
-    var trustedReaderRootCertificates: [x5chain] {
+    var trustConfiguration: TrustConfiguration {
         get {
-            return DefaultValueRegistry.defaultValue(for: ([x5chain]).self)
+            return DefaultValueRegistry.defaultValue(for: (TrustConfiguration).self)
         }
     }
     
@@ -9956,6 +9958,23 @@ import Cuckoo
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/Error+IssuerTrust.swift'
+
+import Cuckoo
+import Foundation
+import EudiWalletKit
+import MdocSecurity18013
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/OfferedDocModel+Extensions.swift'
 
 import Cuckoo
@@ -11993,6 +12012,22 @@ import logic_resources
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Sheet/SheetContainerView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Sheet/TrustBlockedSheetContent.swift'
 
 import Cuckoo
 import SwiftUI

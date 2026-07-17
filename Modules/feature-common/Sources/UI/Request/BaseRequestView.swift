@@ -86,6 +86,13 @@ public struct BaseRequestView<Router: RouterHost>: View {
         Button(.okButton) {}
       }
     )
+    .sheetDialog(isPresented: $viewModel.isVerifierNotTrustedSheetShowing) {
+      TrustBlockedSheetContent(
+        title: .presentationBlockedTitle,
+        message: .presentationBlockedMessage,
+        onClose: { viewModel.onVerifierNotTrustedClose() }
+      )
+    }
   }
 }
 

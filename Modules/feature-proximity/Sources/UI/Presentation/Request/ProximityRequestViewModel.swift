@@ -64,6 +64,8 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
           )
         )
       }
+    case .notSecuredRequest:
+      self.onVerifierNotTrusted()
     case .failure(let error):
       self.onEmptyDocuments(error: error.errorMessage)
     }
@@ -121,6 +123,10 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   override func getPopRoute() -> AppRoute? {
     publisherTask?.cancel()
     return getOriginator()
+  }
+
+  override func stopPresentation() async {
+    await interactor.stopPresentation()
   }
 
   override func getTitle() -> LocalizableStringKey {

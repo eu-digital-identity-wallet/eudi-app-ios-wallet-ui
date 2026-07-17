@@ -71,7 +71,7 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
 
   public func requestReceived() async throws -> PresentationRequest {
     guard session.disclosedDocumentSets.contains(where: { !$0.isEmpty }) else {
-      throw session.uiError ?? .init(description: "Failed to Find known documents to send")
+      throw session.uiError ?? .init(description: "Failed to Find known documents to send", code: .noDocumentsAvailable)
     }
     return createRequest()
   }

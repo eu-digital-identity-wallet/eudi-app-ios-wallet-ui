@@ -17,6 +17,7 @@ import Foundation
 import logic_ui
 import logic_resources
 import feature_common
+import Observation
 
 @Copyable
 struct DocumentOfferViewState: ViewState {
@@ -42,7 +43,10 @@ struct DocumentOfferViewState: ViewState {
   }
 }
 
+@Observable
 final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, DocumentOfferViewState> {
+
+  var isIssuerNotTrustedSheetShowing: Bool = false
 
   private let interactor: DocumentOfferInteractor
 
@@ -179,6 +183,9 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
             )
           )
         )
+      case .issuerNotTrusted:
+        setState { $0.copy(isLoading: false).copy(error: nil) }
+        isIssuerNotTrustedSheetShowing = true
       case .failure(let error):
         setState {
           $0.copy(
@@ -249,6 +256,9 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       router.push(with: route)
     case .noPending:
       setState { $0.copy(isLoading: false) }
+    case .issuerNotTrusted:
+      setState { $0.copy(isLoading: false).copy(error: nil) }
+      isIssuerNotTrustedSheetShowing = true
     case .failure(let error):
       setState {
         $0.copy(

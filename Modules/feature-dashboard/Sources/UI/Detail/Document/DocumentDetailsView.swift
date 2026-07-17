@@ -90,6 +90,13 @@ struct DocumentDetailsView<Router: RouterHost>: View {
         }
       }
     )
+    .sheetDialog(isPresented: $viewModel.isIssuerNotTrustedSheetShowing) {
+      TrustBlockedSheetContent(
+        title: .issuanceBlockedTitle,
+        message: .issuanceBlockedMessage,
+        onClose: { viewModel.isIssuerNotTrustedSheetShowing = false }
+      )
+    }
     .task {
       await viewModel.fetchDocumentDetails()
     }

@@ -138,11 +138,11 @@ final actor WalletKitControllerImpl: WalletKitController {
         serviceName: configLogic.keyChainConfig.documentStorageServiceName,
         accessGroup: configLogic.keyChainConfig.keychainAccessGroup,
         userAuthenticationRequired: walletKitConfig.userAuthenticationRequired,
-        trustedReaderRootCertificates: walletKitConfig.trustedReaderRootCertificates,
         deviceAuthMethod: .deviceSignature,
         uiCulture: Locale.current.systemLanguageCode,
         logFileName: walletKitConfig.logFileName
       ),
+      trustConfig: walletKitConfig.trustConfiguration,
       openID4VpConfig: walletKitConfig.vpConfig,
       openID4VciConfigurations: walletKitConfig.issuersConfig.mapValues { $0.config },
       networking: networkSessionProvider.urlSession,
