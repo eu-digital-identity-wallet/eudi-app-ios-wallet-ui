@@ -169,11 +169,18 @@ var issuersConfig: [String: VciConfig] {
         .init(
           config: .init(
             credentialIssuerURL: "https://issuer.eudiw.dev",
-            clientId: "wallet-dev",
-            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+            clientId: "eudiw-abca",
+            keyAttestationsConfig: .init(
+              walletAttestationsProvider: walletKitAttestationProvider,
+              popKeyOptions: KeyOptions(
+                secureAreaName: SecureEnclaveSecureArea.name,
+                accessControl: []
+              )
+            ),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             parUsage: .required(authorizationCodeDPoPBinding: true),
             requireDpop: true,
+            issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
             cacheIssuerMetadata: true
           ),
           order: 1
@@ -184,11 +191,18 @@ var issuersConfig: [String: VciConfig] {
         .init(
           config: .init(
             credentialIssuerURL: "https://ec.dev.issuer.eudiw.dev",
-            clientId: "wallet-dev",
-            keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+            clientId: "eudiw-abca",
+            keyAttestationsConfig: .init(
+              walletAttestationsProvider: walletKitAttestationProvider,
+              popKeyOptions: KeyOptions(
+                secureAreaName: SecureEnclaveSecureArea.name,
+                accessControl: []
+              )
+            ),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
             parUsage: .required(authorizationCodeDPoPBinding: true),
             requireDpop: true,
+            issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
             cacheIssuerMetadata: true
           ),
           order: 1
@@ -201,7 +215,7 @@ var issuersConfig: [String: VciConfig] {
 }
 ```
 
-In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `parUsage`, `requireDpop`, `keyAttestationsConfig`, and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`). The snippet is trimmed to one issuer per variant for brevity; the live `WalletKitConfigImpl` returns **two** issuers per variant — the primary (`order: 1`) plus a backend issuer (`order: 0`): `https://issuer-backend.eudiw.dev` for `.DEMO` and `https://dev.issuer-backend.eudiw.dev` for `.DEV`.
+In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `parUsage`, `requireDpop`, `keyAttestationsConfig`, `issuerMetadataPolicy` (derived from `trustConfiguration`), and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`). The snippet is trimmed to one issuer per variant for brevity; the live `WalletKitConfigImpl` returns **two** issuers per variant — the primary (`order: 1`) plus a backend issuer (`order: 0`): `https://issuer-backend.eudiw.dev` for `.DEMO` and `https://dev.issuer-backend.eudiw.dev` for `.DEV`.
 
 ### Running with local services
 
