@@ -255,7 +255,14 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   open func stopPresentation() async {}
   public func onVerifierNotTrusted() {
     setState {
-      $0.copy(isLoading: false, initialized: true).copy(error: nil)
+      $0.copy(
+        isLoading: false,
+        showMissingCredentials: false,
+        items: [],
+        combinations: [],
+        allowShare: false,
+        initialized: true
+      ).copy(error: nil)
     }
     isVerifierNotTrustedSheetShowing = true
     Task { await stopPresentation() }
@@ -270,8 +277,6 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     await onCombinationItemClick(combinationIndex: viewState.selectedCombinationIndex, id: id)
   }
 
-  /// Handles a row tap (expand/collapse or checkbox toggle) within a specific combination.
-  /// Edits that combination's data and, when it is the selected one, keeps `items` in sync.
   func onCombinationItemClick(combinationIndex: Int, id: String) async {
     guard viewState.combinations.indices.contains(combinationIndex) else { return }
 
