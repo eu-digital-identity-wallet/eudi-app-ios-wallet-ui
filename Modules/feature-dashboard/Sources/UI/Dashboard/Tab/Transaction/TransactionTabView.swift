@@ -92,8 +92,8 @@ private struct TransactionTabViewContainer: View {
             ForEach(
               state.transactions.keys.sorted(by: {
                 state.sortIsDescending
-                ? $0.order < $1.order
-                : $0.order > $1.order
+                ? $0.order > $1.order
+                : $0.order < $1.order
               }),
               id: \.self
             ) { category in
