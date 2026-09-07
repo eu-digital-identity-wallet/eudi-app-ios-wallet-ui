@@ -705,14 +705,17 @@ Fields:
 * `accessProtection` — maps to `kSecAttrAccessible*`. For production, prefer
   `.whenUnlockedThisDeviceOnly` or `.afterFirstUnlockThisDeviceOnly` unless backup/restore of these
   keys is explicitly required and approved.
-* `accessControl` — `KeyAccessControl` option set. Enable `.requireUserPresence` to gate signing on
-  biometry/passcode for LoA High PID and high-assurance EAA/QEAA credentials.
-  `.requireApplicationPassword` adds a second factor for additional data encryption.
+* `accessControl` — a `KeyAccessControl` enum value, not an option set. The named cases
+  (`.requireUserPresence`, `.requireBiometryAny`, `.requireBiometryCurrentSet`) are mutually
+  exclusive, `.empty` applies no constraint, and `.custom(_:)` passes native keychain flags through
+  verbatim, for example `.custom([.biometryCurrentSet, .or, .devicePasscode])`. Enable
+  `.requireUserPresence` to gate signing on biometry/passcode for LoA High PID and high-assurance
+  EAA/QEAA credentials.
 * `keyPurposes` — defaults to all purposes (`.signing`, `.keyAgreement`). Narrow when policy
   requires.
 
 The reference value
-(`KeyOptions(curve: .P256, secureAreaName: SecureEnclaveSecureArea.name, accessControl: [])`) is
+(`KeyOptions(curve: .P256, secureAreaName: SecureEnclaveSecureArea.name, accessControl: .empty)`) is
 suitable for the reference/demo setup. It does not enable user-presence-bound signing and does not
 set an explicit accessibility class. Review all fields against the assurance level of each
 credential class before production.
@@ -890,6 +893,7 @@ Current registration behavior:
 * `WalletKitController` registers documents through `DocumentRegistrationManager`.
 * Registration is only attempted on iOS 26 and later where the Digital Credentials API is available.
 * Only CBOR documents are registered (`document.docDataFormat == .cbor`).
+* Registrations are reconciled against storage rather than tracked incrementally, so a document deleted in the app is deregistered, and a registration left behind by an earlier build is removed on the next launch.
 
 Production validation:
 
