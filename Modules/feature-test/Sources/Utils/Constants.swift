@@ -206,7 +206,7 @@ extension Constants {
 
 extension Constants {
   struct MockPresentationService: PresentationService {
-    func sendResponse(userAccepted: Bool, itemsToSend: EudiWalletKit.RequestItems, deviceNameSpacesToSend: MdocDataTransfer18013.RequestDeviceNameSpaces?, onSuccess: (@Sendable (URL?) -> Void)?) async throws {}
+    func sendResponse(userAccepted: Bool, itemsToSend: EudiWalletKit.RequestItems, deviceNameSpacesToSend: MdocDataTransfer18013.RequestDeviceNameSpaces?, authenticationContext: ThreadSafeAuthContext, onSuccess: (@Sendable (URL?) -> Void)?) async throws {}
 
     var zkpDocumentIds: [WalletStorage.Document.ID]?
 
@@ -307,7 +307,8 @@ extension Constants {
     storageManager: .init(storageService: mockStorageService),
     docIdToPresentInfo: [:],
     documentKeyIndexes: [:],
-    userAuthenticationRequired: false
+    userAuthenticationRequired: false,
+    localAuthenticationContext: ThreadSafeAuthContext()
   )
 }
 

@@ -559,7 +559,7 @@ private extension TestDeepLinkController {
     
     var flow: EudiWalletKit.FlowType
 
-    func sendResponse(userAccepted: Bool, itemsToSend: EudiWalletKit.RequestItems, deviceNameSpacesToSend: MdocDataTransfer18013.RequestDeviceNameSpaces?, onSuccess: (@Sendable (URL?) -> Void)?) async throws {}
+    func sendResponse(userAccepted: Bool, itemsToSend: EudiWalletKit.RequestItems, deviceNameSpacesToSend: MdocDataTransfer18013.RequestDeviceNameSpaces?, authenticationContext: ThreadSafeAuthContext, onSuccess: (@Sendable (URL?) -> Void)?) async throws {}
   }
   
   static let mockTransactionLog: TransactionLog = .init(
@@ -583,6 +583,7 @@ private extension TestDeepLinkController {
     storageManager: .init(storageService: mockStorageService),
     docIdToPresentInfo: [:],
     documentKeyIndexes: [:],
-    userAuthenticationRequired: false
+    userAuthenticationRequired: false,
+    localAuthenticationContext: ThreadSafeAuthContext()
   )
 }

@@ -216,19 +216,18 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func clearAllDocuments() async throws {
     try await wallet.deleteAllDocuments()
-
-    try? await removeAllRegistration(
-      with: wallet.loadAllDocuments()?.compactMap { return $0.id }
-    )
+    await reconcileRegistrations()
   }
 
   func deleteDocument(with id: String, status: DocumentStatus) async throws {
     try await wallet.deleteDocument(id: id, status: status)
     try await revokedDocumentStorageController.delete(id)
+    await reconcileRegistrations()
   }
 
   func loadDocuments() async throws {
     _ = try await wallet.loadAllDocuments()
+    await reconcileRegistrations()
   }
 
   func startProximityPresentation() async -> ProximitySessionCoordinator {
@@ -289,9 +288,9 @@ final actor WalletKitControllerImpl: WalletKitController {
     wallet.storage.getDocumentModel(id: id)
   }
 
-  func fetchDocuments(with ids: [String]) -> [any DocClaimsDecodable] {
+  func fetchDocuments(with ids: [String]) async -> [any DocClaimsDecodable] {
     let documents = fetchIssuedDocuments().filter { ids.contains($0.id) }
-    registerForDocumentIdentityExtension(documents: documents)
+    await reconcileRegistrations()
     return documents
   }
 
@@ -374,6 +373,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     guard let document = response.documents.first else {
       throw WalletCoreError.unableToIssueAndStore
     }
+    await reconcileRegistrations()
     return document
   }
 
@@ -396,6 +396,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     if result.isDeferred {
       return result.transformToDeferredDecodable()
     } else if let doc = fetchDocument(with: result.id) {
+      await reconcileRegistrations()
       return doc
     } else {
       throw WalletCoreError.unableFetchDocument
@@ -433,13 +434,15 @@ final actor WalletKitControllerImpl: WalletKitController {
       documentId: pendingDoc.id,
       documentTypeIdentifier: pendingDoc.documentTypeIdentifier
     )
-    return try await wallet.resumePendingIssuance(
+    let document = try await wallet.resumePendingIssuance(
       issuerName: metadata.credentialIssuerIdentifier,
       pendingDoc: pendingDoc,
       webUrl: webUrl,
       credentialOptions: credentialOptions,
       keyOptions: walletKitConfig.keyOptions
     )
+    await reconcileRegistrations()
+    return document
   }
 
   func storeDynamicIssuancePendingUrl(with url: URL) {
@@ -714,32 +717,18 @@ final actor WalletKitControllerImpl: WalletKitController {
 
 private extension WalletKitControllerImpl {
 
-  func registerForDocumentIdentityExtension(documents: [any DocClaimsDecodable]) {
-    Task {
-      for document in documents {
-        do {
-          if #available(iOS 26.0, *), document.docDataFormat == .cbor {
-            try await documentRegistrationManager.addRegistration(
-              mobileDocumentType: document.docType,
-              supportedAuthorityKeyIdentifiers: [],
-              documentIdentifier: document.id,
-              invalidationDate: document.validUntil
-            )
-          }
-        } catch {
-          throw WalletCoreError.unableFetchDocuments
+  func reconcileRegistrations() async {
+    await documentRegistrationManager.reconcile(
+      desired: fetchIssuedDocuments()
+        .filter { $0.docDataFormat == .cbor }
+        .map {
+          RegistrationDescriptor(
+            documentIdentifier: $0.id,
+            mobileDocumentType: $0.docType,
+            invalidationDate: $0.validUntil
+          )
         }
-      }
-    }
-  }
-
-  func removeAllRegistration(with ids: [String]?) async {
-    if #available(iOS 26.0, *) {
-      guard let ids else { return }
-      do {
-        try await documentRegistrationManager.removeRegistration(documentIdentifiers: ids)
-      } catch {}
-    } else {}
+    )
   }
 
   func decodeDeeplink(link: URLComponents) -> String? {

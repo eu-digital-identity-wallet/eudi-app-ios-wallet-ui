@@ -20,18 +20,7 @@ final class DocumentRegistrationManagerNoOp: DocumentRegistrationManager, Sendab
 
   init() {}
 
-  func addRegistration(
-    mobileDocumentType: String,
-    supportedAuthorityKeyIdentifiers: [Data],
-    documentIdentifier: String,
-    invalidationDate: Date?
-  ) async throws {
-    // No-op: Identity Document Services not available on this iOS version
-  }
-
-  func removeRegistration(
-    documentIdentifiers: [String]
-  ) async throws {
+  func reconcile(desired: [RegistrationDescriptor]) async {
     // No-op: Identity Document Services not available on this iOS version
   }
 }

@@ -6278,25 +6278,13 @@ public class MockDocumentRegistrationManager: DocumentRegistrationManager, Cucko
     }
 
 
-    public func addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws {
-        return try await cuckoo_manager.callThrows(
-            "addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws",
-            parameters: (p0, p1, p2, p3),
-            escapingParameters: (p0, p1, p2, p3),
-            errorType: Swift.Error.self,
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.addRegistration(mobileDocumentType: p0, supportedAuthorityKeyIdentifiers: p1, documentIdentifier: p2, invalidationDate: p3)
-        )
-    }
-
-    public func removeRegistration(documentIdentifiers p0: [String]) async throws {
-        return try await cuckoo_manager.callThrows(
-            "removeRegistration(documentIdentifiers p0: [String]) async throws",
+    public func reconcile(desired p0: [RegistrationDescriptor]) async {
+        return await cuckoo_manager.call(
+            "reconcile(desired p0: [RegistrationDescriptor]) async",
             parameters: (p0),
             escapingParameters: (p0),
-            errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.removeRegistration(documentIdentifiers: p0)
+            defaultCall: await __defaultImplStub!.reconcile(desired: p0)
         )
     }
 
@@ -6307,18 +6295,10 @@ public class MockDocumentRegistrationManager: DocumentRegistrationManager, Cucko
             self.cuckoo_manager = manager
         }
         
-        func addRegistration<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.OptionalMatchable>(mobileDocumentType p0: M1, supportedAuthorityKeyIdentifiers p1: M2, documentIdentifier p2: M3, invalidationDate p3: M4) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String, [Data], String, Date?),Swift.Error> where M1.MatchedType == String, M2.MatchedType == [Data], M3.MatchedType == String, M4.OptionalMatchedType == Date {
-            let matchers: [Cuckoo.ParameterMatcher<(String, [Data], String, Date?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func reconcile<M1: Cuckoo.Matchable>(desired p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<([RegistrationDescriptor])> where M1.MatchedType == [RegistrationDescriptor] {
+            let matchers: [Cuckoo.ParameterMatcher<([RegistrationDescriptor])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentRegistrationManager.self,
-                method: "addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func removeRegistration<M1: Cuckoo.Matchable>(documentIdentifiers p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<([String]),Swift.Error> where M1.MatchedType == [String] {
-            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentRegistrationManager.self,
-                method: "removeRegistration(documentIdentifiers p0: [String]) async throws",
+                method: "reconcile(desired p0: [RegistrationDescriptor]) async",
                 parameterMatchers: matchers
             ))
         }
@@ -6337,22 +6317,10 @@ public class MockDocumentRegistrationManager: DocumentRegistrationManager, Cucko
         
         
         @discardableResult
-        func addRegistration<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.OptionalMatchable>(mobileDocumentType p0: M1, supportedAuthorityKeyIdentifiers p1: M2, documentIdentifier p2: M3, invalidationDate p3: M4) -> Cuckoo.__DoNotUse<(String, [Data], String, Date?), Void> where M1.MatchedType == String, M2.MatchedType == [Data], M3.MatchedType == String, M4.OptionalMatchedType == Date {
-            let matchers: [Cuckoo.ParameterMatcher<(String, [Data], String, Date?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func reconcile<M1: Cuckoo.Matchable>(desired p0: M1) -> Cuckoo.__DoNotUse<([RegistrationDescriptor]), Void> where M1.MatchedType == [RegistrationDescriptor] {
+            let matchers: [Cuckoo.ParameterMatcher<([RegistrationDescriptor])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func removeRegistration<M1: Cuckoo.Matchable>(documentIdentifiers p0: M1) -> Cuckoo.__DoNotUse<([String]), Void> where M1.MatchedType == [String] {
-            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "removeRegistration(documentIdentifiers p0: [String]) async throws",
+                "reconcile(desired p0: [RegistrationDescriptor]) async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -6365,11 +6333,7 @@ public class DocumentRegistrationManagerStub:DocumentRegistrationManager, @unche
 
 
     
-    public func addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func removeRegistration(documentIdentifiers p0: [String]) async throws {
+    public func reconcile(desired p0: [RegistrationDescriptor]) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }

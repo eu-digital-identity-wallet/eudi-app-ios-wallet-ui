@@ -110,7 +110,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
     KeyOptions(
       curve: .P256,
       secureAreaName: SecureEnclaveSecureArea.name,
-      accessControl: []
+      accessControl: .empty
     )
   }
 
@@ -132,7 +132,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 walletAttestationsProvider: walletKitAttestationProvider,
                 popKeyOptions: KeyOptions(
                   secureAreaName: SecureEnclaveSecureArea.name,
-                  accessControl: []
+                  accessControl: .empty
                 )
               ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
@@ -152,7 +152,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 walletAttestationsProvider: walletKitAttestationProvider,
                 popKeyOptions: KeyOptions(
                   secureAreaName: SecureEnclaveSecureArea.name,
-                  accessControl: []
+                  accessControl: .empty
                 )
               ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
@@ -175,7 +175,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 walletAttestationsProvider: walletKitAttestationProvider,
                 popKeyOptions: KeyOptions(
                   secureAreaName: SecureEnclaveSecureArea.name,
-                  accessControl: []
+                  accessControl: .empty
                 )
               ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
@@ -195,7 +195,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 walletAttestationsProvider: walletKitAttestationProvider,
                 popKeyOptions: KeyOptions(
                   secureAreaName: SecureEnclaveSecureArea.name,
-                  accessControl: []
+                  accessControl: .empty
                 )
               ),
               authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
