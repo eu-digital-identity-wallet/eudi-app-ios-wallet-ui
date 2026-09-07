@@ -837,6 +837,8 @@ In `Modules/logic-core/Sources/Controller/WalletKitController.swift`, documents 
 
 Only CBOR documents are registered (`document.docDataFormat == .cbor`), which controls what the extension can serve for Identity Document requests.
 
+Registrations are reconciled against wallet storage after every operation that adds or removes a document, and on startup: a registration whose document is no longer held is removed.
+
 ### Validation checklist
 
 - Wallet app and extension both sign correctly with your Team ID.

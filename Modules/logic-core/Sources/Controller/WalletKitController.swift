@@ -205,6 +205,7 @@ final actor WalletKitControllerImpl: WalletKitController {
       docTypes: docTypes,
       txCodeValue: txCodeValue
     )
+    await reconcileRegistrations()
     return IssuanceResult(
       documents: response.documents,
       issuerRegistration: makeIssuerRegistration(
@@ -307,6 +308,7 @@ final actor WalletKitControllerImpl: WalletKitController {
       credentialOptions: credentialOptions,
       keyOptions: walletKitConfig.keyOptions
     )
+    await reconcileRegistrations()
     return IssuanceResult(
       documents: response.documents,
       issuerRegistration: makeIssuerRegistration(

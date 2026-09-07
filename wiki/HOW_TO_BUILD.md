@@ -174,7 +174,7 @@ var issuersConfig: [String: VciConfig] {
               walletAttestationsProvider: walletKitAttestationProvider,
               popKeyOptions: KeyOptions(
                 secureAreaName: SecureEnclaveSecureArea.name,
-                accessControl: []
+                accessControl: .empty
               )
             ),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
@@ -196,7 +196,7 @@ var issuersConfig: [String: VciConfig] {
               walletAttestationsProvider: walletKitAttestationProvider,
               popKeyOptions: KeyOptions(
                 secureAreaName: SecureEnclaveSecureArea.name,
-                accessControl: []
+                accessControl: .empty
               )
             ),
             authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
