@@ -52,6 +52,7 @@ public protocol PresentationInteractor: Sendable {
   func onResponsePrepare(combinationIndex: Int) async -> Result<RequestItemConvertible, Error>
   func onRequestReceived() async -> PresentationRequestPartialState
   func onSendResponse() async -> RemoteSentResponsePartialState
+  func onDeclineRequest() async
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) async
   func storeDynamicIssuancePendingUrl(with url: URL) async
   func stopPresentation() async
@@ -112,17 +113,19 @@ final actor PresentationInteractorImpl: PresentationInteractor {
       let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
       let registrationPolicy = coordinator.relyingPartyRegistration
       let overaskedClaims = response.overaskedClaims
+      let transactionDataSets = response.transactionDataSets
       let presentable = response.itemSets
-        .map { documentSet in
-          documentSet.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
-        }
-        .map { documentSet in
-          RequestCombination(
+        .enumerated()
+        .map { index, documentSet in
+          let documentSet = documentSet.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
+          let transactionData = transactionDataSets.indices.contains(index) ? transactionDataSets[index] : [:]
+          return RequestCombination(
             elements: documentSet,
             uiModels: documentSet.toUiModels(
               with: self.walletKitController,
               claimsAreSelectable: false,
-              overaskedPaths: documentSet.overaskedPaths(from: overaskedClaims)
+              overaskedPaths: documentSet.overaskedPaths(from: overaskedClaims),
+              transactionData: transactionData
             )
           )
         }
@@ -191,6 +194,11 @@ final actor PresentationInteractorImpl: PresentationInteractor {
     } catch {
       return .failure(error)
     }
+  }
+
+  public func onDeclineRequest() async {
+    try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().declineResponse()
+    await stopPresentation()
   }
 
   public func storeDynamicIssuancePendingUrl(with url: URL) async {

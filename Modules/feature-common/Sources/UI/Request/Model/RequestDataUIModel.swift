@@ -28,6 +28,7 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
   public var id: String
 
   public let section: PresentationListItemSection
+  public let transactionData: [PresentationListItemSection]
 
   public var log: String {
     "id: \(section.id), title: \(section.title)"
@@ -35,10 +36,12 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 
   public init(
     id: String = UUID().uuidString,
-    section: PresentationListItemSection
+    section: PresentationListItemSection,
+    transactionData: [PresentationListItemSection] = []
   ) {
     self.id = id
     self.section = section
+    self.transactionData = transactionData
   }
 }
 
@@ -357,7 +360,8 @@ public extension Array where Element == DocElements {
   func toUiModels(
     with walletKitController: WalletKitController,
     claimsAreSelectable: Bool = true,
-    overaskedPaths: [String: Set<[String]>] = [:]
+    overaskedPaths: [String: Set<[String]>] = [:],
+    transactionData: [String: [PresentationTransactionData]] = [:]
   ) -> [RequestDataUiModel] {
     self.compactMap { element in
 
@@ -424,6 +428,104 @@ public extension Array where Element == DocElements {
             claimsAreSelectable: claimsAreSelectable,
             overaskedPaths: overaskedPathsForDocument
           )
+        ),
+        transactionData: (transactionData[element.docId] ?? []).map { $0.toListItemSection() }
+      )
+    }
+  }
+}
+
+private extension PresentationTransactionData {
+  func toListItemSection() -> PresentationListItemSection {
+    .init(
+      id: UUID().uuidString,
+      title: type,
+      listItems: [.transactionDataRow(overline: .requestTransactionDataType, value: typeName)] + contentListItems
+    )
+  }
+
+  var typeName: String {
+    switch content {
+    case .qesApproval:
+      LocalizableStringKey.requestTransactionDataTypeQes.toString
+    case .generic:
+      type
+    }
+  }
+
+  var contentListItems: [PresentationExpandableListItem] {
+    switch content {
+    case .qesApproval(let qesApproval):
+      qesApproval.toListItems()
+    case .generic(let fields):
+      fields.map { $0.toExpandableListItem() }
+    }
+  }
+}
+
+private extension QesApprovalTransactionData {
+  func toListItems() -> [PresentationExpandableListItem] {
+    var items: [PresentationExpandableListItem] = [
+      .transactionDataRow(overline: .requestTransactionDataTrustFramework, value: trustFramework)
+    ]
+
+    documents.forEach { document in
+      if let label = document.label {
+        items.append(.transactionDataRow(overline: .requestTransactionDataDocument, value: label))
+      }
+      items.append(
+        .transactionDataRow(
+          overline: .requestTransactionDataHash,
+          value: document.hash,
+          supportingText: document.hashType?.uppercased()
+        )
+      )
+    }
+
+    if let hashAlgorithm {
+      items.append(.transactionDataRow(overline: .requestTransactionDataHashAlgorithm, value: hashAlgorithm))
+    }
+
+    if let numberOfSignatures {
+      items.append(
+        .transactionDataRow(overline: .requestTransactionDataNumberOfSignatures, value: String(numberOfSignatures))
+      )
+    }
+
+    return items
+  }
+}
+
+private extension ExpandableListItem where T == DocumentElementClaim {
+  static func transactionDataRow(
+    overline: LocalizableStringKey,
+    value: String,
+    supportingText: String? = nil
+  ) -> Self {
+    .single(
+      .init(
+        collapsed: .init(
+          mainContent: .text(.custom(value)),
+          overlineText: overline,
+          supportingText: supportingText.map { .custom($0) }
+        ),
+        domainModel: nil
+      )
+    )
+  }
+}
+
+private extension PresentationTransactionDataField {
+  func toExpandableListItem() -> PresentationExpandableListItem {
+    switch value {
+    case .text(let text):
+      .transactionDataRow(overline: .custom(key), value: text)
+    case .group(let fields):
+      .nested(
+        .init(
+          collapsed: .init(mainContent: .text(.custom(key))),
+          expanded: fields.map { $0.toExpandableListItem() },
+          isExpanded: false
         )
       )
     }

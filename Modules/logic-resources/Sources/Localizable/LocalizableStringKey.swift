@@ -31,6 +31,14 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestDataInfoNotice
   case requestDataTitle([String])
   case requestCombinationTitle([String])
+  case requestTransactionDataTitle
+  case requestTransactionDataType
+  case requestTransactionDataTypeQes
+  case requestTransactionDataTrustFramework
+  case requestTransactionDataDocument
+  case requestTransactionDataHash
+  case requestTransactionDataHashAlgorithm
+  case requestTransactionDataNumberOfSignatures
   case documentAdded
   case okButton
   case success
@@ -311,8 +319,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionDetailsCredentialsIssuedSection
   case transactionDetailsIssuedCount([String])
   case transactionDetailsTriggerLabel
-  case transactionDetailsInitiatedByWallet
-  case transactionDetailsRequestedByIssuer
+  case transactionDetailsRequestedByYou
   case transactionDetailsRenewedByWallet
   case transactionDetailsCertificateLabel
   case transactionDetailsFilenameLabel

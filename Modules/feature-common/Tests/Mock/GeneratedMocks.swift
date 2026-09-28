@@ -6230,6 +6230,8 @@ import Cuckoo
 import Foundation
 import EudiWalletKit
 import EudiEtsi1196x2
+import struct OpenID4VP.SupportedTransactionDataType
+import struct OpenID4VP.TransactionDataType
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6280,6 +6282,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
                 "vpConfig",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
                 defaultCall: __defaultImplStub!.vpConfig
+            )
+        }
+    }
+
+    var supportedTransactionDataTypes: [SupportedTransactionDataType] {
+        get {
+            return cuckoo_manager.getter(
+                "supportedTransactionDataTypes",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.supportedTransactionDataTypes
             )
         }
     }
@@ -6384,6 +6396,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "vpConfig")
         }
         
+        var supportedTransactionDataTypes: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,[SupportedTransactionDataType]> {
+            return .init(manager: cuckoo_manager, name: "supportedTransactionDataTypes")
+        }
+        
         var trustConfiguration: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,TrustConfiguration> {
             return .init(manager: cuckoo_manager, name: "trustConfiguration")
         }
@@ -6440,6 +6456,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "vpConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
+        var supportedTransactionDataTypes: Cuckoo.VerifyReadOnlyProperty<[SupportedTransactionDataType]> {
+            return .init(manager: cuckoo_manager, name: "supportedTransactionDataTypes", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
         var trustConfiguration: Cuckoo.VerifyReadOnlyProperty<TrustConfiguration> {
             return .init(manager: cuckoo_manager, name: "trustConfiguration", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
@@ -6491,6 +6511,12 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     var vpConfig: OpenId4VpConfiguration {
         get {
             return DefaultValueRegistry.defaultValue(for: (OpenId4VpConfiguration).self)
+        }
+    }
+    
+    var supportedTransactionDataTypes: [SupportedTransactionDataType] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([SupportedTransactionDataType]).self)
         }
     }
     
@@ -8983,6 +9009,17 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
         )
     }
 
+    public func declineResponse() async throws {
+        return try await cuckoo_manager.callThrows(
+            "declineResponse() async throws",
+            parameters: (),
+            escapingParameters: (),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.declineResponse()
+        )
+    }
+
     public func getState() async -> PresentationState {
         return await cuckoo_manager.call(
             "getState() async -> PresentationState",
@@ -9062,6 +9099,14 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
             let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
                 method: "sendResponse(response p0: RequestItemConvertible) async throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func declineResponse() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(),Swift.Error> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
+                method: "declineResponse() async throws",
                 parameterMatchers: matchers
             ))
         }
@@ -9160,6 +9205,18 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
         
         
         @discardableResult
+        func declineResponse() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "declineResponse() async throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func getState() -> Cuckoo.__DoNotUse<(), PresentationState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -9241,6 +9298,10 @@ public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator, @unchecked S
     }
     
     public func sendResponse(response p0: RequestItemConvertible) async throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func declineResponse() async throws {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -9833,6 +9894,24 @@ import Foundation
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/UserRequestInfo+TransactionData.swift'
+
+import Cuckoo
+import Foundation
+import EudiWalletKit
+import MdocDataTransfer18013
+import SwiftyJSON
+import struct OpenID4VP.OpenId4VPSpec
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/WalletKitConfig+Extensions.swift'
 
 import Cuckoo
@@ -9931,6 +10010,20 @@ import Cuckoo
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DynamicIssuancePendingData.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/PresentationTransactionData.swift'
 
 import Cuckoo
 import Foundation

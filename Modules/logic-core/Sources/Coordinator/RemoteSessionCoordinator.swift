@@ -28,6 +28,7 @@ public protocol RemoteSessionCoordinator: Sendable {
   func initialize() async
   func requestReceived() async throws -> PresentationRequest
   func sendResponse(response: RequestItemConvertible) async throws
+  func declineResponse() async throws
   func getState() async -> PresentationState
 
   func getStream() -> AsyncStream<PresentationState>
@@ -41,6 +42,7 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
 
   private let sendableAnyCancellable: SendableAnyCancellable = .init()
   private let session: PresentationSession
+  private let transactionDataSets: SendableCurrentValueSubject<[[String: [PresentationTransactionData]]]> = .init([])
 
   var relyingPartyRegistration: WrpRegistrationPolicy? { session.wrpVerifierPolicy }
   var relyingPartyWarningViolations: [String] { (session.wrpVerifierWarnings?[""] ?? []).map(\.message) }
@@ -75,7 +77,8 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   }
 
   public func initialize() async {
-    _ = await session.receiveRequest()
+    let requests = await session.receiveRequest()
+    transactionDataSets.setValue(requests?.toTransactionDataSets() ?? [])
   }
 
   public func requestReceived() async throws -> PresentationRequest {
@@ -89,6 +92,10 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
     try await session.sendResponse(userAccepted: true, itemsToSend: response.items, onCancel: nil) { url in
       self.sendableCurrentValueSubject.setValue(.responseSent(url))
     }
+  }
+
+  public func declineResponse() async throws {
+    try await session.sendResponse(userAccepted: false, itemsToSend: [:], onCancel: nil)
   }
 
   public func getState() async -> PresentationState {
@@ -114,7 +121,8 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
       relyingParty: session.readerCertIssuer ?? LocalizableStringKey.unknownVerifier.toString,
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableStringKey.requestDataInfoNotice.toString,
       isTrusted: session.readerCertIssuerValid == true,
-      overaskedClaims: overaskedClaims
+      overaskedClaims: overaskedClaims,
+      transactionDataSets: transactionDataSets.getValue()
     )
   }
 }

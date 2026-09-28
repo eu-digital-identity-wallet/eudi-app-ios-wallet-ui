@@ -17,6 +17,8 @@ import Foundation
 import logic_business
 import EudiWalletKit
 import EudiEtsi1196x2
+import struct OpenID4VP.SupportedTransactionDataType
+import struct OpenID4VP.TransactionDataType
 
 protocol WalletKitConfig: Sendable {
 
@@ -45,6 +47,14 @@ protocol WalletKitConfig: Sendable {
    * VP Configuration
    */
   var vpConfig: OpenId4VpConfiguration { get }
+
+  /**
+   * Transaction data types the wallet accepts in an OpenID4VP request.
+   *
+   * The OpenID4VP library rejects any request carrying `transaction_data` whose type is not
+   * listed here, so an empty list rejects every request with transaction data.
+   */
+  var supportedTransactionDataTypes: [SupportedTransactionDataType] { get }
 
   /**
    * Trust configuration: ETSI LoTE (List of Trusted Entities) trust sources,
@@ -237,8 +247,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
   var vpConfig: OpenId4VpConfiguration {
     .init(
       clientIdSchemes: [.x509SanDns, .x509Hash],
+      supportedTransactionDataTypes: supportedTransactionDataTypes,
       validateRegistrationCertificate: validateIssuerRegistrationCertificate
     )
+  }
+
+  var supportedTransactionDataTypes: [SupportedTransactionDataType] {
+    let types = [
+      TransactionDataTypeIdentifier.qesApproval.rawValue
+    ]
+    return [.default()] + types.compactMap {
+      try? SupportedTransactionDataType(type: TransactionDataType(value: $0))
+    }
   }
 
   var trustConfiguration: TrustConfiguration {

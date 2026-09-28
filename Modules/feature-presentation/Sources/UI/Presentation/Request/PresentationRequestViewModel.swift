@@ -116,6 +116,10 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     await interactor.stopPresentation()
   }
 
+  override func declineRequest() async {
+    await interactor.onDeclineRequest()
+  }
+
   override func getRelyingParty() -> LocalizableStringKey {
     viewState.relyingParty
   }

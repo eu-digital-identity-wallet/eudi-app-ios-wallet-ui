@@ -204,16 +204,37 @@ private struct BaseRequestViewContainer: View {
     _ section: RequestDataUiModel,
     onItemClick: @escaping (String) -> Void
   ) -> some View {
+    VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+      WrapExpandableListView(
+        header: .init(
+          mainContent: .text(.custom(section.section.title)),
+          supportingText: .viewDetails
+        ),
+        items: section.section.listItems,
+        backgroundColor: Theme.shared.color.groupedElevatedBackground,
+        hideSensitiveContent: false,
+        isLoading: viewState.isLoading,
+        onItemClick: { onItemClick($0.groupId) }
+      )
+
+      ForEach(section.transactionData) { transaction in
+        transactionDataSection(transaction)
+      }
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func transactionDataSection(_ transaction: PresentationListItemSection) -> some View {
     WrapExpandableListView(
       header: .init(
-        mainContent: .text(.custom(section.section.title)),
+        mainContent: .text(.requestTransactionDataTitle),
         supportingText: .viewDetails
       ),
-      items: section.section.listItems,
+      items: transaction.listItems,
       backgroundColor: Theme.shared.color.groupedElevatedBackground,
       hideSensitiveContent: false,
-      isLoading: viewState.isLoading,
-      onItemClick: { onItemClick($0.groupId) }
+      isLoading: viewState.isLoading
     )
   }
 

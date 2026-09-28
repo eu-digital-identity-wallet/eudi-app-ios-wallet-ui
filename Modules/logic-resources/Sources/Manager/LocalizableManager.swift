@@ -60,6 +60,22 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "request_data_share_title", arguments: args)
     case .requestCombinationTitle(let args):
       bundle.localizedStringWithArguments(forKey: "request_combination_title", arguments: args)
+    case .requestTransactionDataTitle:
+      bundle.localizedString(forKey: "request_transaction_data_title")
+    case .requestTransactionDataType:
+      bundle.localizedString(forKey: "request_transaction_data_type")
+    case .requestTransactionDataTypeQes:
+      bundle.localizedString(forKey: "request_transaction_data_type_qes")
+    case .requestTransactionDataTrustFramework:
+      bundle.localizedString(forKey: "request_transaction_data_trust_framework")
+    case .requestTransactionDataDocument:
+      bundle.localizedString(forKey: "request_transaction_data_document")
+    case .requestTransactionDataHash:
+      bundle.localizedString(forKey: "request_transaction_data_hash")
+    case .requestTransactionDataHashAlgorithm:
+      bundle.localizedString(forKey: "request_transaction_data_hash_algorithm")
+    case .requestTransactionDataNumberOfSignatures:
+      bundle.localizedString(forKey: "request_transaction_data_number_of_signatures")
     case .documentAdded:
       bundle.localizedString(forKey: "document_added")
     case .okButton:
@@ -620,10 +636,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "transaction_details_credentials_issued_section")
     case .transactionDetailsTriggerLabel:
       bundle.localizedString(forKey: "transaction_details_trigger_label")
-    case .transactionDetailsInitiatedByWallet:
-      bundle.localizedString(forKey: "transaction_details_initiated_by_wallet")
-    case .transactionDetailsRequestedByIssuer:
-      bundle.localizedString(forKey: "transaction_details_requested_by_issuer")
+    case .transactionDetailsRequestedByYou:
+      bundle.localizedString(forKey: "transaction_details_requested_by_you")
     case .transactionDetailsRenewedByWallet:
       bundle.localizedString(forKey: "transaction_details_renewed_by_wallet")
     case .transactionDetailsCertificateLabel:
