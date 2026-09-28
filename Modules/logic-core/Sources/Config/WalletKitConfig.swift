@@ -267,7 +267,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
       fallbackTrustSource: .staticList(
         StaticListTrustSource(rootCertificates: staticRootCertificates)
       ),
-      defaultPolicy: .warning,
+      defaultPolicy: .enforce,
       requireSignedMetadata: true,
       statusTrustPolicy: .warning,
       wrprcVpTrustPolicy: .warning,
