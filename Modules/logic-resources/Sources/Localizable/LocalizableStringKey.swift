@@ -388,6 +388,18 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionActionContinueEmail
   case transactionActionContinuePhone([String])
   case continueButton
+  case trustMarkAboutTitle
+  case trustMarkWelcomeTitle
+  case trustMarkWalletName
+  case trustMarkImageDescription
+  case trustMarkCertificationDescription([String])
+  case trustMarkCertifiedWalletsLink
+  case trustMarkCertificationInformationDescription([String])
+  case trustMarkCertificationInformationLink
+  case trustMarkLoading
+  case trustMarkLoadError
+  case trustMarkImageError
+  case trustMarkBrowserError
 }
 
 public extension LocalizableStringKey {

@@ -429,7 +429,7 @@ public extension Array where Element == DocElements {
             overaskedPaths: overaskedPathsForDocument
           )
         ),
-        transactionData: (transactionData[element.docId] ?? []).map { $0.toListItemSection(documentTitle: title) }
+        transactionData: (transactionData[element.docId] ?? []).map { $0.toListItemSection() }
       )
     }
   }
@@ -438,13 +438,13 @@ public extension Array where Element == DocElements {
 private let transactionDataValueSeparator = " · "
 
 private extension PresentationTransactionData {
-  func toListItemSection(documentTitle: String) -> PresentationListItemSection {
+  func toListItemSection() -> PresentationListItemSection {
     switch content {
     case .qesApproval(let qesApproval):
       .init(
         id: UUID().uuidString,
         title: LocalizableStringKey.requestTransactionDataSignatureDetails.toString,
-        listItems: qesApproval.toListItems(documentTitle: documentTitle)
+        listItems: qesApproval.toListItems()
       )
     case .generic(let fields):
       .init(
@@ -458,18 +458,23 @@ private extension PresentationTransactionData {
 }
 
 private extension QesApprovalTransactionData {
-  func toListItems(documentTitle: String) -> [PresentationExpandableListItem] {
+  func toListItems() -> [PresentationExpandableListItem] {
     var items: [PresentationExpandableListItem] = [
       .transactionDataRow(overline: .requestTransactionDataTrustFramework, value: trustFramework),
       .transactionDataRow(
         overline: .requestTransactionDataType,
         value: LocalizableStringKey.requestTransactionDataTypeQes.toString
-      ),
-      .transactionDataRow(
-        overline: .requestTransactionDataRequestedCredentials,
-        value: ([documentTitle] + credentialIds).joined(separator: transactionDataValueSeparator)
       )
     ]
+
+    if !credentialIds.isEmpty {
+      items.append(
+        .transactionDataRow(
+          overline: .requestTransactionDataRequestedCredentials,
+          value: credentialIds.joined(separator: transactionDataValueSeparator)
+        )
+      )
+    }
 
     if let signingCredentialId {
       items.append(.transactionDataRow(overline: .requestTransactionDataSigningCredentialId, value: signingCredentialId))
@@ -529,7 +534,7 @@ private extension QesDocumentDigest {
 
 private extension QesHashAlgorithm {
   var displayValue: String {
-    [name, oid].compactMap { $0 }.joined(separator: transactionDataValueSeparator)
+    name ?? oid
   }
 }
 

@@ -41,6 +41,7 @@ certification or a replacement for a full security assessment.
 * [Document Categories](#document-categories)
 * [Revocation And Status Checking](#revocation-and-status-checking)
 * [RQES Configuration](#rqes-configuration)
+* [Trust Mark Deployment](#trust-mark-deployment)
 * [ConfigLogic](#configlogic)
 * [Deep Links And Redirect URIs](#deep-links-and-redirect-uris)
 * [Entitlements, Plist Values, And Permissions](#entitlements-plist-values-and-permissions)
@@ -558,10 +559,13 @@ protocol WalletKitConfig: Sendable {
   var transactionLogger: TransactionLogger { get }
   var revocationIntervalSeconds: TimeInterval { get }
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
+  var trustMarkSource: TrustMarkSource { get }
 }
 ```
 
 Each property must be reviewed.
+For Trust Mark settings, see
+[Trust Mark configuration](CONFIGURATION.md#trust-mark-configuration).
 
 ## `EudiWalletConfiguration`
 
@@ -581,6 +585,7 @@ EudiWallet(
   openID4VpConfig: walletKitConfig.vpConfig,
   openID4VciConfigurations: walletKitConfig.issuersConfig.mapValues { $0.config },
   // ...
+  trustMarkSource: walletKitConfig.trustMarkSource
 )
 ```
 
@@ -1241,6 +1246,37 @@ Production rules:
 * Confirm `includeRevocationInfo` with the signing policy and QTSP.
 * Disable verbose logs in production.
 * Test success, cancellation, network failure, expired authorization, and rejected signing flows.
+
+## Trust Mark Deployment
+
+Set `WalletKitConfig.trustMarkSource` to the Trust Mark configuration for your wallet solution.
+The default uses a sample Gist resource and a certification-page URL containing
+`WALLET_SOLUTION_ID`. Replace the sample values in your production variant with the correct
+resource and certification URLs. See
+[Trust Mark configuration](CONFIGURATION.md#trust-mark-configuration) for instructions.
+
+The app does not check certification, recognition, expiry, revocation or wallet instance
+attestation, or automatically remove the mark when certification changes. Check that the
+displayed image, text and links match your wallet's actual certification status before release.
+
+Test the following:
+
+* On a clean install, the introduction appears after splash, Continue proceeds to PIN setup,
+  and later launches skip the completed introduction.
+* "About EUDI Wallet" opens from the side menu.
+* In both the introduction and About views, "EUDI Wallet Provider Trusted List" opens the
+  list of certified wallets and "Certification information page" opens your wallet's
+  certification page in the browser. Both links display an external-link icon.
+* The Trust Mark image is centered above its localized text and keeps its original proportions.
+  Check long text and larger Dynamic Type sizes: the text should use the available width, wrap
+  fully and scroll with the screen while Welcome's Continue remains available. Resource and image
+  loading errors offer Try again.
+
+For an upgrade release, confirm whether existing users should see the introduction and test
+that flow.
+
+The app can report when it cannot open a link. Once the browser opens, page-loading and network
+errors are handled by the browser.
 
 ## ConfigLogic
 

@@ -3857,6 +3857,138 @@
         }
       }
     },
+    "trust_mark_about_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About EUDI Wallet"
+          }
+        }
+      }
+    },
+    "trust_mark_browser_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to open this link."
+          }
+        }
+      }
+    },
+    "trust_mark_certification_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This wallet application has been certified conformant with the EUDI Wallet’s security and privacy requirements and is part of the %@."
+          }
+        }
+      }
+    },
+    "trust_mark_certification_information_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See the %@ for detailed certification information of this wallet."
+          }
+        }
+      }
+    },
+    "trust_mark_certification_information_link" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Certification information page"
+          }
+        }
+      }
+    },
+    "trust_mark_certified_wallets_link" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EUDI Wallet Provider Trusted List"
+          }
+        }
+      }
+    },
+    "trust_mark_image_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EUDI Wallet Trust Mark"
+          }
+        }
+      }
+    },
+    "trust_mark_image_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to load the Trust Mark image."
+          }
+        }
+      }
+    },
+    "trust_mark_load_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to load Trust Mark information. Please try again."
+          }
+        }
+      }
+    },
+    "trust_mark_loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading Trust Mark information…"
+          }
+        }
+      }
+    },
+    "trust_mark_wallet_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EU Digital Identity Wallet"
+          }
+        }
+      }
+    },
+    "trust_mark_welcome_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to the"
+          }
+        }
+      }
+    },
     "trusted_relying_party" : {
       "extractionState" : "manual",
       "localizations" : {

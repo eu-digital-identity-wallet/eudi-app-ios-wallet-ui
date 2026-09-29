@@ -17,6 +17,7 @@ import Foundation
 import logic_business
 import EudiWalletKit
 import EudiEtsi1196x2
+import MdocDataModel18013
 import struct OpenID4VP.SupportedTransactionDataType
 import struct OpenID4VP.TransactionDataType
 
@@ -96,6 +97,12 @@ protocol WalletKitConfig: Sendable {
    * Configuration for document issuance, including default rules and specific overrides.
    */
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
+
+  /**
+   * Provides the information used to display the wallet's Trust Mark and link to its
+   * certification page and the list of certified wallets.
+   */
+  var trustMarkSource: TrustMarkSource { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -408,6 +415,16 @@ struct WalletKitConfigImpl: WalletKitConfig {
         )
       )
     }
+  }
+
+  var trustMarkSource: TrustMarkSource {
+    .static(
+      information: TrustMarkInformation(
+        trustMarkResourceURL: "https://gist.githubusercontent.com/sraptis-scy/025334375fe26177d9a7bcb60fd8a93f/raw/TrustMarkResource.json",
+        listOfCertifiedWalletsURL: "https://eidas.ec.europa.eu/efda/wallet/certified",
+        walletSolutionInfoPageURL: "https://eidas.ec.europa.eu/efda/wallet/certified?id=WALLET_SOLUTION_ID"
+      )
+    )
   }
 }
 

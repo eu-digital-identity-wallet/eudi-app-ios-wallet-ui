@@ -48,6 +48,7 @@ final class TestStartupInteractor: EudiTest {
     stubPrefsControllerSetValue()
     stubKeyChainClear()
     stubWalletKiControllerClearAllDocuments()
+    stubTrustMarkIntroductionCompleted()
   }
   
   override func tearDown() {
@@ -164,6 +165,61 @@ final class TestStartupInteractor: EudiTest {
     
     verifyFirstBootStorageManipulation(count: 1)
   }
+
+  func testInitialize_WhenTrustMarkIntroductionIsNotCompletedAndPinIsNotSet_ThenReturnTrustMarkWelcomeWithQuickPinContinuation() async throws {
+    // Given
+    let expectedConfig = TrustMarkUiConfig(
+      mode: .welcome(
+        continuationRoute: .featureCommonModule(
+          .quickPin(config: QuickPinUiConfig(flow: .setWithActivation))
+        )
+      )
+    )
+    stubFetchDocuments(with: [])
+    stubHasPin(with: false)
+    stubRunAtLeastOnce()
+    stubTrustMarkIntroductionCompleted(false)
+    // When
+    let route = await interactor.initialize(with: .zero)
+    // Then
+    let receivedConfig = try XCTUnwrap(trustMarkConfig(from: route))
+    XCTAssertEqual(receivedConfig, expectedConfig)
+    verifyFirstBootStorageManipulation(count: 0)
+  }
+
+  func testInitialize_WhenTrustMarkIntroductionIsNotCompletedAndPinIsSet_ThenReturnTrustMarkWelcomeWithBiometryContinuation() async throws {
+    // Given
+    let expectedConfig = TrustMarkUiConfig(
+      mode: .welcome(
+        continuationRoute: .featureCommonModule(
+          .biometry(config: biometryConfig(with: true))
+        )
+      )
+    )
+    stubFetchDocuments(with: [Constants.createEuPidModel()])
+    stubHasPin(with: true)
+    stubRunAtLeastOnce()
+    stubTrustMarkIntroductionCompleted(false)
+    // When
+    let route = await interactor.initialize(with: .zero)
+    // Then
+    let receivedConfig = try XCTUnwrap(trustMarkConfig(from: route))
+    XCTAssertEqual(receivedConfig, expectedConfig)
+  }
+
+  func testInitialize_WhenTrustMarkIntroductionIsNotCompletedAndIsFirstBoot_ThenClearDocumentStorageAndReturnTrustMarkWelcome() async throws {
+    // Given
+    stubFetchDocuments(with: [])
+    stubHasPin(with: false)
+    stubRunAtLeastOnce(false)
+    stubTrustMarkIntroductionCompleted(false)
+    // When
+    let route = await interactor.initialize(with: .zero)
+    // Then
+    let receivedConfig = try XCTUnwrap(trustMarkConfig(from: route))
+    XCTAssertTrue(receivedConfig.isWelcome)
+    verifyFirstBootStorageManipulation(count: 1)
+  }
 }
 
 private extension TestStartupInteractor {
@@ -217,6 +273,21 @@ private extension TestStartupInteractor {
     }
   }
   
+  func stubTrustMarkIntroductionCompleted(_ completed: Bool = true) {
+    stub(prefsController) { mock in
+      when(mock.getBool(forKey: Prefs.Key.trustMarkIntroductionCompleted)).thenReturn(completed)
+    }
+  }
+
+  func trustMarkConfig(from route: AppRoute) -> TrustMarkUiConfig? {
+    guard case .featureCommonModule(let module) = route,
+          case .trustMark(let config) = module
+    else {
+      return nil
+    }
+    return config as? TrustMarkUiConfig
+  }
+
   func stubKeyChainClear(success: Bool = true) {
     stub(keyChainController) { mock in
       when(mock.clear()).thenReturn(success)

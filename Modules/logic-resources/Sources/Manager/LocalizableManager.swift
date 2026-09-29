@@ -776,6 +776,30 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "transaction_action_continue_phone", arguments: args)
     case .continueButton:
       bundle.localizedString(forKey: "continue_button")
+    case .trustMarkAboutTitle:
+      bundle.localizedString(forKey: "trust_mark_about_title")
+    case .trustMarkWelcomeTitle:
+      bundle.localizedString(forKey: "trust_mark_welcome_title")
+    case .trustMarkWalletName:
+      bundle.localizedString(forKey: "trust_mark_wallet_name")
+    case .trustMarkImageDescription:
+      bundle.localizedString(forKey: "trust_mark_image_description")
+    case .trustMarkCertificationDescription(let args):
+      bundle.localizedStringWithArguments(forKey: "trust_mark_certification_description", arguments: args)
+    case .trustMarkCertifiedWalletsLink:
+      bundle.localizedString(forKey: "trust_mark_certified_wallets_link")
+    case .trustMarkCertificationInformationDescription(let args):
+      bundle.localizedStringWithArguments(forKey: "trust_mark_certification_information_description", arguments: args)
+    case .trustMarkCertificationInformationLink:
+      bundle.localizedString(forKey: "trust_mark_certification_information_link")
+    case .trustMarkLoading:
+      bundle.localizedString(forKey: "trust_mark_loading")
+    case .trustMarkLoadError:
+      bundle.localizedString(forKey: "trust_mark_load_error")
+    case .trustMarkImageError:
+      bundle.localizedString(forKey: "trust_mark_image_error")
+    case .trustMarkBrowserError:
+      bundle.localizedString(forKey: "trust_mark_browser_error")
     }
   }
 }
