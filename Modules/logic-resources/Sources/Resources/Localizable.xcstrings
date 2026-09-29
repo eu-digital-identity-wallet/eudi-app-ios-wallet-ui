@@ -2185,6 +2185,17 @@
         }
       }
     },
+    "request_requested_data_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Requested data"
+          }
+        }
+      }
+    },
     "request_transaction_data_document" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2218,6 +2229,17 @@
         }
       }
     },
+    "request_transaction_data_hash_representation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hash representation"
+          }
+        }
+      }
+    },
     "request_transaction_data_number_of_signatures" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2225,6 +2247,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Number of signatures"
+          }
+        }
+      }
+    },
+    "request_transaction_data_requested_credentials" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Requested credentials"
+          }
+        }
+      }
+    },
+    "request_transaction_data_section_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data to be signed"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signature_details" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signature details"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signing_credential_id" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signing credential ID"
           }
         }
       }
@@ -2257,7 +2323,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Type"
+            "value" : "Transaction type"
           }
         }
       }
@@ -2268,7 +2334,29 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Qualified Electronic Signature (QES)"
+            "value" : "QES approval"
+          }
+        }
+      }
+    },
+    "request_transaction_data_typed_hash" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ hash"
+          }
+        }
+      }
+    },
+    "request_transaction_data_typed_hash_algorithm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ hash algorithm"
           }
         }
       }

@@ -60,20 +60,36 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "request_data_share_title", arguments: args)
     case .requestCombinationTitle(let args):
       bundle.localizedStringWithArguments(forKey: "request_combination_title", arguments: args)
+    case .requestRequestedDataTitle:
+      bundle.localizedString(forKey: "request_requested_data_title")
+    case .requestTransactionDataSectionTitle:
+      bundle.localizedString(forKey: "request_transaction_data_section_title")
     case .requestTransactionDataTitle:
       bundle.localizedString(forKey: "request_transaction_data_title")
+    case .requestTransactionDataSignatureDetails:
+      bundle.localizedString(forKey: "request_transaction_data_signature_details")
     case .requestTransactionDataType:
       bundle.localizedString(forKey: "request_transaction_data_type")
     case .requestTransactionDataTypeQes:
       bundle.localizedString(forKey: "request_transaction_data_type_qes")
     case .requestTransactionDataTrustFramework:
       bundle.localizedString(forKey: "request_transaction_data_trust_framework")
+    case .requestTransactionDataRequestedCredentials:
+      bundle.localizedString(forKey: "request_transaction_data_requested_credentials")
+    case .requestTransactionDataSigningCredentialId:
+      bundle.localizedString(forKey: "request_transaction_data_signing_credential_id")
     case .requestTransactionDataDocument:
       bundle.localizedString(forKey: "request_transaction_data_document")
+    case .requestTransactionDataHashRepresentation:
+      bundle.localizedString(forKey: "request_transaction_data_hash_representation")
     case .requestTransactionDataHash:
       bundle.localizedString(forKey: "request_transaction_data_hash")
+    case .requestTransactionDataTypedHash(let args):
+      bundle.localizedStringWithArguments(forKey: "request_transaction_data_typed_hash", arguments: args)
     case .requestTransactionDataHashAlgorithm:
       bundle.localizedString(forKey: "request_transaction_data_hash_algorithm")
+    case .requestTransactionDataTypedHashAlgorithm(let args):
+      bundle.localizedStringWithArguments(forKey: "request_transaction_data_typed_hash_algorithm", arguments: args)
     case .requestTransactionDataNumberOfSignatures:
       bundle.localizedString(forKey: "request_transaction_data_number_of_signatures")
     case .documentAdded:

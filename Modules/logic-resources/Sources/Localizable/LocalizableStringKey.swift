@@ -31,13 +31,21 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestDataInfoNotice
   case requestDataTitle([String])
   case requestCombinationTitle([String])
+  case requestRequestedDataTitle
+  case requestTransactionDataSectionTitle
   case requestTransactionDataTitle
+  case requestTransactionDataSignatureDetails
   case requestTransactionDataType
   case requestTransactionDataTypeQes
   case requestTransactionDataTrustFramework
+  case requestTransactionDataRequestedCredentials
+  case requestTransactionDataSigningCredentialId
   case requestTransactionDataDocument
+  case requestTransactionDataHashRepresentation
   case requestTransactionDataHash
+  case requestTransactionDataTypedHash([String])
   case requestTransactionDataHashAlgorithm
+  case requestTransactionDataTypedHashAlgorithm([String])
   case requestTransactionDataNumberOfSignatures
   case documentAdded
   case okButton

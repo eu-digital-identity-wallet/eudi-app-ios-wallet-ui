@@ -37,20 +37,36 @@ public struct PresentationTransactionData: Sendable, Equatable {
 
 public struct QesApprovalTransactionData: Sendable, Equatable {
   public let trustFramework: String
-  public let documents: [QesDocumentDigest]
-  public let hashAlgorithm: String?
+  public let credentialIds: [String]
+  public let signingCredentialId: String?
   public let numberOfSignatures: Int?
+  public let documents: [QesDocumentDigest]
+  public let hashAlgorithm: QesHashAlgorithm?
 
   public init(
     trustFramework: String,
+    credentialIds: [String],
+    signingCredentialId: String?,
+    numberOfSignatures: Int?,
     documents: [QesDocumentDigest],
-    hashAlgorithm: String?,
-    numberOfSignatures: Int?
+    hashAlgorithm: QesHashAlgorithm?
   ) {
     self.trustFramework = trustFramework
+    self.credentialIds = credentialIds
+    self.signingCredentialId = signingCredentialId
+    self.numberOfSignatures = numberOfSignatures
     self.documents = documents
     self.hashAlgorithm = hashAlgorithm
-    self.numberOfSignatures = numberOfSignatures
+  }
+}
+
+public struct QesHashAlgorithm: Sendable, Equatable {
+  public let oid: String
+  public let name: String?
+
+  public init(oid: String, name: String?) {
+    self.oid = oid
+    self.name = name
   }
 }
 

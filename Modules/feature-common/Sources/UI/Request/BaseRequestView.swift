@@ -123,10 +123,12 @@ private struct BaseRequestViewContainer: View {
             .shimmer(isLoading: viewState.isLoading)
         }
 
-        if viewState.combinations.count > 1 {
-          combinationsContent()
-        } else {
-          singleCombinationContent()
+        titledSection(.requestRequestedDataTitle) {
+          if viewState.combinations.count > 1 {
+            combinationsContent()
+          } else {
+            singleCombinationContent()
+          }
         }
 
         VSpacer.medium()
@@ -217,8 +219,31 @@ private struct BaseRequestViewContainer: View {
         onItemClick: { onItemClick($0.groupId) }
       )
 
-      ForEach(section.transactionData) { transaction in
-        transactionDataSection(transaction)
+      if !section.transactionData.isEmpty {
+        titledSection(.requestTransactionDataSectionTitle) {
+          ForEach(section.transactionData) { transaction in
+            transactionDataSection(transaction)
+          }
+        }
+      }
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func titledSection<Content: View>(
+    _ title: LocalizableStringKey,
+    @ViewBuilder content: () -> Content
+  ) -> some View {
+    VStack(alignment: .leading, spacing: SPACING_SMALL) {
+      Text(title)
+        .typography(Theme.shared.font.bodyMedium)
+        .fontWeight(.semibold)
+        .foregroundColor(Theme.shared.color.primaryLabel)
+        .shimmer(isLoading: viewState.isLoading)
+
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+        content()
       }
     }
   }
@@ -228,7 +253,7 @@ private struct BaseRequestViewContainer: View {
   private func transactionDataSection(_ transaction: PresentationListItemSection) -> some View {
     WrapExpandableListView(
       header: .init(
-        mainContent: .text(.requestTransactionDataTitle),
+        mainContent: .text(.custom(transaction.title)),
         supportingText: .viewDetails
       ),
       items: transaction.listItems,

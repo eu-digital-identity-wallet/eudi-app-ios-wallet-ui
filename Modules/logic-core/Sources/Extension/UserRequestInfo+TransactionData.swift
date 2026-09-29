@@ -52,6 +52,7 @@ private let hashAlgorithmNames: [String: String] = [
 ]
 
 private enum QesApprovalKeys {
+  static let credentialId = "credentialID"
   static let documentDigests = "documentDigests"
   static let label = "label"
   static let hash = "hash"
@@ -74,6 +75,9 @@ private extension JSON {
   func toQesApproval() -> QesApprovalTransactionData {
     QesApprovalTransactionData(
       trustFramework: qesTrustFramework,
+      credentialIds: self[OpenId4VPSpec.TRANSACTION_DATA_CREDENTIAL_IDS].arrayValue.compactMap(\.string),
+      signingCredentialId: self[QesApprovalKeys.credentialId].string,
+      numberOfSignatures: self[QesApprovalKeys.numSignatures].int,
       documents: self[QesApprovalKeys.documentDigests].arrayValue.compactMap { digest in
         digest[QesApprovalKeys.hash].string.map {
           QesDocumentDigest(
@@ -83,8 +87,9 @@ private extension JSON {
           )
         }
       },
-      hashAlgorithm: self[QesApprovalKeys.hashAlgorithmOID].string.map { hashAlgorithmNames[$0] ?? $0 },
-      numberOfSignatures: self[QesApprovalKeys.numSignatures].int
+      hashAlgorithm: self[QesApprovalKeys.hashAlgorithmOID].string.map {
+        QesHashAlgorithm(oid: $0, name: hashAlgorithmNames[$0])
+      }
     )
   }
 
