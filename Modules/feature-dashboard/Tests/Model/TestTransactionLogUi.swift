@@ -191,6 +191,30 @@ final class TestTransactionLogUi: EudiTest {
     XCTAssertEqual(log.searchTags, ["QTSP", "contract.pdf"])
   }
 
+  func testSearchTags_WhenDeletion_ThenIssuerAndAttestationTypeAreSearchable() {
+    let log = TransactionLogDomain.credentialDeletion(
+      .init(
+        id: "6", time: time, result: .completed,
+        credential: .init(identifier: .mDocPid),
+        issuer: .init(name: "PID Issuer", identifier: nil, contacts: [])
+      )
+    )
+
+    XCTAssertEqual(log.searchTags, ["PID Issuer", DocumentTypeIdentifier.mDocPid.rawValue])
+  }
+
+  func testSearchTags_WhenDeletionHasNoIssuerName_ThenAttestationTypeIsSearchable() {
+    let log = TransactionLogDomain.credentialDeletion(
+      .init(
+        id: "7", time: time, result: .completed,
+        credential: .init(identifier: .mDocPid),
+        issuer: .init(name: nil, identifier: nil, contacts: [])
+      )
+    )
+
+    XCTAssertEqual(log.searchTags, [DocumentTypeIdentifier.mDocPid.rawValue])
+  }
+
   func testIdentifierPath_WhenSegmentsAreMixed_ThenRendersBracketedComponents() {
     let claim = ClaimRefDomain(segments: [.key(name: "addresses"), .allElements, .key(name: "street"), .index(2)])
 
