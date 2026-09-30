@@ -60,6 +60,38 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "request_data_share_title", arguments: args)
     case .requestCombinationTitle(let args):
       bundle.localizedStringWithArguments(forKey: "request_combination_title", arguments: args)
+    case .requestRequestedDataTitle:
+      bundle.localizedString(forKey: "request_requested_data_title")
+    case .requestTransactionDataSectionTitle:
+      bundle.localizedString(forKey: "request_transaction_data_section_title")
+    case .requestTransactionDataTitle:
+      bundle.localizedString(forKey: "request_transaction_data_title")
+    case .requestTransactionDataSignatureDetails:
+      bundle.localizedString(forKey: "request_transaction_data_signature_details")
+    case .requestTransactionDataType:
+      bundle.localizedString(forKey: "request_transaction_data_type")
+    case .requestTransactionDataTypeQes:
+      bundle.localizedString(forKey: "request_transaction_data_type_qes")
+    case .requestTransactionDataTrustFramework:
+      bundle.localizedString(forKey: "request_transaction_data_trust_framework")
+    case .requestTransactionDataRequestedCredentials:
+      bundle.localizedString(forKey: "request_transaction_data_requested_credentials")
+    case .requestTransactionDataSigningCredentialId:
+      bundle.localizedString(forKey: "request_transaction_data_signing_credential_id")
+    case .requestTransactionDataDocument:
+      bundle.localizedString(forKey: "request_transaction_data_document")
+    case .requestTransactionDataHashRepresentation:
+      bundle.localizedString(forKey: "request_transaction_data_hash_representation")
+    case .requestTransactionDataHash:
+      bundle.localizedString(forKey: "request_transaction_data_hash")
+    case .requestTransactionDataTypedHash(let args):
+      bundle.localizedStringWithArguments(forKey: "request_transaction_data_typed_hash", arguments: args)
+    case .requestTransactionDataHashAlgorithm:
+      bundle.localizedString(forKey: "request_transaction_data_hash_algorithm")
+    case .requestTransactionDataTypedHashAlgorithm(let args):
+      bundle.localizedStringWithArguments(forKey: "request_transaction_data_typed_hash_algorithm", arguments: args)
+    case .requestTransactionDataNumberOfSignatures:
+      bundle.localizedString(forKey: "request_transaction_data_number_of_signatures")
     case .documentAdded:
       bundle.localizedString(forKey: "document_added")
     case .okButton:
@@ -620,10 +652,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "transaction_details_credentials_issued_section")
     case .transactionDetailsTriggerLabel:
       bundle.localizedString(forKey: "transaction_details_trigger_label")
-    case .transactionDetailsInitiatedByWallet:
-      bundle.localizedString(forKey: "transaction_details_initiated_by_wallet")
-    case .transactionDetailsRequestedByIssuer:
-      bundle.localizedString(forKey: "transaction_details_requested_by_issuer")
+    case .transactionDetailsRequestedByYou:
+      bundle.localizedString(forKey: "transaction_details_requested_by_you")
     case .transactionDetailsRenewedByWallet:
       bundle.localizedString(forKey: "transaction_details_renewed_by_wallet")
     case .transactionDetailsCertificateLabel:
@@ -746,6 +776,30 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "transaction_action_continue_phone", arguments: args)
     case .continueButton:
       bundle.localizedString(forKey: "continue_button")
+    case .trustMarkAboutTitle:
+      bundle.localizedString(forKey: "trust_mark_about_title")
+    case .trustMarkWelcomeTitle:
+      bundle.localizedString(forKey: "trust_mark_welcome_title")
+    case .trustMarkWalletName:
+      bundle.localizedString(forKey: "trust_mark_wallet_name")
+    case .trustMarkImageDescription:
+      bundle.localizedString(forKey: "trust_mark_image_description")
+    case .trustMarkCertificationDescription(let args):
+      bundle.localizedStringWithArguments(forKey: "trust_mark_certification_description", arguments: args)
+    case .trustMarkCertifiedWalletsLink:
+      bundle.localizedString(forKey: "trust_mark_certified_wallets_link")
+    case .trustMarkCertificationInformationDescription(let args):
+      bundle.localizedStringWithArguments(forKey: "trust_mark_certification_information_description", arguments: args)
+    case .trustMarkCertificationInformationLink:
+      bundle.localizedString(forKey: "trust_mark_certification_information_link")
+    case .trustMarkLoading:
+      bundle.localizedString(forKey: "trust_mark_loading")
+    case .trustMarkLoadError:
+      bundle.localizedString(forKey: "trust_mark_load_error")
+    case .trustMarkImageError:
+      bundle.localizedString(forKey: "trust_mark_image_error")
+    case .trustMarkBrowserError:
+      bundle.localizedString(forKey: "trust_mark_browser_error")
     }
   }
 }

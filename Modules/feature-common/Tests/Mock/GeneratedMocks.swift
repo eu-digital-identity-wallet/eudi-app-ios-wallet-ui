@@ -92,6 +92,19 @@ import logic_resources
 
 
 
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Config/TrustMarkUiConfig.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Extension/DocClaimsDecodable+Extensions.swift'
 
 import Cuckoo
@@ -1039,6 +1052,133 @@ public class ScannerInteractorStub:ScannerInteractor, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Interactor/TrustMarkInteractor.swift'
+
+import Cuckoo
+import Foundation
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+public class MockTrustMarkInteractor: TrustMarkInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = any TrustMarkInteractor
+    public typealias Stubbing = __StubbingProxy_TrustMarkInteractor
+    public typealias Verification = __VerificationProxy_TrustMarkInteractor
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any TrustMarkInteractor)?
+
+    public func enableDefaultImplementation(_ stub: any TrustMarkInteractor) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public func getTrustMark() async -> LoadTrustMarkPartialState {
+        return await cuckoo_manager.call(
+            "getTrustMark() async -> LoadTrustMarkPartialState",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getTrustMark()
+        )
+    }
+
+    public func completeIntroduction() async {
+        return await cuckoo_manager.call(
+            "completeIntroduction() async",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.completeIntroduction()
+        )
+    }
+
+    public struct __StubbingProxy_TrustMarkInteractor: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func getTrustMark() -> Cuckoo.ProtocolStubFunction<(), LoadTrustMarkPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockTrustMarkInteractor.self,
+                method: "getTrustMark() async -> LoadTrustMarkPartialState",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func completeIntroduction() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockTrustMarkInteractor.self,
+                method: "completeIntroduction() async",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_TrustMarkInteractor: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func getTrustMark() -> Cuckoo.__DoNotUse<(), LoadTrustMarkPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getTrustMark() async -> LoadTrustMarkPartialState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func completeIntroduction() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "completeIntroduction() async",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class TrustMarkInteractorStub:TrustMarkInteractor, @unchecked Sendable {
+
+
+    
+    public func getTrustMark() async -> LoadTrustMarkPartialState {
+        return DefaultValueRegistry.defaultValue(for: (LoadTrustMarkPartialState).self)
+    }
+    
+    public func completeIntroduction() async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+}
+
+
+
+
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Accessibility/BaseRequestLocators.swift'
 
 import Cuckoo
@@ -1343,6 +1483,50 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Success/Generic/GenericSuccessViewModel.swift'
 
 import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/TrustMark/Model/TrustMarkUIModel.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/TrustMark/TrustMarkView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/TrustMark/TrustMarkViewModel.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6230,6 +6414,9 @@ import Cuckoo
 import Foundation
 import EudiWalletKit
 import EudiEtsi1196x2
+import MdocDataModel18013
+import struct OpenID4VP.SupportedTransactionDataType
+import struct OpenID4VP.TransactionDataType
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6280,6 +6467,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
                 "vpConfig",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
                 defaultCall: __defaultImplStub!.vpConfig
+            )
+        }
+    }
+
+    var supportedTransactionDataTypes: [SupportedTransactionDataType] {
+        get {
+            return cuckoo_manager.getter(
+                "supportedTransactionDataTypes",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.supportedTransactionDataTypes
             )
         }
     }
@@ -6364,6 +6561,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         }
     }
 
+    var trustMarkSource: TrustMarkSource {
+        get {
+            return cuckoo_manager.getter(
+                "trustMarkSource",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.trustMarkSource
+            )
+        }
+    }
+
 
     struct __StubbingProxy_WalletKitConfig: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -6382,6 +6589,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var vpConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,OpenId4VpConfiguration> {
             return .init(manager: cuckoo_manager, name: "vpConfig")
+        }
+        
+        var supportedTransactionDataTypes: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,[SupportedTransactionDataType]> {
+            return .init(manager: cuckoo_manager, name: "supportedTransactionDataTypes")
         }
         
         var trustConfiguration: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,TrustConfiguration> {
@@ -6415,6 +6626,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         var documentIssuanceConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,DocumentIssuanceConfig> {
             return .init(manager: cuckoo_manager, name: "documentIssuanceConfig")
         }
+        
+        var trustMarkSource: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,TrustMarkSource> {
+            return .init(manager: cuckoo_manager, name: "trustMarkSource")
+        }
     }
 
     struct __VerificationProxy_WalletKitConfig: Cuckoo.VerificationProxy {
@@ -6438,6 +6653,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         
         var vpConfig: Cuckoo.VerifyReadOnlyProperty<OpenId4VpConfiguration> {
             return .init(manager: cuckoo_manager, name: "vpConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var supportedTransactionDataTypes: Cuckoo.VerifyReadOnlyProperty<[SupportedTransactionDataType]> {
+            return .init(manager: cuckoo_manager, name: "supportedTransactionDataTypes", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var trustConfiguration: Cuckoo.VerifyReadOnlyProperty<TrustConfiguration> {
@@ -6471,6 +6690,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         var documentIssuanceConfig: Cuckoo.VerifyReadOnlyProperty<DocumentIssuanceConfig> {
             return .init(manager: cuckoo_manager, name: "documentIssuanceConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
+        
+        var trustMarkSource: Cuckoo.VerifyReadOnlyProperty<TrustMarkSource> {
+            return .init(manager: cuckoo_manager, name: "trustMarkSource", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
     }
 }
 
@@ -6491,6 +6714,12 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     var vpConfig: OpenId4VpConfiguration {
         get {
             return DefaultValueRegistry.defaultValue(for: (OpenId4VpConfiguration).self)
+        }
+    }
+    
+    var supportedTransactionDataTypes: [SupportedTransactionDataType] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([SupportedTransactionDataType]).self)
         }
     }
     
@@ -6539,6 +6768,12 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     var documentIssuanceConfig: DocumentIssuanceConfig {
         get {
             return DefaultValueRegistry.defaultValue(for: (DocumentIssuanceConfig).self)
+        }
+    }
+    
+    var trustMarkSource: TrustMarkSource {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (TrustMarkSource).self)
         }
     }
 
@@ -8440,6 +8675,99 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Controller/WalletKitTrustMarkController.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+public class MockWalletKitTrustMarkController: WalletKitTrustMarkController, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = any WalletKitTrustMarkController
+    public typealias Stubbing = __StubbingProxy_WalletKitTrustMarkController
+    public typealias Verification = __VerificationProxy_WalletKitTrustMarkController
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any WalletKitTrustMarkController)?
+
+    public func enableDefaultImplementation(_ stub: any WalletKitTrustMarkController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public func getTrustMark() async throws -> TrustMarkDomain {
+        return try await cuckoo_manager.callThrows(
+            "getTrustMark() async throws -> TrustMarkDomain",
+            parameters: (),
+            escapingParameters: (),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getTrustMark()
+        )
+    }
+
+    public struct __StubbingProxy_WalletKitTrustMarkController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func getTrustMark() -> Cuckoo.ProtocolStubThrowingFunction<(), TrustMarkDomain,Swift.Error> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitTrustMarkController.self,
+                method: "getTrustMark() async throws -> TrustMarkDomain",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_WalletKitTrustMarkController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func getTrustMark() -> Cuckoo.__DoNotUse<(), TrustMarkDomain> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getTrustMark() async throws -> TrustMarkDomain",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class WalletKitTrustMarkControllerStub:WalletKitTrustMarkController, @unchecked Sendable {
+
+
+    
+    public func getTrustMark() async throws -> TrustMarkDomain {
+        return DefaultValueRegistry.defaultValue(for: (TrustMarkDomain).self)
+    }
+}
+
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Coordinator/Model/PresentationRequest.swift'
 
 import Cuckoo
@@ -8983,6 +9311,17 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
         )
     }
 
+    public func declineResponse() async throws {
+        return try await cuckoo_manager.callThrows(
+            "declineResponse() async throws",
+            parameters: (),
+            escapingParameters: (),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.declineResponse()
+        )
+    }
+
     public func getState() async -> PresentationState {
         return await cuckoo_manager.call(
             "getState() async -> PresentationState",
@@ -9062,6 +9401,14 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
             let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
                 method: "sendResponse(response p0: RequestItemConvertible) async throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func declineResponse() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(),Swift.Error> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
+                method: "declineResponse() async throws",
                 parameterMatchers: matchers
             ))
         }
@@ -9160,6 +9507,18 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
         
         
         @discardableResult
+        func declineResponse() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "declineResponse() async throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func getState() -> Cuckoo.__DoNotUse<(), PresentationState> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -9241,6 +9600,10 @@ public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator, @unchecked S
     }
     
     public func sendResponse(response p0: RequestItemConvertible) async throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func declineResponse() async throws {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -9819,10 +10182,43 @@ import MdocDataModel18013
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/TrustMarkResource+Extensions.swift'
+
+import Cuckoo
+import Foundation
+import MdocDataModel18013
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/URLComponents+Extensions.swift'
 
 import Cuckoo
 import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/UserRequestInfo+TransactionData.swift'
+
+import Cuckoo
+import Foundation
+import EudiWalletKit
+import MdocDataTransfer18013
+import SwiftyJSON
+import struct OpenID4VP.OpenId4VPSpec
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -9931,6 +10327,20 @@ import Cuckoo
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/DynamicIssuancePendingData.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/PresentationTransactionData.swift'
 
 import Cuckoo
 import Foundation
@@ -10084,6 +10494,20 @@ import Foundation
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/TransactionLogDomain.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/TrustMarkDomain.swift'
 
 import Cuckoo
 import Foundation

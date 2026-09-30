@@ -58,6 +58,13 @@ public final class LogicCoreAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.container)
 
+    container.register(WalletKitTrustMarkController.self) { r in
+      WalletKitTrustMarkControllerImpl(
+        walletKitController: r.force(WalletKitController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.transient)
+
     container.register(WalletProviderAttestationConfig.self) { r in
       WalletProviderAttestationConfigImpl(
         configLogic: r.force(ConfigLogic.self)

@@ -26,6 +26,7 @@ public enum WalletCoreError: LocalizedError, Equatable {
   case unableToPresentAndShare
   case unableToFetchTransactionLog
   case unableToRecordTransactionAction
+  case unableToFetchTrustMark
 
   public var errorDescription: String? {
     return switch self {
@@ -47,6 +48,8 @@ public enum WalletCoreError: LocalizedError, Equatable {
       LocalizableStringKey.errorFetchTransactionLog.toString
     case .unableToRecordTransactionAction:
       LocalizableStringKey.transactionDetailsActionError.toString
+    case .unableToFetchTrustMark:
+      LocalizableStringKey.trustMarkLoadError.toString
     }
   }
 }

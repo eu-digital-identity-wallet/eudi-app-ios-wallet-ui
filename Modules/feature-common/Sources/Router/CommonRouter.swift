@@ -61,6 +61,16 @@ public final class CommonRouter {
           )
         )
       )
+    case .trustMark(let config):
+      TrustMarkView(
+        with: .init(
+          router: host,
+          interactor: DIGraph.shared.resolver.force(
+            TrustMarkInteractor.self
+          ),
+          config: config
+        )
+      )
     }
   }
 }

@@ -100,5 +100,6 @@ public extension Prefs {
     case language
     case batchCounter
     case validateIssuerRegistrationCertificate
+    case trustMarkIntroductionCompleted
   }
 }

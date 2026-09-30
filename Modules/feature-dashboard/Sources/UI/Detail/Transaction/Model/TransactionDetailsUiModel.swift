@@ -270,7 +270,7 @@ extension TransactionDetailsFieldUi {
 
   static func triggerFields(_ isUserTriggered: Bool?) -> [TransactionDetailsFieldUi] {
     guard let isUserTriggered else { return [] }
-    let value: LocalizableStringKey = isUserTriggered ? .transactionDetailsInitiatedByWallet : .transactionDetailsRenewedByWallet
+    let value: LocalizableStringKey = isUserTriggered ? .transactionDetailsRequestedByYou : .transactionDetailsRenewedByWallet
     return [.field(id: "issuance:trigger", label: .transactionDetailsTriggerLabel, value: value.toString)]
   }
 

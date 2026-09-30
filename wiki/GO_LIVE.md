@@ -41,6 +41,7 @@ certification or a replacement for a full security assessment.
 * [Document Categories](#document-categories)
 * [Revocation And Status Checking](#revocation-and-status-checking)
 * [RQES Configuration](#rqes-configuration)
+* [Trust Mark Deployment](#trust-mark-deployment)
 * [ConfigLogic](#configlogic)
 * [Deep Links And Redirect URIs](#deep-links-and-redirect-uris)
 * [Entitlements, Plist Values, And Permissions](#entitlements-plist-values-and-permissions)
@@ -549,7 +550,9 @@ It implements:
 ```swift
 protocol WalletKitConfig: Sendable {
   var issuersConfig: [String: VciConfig] { get }
+  var validateIssuerRegistrationCertificate: Bool { get }
   var vpConfig: OpenId4VpConfiguration { get }
+  var supportedTransactionDataTypes: [SupportedTransactionDataType] { get }
   var trustConfiguration: TrustConfiguration { get }
   var userAuthenticationRequired: Bool { get }
   var keyOptions: KeyOptions? { get }
@@ -558,10 +561,13 @@ protocol WalletKitConfig: Sendable {
   var transactionLogger: TransactionLogger { get }
   var revocationIntervalSeconds: TimeInterval { get }
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
+  var trustMarkSource: TrustMarkSource { get }
 }
 ```
 
 Each property must be reviewed.
+For Trust Mark settings, see
+[Trust Mark configuration](CONFIGURATION.md#trust-mark-configuration).
 
 ## `EudiWalletConfiguration`
 
@@ -581,6 +587,7 @@ EudiWallet(
   openID4VpConfig: walletKitConfig.vpConfig,
   openID4VciConfigurations: walletKitConfig.issuersConfig.mapValues { $0.config },
   // ...
+  trustMarkSource: walletKitConfig.trustMarkSource
 )
 ```
 
@@ -732,8 +739,19 @@ Current code:
 ```swift
 var vpConfig: OpenId4VpConfiguration {
   .init(
-    clientIdSchemes: [.x509SanDns, .x509Hash]
+    clientIdSchemes: [.x509SanDns, .x509Hash],
+    supportedTransactionDataTypes: supportedTransactionDataTypes,
+    validateRegistrationCertificate: validateIssuerRegistrationCertificate
   )
+}
+
+var supportedTransactionDataTypes: [SupportedTransactionDataType] {
+  let types = [
+    TransactionDataTypeIdentifier.qesApproval.rawValue
+  ]
+  return [.default()] + types.compactMap {
+    try? SupportedTransactionDataType(type: TransactionDataType(value: $0))
+  }
 }
 ```
 
@@ -744,6 +762,8 @@ Production meaning:
 | `.x509SanDns` | Verifier client identity is bound to a DNS name in an X.509 certificate. | Use when verifier certificates and trust anchors are managed and audited. |
 | `.x509Hash` | Verifier identity is bound to a certificate hash. | Use when the verifier ecosystem requires hash-based certificate binding. |
 | `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add production verifier API URL, legal name, and client ID. |
+| `supportedTransactionDataTypes` | OpenID4VP `transaction_data` types the wallet accepts. The OpenID4VP library rejects any request whose transaction data type is not listed; an empty list rejects every request that carries transaction data. The app accepts `.default()` (the library's placeholder type `transaction_data`) and the CSC `https://cloudsignatureconsortium.org/2025/qes-approval` type. | List only the types your wallet can display to the user. Drop `.default()` unless a production verifier uses it. |
+| `validateRegistrationCertificate` | Whether the verifier's WRP registration certificate is validated during OpenID4VP. Set from `validateIssuerRegistrationCertificate`. | See [Registration Certificates: The Second Trust Layer](#registration-certificates-the-second-trust-layer). |
 
 If using preregistered verifiers, add the relevant import and production entries:
 
@@ -764,7 +784,9 @@ var vpConfig: OpenId4VpConfiguration {
           )
         ]
       )
-    ]
+    ],
+    supportedTransactionDataTypes: supportedTransactionDataTypes,
+    validateRegistrationCertificate: validateIssuerRegistrationCertificate
   )
 }
 ```
@@ -776,6 +798,12 @@ Rules:
 * `clientId` must match verifier registration and protocol profile.
 * Do not include development verifier URLs in production.
 * If a verifier is not trusted, the user interface must clearly show that status before disclosure.
+
+Transaction data is shown on the request screen under "Data to be signed", below the document it is
+bound to. A QES approval shows the trust framework, transaction type, requested credential query
+ids, signing credential ID, number of signatures, and each document's label, hash representation,
+hash and hash algorithm. Any other accepted type is shown as its raw fields. Before release, check
+that every type you accept is displayed in full, since the user approves it by sharing.
 
 ### Relay Attack Risk In Presentation Flows
 
@@ -1241,6 +1269,37 @@ Production rules:
 * Confirm `includeRevocationInfo` with the signing policy and QTSP.
 * Disable verbose logs in production.
 * Test success, cancellation, network failure, expired authorization, and rejected signing flows.
+
+## Trust Mark Deployment
+
+Set `WalletKitConfig.trustMarkSource` to the Trust Mark configuration for your wallet solution.
+The default uses a sample Gist resource and a certification-page URL containing
+`WALLET_SOLUTION_ID`. Replace the sample values in your production variant with the correct
+resource and certification URLs. See
+[Trust Mark configuration](CONFIGURATION.md#trust-mark-configuration) for instructions.
+
+The app does not check certification, recognition, expiry, revocation or wallet instance
+attestation, or automatically remove the mark when certification changes. Check that the
+displayed image, text and links match your wallet's actual certification status before release.
+
+Test the following:
+
+* On a clean install, the introduction appears after splash, Continue proceeds to PIN setup,
+  and later launches skip the completed introduction.
+* "About EUDI Wallet" opens from the side menu.
+* In both the introduction and About views, "EUDI Wallet Provider Trusted List" opens the
+  list of certified wallets and "Certification information page" opens your wallet's
+  certification page in the browser. Both links display an external-link icon.
+* The Trust Mark image is centered above its localized text and keeps its original proportions.
+  Check long text and larger Dynamic Type sizes: the text should use the available width, wrap
+  fully and scroll with the screen while Welcome's Continue remains available. Resource and image
+  loading errors offer Try again.
+
+For an upgrade release, confirm whether existing users should see the introduction and test
+that flow.
+
+The app can report when it cannot open a link. Once the browser opens, page-loading and network
+errors are handled by the browser.
 
 ## ConfigLogic
 

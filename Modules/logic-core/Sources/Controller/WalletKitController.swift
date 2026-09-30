@@ -162,7 +162,8 @@ final actor WalletKitControllerImpl: WalletKitController {
       openID4VpConfig: walletKitConfig.vpConfig,
       openID4VciConfigurations: walletKitConfig.issuersConfig.mapValues { $0.config },
       networking: networkSessionProvider.urlSession,
-      transactionLogger: walletKitConfig.transactionLogger
+      transactionLogger: walletKitConfig.transactionLogger,
+      trustMarkSource: walletKitConfig.trustMarkSource
     ) else {
       fatalError("Unable to Initialize WalletKit")
     }

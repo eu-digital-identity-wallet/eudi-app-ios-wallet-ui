@@ -49,6 +49,20 @@ final actor StartupInteractorImpl: StartupInteractor {
     try? await walletKitController.loadDocuments()
     let hasDocuments = await !walletKitController.fetchAllDocuments().isEmpty
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
+    let continuationRoute = await getContinuationRoute(hasDocuments: hasDocuments)
+    guard !prefsController.getBool(forKey: .trustMarkIntroductionCompleted) else {
+      return continuationRoute
+    }
+    return .featureCommonModule(
+      .trustMark(
+        config: TrustMarkUiConfig(
+          mode: .welcome(continuationRoute: continuationRoute)
+        )
+      )
+    )
+  }
+
+  private func getContinuationRoute(hasDocuments: Bool) async -> AppRoute {
     if await quickPinInteractor.hasPin() {
       return .featureCommonModule(
         .biometry(

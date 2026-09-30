@@ -213,6 +213,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
           image: Theme.shared.image.chevronLeft,
           accessibilityLocator: ToolbarLocators.chevronLeft
         ) {
+          Task { await self.declineRequest() }
           self.onPop()
         }
       ]
@@ -228,6 +229,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   }
 
   open func stopPresentation() async {}
+  open func declineRequest() async {}
   public func onTrustBlocked() {
     setState {
       $0.copy(

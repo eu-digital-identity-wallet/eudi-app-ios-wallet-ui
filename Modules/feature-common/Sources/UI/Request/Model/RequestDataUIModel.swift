@@ -28,6 +28,7 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
   public var id: String
 
   public let section: PresentationListItemSection
+  public let transactionData: [PresentationListItemSection]
 
   public var log: String {
     "id: \(section.id), title: \(section.title)"
@@ -35,10 +36,12 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 
   public init(
     id: String = UUID().uuidString,
-    section: PresentationListItemSection
+    section: PresentationListItemSection,
+    transactionData: [PresentationListItemSection] = []
   ) {
     self.id = id
     self.section = section
+    self.transactionData = transactionData
   }
 }
 
@@ -357,7 +360,8 @@ public extension Array where Element == DocElements {
   func toUiModels(
     with walletKitController: WalletKitController,
     claimsAreSelectable: Bool = true,
-    overaskedPaths: [String: Set<[String]>] = [:]
+    overaskedPaths: [String: Set<[String]>] = [:],
+    transactionData: [String: [PresentationTransactionData]] = [:]
   ) -> [RequestDataUiModel] {
     self.compactMap { element in
 
@@ -424,6 +428,144 @@ public extension Array where Element == DocElements {
             claimsAreSelectable: claimsAreSelectable,
             overaskedPaths: overaskedPathsForDocument
           )
+        ),
+        transactionData: (transactionData[element.docId] ?? []).map { $0.toListItemSection() }
+      )
+    }
+  }
+}
+
+private let transactionDataValueSeparator = " · "
+
+private extension PresentationTransactionData {
+  func toListItemSection() -> PresentationListItemSection {
+    switch content {
+    case .qesApproval(let qesApproval):
+      .init(
+        id: UUID().uuidString,
+        title: LocalizableStringKey.requestTransactionDataSignatureDetails.toString,
+        listItems: qesApproval.toListItems()
+      )
+    case .generic(let fields):
+      .init(
+        id: UUID().uuidString,
+        title: LocalizableStringKey.requestTransactionDataTitle.toString,
+        listItems: [.transactionDataRow(overline: .requestTransactionDataType, value: type)]
+        + fields.map { $0.toExpandableListItem() }
+      )
+    }
+  }
+}
+
+private extension QesApprovalTransactionData {
+  func toListItems() -> [PresentationExpandableListItem] {
+    var items: [PresentationExpandableListItem] = [
+      .transactionDataRow(overline: .requestTransactionDataTrustFramework, value: trustFramework),
+      .transactionDataRow(
+        overline: .requestTransactionDataType,
+        value: LocalizableStringKey.requestTransactionDataTypeQes.toString
+      )
+    ]
+
+    if !credentialIds.isEmpty {
+      items.append(
+        .transactionDataRow(
+          overline: .requestTransactionDataRequestedCredentials,
+          value: credentialIds.joined(separator: transactionDataValueSeparator)
+        )
+      )
+    }
+
+    if let signingCredentialId {
+      items.append(.transactionDataRow(overline: .requestTransactionDataSigningCredentialId, value: signingCredentialId))
+    }
+
+    if let numberOfSignatures {
+      items.append(
+        .transactionDataRow(overline: .requestTransactionDataNumberOfSignatures, value: String(numberOfSignatures))
+      )
+    }
+
+    documents.forEach { document in
+      items.append(contentsOf: document.toListItems(hashAlgorithm: hashAlgorithm))
+    }
+
+    if documents.isEmpty, let hashAlgorithm {
+      items.append(.transactionDataRow(overline: .requestTransactionDataHashAlgorithm, value: hashAlgorithm.displayValue))
+    }
+
+    return items
+  }
+}
+
+private extension QesDocumentDigest {
+  func toListItems(hashAlgorithm: QesHashAlgorithm?) -> [PresentationExpandableListItem] {
+    let representation = hashType?.uppercased()
+    var items: [PresentationExpandableListItem] = []
+
+    if let label {
+      items.append(.transactionDataRow(overline: .requestTransactionDataDocument, value: label))
+    }
+
+    if let representation {
+      items.append(.transactionDataRow(overline: .requestTransactionDataHashRepresentation, value: representation))
+    }
+
+    items.append(
+      .transactionDataRow(
+        overline: representation.map { .requestTransactionDataTypedHash([$0]) } ?? .requestTransactionDataHash,
+        value: hash
+      )
+    )
+
+    if let hashAlgorithm {
+      items.append(
+        .transactionDataRow(
+          overline: representation.map { .requestTransactionDataTypedHashAlgorithm([$0]) }
+          ?? .requestTransactionDataHashAlgorithm,
+          value: hashAlgorithm.displayValue
+        )
+      )
+    }
+
+    return items
+  }
+}
+
+private extension QesHashAlgorithm {
+  var displayValue: String {
+    name ?? oid
+  }
+}
+
+private extension ExpandableListItem where T == DocumentElementClaim {
+  static func transactionDataRow(
+    overline: LocalizableStringKey,
+    value: String
+  ) -> Self {
+    .single(
+      .init(
+        collapsed: .init(
+          mainContent: .text(.custom(value)),
+          overlineText: overline
+        ),
+        domainModel: nil
+      )
+    )
+  }
+}
+
+private extension PresentationTransactionDataField {
+  func toExpandableListItem() -> PresentationExpandableListItem {
+    switch value {
+    case .text(let text):
+      .transactionDataRow(overline: .custom(key), value: text)
+    case .group(let fields):
+      .nested(
+        .init(
+          collapsed: .init(mainContent: .text(.custom(key))),
+          expanded: fields.map { $0.toExpandableListItem() },
+          isExpanded: false
         )
       )
     }

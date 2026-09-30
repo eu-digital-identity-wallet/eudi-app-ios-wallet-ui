@@ -31,6 +31,22 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestDataInfoNotice
   case requestDataTitle([String])
   case requestCombinationTitle([String])
+  case requestRequestedDataTitle
+  case requestTransactionDataSectionTitle
+  case requestTransactionDataTitle
+  case requestTransactionDataSignatureDetails
+  case requestTransactionDataType
+  case requestTransactionDataTypeQes
+  case requestTransactionDataTrustFramework
+  case requestTransactionDataRequestedCredentials
+  case requestTransactionDataSigningCredentialId
+  case requestTransactionDataDocument
+  case requestTransactionDataHashRepresentation
+  case requestTransactionDataHash
+  case requestTransactionDataTypedHash([String])
+  case requestTransactionDataHashAlgorithm
+  case requestTransactionDataTypedHashAlgorithm([String])
+  case requestTransactionDataNumberOfSignatures
   case documentAdded
   case okButton
   case success
@@ -311,8 +327,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionDetailsCredentialsIssuedSection
   case transactionDetailsIssuedCount([String])
   case transactionDetailsTriggerLabel
-  case transactionDetailsInitiatedByWallet
-  case transactionDetailsRequestedByIssuer
+  case transactionDetailsRequestedByYou
   case transactionDetailsRenewedByWallet
   case transactionDetailsCertificateLabel
   case transactionDetailsFilenameLabel
@@ -373,6 +388,18 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionActionContinueEmail
   case transactionActionContinuePhone([String])
   case continueButton
+  case trustMarkAboutTitle
+  case trustMarkWelcomeTitle
+  case trustMarkWalletName
+  case trustMarkImageDescription
+  case trustMarkCertificationDescription([String])
+  case trustMarkCertifiedWalletsLink
+  case trustMarkCertificationInformationDescription([String])
+  case trustMarkCertificationInformationLink
+  case trustMarkLoading
+  case trustMarkLoadError
+  case trustMarkImageError
+  case trustMarkBrowserError
 }
 
 public extension LocalizableStringKey {

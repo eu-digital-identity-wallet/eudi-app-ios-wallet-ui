@@ -330,6 +330,7 @@ extension Constants {
     relyingParty: "Relying Party",
     dataRequestInfo: "Data Request Info",
     isTrusted: true,
-    overaskedClaims: []
+    overaskedClaims: [],
+    transactionDataSets: []
   )
 }

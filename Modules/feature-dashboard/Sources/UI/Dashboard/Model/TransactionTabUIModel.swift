@@ -166,7 +166,9 @@ extension TransactionLogDomain {
       [partyName, log.intermediary?.name]
     case .signingSealing(let log):
       [partyName, log.fileName]
-    case .credentialIssuance, .credentialReissuance, .credentialDeletion:
+    case .credentialDeletion(let log):
+      [partyName, log.credential.identifier.rawValue]
+    case .credentialIssuance, .credentialReissuance:
       [partyName]
     case .dataDeletionRequest, .dpaReport:
       []

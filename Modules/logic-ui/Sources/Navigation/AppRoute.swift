@@ -36,6 +36,7 @@ public enum FeatureCommonRouteModule: AppRouteModule {
   case qrScanner(config: any UIConfigType)
   case biometry(config: any UIConfigType)
   case genericSuccess(config: any UIConfigType)
+  case trustMark(config: any UIConfigType)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -47,6 +48,8 @@ public enum FeatureCommonRouteModule: AppRouteModule {
       (key: "QuickPin", arguments: ["config": config.log])
     case .qrScanner(config: let config):
       (key: "QRScanner", arguments: ["config": config.log])
+    case .trustMark(let config):
+      (key: "TrustMark", arguments: ["config": config.log])
     }
   }
 }
