@@ -295,7 +295,11 @@ struct WalletKitConfigImpl: WalletKitConfig {
       fallbackTrustSource: .staticList(
         StaticListTrustSource(rootCertificates: staticRootCertificates)
       ),
-      defaultPolicy: .enforce,
+      defaultPolicy: .warning,
+      docTypePolicies: [
+        DocumentTypeIdentifier.mDocPid.rawValue: .enforce,
+        DocumentTypeIdentifier.sdJwtPid.rawValue: .enforce
+      ],
       requireSignedMetadata: true,
       statusTrustPolicy: .warning,
       wrprcVpTrustPolicy: .warning,

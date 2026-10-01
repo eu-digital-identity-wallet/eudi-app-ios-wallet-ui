@@ -364,7 +364,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionActionCall
   case transactionActionOpenEmail
   case transactionActionVisitWebsite
-  case transactionActionUnknownParty
   case transactionHistoryDeletionTitle([String])
   case transactionHistoryReportTitle([String])
   case transactionHistoryDeletionDisclaimer

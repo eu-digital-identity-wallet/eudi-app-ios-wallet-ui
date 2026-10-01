@@ -3010,17 +3010,6 @@
         }
       }
     },
-    "transaction_action_unknown_party" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "the relevant authority"
-          }
-        }
-      }
-    },
     "transaction_action_visit_website" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -728,8 +728,6 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "transaction_action_open_email")
     case .transactionActionVisitWebsite:
       bundle.localizedString(forKey: "transaction_action_visit_website")
-    case .transactionActionUnknownParty:
-      bundle.localizedString(forKey: "transaction_action_unknown_party")
     case .transactionHistoryDeletionTitle(let args):
       bundle.localizedStringWithArguments(forKey: "transaction_history_deletion_title", arguments: args)
     case .transactionHistoryReportTitle(let args):

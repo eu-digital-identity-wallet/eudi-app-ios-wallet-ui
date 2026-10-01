@@ -171,13 +171,18 @@ The primary trust source is an ETSI LoTE (List of Trusted Entities) source that 
       trustSource: .etsi(
         EtsiTrustSource(
           loteLocations: loteLocations,
-          contextTypeMappings: classifications
+          contextTypeMappings: classifications,
+          isRevocationEnabled: false
         )
       ),
       fallbackTrustSource: .staticList(
         StaticListTrustSource(rootCertificates: staticRootCertificates)
       ),
-      defaultPolicy: .enforce,
+      defaultPolicy: .warning,
+      docTypePolicies: [
+        DocumentTypeIdentifier.mDocPid.rawValue: .enforce,
+        DocumentTypeIdentifier.sdJwtPid.rawValue: .enforce
+      ],
       requireSignedMetadata: true,
       statusTrustPolicy: .warning,
       wrprcVpTrustPolicy: .warning,
@@ -206,6 +211,11 @@ whose signer chain is not trusted is refused and not stored, and the issuance en
 `docTypePolicies` overrides the policy for specific doc types. A doc type with no verification
 context in either trust source cannot be validated, so under `.enforce` it is refused even when
 its issuer is legitimate. Map every doc type the wallet issues before enforcing.
+
+The app enforces signer trust for the PID only and warns for every other
+attestation: those doc types have no verification context, so enforcing them would refuse every
+EAA. `isRevocationEnabled: false` turns off PKIX revocation checks for the dev trust lists, as
+`relaxPkixRevocation()` does on Android; set it to `true` for production.
 
 **Two trust layers.** An access certificate (WRPAC) answers *who is this party*, a registration
 certificate (WRPRC) answers *what is it registered to do* — the registered identity, declared
