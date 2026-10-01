@@ -206,6 +206,42 @@ extension TestTransactionDetailsInteractor {
     XCTAssertEqual(ui.entries.map(\.method), [.transactionHistoryChannelWebsite])
   }
 
+  func testGetDataProtectionActionHistory_WhenReportAndAuthorityHasNoName_ThenHasNoAuthorityCard() async {
+    // Given
+    stub(walletKitController) { stub in
+      when(stub.fetchTransactionLog(with: equal(to: "tx-contacts")))
+        .thenReturn(Self.presentationWithUnnamedDpa)
+      when(stub.fetchPresentationActions(parentPresentationId: any())).thenReturn([Self.websiteReport])
+    }
+
+    // When
+    let result = await interactor.getDataProtectionActionHistory(transactionId: "tx-contacts", action: .reportSuspiciousTransaction)
+
+    // Then
+    guard case .success(let ui) = result else {
+      return XCTFail("Expected success, but got \(result).")
+    }
+    XCTAssertNil(ui.authorityLabel)
+    XCTAssertNil(ui.authorityName)
+    XCTAssertEqual(ui.entries.map(\.method), [.transactionHistoryChannelWebsite])
+  }
+
+  func testGetDataProtectionActionHistory_WhenReportHasNoAttempts_ThenHasNoAuthorityCard() async {
+    // Given
+    stubFetchPresentationWithContacts()
+
+    // When
+    let result = await interactor.getDataProtectionActionHistory(transactionId: "tx-contacts", action: .reportSuspiciousTransaction)
+
+    // Then
+    guard case .success(let ui) = result else {
+      return XCTFail("Expected success, but got \(result).")
+    }
+    XCTAssertNil(ui.authorityLabel)
+    XCTAssertNil(ui.authorityName)
+    XCTAssertTrue(ui.entries.isEmpty)
+  }
+
   func testGetDataProtectionActionHistory_WhenDeletion_ThenHasNoAuthorityCard() async {
     // Given
     stubFetchPresentationWithContacts()
@@ -366,6 +402,19 @@ extension TestTransactionDetailsInteractor {
       registration: .init(registrarUrl: nil, purpose: nil, privacyPolicyUrls: [], dpa: .init(name: "DPA", country: "GR", contacts: ["https://dpa.example/report"])),
       claimsRequested: [],
       claimsPresented: [.init(credential: .init(identifier: .mDocPid), claims: [.init(segments: [.key(name: "ns"), .key(name: "family_name")])])]
+    )
+  )
+
+  static let presentationWithUnnamedDpa: TransactionLogDomain = .presentation(
+    .init(
+      id: "tx-contacts",
+      time: Date(),
+      result: .completed,
+      party: .init(name: "Verifier", identifier: nil, contacts: []),
+      intermediary: nil,
+      registration: .init(registrarUrl: nil, purpose: nil, privacyPolicyUrls: [], dpa: .init(name: "  ", country: nil, contacts: ["https://dpa.example/report"])),
+      claimsRequested: [],
+      claimsPresented: []
     )
   )
 

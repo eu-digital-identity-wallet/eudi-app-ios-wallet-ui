@@ -65,12 +65,13 @@ extension TransactionLogDomain.Presentation {
         entries: entries
       )
     case .reportSuspiciousTransaction:
+      let authorityName = entries.isEmpty ? nil : registration?.dpa?.name?.nonBlankValue
       return .init(
         title: .transactionHistoryReportTitle([partyName]),
         disclaimer: .transactionHistoryReportDisclaimer,
         message: .transactionHistoryReportMessage,
-        authorityLabel: .transactionActionAuthorityLabel,
-        authorityName: .custom(registration?.dpa?.name ?? LocalizableStringKey.transactionActionUnknownParty.toString),
+        authorityLabel: authorityName == nil ? nil : .transactionActionAuthorityLabel,
+        authorityName: authorityName.map { .custom($0) },
         entries: entries
       )
     }

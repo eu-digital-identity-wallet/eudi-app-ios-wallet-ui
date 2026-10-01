@@ -288,13 +288,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
       trustSource: .etsi(
         EtsiTrustSource(
           loteLocations: loteLocations,
-          contextTypeMappings: classifications
+          contextTypeMappings: classifications,
+          isRevocationEnabled: false
         )
       ),
       fallbackTrustSource: .staticList(
         StaticListTrustSource(rootCertificates: staticRootCertificates)
       ),
-      defaultPolicy: .enforce,
+      defaultPolicy: .warning,
+      docTypePolicies: [
+        DocumentTypeIdentifier.mDocPid.rawValue: .enforce,
+        DocumentTypeIdentifier.sdJwtPid.rawValue: .enforce
+      ],
       requireSignedMetadata: true,
       statusTrustPolicy: .warning,
       wrprcVpTrustPolicy: .warning,
