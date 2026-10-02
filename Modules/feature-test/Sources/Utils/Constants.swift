@@ -216,7 +216,8 @@ extension Constants {
 
     func waitForDisconnect() async throws {}
     
-    var transactionLog: TransactionLog
+    var transactionLog: TransactionEntry
+    var transactionLogger: (any TransactionLogger)?
     
     func startQrEngagement(secureAreaName: String?, keyOptions: MdocDataModel18013.KeyOptions) async throws -> String {
       ""
@@ -234,62 +235,49 @@ extension Constants {
     var flow: EudiWalletKit.FlowType
   }
   
-  static let mockTransactionLog: TransactionLog = .init(
-    timestamp: .min,
-    status: .completed,
-    type: .presentation,
-    dataFormat: .cbor
-  )
-  
-  static let eudiRemoteVerifierMock: TransactionLogItem = .init(
-    id: "transactionId1",
-    transactionLogData: .presentation(
-      log: .init(
-        TransactionLog(
-          timestamp: Int64(Date().timeIntervalSince1970),
-          status: .completed,
-          errorMessage: nil,
-          rawRequest: nil,
-          rawResponse: nil,
-          relyingParty: TransactionLog.RelyingParty(
-            name: "EUDI Remote Verifier",
-            isVerified: true,
-            certificateChain: [],
-            readerAuth: nil
-          ),
-          type: .presentation,
-          dataFormat: .json,
-          sessionTranscript: nil,
-          docMetadata: nil
-        ),
-        uiCulture: Locale.current.systemLanguageCode
-      )
+  static let mockTransactionLog: TransactionEntry = .presentation(
+    .init(
+      transactionIdentifier: "transactionId0",
+      time: Date(timeIntervalSince1970: 0),
+      transactionResult: .completed,
+      listOfClaimsRequested: [],
+      listOfClaimsPresented: []
     )
   )
   
-  static let otherRelPartyMock: TransactionLogItem = .init(
-    id: "transactionId2",
-    transactionLogData: .presentation(
-      log: .init(
-        TransactionLog(
-          timestamp: Int64(Date().addingTimeInterval(-3600).timeIntervalSince1970),
-          status: .failed,
-          errorMessage: "Some Error",
-          rawRequest: nil,
-          rawResponse: nil,
-          relyingParty: TransactionLog.RelyingParty(
-            name: "Other Relaying Party",
-            isVerified: false,
-            certificateChain: [],
-            readerAuth: nil
-          ),
-          type: .presentation,
-          dataFormat: .json,
-          sessionTranscript: nil,
-          docMetadata: nil
-        ),
-        uiCulture: Locale.current.systemLanguageCode
-      )
+  static let eudiRemoteVerifierMock: TransactionLogDomain = .presentation(
+    .init(
+      id: "transactionId1",
+      time: Date(),
+      result: .completed,
+      party: .init(name: "EUDI Remote Verifier", identifier: nil, contacts: []),
+      intermediary: nil,
+      registration: nil,
+      claimsRequested: [
+        .init(
+          credential: .init(identifier: .mDocPid),
+          claims: [.init(segments: [.key(name: DocumentTypeIdentifier.mDocPid.rawValue), .key(name: "family_name")])]
+        )
+      ],
+      claimsPresented: [
+        .init(
+          credential: .init(identifier: .mDocPid),
+          claims: [.init(segments: [.key(name: DocumentTypeIdentifier.mDocPid.rawValue), .key(name: "family_name")])]
+        )
+      ]
+    )
+  )
+  
+  static let otherRelPartyMock: TransactionLogDomain = .presentation(
+    .init(
+      id: "transactionId2",
+      time: Date().addingTimeInterval(-3600),
+      result: .notCompleted(reason: "Some Error"),
+      party: .init(name: "Other Relaying Party", identifier: nil, contacts: []),
+      intermediary: nil,
+      registration: nil,
+      claimsRequested: [],
+      claimsPresented: []
     )
   )
   
@@ -342,6 +330,7 @@ extension Constants {
     relyingParty: "Relying Party",
     dataRequestInfo: "Data Request Info",
     isTrusted: true,
-    overaskedClaims: []
+    overaskedClaims: [],
+    transactionDataSets: []
   )
 }

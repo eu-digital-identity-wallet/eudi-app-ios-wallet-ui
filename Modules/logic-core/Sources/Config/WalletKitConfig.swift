@@ -17,6 +17,9 @@ import Foundation
 import logic_business
 import EudiWalletKit
 import EudiEtsi1196x2
+import MdocDataModel18013
+import struct OpenID4VP.SupportedTransactionDataType
+import struct OpenID4VP.TransactionDataType
 
 protocol WalletKitConfig: Sendable {
 
@@ -45,6 +48,14 @@ protocol WalletKitConfig: Sendable {
    * VP Configuration
    */
   var vpConfig: OpenId4VpConfiguration { get }
+
+  /**
+   * Transaction data types the wallet accepts in an OpenID4VP request.
+   *
+   * The OpenID4VP library rejects any request carrying `transaction_data` whose type is not
+   * listed here, so an empty list rejects every request with transaction data.
+   */
+  var supportedTransactionDataTypes: [SupportedTransactionDataType] { get }
 
   /**
    * Trust configuration: ETSI LoTE (List of Trusted Entities) trust sources,
@@ -86,6 +97,12 @@ protocol WalletKitConfig: Sendable {
    * Configuration for document issuance, including default rules and specific overrides.
    */
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
+
+  /**
+   * Provides the information used to display the wallet's Trust Mark and link to its
+   * certification page and the list of certified wallets.
+   */
+  var trustMarkSource: TrustMarkSource { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -237,8 +254,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
   var vpConfig: OpenId4VpConfiguration {
     .init(
       clientIdSchemes: [.x509SanDns, .x509Hash],
+      supportedTransactionDataTypes: supportedTransactionDataTypes,
       validateRegistrationCertificate: validateIssuerRegistrationCertificate
     )
+  }
+
+  var supportedTransactionDataTypes: [SupportedTransactionDataType] {
+    let types = [
+      TransactionDataTypeIdentifier.qesApproval.rawValue
+    ]
+    return [.default()] + types.compactMap {
+      try? SupportedTransactionDataType(type: TransactionDataType(value: $0))
+    }
   }
 
   var trustConfiguration: TrustConfiguration {
@@ -261,13 +288,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
       trustSource: .etsi(
         EtsiTrustSource(
           loteLocations: loteLocations,
-          contextTypeMappings: classifications
+          contextTypeMappings: classifications,
+          isRevocationEnabled: false
         )
       ),
       fallbackTrustSource: .staticList(
         StaticListTrustSource(rootCertificates: staticRootCertificates)
       ),
       defaultPolicy: .warning,
+      docTypePolicies: [
+        DocumentTypeIdentifier.mDocPid.rawValue: .enforce,
+        DocumentTypeIdentifier.sdJwtPid.rawValue: .enforce
+      ],
       requireSignedMetadata: true,
       statusTrustPolicy: .warning,
       wrprcVpTrustPolicy: .warning,
@@ -388,6 +420,16 @@ struct WalletKitConfigImpl: WalletKitConfig {
         )
       )
     }
+  }
+
+  var trustMarkSource: TrustMarkSource {
+    .static(
+      information: TrustMarkInformation(
+        trustMarkResourceURL: "https://gist.githubusercontent.com/sraptis-scy/025334375fe26177d9a7bcb60fd8a93f/raw/TrustMarkResource.json",
+        listOfCertifiedWalletsURL: "https://eidas.ec.europa.eu/efda/wallet/certified",
+        walletSolutionInfoPageURL: "https://eidas.ec.europa.eu/efda/wallet/certified?id=WALLET_SOLUTION_ID"
+      )
+    )
   }
 }
 

@@ -24,17 +24,13 @@ final actor WalletKitTransactionLogControllerImpl: TransactionLogger {
     self.transactionLogStorageController = transactionLogStorageController
   }
 
-  func log(transaction: MdocDataModel18013.TransactionLog) async throws {
-    do {
-
-      let jsonResultData = try JSONEncoder().encode(transaction.withPresenterName())
-      let value = try jsonResultData.toJSONString()
-
-      try await transactionLogStorageController.store(
-        .init(identifier: UUID().uuidString, value: value)
+  func log(transaction: TransactionEntry) async throws {
+    let stored = try? await transactionLogStorageController.retrieve(transaction.transactionIdentifier)
+    try await transactionLogStorageController.store(
+      transaction.toTransactionLogStorage(
+        parentPresentationId: stored?.parentPresentationId,
+        actionChannel: stored?.actionChannel.flatMap { TransactionActionChannel(rawValue: $0) }
       )
-    } catch {
-      throw error
-    }
+    )
   }
 }

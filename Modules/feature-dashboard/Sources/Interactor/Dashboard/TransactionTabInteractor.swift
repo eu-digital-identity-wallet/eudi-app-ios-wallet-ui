@@ -147,7 +147,7 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
       if let multipleGroup = filterGroup as? MultipleSelectionFilterGroup {
         switch multipleGroup.filterType {
         case .relyingParty:
-          return multipleGroup.copy(filters: addRelyingPartyName(transactions: transactions)) as any FilterGroup
+          return multipleGroup.copy(filters: addPartyNames(transactions: transactions)) as any FilterGroup
         default:
           return multipleGroup as any FilterGroup
         }
@@ -163,7 +163,7 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
     return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
       self.filtersStateAsync = continuation
       Task {
-        for try await state in filterValidator.getFilterResultStream() {
+        for await state in filterValidator.getFilterResultStream() {
           switch state {
           case .success(let filterResult):
             switch filterResult {
@@ -247,8 +247,8 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
               isDefault: true
             ),
             FilterItem(
-              id: FilterIds.FILTER_BY_STATUS_FAILED,
-              name: LocalizableStringKey.failed.toString,
+              id: FilterIds.FILTER_BY_STATUS_NOT_COMPLETED,
+              name: LocalizableStringKey.notCompleted.toString,
               selected: true,
               isDefault: true
             )
@@ -257,8 +257,8 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
             switch filter.id {
             case FilterIds.FILTER_BY_STATUS_COMPLETED:
               attribute.status == .completed
-            case FilterIds.FILTER_BY_STATUS_FAILED:
-              attribute.status == .failed
+            case FilterIds.FILTER_BY_STATUS_NOT_COMPLETED:
+              attribute.status == .notCompleted
             default:
               true
             }
@@ -266,16 +266,16 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
           filterType: .other
         ),
         MultipleSelectionFilterGroup(
-          id: FilterIds.FILTER_BY_RELYING_PARY_NAME,
-          name: LocalizableStringKey.relyingParty.toString,
+          id: FilterIds.FILTER_BY_PARTY_NAME,
+          name: LocalizableStringKey.filterByParty.toString,
           filters: [],
           filterableAction: FilterMultipleAction<TransactionFilterableAttributes>(predicate: { attribute, filter in
-            if filter.id == FilterIds.FILTER_BY_RELYING_PARTY_NONE {
-               return attribute.relyingPartyName == nil
+            if filter.id == FilterIds.FILTER_BY_PARTY_NONE {
+               return attribute.partyName == nil
             }
 
-            if attribute.relyingPartyName != nil {
-              return attribute.relyingPartyName == filter.name
+            if attribute.partyName != nil {
+              return attribute.partyName == filter.name
             }
 
             return false
@@ -299,6 +299,18 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
               isDefault: true
             ),
             FilterItem(
+              id: FilterIds.FILTER_BY_TYPE_REISSUANCE,
+              name: LocalizableStringKey.reissuance.toString,
+              selected: true,
+              isDefault: true
+            ),
+            FilterItem(
+              id: FilterIds.FILTER_BY_TYPE_DELETION,
+              name: LocalizableStringKey.deletion.toString,
+              selected: true,
+              isDefault: true
+            ),
+            FilterItem(
               id: FilterIds.FILTER_BY_TYPE_SIGNING,
               name: LocalizableStringKey.signing.toString,
               selected: true,
@@ -309,12 +321,16 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
             switch filter.id {
             case FilterIds.FILTER_BY_TYPE_PRESENTATION:
               attribute.transactionType == .presentation
-            case FilterIds.FILTER_BY_TYPE_SIGNING:
-              attribute.transactionType == .signing
             case FilterIds.FILTER_BY_TYPE_ISSUANCE:
               attribute.transactionType == .issuance
+            case FilterIds.FILTER_BY_TYPE_REISSUANCE:
+              attribute.transactionType == .reissuance
+            case FilterIds.FILTER_BY_TYPE_DELETION:
+              attribute.transactionType == .deletion
+            case FilterIds.FILTER_BY_TYPE_SIGNING:
+              attribute.transactionType == .signing
             default:
-              true
+              false
             }
           }),
           filterType: .other
@@ -340,7 +356,7 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
   }
 
   private func fetchFilteredTransactions() async throws -> FilterableList? {
-    let transactions: [TransactionLogItem]
+    let transactions: [TransactionLogDomain]
 
     do {
       transactions = try await self.walletKitController.fetchTransactionLogs()
@@ -358,47 +374,17 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
         return nil
       }
 
-      switch transaction.transactionLogData {
-      case .presentation(let logData):
-
-        var tags = [logData.relyingParty.name]
-
-        let relyingPartyTrimmed = logData.relyingParty.name.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        let credentials: [String] = logData.documents
-          .compactMap(\.displayName)
-
-        let credentialsTrimmed = credentials.map {
-          $0.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-
-        if !relyingPartyTrimmed.isEmpty {
-          tags.append(relyingPartyTrimmed)
-        }
-        if !credentials.isEmpty {
-          tags.append(contentsOf: credentials)
-        }
-        if !credentialsTrimmed.isEmpty {
-          tags.append(contentsOf: credentialsTrimmed)
-        }
-
-        return FilterableItem(
-          payload: transactionUi,
-          attributes: TransactionFilterableAttributes(
-            sortingKey: logData.relyingParty.name.lowercased(),
-            searchTags: tags,
-            status: logData.status.mapToTransactionStatus(),
-            creationDate: logData.timestamp,
-            relyingPartyName: logData.relyingParty.name,
-            transactionType: .presentation
-          )
+      return FilterableItem(
+        payload: transactionUi,
+        attributes: TransactionFilterableAttributes(
+          sortingKey: transactionUi.name.lowercased(),
+          searchTags: transaction.searchTags,
+          status: transactionUi.status,
+          creationDate: transaction.time,
+          partyName: transaction.partyName,
+          transactionType: transactionUi.transactionType
         )
-      case .issuance, .signing, .deletion:
-        // Unreachable in practice: transformToTransactionUI() above already
-        // returns nil for non-presentation log data, so this arm only exists to
-        // keep the switch exhaustive against TransactionLogData.
-        return nil
-      }
+      )
     }
 
     return !filterableItems.isEmpty ? FilterableList(items: filterableItems) : nil
@@ -432,28 +418,28 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
     return sections
   }
 
-  private func addRelyingPartyName(transactions: FilterableList) -> [FilterItem] {
-    let distinctRelyingPartyNames = transactions.items.compactMap {
-      ($0.attributes as? TransactionFilterableAttributes)?.relyingPartyName
+  private func addPartyNames(transactions: FilterableList) -> [FilterItem] {
+    let distinctPartyNames = transactions.items.compactMap {
+      ($0.attributes as? TransactionFilterableAttributes)?.partyName
     }.reduce(into: [String]()) { unique, element in
       if !unique.contains(element) {
         unique.append(element)
       }
     }
 
-    let filterItems = distinctRelyingPartyNames.map { relyingPartyName in
+    let filterItems = distinctPartyNames.map { partyName in
       return FilterItem(
-        id: relyingPartyName,
-        name: relyingPartyName,
+        id: partyName,
+        name: partyName,
         selected: true,
         isDefault: true
       )
-    }.sorted { $0.name < $1.name }
+    }.sorted { $0.name.lowercased() < $1.name.lowercased() }
 
     return [
       FilterItem(
-        id: FilterIds.FILTER_BY_RELYING_PARTY_NONE,
-        name: LocalizableStringKey.withoutRelyingName.toString,
+        id: FilterIds.FILTER_BY_PARTY_NONE,
+        name: LocalizableStringKey.withoutPartyName.toString,
         selected: true,
         isDefault: true
       )

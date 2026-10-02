@@ -22,7 +22,7 @@ public struct TransactionTabUIModel: Identifiable, Sendable, Equatable, Filterab
   public let id: String
   public let name: String
   public let status: TransactionStatus
-  public let transactionDate: String
+  public let transactionDate: Date
   public let transactionCategory: TransactionCategory
   public let transactionType: TransactionType
 
@@ -30,9 +30,7 @@ public struct TransactionTabUIModel: Identifiable, Sendable, Equatable, Filterab
     id: String,
     name: String,
     status: TransactionStatus,
-    transactionDate: String,
-    transactionCategory: TransactionCategory,
-    relyingPartyName: String? = nil,
+    transactionDate: Date,
     transactionType: TransactionType
   ) {
     self.id = id
@@ -60,20 +58,20 @@ public struct TransactionTabUIModel: Identifiable, Sendable, Equatable, Filterab
   }
 
   private func formattedTransactionDate() -> LocalizableStringKey {
-    Date.fromFormattedTransactionString(transactionDate)?.formattedForTransactionDisplay() ?? .custom(transactionDate)
+    transactionDate.formattedForTransactionDisplay()
   }
 }
 
 public enum TransactionStatus: Sendable, Equatable {
   case completed
-  case failed
+  case notCompleted
 
   var statusTitle: LocalizableStringKey {
     switch self {
     case .completed:
       return .completed
-    case .failed:
-      return .failed
+    case .notCompleted:
+      return .notCompleted
     }
   }
 }
@@ -81,8 +79,11 @@ public enum TransactionStatus: Sendable, Equatable {
 public enum TransactionType: Sendable, Equatable {
   case presentation
   case issuance
-  case signing
+  case reissuance
   case deletion
+  case signing
+  case dataDeletionRequest
+  case dpaReport
 
   var typeTitle: LocalizableStringKey {
     switch self {
@@ -90,39 +91,121 @@ public enum TransactionType: Sendable, Equatable {
       return .presentation
     case .issuance:
       return .issuance
-    case .signing:
-      return .signing
+    case .reissuance:
+      return .reissuance
     case .deletion:
       return .deletion
+    case .signing:
+      return .signing
+    case .dataDeletionRequest:
+      return .transactionTypeDataDeletionRequest
+    case .dpaReport:
+      return .transactionTypeDpaReport
     }
   }
 }
 
-extension TransactionLogItem {
+extension TransactionLogDomain {
+  var transactionType: TransactionType {
+    switch self {
+    case .presentation: .presentation
+    case .credentialIssuance: .issuance
+    case .credentialReissuance: .reissuance
+    case .credentialDeletion: .deletion
+    case .signingSealing: .signing
+    case .dataDeletionRequest: .dataDeletionRequest
+    case .dpaReport: .dpaReport
+    }
+  }
+
+  var transactionStatus: TransactionStatus {
+    result.mapToTransactionStatus()
+  }
+
+  var isVisibleInTransactionList: Bool {
+    switch self {
+    case .presentation, .credentialIssuance, .credentialReissuance, .credentialDeletion, .signingSealing:
+      true
+    case .dataDeletionRequest, .dpaReport:
+      false
+    }
+  }
+
+  var partyName: String? {
+    let name: String? = switch self {
+    case .presentation(let log): log.party.name
+    case .credentialIssuance(let log): log.details.issuer.name
+    case .credentialReissuance(let log): log.details.issuer.name
+    case .credentialDeletion(let log): log.issuer.name
+    case .signingSealing(let log): log.service.name
+    case .dataDeletionRequest(let log): log.party.name
+    case .dpaReport(let log): log.dpaName
+    }
+    return name?.nonBlank
+  }
+
+  var transactionTitle: String {
+    let name: String? = switch self {
+    case .presentation, .dataDeletionRequest, .dpaReport:
+      partyName
+    case .credentialIssuance(let log):
+      partyName ?? log.details.credentials.first?.identifier.rawValue
+    case .credentialReissuance(let log):
+      partyName ?? log.details.credentials.first?.identifier.rawValue
+    case .credentialDeletion(let log):
+      partyName ?? log.credential.identifier.rawValue
+    case .signingSealing(let log):
+      partyName ?? log.fileName?.nonBlank
+    }
+    return name ?? transactionType.typeTitle.toString
+  }
+
+  var searchTags: [String] {
+    let tags: [String?] = switch self {
+    case .presentation(let log):
+      [partyName, log.intermediary?.name]
+    case .signingSealing(let log):
+      [partyName, log.fileName]
+    case .credentialDeletion(let log):
+      [partyName, log.credential.identifier.rawValue]
+    case .credentialIssuance, .credentialReissuance:
+      [partyName]
+    case .dataDeletionRequest, .dpaReport:
+      []
+    }
+    return tags
+      .compactMap { $0?.nonBlank }
+      .reduce(into: [String]()) { unique, tag in
+        if !unique.contains(tag) { unique.append(tag) }
+      }
+  }
+
   func transformToTransactionUI() -> TransactionTabUIModel? {
-    switch self.transactionLogData {
-    case .presentation(let logData):
-      return .init(
-        id: self.id,
-        name: logData.relyingParty.name,
-        status: logData.status.mapToTransactionStatus(),
-        transactionDate: logData.timestamp.formattedAsDayMonthYearTime(),
-        transactionCategory: .category(for: logData.timestamp.formattedAsDayMonthYearTime()),
-        transactionType: .presentation
-      )
-    case .issuance, .signing, .deletion:
-      return nil
-    }
+    guard isVisibleInTransactionList else { return nil }
+    return .init(
+      id: id,
+      name: transactionTitle,
+      status: transactionStatus,
+      transactionDate: time,
+      transactionType: transactionType
+    )
   }
 }
 
-extension TransactionLog.Status {
+extension TransactionResultDomain {
   func mapToTransactionStatus() -> TransactionStatus {
     switch self {
     case .completed:
       return .completed
-    case .failed, .incomplete:
-      return .failed
+    case .notCompleted:
+      return .notCompleted
     }
+  }
+}
+
+private extension String {
+  var nonBlank: String? {
+    let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
+    return trimmed.isEmpty ? nil : trimmed
   }
 }

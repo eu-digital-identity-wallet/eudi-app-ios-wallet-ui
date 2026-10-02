@@ -78,13 +78,6 @@ public extension Date {
 
     return (startOfDay...endOfDay).contains(self)
   }
-
-  func formattedAsDayMonthYearTime() -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "d MMMM yyyy hh:mm a"
-    formatter.locale = Locale.current.userSelectedLocale
-    return formatter.string(from: self)
-  }
 }
 
 public extension Date {
@@ -95,12 +88,6 @@ public extension Date {
     formatter.locale = Locale.current.userSelectedLocale
     return formatter
   }()
-
-  func toLocal() -> Date {
-    let timeZone = TimeZone.current
-    let seconds = timeZone.secondsFromGMT(for: self)
-    return addingTimeInterval(TimeInterval(seconds))
-  }
 
   func isToday() -> Bool {
     let calendar = Calendar.current
@@ -113,14 +100,14 @@ public extension Date {
     let calendar = Calendar.current
     let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date()))!
     let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
-    return self.toLocal() >= startOfWeek && self.toLocal() < endOfWeek
+    return self >= startOfWeek && self < endOfWeek
   }
 
   func formattedMonthYear() -> String {
     let formatter = DateFormatter()
     formatter.dateFormat = "MMMM yyyy"
     formatter.locale = Locale.current.userSelectedLocale
-    return formatter.string(from: self.toLocal()).uppercased()
+    return formatter.string(from: self).uppercased()
   }
 
   var monthYearOrder: Int {

@@ -37,21 +37,41 @@ struct TransactionDetailsView<Router: RouterHost>: View {
     ) {
       TransactionDetailsViewContainer(
         state: viewModel.viewState,
-        onReportModal: viewModel.onReportModal,
-        onShowDeleteModal: viewModel.onShowDeleteModal
+        onReportModal: { viewModel.onReportModal() },
+        onRequestDataDeletion: { viewModel.onRequestDataDeletion() },
+        onPreviousActions: { viewModel.onPreviousActions($0) }
       )
     }
-    .task {
-      await viewModel.getTransactionDetails()
+    .alertView(
+      isPresented: $viewModel.isDeletionModalShowing,
+      title: .transactionDetailsDeleteTitle,
+      message: .transactionDetailsDeleteMessage,
+      actions: {
+        Button(.transactionDetailsDeleteButton, role: .destructive) {
+          viewModel.onDeleteTransaction()
+        }
+        .accessibilityElement()
+        .accessibilityIdentifier(TransactionDetailsLocators.confirmDialogDeleteButton.id)
+
+        Button(.cancelButton, role: .cancel) {}
+          .accessibilityElement()
+          .accessibilityIdentifier(TransactionDetailsLocators.confirmDialogCancelButton.id)
+      }
+    )
+    .onAppear {
+      Task { await viewModel.getTransactionDetails() }
     }
   }
 }
 
 private struct TransactionDetailsViewContainer: View {
 
+  @Environment(\.openURL) private var openURL
+
   let state: TransactionDetailsViewState
   let onReportModal: () -> Void
-  let onShowDeleteModal: () -> Void
+  let onRequestDataDeletion: () -> Void
+  let onPreviousActions: (TransactionDataProtectionAction) -> Void
 
   var body: some View {
     content()
@@ -70,65 +90,156 @@ private struct TransactionDetailsViewContainer: View {
           )
         }
 
-        if let transactionDetailsDataSharedList = state.transactionDetailsUi?.items, !transactionDetailsDataSharedList.isEmpty {
-          VStack(alignment: .leading, spacing: SPACING_SMALL) {
-            Text(.transactionDetailsDataShare)
-              .typography(Theme.shared.font.bodySmall)
-              .fontWeight(.semibold)
-              .foregroundStyle(Theme.shared.color.secondaryLabel)
-              .shimmer(isLoading: state.isLoading)
+        ForEach(state.transactionDetailsUi?.sections ?? []) { section in
+          sectionView(section)
+        }
 
-            ForEach(transactionDetailsDataSharedList) { item in
-              WrapExpandableListView(
-                header: .init(
-                  mainContent: .text(.custom(item.title)),
-                  supportingText: .viewDetails
-                ),
-                items: item.listItems,
-                backgroundColor: Theme.shared.color.groupedElevatedBackground,
-                hideSensitiveContent: false,
-                isLoading: state.isLoading
-              )
-            }
-          }
-          .zIndex(1)
-
-          VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-            VStack(alignment: .leading, spacing: SPACING_SMALL) {
-              Text(.transactionDetailsRequestDeletionMessage)
-                .font(Theme.shared.font.bodyLarge.font)
-                .foregroundStyle(Theme.shared.color.secondaryLabel)
-                .shimmer(isLoading: state.isLoading)
-
-              WrapButtonView(
-                style: .error,
-                title: .transactionDetailsRequestDeletionButton,
-                isLoading: state.isLoading,
-                isEnabled: false,
-                onAction: onShowDeleteModal()
-              )
-            }
-
-            VStack(alignment: .leading, spacing: SPACING_SMALL) {
-              Text(.transactionDetailsReportTransactionMessage)
-                .font(Theme.shared.font.bodyLarge.font)
-                .foregroundStyle(Theme.shared.color.secondaryLabel)
-                .shimmer(isLoading: state.isLoading)
-
-              WrapButtonView(
-                style: .secondary,
-                title: .transactionDetailsReportTransactionButton,
-                isLoading: state.isLoading,
-                isEnabled: false,
-                onAction: onShowDeleteModal()
-              )
-            }
-          }
-          .zIndex(0)
+        if let actions = state.transactionDetailsUi?.presentationActions {
+          presentationActions(actions)
         }
       }
       .padding(Theme.shared.dimension.padding)
       .padding(.bottom)
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func sectionView(_ section: TransactionDetailsSectionUi) -> some View {
+    VStack(alignment: .leading, spacing: SPACING_SMALL) {
+      Text(section.title)
+        .typography(Theme.shared.font.bodySmall)
+        .fontWeight(.semibold)
+        .foregroundStyle(Theme.shared.color.secondaryLabel)
+        .shimmer(isLoading: state.isLoading)
+
+      if section.isEmpty {
+        WrapCardView(backgroundColor: Theme.shared.color.groupedElevatedBackground) {
+          WrapListItemView(
+            listItem: .init(id: "\(section.id):empty", mainContent: .text(section.emptyText)),
+            mainTextVerticalPadding: SPACING_SMALL,
+            minHeight: false
+          )
+        }
+        .shimmer(isLoading: state.isLoading)
+      }
+
+      if !section.fields.isEmpty {
+        WrapCardView(backgroundColor: Theme.shared.color.groupedElevatedBackground) {
+          VStack(spacing: SPACING_SMALL) {
+            ForEach(section.fields) { field in
+              WrapListItemView(
+                listItem: field.listItem,
+                minHeight: false
+              ) {
+                if let url = field.url {
+                  openURL(url)
+                }
+              }
+            }
+          }
+        }
+        .shimmer(isLoading: state.isLoading)
+      }
+
+      ForEach(section.groups) { group in
+        WrapExpandableListView(
+          header: .init(
+            mainContent: .text(.custom(group.title)),
+            supportingText: .viewDetails
+          ),
+          items: group.listItems,
+          backgroundColor: Theme.shared.color.groupedElevatedBackground,
+          hideSensitiveContent: false,
+          isLoading: state.isLoading
+        )
+      }
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func presentationActions(_ actions: TransactionPresentationActionsUi) -> some View {
+    VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
+      actionSection(
+        title: .transactionDetailsRequestDeletionSection,
+        message: .transactionDetailsRequestDeletionMessage,
+        buttonStyle: .error,
+        buttonTitle: .transactionDetailsRequestDeletionButton,
+        isEnabled: !actions.deletionContacts.isEmpty,
+        previous: actions.dataDeletionRequests > 0
+          ? .transactionDetailsPreviousDeletionRequests([String(actions.dataDeletionRequests)])
+          : nil,
+        onAction: onRequestDataDeletion,
+        onPrevious: { onPreviousActions(.requestDataDeletion) }
+      )
+
+      actionSection(
+        title: .transactionDetailsReportSection,
+        message: .transactionDetailsReportTransactionMessage,
+        buttonStyle: .secondary,
+        buttonTitle: .transactionDetailsReportTransactionButton,
+        isEnabled: !actions.reportContacts.isEmpty,
+        previous: actions.dpaReports > 0
+          ? .transactionDetailsPreviousReports([String(actions.dpaReports)])
+          : nil,
+        onAction: onReportModal,
+        onPrevious: { onPreviousActions(.reportSuspiciousTransaction) }
+      )
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func actionSection(
+    title: LocalizableStringKey,
+    message: LocalizableStringKey,
+    buttonStyle: ButtonViewStyle,
+    buttonTitle: LocalizableStringKey,
+    isEnabled: Bool,
+    previous: LocalizableStringKey?,
+    onAction: @escaping () -> Void,
+    onPrevious: @escaping () -> Void
+  ) -> some View {
+    VStack(alignment: .leading, spacing: SPACING_MEDIUM_SMALL) {
+      Text(title)
+        .typography(Theme.shared.font.bodySmall)
+        .fontWeight(.semibold)
+        .foregroundStyle(Theme.shared.color.secondaryLabel)
+        .shimmer(isLoading: state.isLoading)
+
+      Text(message)
+        .typography(Theme.shared.font.bodyMedium)
+        .foregroundStyle(Theme.shared.color.primaryLabel)
+        .shimmer(isLoading: state.isLoading)
+
+      if let previous {
+        Button(action: onPrevious) {
+          HStack(spacing: SPACING_SMALL) {
+            Text(previous)
+              .typography(Theme.shared.font.bodyMedium)
+              .fontWeight(.medium)
+              .foregroundStyle(Theme.shared.color.accent)
+
+            Theme.shared.image.chevronRight
+              .renderingMode(.template)
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(width: 16, height: 16)
+              .foregroundStyle(Theme.shared.color.accent)
+          }
+        }
+        .disabled(state.isLoading)
+        .shimmer(isLoading: state.isLoading)
+      }
+
+      WrapButtonView(
+        style: buttonStyle,
+        title: buttonTitle,
+        isLoading: state.isLoading,
+        isEnabled: isEnabled,
+        onAction: onAction()
+      )
     }
   }
 }

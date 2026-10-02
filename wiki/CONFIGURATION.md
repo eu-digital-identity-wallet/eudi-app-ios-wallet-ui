@@ -12,6 +12,7 @@
 * [PIN throttle configuration](#pin-throttle-configuration)
 * [Analytics configuration](#analytics-configuration)
 * [Document Provider extension configuration](#document-provider-extension-configuration)
+* [Trust Mark configuration](#trust-mark-configuration)
 
 ## General configuration
 
@@ -170,13 +171,18 @@ The primary trust source is an ETSI LoTE (List of Trusted Entities) source that 
       trustSource: .etsi(
         EtsiTrustSource(
           loteLocations: loteLocations,
-          contextTypeMappings: classifications
+          contextTypeMappings: classifications,
+          isRevocationEnabled: false
         )
       ),
       fallbackTrustSource: .staticList(
         StaticListTrustSource(rootCertificates: staticRootCertificates)
       ),
       defaultPolicy: .warning,
+      docTypePolicies: [
+        DocumentTypeIdentifier.mDocPid.rawValue: .enforce,
+        DocumentTypeIdentifier.sdJwtPid.rawValue: .enforce
+      ],
       requireSignedMetadata: true,
       statusTrustPolicy: .warning,
       wrprcVpTrustPolicy: .warning,
@@ -197,6 +203,19 @@ The primary trust source is an ETSI LoTE (List of Trusted Entities) source that 
     ].compactMap { loadCertificate($0) }
   }
 ```
+
+**Document signer trust.** `defaultPolicy` applies to the certificate that signs each issued
+document, validated against the issuer trusted lists above. With `.enforce`, an issued document
+whose signer chain is not trusted is refused and not stored, and the issuance ends on the
+"Issuance blocked" alert. With `.warning`, the failure is only logged and the document is stored.
+`docTypePolicies` overrides the policy for specific doc types. A doc type with no verification
+context in either trust source cannot be validated, so under `.enforce` it is refused even when
+its issuer is legitimate. Map every doc type the wallet issues before enforcing.
+
+The app enforces signer trust for the PID only and warns for every other
+attestation: those doc types have no verification context, so enforcing them would refuse every
+EAA. `isRevocationEnabled: false` turns off PKIX revocation checks for the dev trust lists, as
+`relaxPkixRevocation()` does on Android; set it to `true` for production.
 
 **Two trust layers.** An access certificate (WRPAC) answers *who is this party*, a registration
 certificate (WRPRC) answers *what is it registered to do* — the registered identity, declared
@@ -301,9 +320,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
 Via the *RQESConfig* class, which implements the *EudiRQESUiConfig* protocol from the RQESUi SDK, inside the logic-business module.
 
-The SDK protocol defines four members. `rssps` and `printLogs` are required; `translations` and
-`theme` have SDK-provided default implementations, so the wallet may omit them (and the reference app
-does — it overrides neither):
+The SDK protocol defines five members. `rssps` and `printLogs` are required; `translations`, `theme`
+and `transactionLogger` have SDK-provided default implementations, so the wallet may omit them. The
+reference app overrides neither `translations` nor `theme`, and supplies `transactionLogger` so that
+signing transactions are recorded alongside the presentation and issuance ones:
 
 ```swift
 public protocol EudiRQESUiConfig: Sendable {
@@ -311,8 +331,12 @@ public protocol EudiRQESUiConfig: Sendable {
   var printLogs: Bool { get }                                    // Required.
   var translations: [String: [LocalizableKey: String]] { get }  // Optional — defaults to [:] (English).
   var theme: ThemeProtocol { get }                               // Optional — defaults to the SDK theme.
+  var transactionLogger: (any TransactionLogger)? { get }       // Optional — defaults to nil (no logging).
 }
 ```
+
+The SDK emits one signing transaction entry per signed document, stored or updated by its
+`transactionIdentifier`. Failures inside the logger never interrupt signing.
 
 Based on the Build Variant and Type of the Wallet (e.g., Dev Debug)
 
@@ -321,10 +345,16 @@ final class RQESConfig: EudiRQESUiConfig {
 
   let buildVariant: AppBuildVariant
   let buildType: AppBuildType
+  let transactionLogger: (any TransactionLogger)?
 
-  init(buildVariant: AppBuildVariant, buildType: AppBuildType) {
+  init(
+    buildVariant: AppBuildVariant,
+    buildType: AppBuildType,
+    transactionLogger: (any TransactionLogger)? = nil
+  ) {
     self.buildVariant = buildVariant
     self.buildType = buildType
+    self.transactionLogger = transactionLogger
   }
 
   var rssps: [QTSPData] {
@@ -403,6 +433,7 @@ production values for every config surface listed below.
 | Remote presentation ephemeral key handling | `WalletKitConfig.swift`, `WalletKitController.startRemotePresentation(...)`, WalletKit OpenID4VP integration | Ephemeral protocol key material must be generated per transaction, not reused across verifiers, and not persisted beyond the protocol flow. If WalletKit exposes a dedicated ephemeral key-storage option, configure it in the production integration and document the exact SDK API. |
 | Document issuance | `WalletKitConfig.swift` | Production credential policy, batch size, and reissuance thresholds. |
 | Revocation/status | `WalletKitConfig.swift` | Production status-check interval and failure behavior. |
+| Trust Mark | `WalletKitConfig.swift` (`trustMarkSource`) | Production Trust Mark resource URL, list of certified wallets URL, and the wallet's certification page URL. See [Trust Mark configuration](#trust-mark-configuration). |
 | RQES | `RQESConfig.swift` | Production QTSP/RSSP endpoint, TSA, client ID, redirect URI, hash policy, and logging policy. Do not hardcode production secrets. |
 | Deep links | `Wallet/Wallet.plist`, deep-link parsing code | Production URI schemes and strict validation. |
 | Entitlements | `EudiWallet.entitlements`, extension entitlements | Production App Groups, Keychain access groups, document-provider capabilities, and mobile document types. |
@@ -855,3 +886,52 @@ Registrations are reconciled against wallet storage after every operation that a
 - `SHARED_APP_GROUP_IDENTIFIER` is present for all extension configurations.
 - Main app and extension resolve to the same runtime keychain access group.
 - On iOS 26+, registered CBOR documents appear in the extension request flow.
+
+## Trust Mark configuration
+
+[`WalletKitConfig.trustMarkSource`](../Modules/logic-core/Sources/Config/WalletKitConfig.swift)
+selects how Trust Mark information is supplied. All build variants use this static default:
+
+```swift
+var trustMarkSource: TrustMarkSource {
+  .static(
+    information: TrustMarkInformation(
+      trustMarkResourceURL: "https://gist.githubusercontent.com/sraptis-scy/025334375fe26177d9a7bcb60fd8a93f/raw/TrustMarkResource.json",
+      listOfCertifiedWalletsURL: "https://eidas.ec.europa.eu/efda/wallet/certified",
+      walletSolutionInfoPageURL: "https://eidas.ec.europa.eu/efda/wallet/certified?id=WALLET_SOLUTION_ID"
+    )
+  )
+}
+```
+
+`WalletKitController` passes the configured source to `EudiWallet`:
+
+```swift
+EudiWallet(
+  eudiWalletConfig: EudiWalletConfiguration(
+    // ...
+  ),
+  trustConfig: walletKitConfig.trustConfiguration,
+  // ...
+  trustMarkSource: walletKitConfig.trustMarkSource
+)
+```
+
+To change the Trust Mark settings, return a different `trustMarkSource` from `WalletKitConfigImpl`,
+switching on `configLogic.appBuildVariant` when the values differ per variant. Use `.static` for
+predefined information, or `.dynamic(provider:)` with a `TrustMarkProvider` that supplies the
+information at runtime.
+
+WalletKit fetches JSON from `trustMarkResourceURL`. The Trust Mark screen displays the image from
+`image.url` above the localized text from the resource. A relative `image.url` is resolved against
+`trustMarkResourceURL`, and SVG images are supported.
+
+"EUDI Wallet Provider Trusted List" opens `listOfCertifiedWalletsURL` in the browser.
+"Certification information page" opens `walletSolutionInfoPageURL` in the browser.
+Both links include an external-link icon and are available in the introduction and About views.
+
+Static configuration does not bundle the resource or make it available offline. The configured
+Gist is a development sample and `WALLET_SOLUTION_ID` is a literal placeholder. Displaying the
+information does not verify certification, recognition, expiry, revocation or wallet instance
+attestation. See [Trust Mark deployment](GO_LIVE.md#trust-mark-deployment) before using a production
+configuration.

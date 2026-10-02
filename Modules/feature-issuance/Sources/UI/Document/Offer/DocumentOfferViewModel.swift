@@ -117,6 +117,16 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
         ).copy(error: nil)
       }
       isRegistrationBlockedAlertShowing = true
+    case .issuerNotTrusted:
+      setState {
+        $0.copy(
+          isLoading: false,
+          documentOfferUiModel: DocumentOfferUIModel.empty(),
+          allowIssue: false,
+          initialized: false
+        ).copy(error: nil)
+      }
+      isTrustBlockedAlertShowing = true
     case .failure(let error):
       setState {
         $0.copy(

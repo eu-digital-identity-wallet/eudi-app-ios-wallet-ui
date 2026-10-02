@@ -18,24 +18,6 @@ import logic_resources
 
 extension Date {
 
-  static let transactionDateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "dd MMMM yyyy HH:mm a"
-    formatter.locale = Locale.current.userSelectedLocale
-    return formatter
-  }()
-
-  static func date(from string: String) -> Date? {
-    return Date.transactionDateFormatter.date(from: string)
-  }
-
-  static func fromFormattedTransactionString(_ string: String) -> Date? {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "dd MMM yyyy hh:mm a"
-    formatter.locale = Locale.current.userSelectedLocale
-    return formatter.date(from: string)
-  }
-
   func formattedTimestamp() -> LocalizableStringKey {
     let formatter = DateFormatter()
     formatter.locale = Locale.current.userSelectedLocale

@@ -49,5 +49,13 @@ public final class FeatureCommonAssembly: Assembly {
       )
     }
     .inObjectScope(ObjectScope.transient)
+
+    container.register(TrustMarkInteractor.self) { r in
+      TrustMarkInteractorImpl(
+        walletKitTrustMarkController: r.force(WalletKitTrustMarkController.self),
+        prefsController: r.force(PrefsController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

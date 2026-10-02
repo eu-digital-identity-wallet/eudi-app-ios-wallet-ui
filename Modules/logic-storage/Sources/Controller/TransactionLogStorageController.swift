@@ -15,7 +15,9 @@
  */
 import Foundation
 
-public protocol TransactionLogStorageController: StorageController where Value == TransactionLog {}
+public protocol TransactionLogStorageController: StorageController where Value == TransactionLog {
+  func retrieve(parentPresentationId: String) async throws -> [TransactionLog]
+}
 
 final actor TransactionLogStorageControllerImpl: TransactionLogStorageController {
 
@@ -47,6 +49,11 @@ final actor TransactionLogStorageControllerImpl: TransactionLogStorageController
       throw StorageError.itemNotFound
     }
     return log
+  }
+
+  func retrieve(parentPresentationId: String) async throws -> [TransactionLog] {
+    try await swiftDataService.readAll(SDTransactionLog.self) { $0.toTransactionLog() }
+      .filter { $0.parentPresentationId == parentPresentationId }
   }
 
   func retrieveAll() async throws -> [TransactionLog] {

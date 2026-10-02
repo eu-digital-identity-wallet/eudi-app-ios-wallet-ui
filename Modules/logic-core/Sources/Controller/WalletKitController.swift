@@ -80,8 +80,12 @@ public protocol WalletKitController: Sendable {
   func storeBookmarkedDocument(with id: String) async throws
   func removeBookmarkedDocument(with id: String) async throws
 
-  func fetchTransactionLog(with id: String) async throws -> TransactionLogItem
-  func fetchTransactionLogs() async throws -> [TransactionLogItem]
+  func fetchTransactionLog(with id: String) async throws -> TransactionLogDomain
+  func fetchTransactionLogs() async throws -> [TransactionLogDomain]
+  func deleteTransactionLog(with id: String) async throws
+  func fetchPresentationActions(parentPresentationId: String) async throws -> [TransactionLogDomain]
+  func recordDataDeletionRequest(for presentation: TransactionLogDomain.Presentation, contactUrl: URL) async throws
+  func recordDpaReport(for presentation: TransactionLogDomain.Presentation, contactUrl: URL) async throws
 
   func isDocumentRevoked(with id: String) async -> Bool
   func fetchRevokedDocuments() async throws -> [String]
@@ -158,7 +162,8 @@ final actor WalletKitControllerImpl: WalletKitController {
       openID4VpConfig: walletKitConfig.vpConfig,
       openID4VciConfigurations: walletKitConfig.issuersConfig.mapValues { $0.config },
       networking: networkSessionProvider.urlSession,
-      transactionLogger: walletKitConfig.transactionLogger
+      transactionLogger: walletKitConfig.transactionLogger,
+      trustMarkSource: walletKitConfig.trustMarkSource
     ) else {
       fatalError("Unable to Initialize WalletKit")
     }
@@ -650,36 +655,90 @@ final actor WalletKitControllerImpl: WalletKitController {
     try await bookmarkStorageController.delete(id)
   }
 
-  func fetchTransactionLog(with id: String) async throws -> TransactionLogItem {
+  func fetchTransactionLog(with id: String) async throws -> TransactionLogDomain {
     guard
       let storedLog = try? await self.transactionLogStorageController.retrieve(id),
-      let item = try? storedLog.toTransactionLogItem(
-        id: storedLog.identifier,
-        parse: { self.wallet.parseTransactionLog($0) }
-      )
+      let log = storedLog.toTransactionLogDomain()
     else {
       throw WalletCoreError.unableToFetchTransactionLog
     }
-    return item
+    return log
   }
 
-  func fetchTransactionLogs() async throws -> [TransactionLogItem] {
+  func fetchTransactionLogs() async throws -> [TransactionLogDomain] {
     guard
       let storedLogs = try? await self.transactionLogStorageController.retrieveAll()
     else {
       throw WalletCoreError.unableToFetchTransactionLog
     }
-    return storedLogs.compactMap {
+    var logs: [TransactionLogDomain] = []
+    for storedLog in storedLogs {
+      guard let entry = storedLog.toTransactionEntry() else {
+        try? await self.transactionLogStorageController.delete(storedLog.identifier)
+        continue
+      }
       guard
-        let item = try? $0.toTransactionLogItem(
-          id: $0.identifier,
-          parse: { self.wallet.parseTransactionLog($0) }
+        let log = entry.toTransactionLogDomain(
+          id: storedLog.identifier,
+          parentPresentationId: storedLog.parentPresentationId
         )
       else {
-        return nil
+        continue
       }
-      return item
+      logs.append(log)
     }
+    return logs
+  }
+
+  func deleteTransactionLog(with id: String) async throws {
+    let actions = (try? await self.transactionLogStorageController.retrieve(parentPresentationId: id)) ?? []
+    for action in actions {
+      try await self.transactionLogStorageController.delete(action.identifier)
+    }
+    try await self.transactionLogStorageController.delete(id)
+  }
+
+  func fetchPresentationActions(parentPresentationId: String) async throws -> [TransactionLogDomain] {
+    let storedActions = try await self.transactionLogStorageController.retrieve(parentPresentationId: parentPresentationId)
+    return storedActions
+      .compactMap { $0.toTransactionLogDomain() }
+      .filter { $0.parentPresentationId == parentPresentationId }
+      .sorted { $0.time > $1.time }
+  }
+
+  func recordDataDeletionRequest(for presentation: TransactionLogDomain.Presentation, contactUrl: URL) async throws {
+    try await recordPresentationAction(
+      parentPresentationId: presentation.id,
+      entry: presentation.toDataDeletionRequestEntry(id: UUID().uuidString, time: Date()),
+      channel: TransactionActionChannel(url: contactUrl)
+    )
+  }
+
+  func recordDpaReport(for presentation: TransactionLogDomain.Presentation, contactUrl: URL) async throws {
+    try await recordPresentationAction(
+      parentPresentationId: presentation.id,
+      entry: presentation.toDpaReportEntry(id: UUID().uuidString, time: Date()),
+      channel: TransactionActionChannel(url: contactUrl)
+    )
+  }
+
+  private func recordPresentationAction(
+    parentPresentationId: String,
+    entry: TransactionEntry,
+    channel: TransactionActionChannel?
+  ) async throws {
+    guard
+      !parentPresentationId.isEmpty,
+      parentPresentationId != entry.transactionIdentifier,
+      let parent = try? await self.transactionLogStorageController.retrieve(parentPresentationId),
+      parent.parentPresentationId == nil,
+      case .presentation? = parent.toTransactionEntry()
+    else {
+      throw WalletCoreError.unableToRecordTransactionAction
+    }
+    try await self.transactionLogStorageController.store(
+      entry.toTransactionLogStorage(parentPresentationId: parentPresentationId, actionChannel: channel)
+    )
   }
 
   func fetchRevokedDocuments() async throws -> [String] {

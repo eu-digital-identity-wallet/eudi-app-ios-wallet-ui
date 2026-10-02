@@ -97,6 +97,28 @@ public final class DashboardRouter {
           transactionId: id
         )
       )
+    case .transactionAction(id: let id, action: let action):
+      TransactionActionView(
+        with: .init(
+          router: host,
+          interactor: DIGraph.shared.resolver.force(
+            TransactionDetailsInteractor.self
+          ),
+          transactionId: id,
+          action: action
+        )
+      )
+    case .transactionActionHistory(id: let id, action: let action):
+      TransactionActionHistoryView(
+        with: .init(
+          router: host,
+          interactor: DIGraph.shared.resolver.force(
+            TransactionDetailsInteractor.self
+          ),
+          transactionId: id,
+          action: action
+        )
+      )
     }
   }
 }

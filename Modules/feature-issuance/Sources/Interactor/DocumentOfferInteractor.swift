@@ -86,7 +86,7 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
       return .success(offer.transformToDocumentOfferUi(), issuerRegistration)
     } catch {
-      return .failure(error)
+      return error.isTrustBlocked ? .issuerNotTrusted : .failure(error)
     }
   }
 
@@ -324,6 +324,7 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
 public enum OfferRequestPartialState: Sendable {
   case success(DocumentOfferUIModel, IssuerRegistration?)
   case registrationBlocked(IssuerRegistration.BlockedReason)
+  case issuerNotTrusted
   case failure(Error)
 }
 

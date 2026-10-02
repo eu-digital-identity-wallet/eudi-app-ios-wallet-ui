@@ -61,9 +61,9 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   override func onShare() {
     Task {
 
-      let items = self.viewState.items
-
-      let result = await interactor.onResponsePrepare(requestItems: items)
+      let result = await interactor.onResponsePrepare(
+        combinationIndex: self.viewState.selectedCombinationIndex
+      )
 
       switch result {
       case .success:
@@ -114,6 +114,10 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   override func stopPresentation() async {
     await interactor.stopPresentation()
+  }
+
+  override func declineRequest() async {
+    await interactor.onDeclineRequest()
   }
 
   override func getRelyingParty() -> LocalizableStringKey {

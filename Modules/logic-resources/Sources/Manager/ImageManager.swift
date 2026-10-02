@@ -44,6 +44,9 @@ public protocol ImageManagerProtocol: Sendable {
   var checkMarkSealFill: Image { get }
   var photo: Image { get }
   var trash: Image { get }
+  var phone: Image { get }
+  var envelope: Image { get }
+  var link: Image { get }
   var viewFinder: Image { get }
   var clock: Image { get }
   var clockIndicator: Image { get }
@@ -112,6 +115,9 @@ final class ImageManager: ImageManagerProtocol {
     case checkMarkSealFill = "checkmark.seal.fill"
     case photo = "photo.fill"
     case trash = "trash"
+    case phone = "phone"
+    case envelope = "envelope"
+    case link = "link"
     case viewFinder = "viewfinder"
     case clock = "ic-clock"
     case clockIndicator = "clock.fill"
@@ -241,6 +247,15 @@ final class ImageManager: ImageManagerProtocol {
   }
   var trash: Image {
     Image(systemName: ImageEnum.trash.rawValue)
+  }
+  var phone: Image {
+    Image(systemName: ImageEnum.phone.rawValue)
+  }
+  var envelope: Image {
+    Image(systemName: ImageEnum.envelope.rawValue)
+  }
+  var link: Image {
+    Image(systemName: ImageEnum.link.rawValue)
   }
   var viewFinder: Image {
     Image(systemName: ImageEnum.viewFinder.rawValue)

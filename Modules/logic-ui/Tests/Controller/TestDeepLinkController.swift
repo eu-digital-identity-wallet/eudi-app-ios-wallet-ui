@@ -547,7 +547,8 @@ private extension TestDeepLinkController {
 
     func waitForDisconnect() async throws {}
     
-    var transactionLog: TransactionLog
+    var transactionLog: TransactionEntry
+    var transactionLogger: (any TransactionLogger)?
     
     func startQrEngagement(secureAreaName: String?, keyOptions: MdocDataModel18013.KeyOptions) async throws -> String {
       ""
@@ -562,11 +563,14 @@ private extension TestDeepLinkController {
     func sendResponse(userAccepted: Bool, itemsToSend: EudiWalletKit.RequestItems, deviceNameSpacesToSend: MdocDataTransfer18013.RequestDeviceNameSpaces?, authenticationContext: ThreadSafeAuthContext, onSuccess: (@Sendable (URL?) -> Void)?) async throws {}
   }
   
-  static let mockTransactionLog: TransactionLog = .init(
-    timestamp: .min,
-    status: .completed,
-    type: .presentation,
-    dataFormat: .cbor
+  static let mockTransactionLog: TransactionEntry = .presentation(
+    .init(
+      transactionIdentifier: "transactionId0",
+      time: Date(timeIntervalSince1970: 0),
+      transactionResult: .completed,
+      listOfClaimsRequested: [],
+      listOfClaimsPresented: []
+    )
   )
   
   static let mockStorageService: DataStorageService = KeyChainStorageService(

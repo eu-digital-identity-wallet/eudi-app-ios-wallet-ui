@@ -109,7 +109,7 @@ public struct WrapListItemView: View {
           case .text(let mainText):
             Text(mainText)
               .typography(Theme.shared.font.headlineMedium)
-              .foregroundStyle(Theme.shared.color.primaryLabel)
+              .foregroundStyle(listItem.mainTextColor)
               .fontWeight(listItem.mainStyle == .plain ? .medium : .bold)
               .lineLimit(nil)
               .multilineTextAlignment(.leading)

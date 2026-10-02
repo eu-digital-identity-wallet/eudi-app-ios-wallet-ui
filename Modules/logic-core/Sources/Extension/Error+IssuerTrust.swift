@@ -18,6 +18,7 @@ import EudiWalletKit
 import MdocSecurity18013
 import enum OpenID4VP.ValidationError
 import enum OpenID4VCI.WRPRCError
+import enum OpenID4VCI.CredentialIssuerMetadataError
 
 public extension Error {
 
@@ -31,7 +32,8 @@ public extension Error {
 
       if walletError.code == .trustError || walletError.code == .invalidWrprc { return true }
 
-      if let innerError = walletError.innerError, innerError.isRegistrationPolicyRejection {
+      if let innerError = walletError.innerError,
+         innerError.isRegistrationPolicyRejection || innerError.isIssuerMetadataTrustFailure {
         return true
       }
     }
@@ -49,6 +51,24 @@ private extension Error {
     guard let validationError = self as? ValidationError else { return false }
     if case .authorizationPolicyNotMet = validationError { return true }
     return false
+  }
+
+  var isIssuerMetadataTrustFailure: Bool {
+    guard let metadataError = self as? CredentialIssuerMetadataError else { return false }
+    switch metadataError {
+    case .invalidIssuerTrust,
+         .missingSignedMetadata,
+         .missingContentType,
+         .missingRightContentTypeHeader,
+         .invalidSignedMetadata,
+         .invalidJOSEHeader,
+         .invalidJWTClaims,
+         .nonParseableSignedMetadata,
+         .issuerMismatch:
+      return true
+    default:
+      return false
+    }
   }
 }
 

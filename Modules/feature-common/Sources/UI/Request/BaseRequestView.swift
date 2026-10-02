@@ -123,10 +123,12 @@ private struct BaseRequestViewContainer: View {
             .shimmer(isLoading: viewState.isLoading)
         }
 
-        if viewState.combinations.count > 1 {
-          combinationsContent()
-        } else {
-          singleCombinationContent()
+        titledSection(.requestRequestedDataTitle) {
+          if viewState.combinations.count > 1 {
+            combinationsContent()
+          } else {
+            singleCombinationContent()
+          }
         }
 
         VSpacer.medium()
@@ -204,16 +206,60 @@ private struct BaseRequestViewContainer: View {
     _ section: RequestDataUiModel,
     onItemClick: @escaping (String) -> Void
   ) -> some View {
+    VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+      WrapExpandableListView(
+        header: .init(
+          mainContent: .text(.custom(section.section.title)),
+          supportingText: .viewDetails
+        ),
+        items: section.section.listItems,
+        backgroundColor: Theme.shared.color.groupedElevatedBackground,
+        hideSensitiveContent: false,
+        isLoading: viewState.isLoading,
+        onItemClick: { onItemClick($0.groupId) }
+      )
+
+      if !section.transactionData.isEmpty {
+        titledSection(.requestTransactionDataSectionTitle) {
+          ForEach(section.transactionData) { transaction in
+            transactionDataSection(transaction)
+          }
+        }
+      }
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func titledSection<Content: View>(
+    _ title: LocalizableStringKey,
+    @ViewBuilder content: () -> Content
+  ) -> some View {
+    VStack(alignment: .leading, spacing: SPACING_SMALL) {
+      Text(title)
+        .typography(Theme.shared.font.bodyMedium)
+        .fontWeight(.semibold)
+        .foregroundColor(Theme.shared.color.primaryLabel)
+        .shimmer(isLoading: viewState.isLoading)
+
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+        content()
+      }
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func transactionDataSection(_ transaction: PresentationListItemSection) -> some View {
     WrapExpandableListView(
       header: .init(
-        mainContent: .text(.custom(section.section.title)),
+        mainContent: .text(.custom(transaction.title)),
         supportingText: .viewDetails
       ),
-      items: section.section.listItems,
+      items: transaction.listItems,
       backgroundColor: Theme.shared.color.groupedElevatedBackground,
       hideSensitiveContent: false,
-      isLoading: viewState.isLoading,
-      onItemClick: { onItemClick($0.groupId) }
+      isLoading: viewState.isLoading
     )
   }
 

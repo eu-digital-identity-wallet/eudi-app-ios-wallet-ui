@@ -49,19 +49,27 @@ public protocol PresentationInteractor: Sendable {
   func getSessionStatePublisher() async -> RemotePublisherPartialState
   func getCoordinator() async -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> PresentationRequestPartialState
-  func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>
+  func onResponsePrepare(combinationIndex: Int) async -> Result<RequestItemConvertible, Error>
   func onRequestReceived() async -> PresentationRequestPartialState
   func onSendResponse() async -> RemoteSentResponsePartialState
+  func onDeclineRequest() async
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) async
   func storeDynamicIssuancePendingUrl(with url: URL) async
   func stopPresentation() async
   func registrationForFailedRequest() async -> RelyingPartyRegistration?
 }
 
+private struct RequestCombination {
+  let elements: [DocElements]
+  let uiModels: [RequestDataUiModel]
+}
+
 final actor PresentationInteractorImpl: PresentationInteractor {
 
   private let sessionCoordinatorHolder: SessionCoordinatorHolder
   private let walletKitController: WalletKitController
+
+  private var requestedItemSets: [[DocElements]] = []
 
   init(
     with presentationCoordinator: RemoteSessionCoordinator,
@@ -105,18 +113,27 @@ final actor PresentationInteractorImpl: PresentationInteractor {
       let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
       let registrationPolicy = coordinator.relyingPartyRegistration
       let overaskedClaims = response.overaskedClaims
-      let combinations = response.itemSets
-        .map { documentSet in
-          documentSet.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
-        }
-        .map { documentSet -> [RequestDataUiModel] in
-          documentSet.toUiModels(
-            with: self.walletKitController,
-            claimsAreSelectable: false,
-            overaskedPaths: documentSet.overaskedPaths(from: overaskedClaims)
+      let transactionDataSets = response.transactionDataSets
+      let presentable = response.itemSets
+        .enumerated()
+        .map { index, documentSet in
+          let documentSet = documentSet.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
+          let transactionData = transactionDataSets.indices.contains(index) ? transactionDataSets[index] : [:]
+          return RequestCombination(
+            elements: documentSet,
+            uiModels: documentSet.toUiModels(
+              with: self.walletKitController,
+              claimsAreSelectable: false,
+              overaskedPaths: documentSet.overaskedPaths(from: overaskedClaims),
+              transactionData: transactionData
+            )
           )
         }
-        .filter { !$0.isEmpty }
+        .filter { !$0.uiModels.isEmpty }
+
+      self.requestedItemSets = presentable.map(\.elements)
+      let combinations = presentable.map(\.uiModels)
+
       return .success(
         .init(
           requestDataCombinations: combinations,
@@ -137,11 +154,15 @@ final actor PresentationInteractorImpl: PresentationInteractor {
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
+  public func onResponsePrepare(combinationIndex: Int) async -> Result<RequestItemConvertible, Error> {
 
-    let requestConvertible = requestItems.prepareRequest()
+    guard requestedItemSets.indices.contains(combinationIndex) else {
+      return .failure(PresentationSessionError.conversionToRequestItemModel)
+    }
 
-    guard requestConvertible.items.isEmpty == false else {
+    let requestConvertible = requestedItemSets[combinationIndex].items
+
+    guard requestConvertible.isEmpty == false else {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
@@ -173,6 +194,11 @@ final actor PresentationInteractorImpl: PresentationInteractor {
     } catch {
       return .failure(error)
     }
+  }
+
+  public func onDeclineRequest() async {
+    try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().declineResponse()
+    await stopPresentation()
   }
 
   public func storeDynamicIssuancePendingUrl(with url: URL) async {

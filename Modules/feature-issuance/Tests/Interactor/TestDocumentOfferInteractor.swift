@@ -789,6 +789,58 @@ final class TestDocumentOfferInteractor: EudiTest {
     XCTAssertEqual(mock.docOffers.count, 0)
   }
   
+  func testProcessOfferRequest_WhenTheIssuerMetadataIsNotTrusted_ThenReturnsIssuerNotTrusted() async {
+    // Given
+    let uri = "uri"
+    let error = WalletError(
+      description: "Unable to resolve credential offer: Credential issuer metadata is not issued by a trusted issuer",
+      code: .offerResolutionFailed,
+      innerError: CredentialIssuerMetadataError.invalidIssuerTrust
+    )
+    stub(walletKitController) { mock in
+      mock.resolveOfferUrlDocTypes(offerUri: uri).thenThrow(error)
+      mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
+    }
+
+    // When
+    let result = await interactor.processOfferRequest(with: uri)
+
+    // Then
+    switch result {
+    case .issuerNotTrusted:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Expected .issuerNotTrusted, got \(result)")
+    }
+  }
+
+  func testProcessOfferRequest_WhenTheIssuerIsUnreachable_ThenReturnsFailure() async {
+    // Given
+    let uri = "uri"
+    let error = WalletError(
+      description: "Unable to resolve credential offer",
+      code: .offerResolutionFailed,
+      innerError: CredentialIssuerMetadataError.unableToFetchCredentialIssuerMetadata(
+        cause: URLError(.notConnectedToInternet)
+      )
+    )
+    stub(walletKitController) { mock in
+      mock.resolveOfferUrlDocTypes(offerUri: uri).thenThrow(error)
+      mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
+    }
+
+    // When
+    let result = await interactor.processOfferRequest(with: uri)
+
+    // Then
+    switch result {
+    case .failure:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Expected failure, got \(result)")
+    }
+  }
+
   func testProcessOfferRequest_WhenTxCodeLengthOutOfRange_ThenReturnsTransactionCodeFormatFailure() async {
     // Given: an offer with txCodeSpec.length outside the 4...6 range hits the
     // failure branch in processOfferRequest (lines 59-63).

@@ -16,6 +16,7 @@
 import XCTest
 import EudiWalletKit
 import MdocSecurity18013
+import enum OpenID4VCI.CredentialIssuerMetadataError
 @testable import logic_core
 @testable import logic_test
 @testable import feature_test
@@ -38,6 +39,53 @@ final class TestErrorIssuerTrust: EudiTest {
     // `.notSecuredRequest` is a distinct code from `.trustError`; only `.trustError`
     // maps to an untrusted issuer.
     let error: Error = WalletError(description: "not secured", code: .notSecuredRequest)
+    XCTAssertFalse(error.isTrustBlocked)
+  }
+
+  // MARK: - Credential issuer metadata
+
+  func testIsIssuerNotTrusted_whenOfferResolutionFailedWithUntrustedMetadata_thenReturnsTrue() {
+    let error: Error = WalletError(
+      description: "Unable to resolve credential offer: Credential issuer metadata is not issued by a trusted issuer",
+      code: .offerResolutionFailed,
+      innerError: CredentialIssuerMetadataError.invalidIssuerTrust
+    )
+    XCTAssertTrue(error.isTrustBlocked)
+  }
+
+  func testIsIssuerNotTrusted_whenOfferResolutionFailedWithUnsignedMetadata_thenReturnsTrue() {
+    let error: Error = WalletError(
+      description: "Unable to resolve credential offer",
+      code: .offerResolutionFailed,
+      innerError: CredentialIssuerMetadataError.missingRightContentTypeHeader
+    )
+    XCTAssertTrue(error.isTrustBlocked)
+  }
+
+  func testIsIssuerNotTrusted_whenOfferResolutionFailedBecauseTheIssuerIsUnreachable_thenReturnsFalse() {
+    let error: Error = WalletError(
+      description: "Unable to resolve credential offer",
+      code: .offerResolutionFailed,
+      innerError: CredentialIssuerMetadataError.unableToFetchCredentialIssuerMetadata(
+        cause: URLError(.notConnectedToInternet)
+      )
+    )
+    XCTAssertFalse(error.isTrustBlocked)
+  }
+
+  func testIsIssuerNotTrusted_whenOfferResolutionFailedWithMalformedMetadata_thenReturnsFalse() {
+    let error: Error = WalletError(
+      description: "Unable to resolve credential offer",
+      code: .offerResolutionFailed,
+      innerError: CredentialIssuerMetadataError.nonParseableCredentialIssuerMetadata(
+        cause: URLError(.cannotParseResponse)
+      )
+    )
+    XCTAssertFalse(error.isTrustBlocked)
+  }
+
+  func testIsIssuerNotTrusted_whenOfferResolutionFailedWithoutAnInnerError_thenReturnsFalse() {
+    let error: Error = WalletError(description: "Unable to resolve credential offer", code: .offerResolutionFailed)
     XCTAssertFalse(error.isTrustBlocked)
   }
 

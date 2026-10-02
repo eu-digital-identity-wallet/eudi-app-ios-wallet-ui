@@ -15,6 +15,7 @@
  */
 import Foundation
 import EudiRQESUi
+import MdocDataModel18013
 
 public enum AppBuildType: String, Sendable {
   case RELEASE, DEBUG
@@ -64,6 +65,12 @@ public protocol ConfigLogic: Sendable {
 
 struct ConfigLogicImpl: ConfigLogic {
 
+  private let transactionLogger: (any TransactionLogger)?
+
+  init(transactionLogger: (any TransactionLogger)? = nil) {
+    self.transactionLogger = transactionLogger
+  }
+
   public var appBuildType: AppBuildType {
     getBuildType()
   }
@@ -77,7 +84,11 @@ struct ConfigLogicImpl: ConfigLogic {
   }
 
   public var rqesConfig: EudiRQESUiConfig {
-    RQESConfig(buildVariant: appBuildVariant, buildType: appBuildType)
+    RQESConfig(
+      buildVariant: appBuildVariant,
+      buildType: appBuildType,
+      transactionLogger: transactionLogger
+    )
   }
 
   public var changelogUrl: URL? {

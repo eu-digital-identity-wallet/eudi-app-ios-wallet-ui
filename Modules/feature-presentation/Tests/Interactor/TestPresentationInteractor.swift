@@ -395,12 +395,14 @@ final class TestPresentationInteractor: EudiTest {
     // Given
     let expectedRequestItems = Self.mockRequestItems
 
+    await stubReceivedRequest()
+
     stub(presentationCoordinator) { mock in
       when(mock.setState(presentationState: any())).thenDoNothing()
     }
 
     // When
-    let state = await interactor.onResponsePrepare(requestItems: Self.mockUiModels())
+    let state = await interactor.onResponsePrepare(combinationIndex: 0)
 
     // Then
     switch state {
@@ -417,6 +419,8 @@ final class TestPresentationInteractor: EudiTest {
     // Given
     let expectedError = PresentationSessionError.invalidState
 
+    await stubReceivedRequest()
+
     stub(presentationCoordinator) { mock in
       when(mock.setState(presentationState: any())).thenDoNothing()
     }
@@ -426,7 +430,7 @@ final class TestPresentationInteractor: EudiTest {
     }
 
     // When
-    let state = await interactor.onResponsePrepare(requestItems: Self.mockUiModels())
+    let state = await interactor.onResponsePrepare(combinationIndex: 0)
 
     // Then
     switch state {
@@ -437,12 +441,14 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
-  func testOnResponsePrepare_WhenRequestItemsMissingDataOrVerificationRows_ThenReturnsFailureWithConversionError() async {
+  func testOnResponsePrepare_WhenTheCombinationIndexIsOutOfRange_ThenReturnsFailureWithConversionError() async {
     // Given
     let expectedError = PresentationSessionError.conversionToRequestItemModel
 
+    await stubReceivedRequest()
+
     // When
-    let state = await interactor.onResponsePrepare(requestItems: Self.mockUiModels().dropLast())
+    let state = await interactor.onResponsePrepare(combinationIndex: 1)
 
     // Then
     switch state {
@@ -688,6 +694,38 @@ private extension TestPresentationInteractor {
       ]
     ]
   ]
+
+  func stubReceivedRequest() async {
+    stub(presentationCoordinator) { mock in
+      when(mock.requestReceived()).thenReturn(Self.mockPresentationRequest)
+    }
+    stubFetchRevokedDocuments(with: [])
+    stub(walletKitController) { mock in
+      when(
+        mock.parseDocClaim(
+          docId: any(),
+          groupId: any(),
+          docClaim: any(),
+          type: any(),
+          parser: any()
+        )
+      ).thenReturn(
+        [
+          .primitive(
+            id: Constants.randomIdentifier,
+            title: "elementIdentifier",
+            documentId: Constants.isoMdlModelId,
+            nameSpace: "nameSpace",
+            path: ["nameSpace", "elementIdentifier"],
+            type: .mdoc,
+            value: .string("value"),
+            status: .available(isRequired: false)
+          )
+        ]
+      )
+    }
+    _ = await interactor.onRequestReceived()
+  }
 
   func stubFetchRevokedDocuments(with revokedDocuments: [String]) {
     stub(walletKitController) { mock in

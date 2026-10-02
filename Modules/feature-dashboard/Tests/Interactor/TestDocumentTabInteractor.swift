@@ -372,7 +372,7 @@ final class TestDocumentTabInteractor: EudiTest {
     
     // Then
     Task {
-      for try await result in resultStream {
+      for await result in resultStream {
         results.append(result)
       }
       

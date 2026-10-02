@@ -1,116 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "relying_party_overasked_warning" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Warning: Some of the requested data are not registered with this interacting party. Review carefully before sharing your data."
-          }
-        }
-      }
-    },
-    "not_registered_data" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not registered data"
-          }
-        }
-      }
-    },
-    "issuance_registration_blocked_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Issuance blocked"
-          }
-        }
-      }
-    },
-    "issuance_registration_blocked_message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This issuance request has been blocked because the provider is not registered for it.\n\nNo document has been added to your Wallet."
-          }
-        }
-      }
-    },
-    "continue_button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue"
-          }
-        }
-      }
-    },
-    "understand_risks_agree" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I understand the risks and agree to share my data"
-          }
-        }
-      }
-    },
-    "relying_party_not_verified_warning" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Warning: The information registered about the entity could not be obtained. Review carefully before sharing your data."
-          }
-        }
-      }
-    },
-    "intended_use" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intended use"
-          }
-        }
-      }
-    },
-    "privacy_policy" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Privacy policy"
-          }
-        }
-      }
-    },
-    "relying_party_id" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(ID: %@)"
-          }
-        }
-      }
-    },
     "add_doc" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -239,39 +129,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Authenticate, authorise transactions and share your digital documents in person or online."
-          }
-        }
-      }
-    },
-    "restart_required_message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Restart the app to apply this change"
-          }
-        }
-      }
-    },
-    "restart_required_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Restart required"
-          }
-        }
-      }
-    },
-    "validate_issuer_registration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check Registration Certificates"
           }
         }
       }
@@ -540,6 +397,17 @@
         }
       }
     },
+    "continue_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        }
+      }
+    },
     "data_shared" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -716,17 +584,6 @@
         }
       }
     },
-    "document_details_expires_on" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Expires on: %@"
-          }
-        }
-      }
-    },
     "document_details_expired_on" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -734,6 +591,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Expired on: %@"
+          }
+        }
+      }
+    },
+    "document_details_expires_on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expires on: %@"
           }
         }
       }
@@ -756,6 +624,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Issued on: %@"
+          }
+        }
+      }
+    },
+    "document_details_issuer_card_expired_message_text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This document has expired. You may reissue it."
           }
         }
       }
@@ -789,17 +668,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This document cannot be used for verification."
-          }
-        }
-      }
-    },
-    "document_details_issuer_card_expired_message_text" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This document has expired. You may reissue it."
           }
         }
       }
@@ -1093,6 +961,17 @@
         }
       }
     },
+    "filter_by_party" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relying Party"
+          }
+        }
+      }
+    },
     "filter_by_state" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1166,6 +1045,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ISSUER DETAILS"
+          }
+        }
+      }
+    },
+    "hide_details" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide details"
           }
         }
       }
@@ -1247,6 +1137,17 @@
         }
       }
     },
+    "intended_use" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intended use"
+          }
+        }
+      }
+    },
     "invalid_quick_pin" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1269,13 +1170,13 @@
         }
       }
     },
-    "issuance_blocked_bottom_sheet_title" : {
+    "issuance_add_document_no_options" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Issuance blocked"
+            "value" : "No available documents"
           }
         }
       }
@@ -1291,35 +1192,13 @@
         }
       }
     },
-    "request_blocked_bottom_sheet_title" : {
+    "issuance_blocked_bottom_sheet_title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Presentation blocked"
-          }
-        }
-      }
-    },
-    "request_blocked_bottom_sheet_message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This presentation request has been blocked because the relying party could not be verified by your Wallet.\n\nYour personal information or other data has not been shared with this relying party."
-          }
-        }
-      }
-    },
-    "issuance_add_document_no_options" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No available documents"
+            "value" : "Issuance blocked"
           }
         }
       }
@@ -1379,13 +1258,24 @@
         }
       }
     },
-    "issuance_request_title" : {
+    "issuance_registration_blocked_message" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Issuance request"
+            "value" : "This issuance request has been blocked because the provider is not registered for it.\n\nNo document has been added to your Wallet."
+          }
+        }
+      }
+    },
+    "issuance_registration_blocked_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuance blocked"
           }
         }
       }
@@ -1397,6 +1287,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ISSUANCE REQUEST"
+          }
+        }
+      }
+    },
+    "issuance_request_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuance request"
           }
         }
       }
@@ -1668,6 +1569,28 @@
         }
       }
     },
+    "not_completed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not completed"
+          }
+        }
+      }
+    },
+    "not_registered_data" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not registered data"
+          }
+        }
+      }
+    },
     "ok_button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1763,6 +1686,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Presentation"
+          }
+        }
+      }
+    },
+    "privacy_policy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy policy"
           }
         }
       }
@@ -2053,6 +1987,17 @@
         }
       }
     },
+    "reissuance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Re-issuance"
+          }
+        }
+      }
+    },
     "relying_party" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2060,6 +2005,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Relying Party"
+          }
+        }
+      }
+    },
+    "relying_party_id" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(ID: %@)"
+          }
+        }
+      }
+    },
+    "relying_party_not_verified_warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warning: The information registered about the entity could not be obtained. Review carefully before sharing your data."
+          }
+        }
+      }
+    },
+    "relying_party_overasked_warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warning: Some of the requested data are not registered with this interacting party. Review carefully before sharing your data."
           }
         }
       }
@@ -2093,6 +2071,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The document was successfully removed from your favorite list"
+          }
+        }
+      }
+    },
+    "request_blocked_bottom_sheet_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This presentation request has been blocked because the relying party could not be verified by your Wallet.\n\nYour personal information or other data has not been shared with this relying party."
+          }
+        }
+      }
+    },
+    "request_blocked_bottom_sheet_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation blocked"
           }
         }
       }
@@ -2185,6 +2185,182 @@
         }
       }
     },
+    "request_requested_data_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Requested data"
+          }
+        }
+      }
+    },
+    "request_transaction_data_document" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        }
+      }
+    },
+    "request_transaction_data_hash" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hash"
+          }
+        }
+      }
+    },
+    "request_transaction_data_hash_algorithm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hash algorithm"
+          }
+        }
+      }
+    },
+    "request_transaction_data_hash_representation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hash representation"
+          }
+        }
+      }
+    },
+    "request_transaction_data_number_of_signatures" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number of signatures"
+          }
+        }
+      }
+    },
+    "request_transaction_data_requested_credentials" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Requested credentials"
+          }
+        }
+      }
+    },
+    "request_transaction_data_section_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data to be signed"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signature_details" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signature details"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signing_credential_id" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signing credential ID"
+          }
+        }
+      }
+    },
+    "request_transaction_data_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transaction to authorize"
+          }
+        }
+      }
+    },
+    "request_transaction_data_trust_framework" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trust framework"
+          }
+        }
+      }
+    },
+    "request_transaction_data_type" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transaction type"
+          }
+        }
+      }
+    },
+    "request_transaction_data_type_qes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "QES approval"
+          }
+        }
+      }
+    },
+    "request_transaction_data_typed_hash" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ hash"
+          }
+        }
+      }
+    },
+    "request_transaction_data_typed_hash_algorithm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ hash algorithm"
+          }
+        }
+      }
+    },
     "requests_the_following" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2214,6 +2390,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reset dates"
+          }
+        }
+      }
+    },
+    "restart_required_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart the app to apply this change"
+          }
+        }
+      }
+    },
+    "restart_required_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart required"
           }
         }
       }
@@ -2581,6 +2779,248 @@
         }
       }
     },
+    "transaction_action_authority_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Responsible data protection authority"
+          }
+        }
+      }
+    },
+    "transaction_action_call" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Call"
+          }
+        }
+      }
+    },
+    "transaction_action_continue_email" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue to email"
+          }
+        }
+      }
+    },
+    "transaction_action_continue_phone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Call %@"
+          }
+        }
+      }
+    },
+    "transaction_action_continue_website" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue to %@’s website"
+          }
+        }
+      }
+    },
+    "transaction_action_deletion_intro_email" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’re about to leave the wallet and open an email to %@, where you can request deletion of the data you shared."
+          }
+        }
+      }
+    },
+    "transaction_action_deletion_intro_phone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’re about to leave the wallet and call %@, where you can request deletion of the data you shared."
+          }
+        }
+      }
+    },
+    "transaction_action_deletion_intro_website" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You’re about to leave the wallet and go to %@’s website, where you can fill in a form to request deletion of the data you shared."
+          }
+        }
+      }
+    },
+    "transaction_action_deletion_legal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ may still be required to keep some of your data for legal reasons, even after your request. Any updates on the outcome will come from %@ directly, not the wallet."
+          }
+        }
+      }
+    },
+    "transaction_action_deletion_notice_bold" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The wallet doesn’t send or manage this request for you."
+          }
+        }
+      }
+    },
+    "transaction_action_deletion_notice_email" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Once the email is open, it’s up to you to complete and send it."
+          }
+        }
+      }
+    },
+    "transaction_action_deletion_notice_phone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Once you are on the call, it’s up to you to make the request."
+          }
+        }
+      }
+    },
+    "transaction_action_deletion_notice_website" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Once you’re on the form, it’s up to you to complete and submit it."
+          }
+        }
+      }
+    },
+    "transaction_action_deletion_screen_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before you continue"
+          }
+        }
+      }
+    },
+    "transaction_action_open_email" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open email"
+          }
+        }
+      }
+    },
+    "transaction_action_report_follow_up" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You will need to describe the transaction yourself. Any follow-up on the outcome will come from %@ directly, not the wallet."
+          }
+        }
+      }
+    },
+    "transaction_action_report_follow_up_no_authority" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You will need to describe the transaction yourself. Any follow-up on the outcome will come from the data protection authority directly, not the wallet."
+          }
+        }
+      }
+    },
+    "transaction_action_report_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To report this transaction, contact %@ directly, using whichever method works best for you below."
+          }
+        }
+      }
+    },
+    "transaction_action_report_message_bold" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The wallet doesn’t submit or track this report."
+          }
+        }
+      }
+    },
+    "transaction_action_report_message_no_authority" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To report this transaction, contact the data protection authority directly, using whichever method works best for you below."
+          }
+        }
+      }
+    },
+    "transaction_action_report_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Initiate transaction report"
+          }
+        }
+      }
+    },
+    "transaction_action_visit_website" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visit website"
+          }
+        }
+      }
+    },
     "transaction_code_format_error" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2603,6 +3043,72 @@
         }
       }
     },
+    "transaction_details_action_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The action could not be recorded. Please try again."
+          }
+        }
+      }
+    },
+    "transaction_details_action_open_failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This contact could not be opened. Retry to open it again, or cancel to return to the transaction."
+          }
+        }
+      }
+    },
+    "transaction_details_action_unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This action is unavailable. No suitable contact or shared data was recorded for it."
+          }
+        }
+      }
+    },
+    "transaction_details_authority_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data protection authority"
+          }
+        }
+      }
+    },
+    "transaction_details_bytes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ bytes"
+          }
+        }
+      }
+    },
+    "transaction_details_certificate_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Certificate serial number"
+          }
+        }
+      }
+    },
     "transaction_details_completed" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2610,6 +3116,61 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Completed"
+          }
+        }
+      }
+    },
+    "transaction_details_contact_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contact"
+          }
+        }
+      }
+    },
+    "transaction_details_credentials_issued_section" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CREDENTIALS ISSUED"
+          }
+        }
+      }
+    },
+    "transaction_details_credentials_section" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CREDENTIALS"
+          }
+        }
+      }
+    },
+    "transaction_details_data_deletion_section" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DATA REQUESTED FOR DELETION"
+          }
+        }
+      }
+    },
+    "transaction_details_data_requested" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DATA REQUESTED"
           }
         }
       }
@@ -2636,13 +3197,90 @@
         }
       }
     },
+    "transaction_details_delete_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "transaction_details_delete_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The transaction could not be deleted. Please try again."
+          }
+        }
+      }
+    },
+    "transaction_details_delete_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This transaction record will be permanently deleted from your wallet. Losing this record may make it harder to exercise your data protection rights, including requesting data deletion or reporting misuse."
+          }
+        }
+      }
+    },
+    "transaction_details_delete_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete transaction?"
+          }
+        }
+      }
+    },
+    "transaction_details_deletion_email_body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I request the erasure of all personal data shared with the relying party in the transaction below, under Article 17 of the GDPR.\n\nRelying party:\n%@\n\nTransaction date: %@\n\nPlease let me know how to complete this request."
+          }
+        }
+      }
+    },
+    "transaction_details_deletion_email_subject" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personal data erasure request under Article 17 — %@"
+          }
+        }
+      }
+    },
+    "transaction_details_digest_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed digest"
+          }
+        }
+      }
+    },
     "transaction_details_eequest_deletion_button" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Request data deletion"
+            "value" : "Initiate deletion request"
           }
         }
       }
@@ -2653,7 +3291,293 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can request to stop processing personal data linked to this transaction. This may affect your access to services."
+            "value" : "You can request to stop this relying party from processing your personal data linked to this transaction. However, this may affect your access to services."
+          }
+        }
+      }
+    },
+    "transaction_details_filename_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File name"
+          }
+        }
+      }
+    },
+    "transaction_details_filesize_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File size"
+          }
+        }
+      }
+    },
+    "transaction_details_identifier_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identifier"
+          }
+        }
+      }
+    },
+    "transaction_details_identifier_scheme_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identifier scheme"
+          }
+        }
+      }
+    },
+    "transaction_details_intermediary_contact_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intermediary contact"
+          }
+        }
+      }
+    },
+    "transaction_details_intermediary_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intermediary"
+          }
+        }
+      }
+    },
+    "transaction_details_intermediary_name_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intermediary name"
+          }
+        }
+      }
+    },
+    "transaction_details_issuance_section" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISSUANCE"
+          }
+        }
+      }
+    },
+    "transaction_details_issued_count" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ of %@ issued"
+          }
+        }
+      }
+    },
+    "transaction_details_issued_count_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Credentials issued"
+          }
+        }
+      }
+    },
+    "transaction_details_issuer_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuer"
+          }
+        }
+      }
+    },
+    "transaction_details_issuer_type_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issuer type"
+          }
+        }
+      }
+    },
+    "transaction_details_no_claims" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No attributes recorded"
+          }
+        }
+      }
+    },
+    "transaction_details_no_data_requested" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No data requested"
+          }
+        }
+      }
+    },
+    "transaction_details_no_data_shared" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No data shared"
+          }
+        }
+      }
+    },
+    "transaction_details_no_information" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No information recorded"
+          }
+        }
+      }
+    },
+    "transaction_details_previous_deletion_requests" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View previous data deletion requests (%@)"
+          }
+        }
+      }
+    },
+    "transaction_details_previous_reports" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View previous transaction reports (%@)"
+          }
+        }
+      }
+    },
+    "transaction_details_privacy_policy_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy policy"
+          }
+        }
+      }
+    },
+    "transaction_details_purpose_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intended use"
+          }
+        }
+      }
+    },
+    "transaction_details_registrar_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrar"
+          }
+        }
+      }
+    },
+    "transaction_details_relying_party_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relying party"
+          }
+        }
+      }
+    },
+    "transaction_details_renewed_by_wallet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Wallet"
+          }
+        }
+      }
+    },
+    "transaction_details_report_email_body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I would like to report a potentially unlawful or suspicious request for personal data from the relying party identified below.\n\nRelying party:\n%@\n\nTransaction date: %@\n\nPlease investigate this request. I can provide further details about my concerns."
+          }
+        }
+      }
+    },
+    "transaction_details_report_email_subject" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Report of a potentially unlawful or suspicious data request — %@"
+          }
+        }
+      }
+    },
+    "transaction_details_report_section" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "REPORT THIS TRANSACTION"
           }
         }
       }
@@ -2664,7 +3588,40 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If you believe this relying party has unlawfully requested personal data, you can report this transaction to the authorities. "
+            "value" : "If you believe this Relying Party has unlawfully requested your personal data, you can report it to the relevant Member State’s data protection authority."
+          }
+        }
+      }
+    },
+    "transaction_details_request_deletion_section" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "REQUEST DATA DELETION"
+          }
+        }
+      }
+    },
+    "transaction_details_requested_by_you" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wallet holder"
+          }
+        }
+      }
+    },
+    "transaction_details_requested_count_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Credentials requested"
           }
         }
       }
@@ -2680,13 +3637,178 @@
         }
       }
     },
+    "transaction_details_signing_identifier_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signing transaction identifier"
+          }
+        }
+      }
+    },
+    "transaction_details_signing_service_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signing service"
+          }
+        }
+      }
+    },
+    "transaction_details_technical_section" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TECHNICAL DETAILS"
+          }
+        }
+      }
+    },
+    "transaction_details_trigger_label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Initiated by"
+          }
+        }
+      }
+    },
+    "transaction_details_unknown_claim" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attribute identifier unavailable"
+          }
+        }
+      }
+    },
     "transaction_detailsReport_transaction_button" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Report suspicious transaction"
+            "value" : "Initiate transaction report"
+          }
+        }
+      }
+    },
+    "transaction_history_channel_email" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
+          }
+        }
+      }
+    },
+    "transaction_history_channel_other" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other method"
+          }
+        }
+      }
+    },
+    "transaction_history_channel_phone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phone"
+          }
+        }
+      }
+    },
+    "transaction_history_channel_website" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Website"
+          }
+        }
+      }
+    },
+    "transaction_history_deletion_disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data deletion requests are completed outside the Wallet; therefore their final outcome cannot be tracked."
+          }
+        }
+      }
+    },
+    "transaction_history_deletion_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have previously attempted to initiate a data deletion request with this Relying Party via the following methods:"
+          }
+        }
+      }
+    },
+    "transaction_history_deletion_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous data deletion requests for %@"
+          }
+        }
+      }
+    },
+    "transaction_history_report_disclaimer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transaction reports are completed outside the Wallet; therefore their final outcome cannot be tracked."
+          }
+        }
+      }
+    },
+    "transaction_history_report_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have previously attempted to initiate a transaction report with the responsible data protection authority via the following methods:"
+          }
+        }
+      }
+    },
+    "transaction_history_report_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous transaction reports for %@"
           }
         }
       }
@@ -2698,6 +3820,160 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Transaction information"
+          }
+        }
+      }
+    },
+    "transaction_type_data_deletion_request" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data Deletion Requests"
+          }
+        }
+      }
+    },
+    "transaction_type_dpa_report" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suspicious Transaction Reports"
+          }
+        }
+      }
+    },
+    "trust_mark_about_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About EUDI Wallet"
+          }
+        }
+      }
+    },
+    "trust_mark_browser_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to open this link."
+          }
+        }
+      }
+    },
+    "trust_mark_certification_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This wallet application has been certified conformant with the EUDI Wallet’s security and privacy requirements and is part of the %@."
+          }
+        }
+      }
+    },
+    "trust_mark_certification_information_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See the %@ for detailed certification information of this wallet."
+          }
+        }
+      }
+    },
+    "trust_mark_certification_information_link" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Certification information page"
+          }
+        }
+      }
+    },
+    "trust_mark_certified_wallets_link" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EUDI Wallet Provider Trusted List"
+          }
+        }
+      }
+    },
+    "trust_mark_image_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EUDI Wallet Trust Mark"
+          }
+        }
+      }
+    },
+    "trust_mark_image_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to load the Trust Mark image."
+          }
+        }
+      }
+    },
+    "trust_mark_load_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to load Trust Mark information. Please try again."
+          }
+        }
+      }
+    },
+    "trust_mark_loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading Trust Mark information…"
+          }
+        }
+      }
+    },
+    "trust_mark_wallet_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EU Digital Identity Wallet"
+          }
+        }
+      }
+    },
+    "trust_mark_welcome_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to the"
           }
         }
       }
@@ -2753,6 +4029,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not available"
+          }
+        }
+      }
+    },
+    "understand_risks_agree" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I understand the risks and agree to share my data"
           }
         }
       }
@@ -2823,6 +4110,17 @@
         }
       }
     },
+    "validate_issuer_registration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check Registration Certificates"
+          }
+        }
+      }
+    },
     "view_details" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2856,7 +4154,7 @@
         }
       }
     },
-    "without_relying_name" : {
+    "without_party_name" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {

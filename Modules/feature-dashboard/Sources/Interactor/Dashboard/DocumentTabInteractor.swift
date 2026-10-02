@@ -102,7 +102,7 @@ final actor DocumentTabInteractorImpl: DocumentTabInteractor {
     return AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
       self.filtersStateAsync = continuation
       Task {
-        for try await state in filterValidator.getFilterResultStream() {
+        for await state in filterValidator.getFilterResultStream() {
           switch state {
           case .success(let filterResult):
             switch filterResult {

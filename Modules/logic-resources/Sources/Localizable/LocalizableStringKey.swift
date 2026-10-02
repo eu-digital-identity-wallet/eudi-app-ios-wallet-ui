@@ -31,6 +31,22 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestDataInfoNotice
   case requestDataTitle([String])
   case requestCombinationTitle([String])
+  case requestRequestedDataTitle
+  case requestTransactionDataSectionTitle
+  case requestTransactionDataTitle
+  case requestTransactionDataSignatureDetails
+  case requestTransactionDataType
+  case requestTransactionDataTypeQes
+  case requestTransactionDataTrustFramework
+  case requestTransactionDataRequestedCredentials
+  case requestTransactionDataSigningCredentialId
+  case requestTransactionDataDocument
+  case requestTransactionDataHashRepresentation
+  case requestTransactionDataHash
+  case requestTransactionDataTypedHash([String])
+  case requestTransactionDataHashAlgorithm
+  case requestTransactionDataTypedHashAlgorithm([String])
+  case requestTransactionDataNumberOfSignatures
   case documentAdded
   case okButton
   case success
@@ -226,7 +242,6 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case signing
   case issuance
   case deletion
-  case withoutRelyingName
   case errorFetchTransactionLog
   case incomplete
   case justNow
@@ -280,7 +295,110 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case notRegisteredData
   case issuanceRegistrationBlockedTitle
   case issuanceRegistrationBlockedMessage
+  case notCompleted
+  case reissuance
+  case filterByParty
+  case withoutPartyName
+  case transactionTypeDataDeletionRequest
+  case transactionTypeDpaReport
+  case transactionDetailsDeleteButton
+  case transactionDetailsDeleteTitle
+  case transactionDetailsDeleteMessage
+  case transactionDetailsDeleteError
+  case transactionDetailsDataRequested
+  case transactionDetailsIssuanceSection
+  case transactionDetailsCredentialsSection
+  case transactionDetailsTechnicalSection
+  case transactionDetailsDataDeletionSection
+  case transactionDetailsNoDataRequested
+  case transactionDetailsNoDataShared
+  case transactionDetailsNoClaims
+  case transactionDetailsNoInformation
+  case transactionDetailsUnknownClaim
+  case transactionDetailsIdentifierLabel
+  case transactionDetailsIdentifierSchemeLabel
+  case transactionDetailsContactLabel
+  case transactionDetailsPurposeLabel
+  case transactionDetailsRegistrarLabel
+  case transactionDetailsPrivacyPolicyLabel
+  case transactionDetailsIssuerTypeLabel
+  case transactionDetailsIssuedCountLabel
+  case transactionDetailsRequestedCountLabel
+  case transactionDetailsCredentialsIssuedSection
+  case transactionDetailsIssuedCount([String])
+  case transactionDetailsTriggerLabel
+  case transactionDetailsRequestedByYou
+  case transactionDetailsRenewedByWallet
+  case transactionDetailsCertificateLabel
+  case transactionDetailsFilenameLabel
+  case transactionDetailsFilesizeLabel
+  case transactionDetailsBytes([String])
+  case transactionDetailsDigestLabel
+  case transactionDetailsActionUnavailable
+  case transactionDetailsActionOpenFailed
+  case transactionDetailsActionError
+  case transactionDetailsDeletionEmailSubject([String])
+  case transactionDetailsDeletionEmailBody([String])
+  case transactionDetailsReportEmailSubject([String])
+  case transactionDetailsReportEmailBody([String])
+  case hideDetails
+  case transactionDetailsRelyingPartyLabel
+  case transactionDetailsIssuerLabel
+  case transactionDetailsSigningServiceLabel
+  case transactionDetailsAuthorityLabel
+  case transactionDetailsIntermediaryLabel
+  case transactionDetailsIntermediaryNameLabel
+  case transactionDetailsIntermediaryContactLabel
+  case transactionDetailsSigningIdentifierLabel
+  case transactionDetailsRequestDeletionSection
+  case transactionDetailsReportSection
+  case transactionDetailsPreviousDeletionRequests([String])
+  case transactionDetailsPreviousReports([String])
+  case transactionActionReportTitle
+  case transactionActionAuthorityLabel
+  case transactionActionReportMessageBold
+  case transactionActionReportMessage([String])
+  case transactionActionReportMessageNoAuthority
+  case transactionActionReportFollowUp([String])
+  case transactionActionReportFollowUpNoAuthority
+  case transactionActionCall
+  case transactionActionOpenEmail
+  case transactionActionVisitWebsite
+  case transactionHistoryDeletionTitle([String])
+  case transactionHistoryReportTitle([String])
+  case transactionHistoryDeletionDisclaimer
+  case transactionHistoryReportDisclaimer
+  case transactionHistoryDeletionMessage
+  case transactionHistoryReportMessage
+  case transactionHistoryChannelPhone
+  case transactionHistoryChannelEmail
+  case transactionHistoryChannelWebsite
+  case transactionHistoryChannelOther
+  case transactionActionDeletionScreenTitle
+  case transactionActionDeletionIntroWebsite([String])
+  case transactionActionDeletionIntroEmail([String])
+  case transactionActionDeletionIntroPhone([String])
+  case transactionActionDeletionNoticeBold
+  case transactionActionDeletionNoticeWebsite
+  case transactionActionDeletionNoticeEmail
+  case transactionActionDeletionNoticePhone
+  case transactionActionDeletionLegal([String])
+  case transactionActionContinueWebsite([String])
+  case transactionActionContinueEmail
+  case transactionActionContinuePhone([String])
   case continueButton
+  case trustMarkAboutTitle
+  case trustMarkWelcomeTitle
+  case trustMarkWalletName
+  case trustMarkImageDescription
+  case trustMarkCertificationDescription([String])
+  case trustMarkCertifiedWalletsLink
+  case trustMarkCertificationInformationDescription([String])
+  case trustMarkCertificationInformationLink
+  case trustMarkLoading
+  case trustMarkLoadError
+  case trustMarkImageError
+  case trustMarkBrowserError
 }
 
 public extension LocalizableStringKey {

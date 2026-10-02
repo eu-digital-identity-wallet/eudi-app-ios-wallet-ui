@@ -52,11 +52,7 @@ public enum TransactionCategory: Hashable, Equatable, Sendable {
     }
   }
 
-  public static func category(for dateString: String) -> TransactionCategory {
-    guard let date = Date.date(from: dateString) else {
-      return .month(dateTime: LocalizableStringKey.custom("").toString)
-    }
-
+  public static func category(for date: Date) -> TransactionCategory {
     if date.isToday() {
       return .month(dateTime: LocalizableStringKey.today.toString)
     } else if date.isThisWeek() {

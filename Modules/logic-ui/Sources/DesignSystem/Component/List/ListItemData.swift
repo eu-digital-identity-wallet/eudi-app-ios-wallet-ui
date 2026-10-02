@@ -35,6 +35,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
   public let mainStyle: MainStyle
   public let overlineText: LocalizableStringKey?
   public let supportingText: LocalizableStringKey?
+  public let mainTextColor: Color
   public let supportingTextColor: Color
   public let overlineTextColor: Color
   public let leadingContent: LeadingContent?
@@ -49,6 +50,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
     mainStyle: MainStyle = .plain,
     overlineText: LocalizableStringKey? = nil,
     supportingText: LocalizableStringKey? = nil,
+    mainTextColor: Color = Theme.shared.color.primaryLabel,
     supportingTextColor: Color = Theme.shared.color.secondaryLabel,
     overlineTextColor: Color = Theme.shared.color.secondaryLabel,
     leadingContent: LeadingContent? = nil,
@@ -62,6 +64,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
     self.mainStyle = mainStyle
     self.overlineText = overlineText
     self.supportingText = supportingText
+    self.mainTextColor = mainTextColor
     self.supportingTextColor = supportingTextColor
     self.overlineTextColor = overlineTextColor
     self.leadingContent = leadingContent
