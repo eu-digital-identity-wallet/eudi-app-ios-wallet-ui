@@ -17,12 +17,14 @@ import Foundation
 
 enum TransactionDataTypeIdentifier: String {
   case qesApproval = "https://cloudsignatureconsortium.org/2025/qes-approval"
+  case qes = "https://cloudsignatureconsortium.org/2025/qes"
 }
 
 public struct PresentationTransactionData: Sendable, Equatable {
 
   public enum Content: Sendable, Equatable {
     case qesApproval(QesApprovalTransactionData)
+    case qes(QesTransactionData)
     case generic([PresentationTransactionDataField])
   }
 
@@ -57,6 +59,76 @@ public struct QesApprovalTransactionData: Sendable, Equatable {
     self.numberOfSignatures = numberOfSignatures
     self.documents = documents
     self.hashAlgorithm = hashAlgorithm
+  }
+}
+
+public struct QesTransactionData: Sendable, Equatable {
+  public let trustFramework: String
+  public let credentialIds: [String]
+  public let signatureRequests: [QesSignatureRequest]
+
+  public init(
+    trustFramework: String,
+    credentialIds: [String],
+    signatureRequests: [QesSignatureRequest]
+  ) {
+    self.trustFramework = trustFramework
+    self.credentialIds = credentialIds
+    self.signatureRequests = signatureRequests
+  }
+}
+
+public struct QesSignatureRequest: Sendable, Equatable {
+  public let label: String?
+  public let signatureQualifier: String?
+  public let signatureFormat: String?
+  public let conformanceLevel: String?
+  public let signedAttributes: [QesSignedAttribute]
+  public let href: String?
+  public let checksum: QesDocumentChecksum?
+  public let oneTimePassword: String?
+  public let responseUri: String?
+
+  public init(
+    label: String?,
+    signatureQualifier: String?,
+    signatureFormat: String?,
+    conformanceLevel: String?,
+    signedAttributes: [QesSignedAttribute],
+    href: String?,
+    checksum: QesDocumentChecksum?,
+    oneTimePassword: String?,
+    responseUri: String?
+  ) {
+    self.label = label
+    self.signatureQualifier = signatureQualifier
+    self.signatureFormat = signatureFormat
+    self.conformanceLevel = conformanceLevel
+    self.signedAttributes = signedAttributes
+    self.href = href
+    self.checksum = checksum
+    self.oneTimePassword = oneTimePassword
+    self.responseUri = responseUri
+  }
+}
+
+public struct QesSignedAttribute: Sendable, Equatable {
+  public let name: String
+  public let value: String?
+
+  public init(name: String, value: String?) {
+    self.name = name
+    self.value = value
+  }
+}
+
+public struct QesDocumentChecksum: Sendable, Equatable {
+  public let value: String
+  public let algorithm: QesHashAlgorithm
+
+  public init(value: String, algorithm: QesHashAlgorithm) {
+    self.value = value
+    self.algorithm = algorithm
   }
 }
 

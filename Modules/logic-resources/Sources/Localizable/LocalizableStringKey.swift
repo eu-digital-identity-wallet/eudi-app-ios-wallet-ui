@@ -37,6 +37,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestTransactionDataSignatureDetails
   case requestTransactionDataType
   case requestTransactionDataTypeQes
+  case requestTransactionDataTypeQesRequest
   case requestTransactionDataTrustFramework
   case requestTransactionDataRequestedCredentials
   case requestTransactionDataSigningCredentialId
@@ -47,6 +48,22 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestTransactionDataHashAlgorithm
   case requestTransactionDataTypedHashAlgorithm([String])
   case requestTransactionDataNumberOfSignatures
+  case requestTransactionDataDocumentNumbered([String])
+  case requestTransactionDataDocumentLocation
+  case requestTransactionDataExpectedChecksum
+  case requestTransactionDataChecksumAlgorithm
+  case requestTransactionDataSignatureType
+  case requestTransactionDataSignatureFormat
+  case requestTransactionDataConformanceLevel
+  case requestTransactionDataSignedAttributes
+  case requestTransactionDataOneTimePassword
+  case requestTransactionDataResponseUri
+  case requestTransactionDataSignatureQes
+  case requestTransactionDataSignatureQeseal
+  case requestTransactionDataSignatureAes
+  case requestTransactionDataSignatureAeseal
+  case requestTransactionDataSignatureAesqc
+  case requestTransactionDataSignatureAesealqc
   case documentAdded
   case okButton
   case success

@@ -61,12 +61,32 @@ private enum QesApprovalKeys {
   static let numSignatures = "numSignatures"
 }
 
+private enum QesKeys {
+  static let signatureRequests = "signatureRequests"
+  static let label = "label"
+  static let signatureQualifier = "signatureQualifier"
+  static let signatureFormat = "signature_format"
+  static let conformanceLevel = "conformance_level"
+  static let signedProperties = "signed_props"
+  static let attributeName = "attribute_name"
+  static let attributeValue = "attribute_value"
+  static let href = "href"
+  static let checksum = "checksum"
+  static let checksumValue = "value"
+  static let checksumAlgorithmOID = "algorithmOID"
+  static let access = "access"
+  static let oneTimePassword = "oneTimePassword"
+  static let responseURI = "responseURI"
+}
+
 private extension JSON {
 
   func toTransactionDataContent(type: String) -> PresentationTransactionData.Content {
     switch TransactionDataTypeIdentifier(rawValue: type) {
     case .qesApproval:
       .qesApproval(toQesApproval())
+    case .qes:
+      .qes(toQes())
     case nil:
       .generic(toTransactionDataFields(excluding: transactionDataCommonKeys))
     }
@@ -90,6 +110,37 @@ private extension JSON {
       hashAlgorithm: self[QesApprovalKeys.hashAlgorithmOID].string.map {
         QesHashAlgorithm(oid: $0, name: hashAlgorithmNames[$0])
       }
+    )
+  }
+
+  func toQes() -> QesTransactionData {
+    QesTransactionData(
+      trustFramework: qesTrustFramework,
+      credentialIds: self[OpenId4VPSpec.TRANSACTION_DATA_CREDENTIAL_IDS].arrayValue.compactMap(\.string),
+      signatureRequests: self[QesKeys.signatureRequests].arrayValue.map { $0.toQesSignatureRequest() }
+    )
+  }
+
+  func toQesSignatureRequest() -> QesSignatureRequest {
+    let checksum = self[QesKeys.checksum]
+    return QesSignatureRequest(
+      label: self[QesKeys.label].string,
+      signatureQualifier: self[QesKeys.signatureQualifier].string,
+      signatureFormat: self[QesKeys.signatureFormat].string,
+      conformanceLevel: self[QesKeys.conformanceLevel].string,
+      signedAttributes: self[QesKeys.signedProperties].arrayValue.compactMap { attribute in
+        attribute[QesKeys.attributeName].string.map {
+          QesSignedAttribute(name: $0, value: attribute[QesKeys.attributeValue].string)
+        }
+      },
+      href: self[QesKeys.href].string,
+      checksum: checksum[QesKeys.checksumValue].string.flatMap { value in
+        checksum[QesKeys.checksumAlgorithmOID].string.map {
+          QesDocumentChecksum(value: value, algorithm: QesHashAlgorithm(oid: $0, name: hashAlgorithmNames[$0]))
+        }
+      },
+      oneTimePassword: self[QesKeys.access][QesKeys.oneTimePassword].string,
+      responseUri: self[QesKeys.responseURI].string
     )
   }
 
