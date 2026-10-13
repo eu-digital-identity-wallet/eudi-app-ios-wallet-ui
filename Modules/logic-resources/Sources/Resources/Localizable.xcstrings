@@ -2361,6 +2361,193 @@
         }
       }
     },
+    "request_transaction_data_type_qes_request" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "QES request"
+          }
+        }
+      }
+    },
+    "request_transaction_data_document_numbered" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document %@"
+          }
+        }
+      }
+    },
+    "request_transaction_data_document_location" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document location"
+          }
+        }
+      }
+    },
+    "request_transaction_data_expected_checksum" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expected document checksum"
+          }
+        }
+      }
+    },
+    "request_transaction_data_checksum_algorithm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checksum algorithm"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signature_type" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signature type"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signature_format" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signature format"
+          }
+        }
+      }
+    },
+    "request_transaction_data_conformance_level" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conformance level"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signed_attributes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed attributes"
+          }
+        }
+      }
+    },
+    "request_transaction_data_one_time_password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One-time password (OTP)"
+          }
+        }
+      }
+    },
+    "request_transaction_data_response_uri" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Response URI"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signature_qes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qualified electronic signature (QES)"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signature_qeseal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qualified electronic seal"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signature_aes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced electronic signature"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signature_aeseal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced electronic seal"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signature_aesqc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced electronic signature with a qualified certificate"
+          }
+        }
+      }
+    },
+    "request_transaction_data_signature_aesealqc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced electronic seal with a qualified certificate"
+          }
+        }
+      }
+    },
     "requests_the_following" : {
       "extractionState" : "manual",
       "localizations" : {

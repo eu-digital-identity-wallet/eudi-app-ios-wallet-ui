@@ -747,7 +747,8 @@ var vpConfig: OpenId4VpConfiguration {
 
 var supportedTransactionDataTypes: [SupportedTransactionDataType] {
   let types = [
-    TransactionDataTypeIdentifier.qesApproval.rawValue
+    TransactionDataTypeIdentifier.qesApproval.rawValue,
+    TransactionDataTypeIdentifier.qes.rawValue
   ]
   return [.default()] + types.compactMap {
     try? SupportedTransactionDataType(type: TransactionDataType(value: $0))
@@ -762,7 +763,7 @@ Production meaning:
 | `.x509SanDns` | Verifier client identity is bound to a DNS name in an X.509 certificate. | Use when verifier certificates and trust anchors are managed and audited. |
 | `.x509Hash` | Verifier identity is bound to a certificate hash. | Use when the verifier ecosystem requires hash-based certificate binding. |
 | `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add production verifier API URL, legal name, and client ID. |
-| `supportedTransactionDataTypes` | OpenID4VP `transaction_data` types the wallet accepts. The OpenID4VP library rejects any request whose transaction data type is not listed; an empty list rejects every request that carries transaction data. The app accepts `.default()` (the library's placeholder type `transaction_data`) and the CSC `https://cloudsignatureconsortium.org/2025/qes-approval` type. | List only the types your wallet can display to the user. Drop `.default()` unless a production verifier uses it. |
+| `supportedTransactionDataTypes` | OpenID4VP `transaction_data` types the wallet accepts. The OpenID4VP library rejects any request whose transaction data type is not listed; an empty list rejects every request that carries transaction data. The app accepts `.default()` (the library's placeholder type `transaction_data`) and the CSC `https://cloudsignatureconsortium.org/2025/qes-approval` and `https://cloudsignatureconsortium.org/2025/qes` types. | List only the types your wallet can display to the user. Drop `.default()` unless a production verifier uses it. |
 | `validateRegistrationCertificate` | Whether the verifier's WRP registration certificate is validated during OpenID4VP. Set from `validateIssuerRegistrationCertificate`. | See [Registration Certificates: The Second Trust Layer](#registration-certificates-the-second-trust-layer). |
 
 If using preregistered verifiers, add the relevant import and production entries:
@@ -802,8 +803,12 @@ Rules:
 Transaction data is shown on the request screen under "Data to be signed", below the document it is
 bound to. A QES approval shows the trust framework, transaction type, requested credential query
 ids, signing credential ID, number of signatures, and each document's label, hash representation,
-hash and hash algorithm. Any other accepted type is shown as its raw fields. Before release, check
-that every type you accept is displayed in full, since the user approves it by sharing.
+hash and hash algorithm. A QES request shows the trust framework, transaction type, requested
+credential query ids and, for each signature request, the document's label, location, expected
+checksum and checksum algorithm, signature type, signature format, conformance level, signed
+attributes, one-time password and response URI. Any other accepted type is shown as its raw fields.
+Before release, check that every type you accept is displayed in full, since the user approves it
+by sharing.
 
 ### Relay Attack Risk In Presentation Flows
 

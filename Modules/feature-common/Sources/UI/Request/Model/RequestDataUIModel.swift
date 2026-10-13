@@ -446,6 +446,12 @@ private extension PresentationTransactionData {
         title: LocalizableStringKey.requestTransactionDataSignatureDetails.toString,
         listItems: qesApproval.toListItems()
       )
+    case .qes(let qes):
+      .init(
+        id: UUID().uuidString,
+        title: LocalizableStringKey.requestTransactionDataSignatureDetails.toString,
+        listItems: qes.toListItems()
+      )
     case .generic(let fields):
       .init(
         id: UUID().uuidString,
@@ -532,6 +538,126 @@ private extension QesDocumentDigest {
   }
 }
 
+private extension QesTransactionData {
+  func toListItems() -> [PresentationExpandableListItem] {
+    var items: [PresentationExpandableListItem] = [
+      .transactionDataRow(overline: .requestTransactionDataTrustFramework, value: trustFramework),
+      .transactionDataRow(
+        overline: .requestTransactionDataType,
+        value: LocalizableStringKey.requestTransactionDataTypeQesRequest.toString
+      )
+    ]
+
+    if !credentialIds.isEmpty {
+      items.append(
+        .transactionDataRow(
+          overline: .requestTransactionDataRequestedCredentials,
+          value: credentialIds.joined(separator: transactionDataValueSeparator)
+        )
+      )
+    }
+
+    signatureRequests.enumerated().forEach { index, signatureRequest in
+      items.append(contentsOf: signatureRequest.toListItems(index: index))
+    }
+
+    return items
+  }
+}
+
+private extension QesSignatureRequest {
+  func toListItems(index: Int) -> [PresentationExpandableListItem] {
+    var items: [PresentationExpandableListItem] = [
+      .transactionDataRow(
+        overline: .requestTransactionDataDocument,
+        value: label ?? LocalizableStringKey.requestTransactionDataDocumentNumbered([String(index + 1)]).toString
+      )
+    ]
+
+    if let href {
+      items.append(.transactionDataRow(overline: .requestTransactionDataDocumentLocation, value: href))
+    }
+
+    if let checksum {
+      items.append(.transactionDataRow(overline: .requestTransactionDataExpectedChecksum, value: checksum.value))
+      items.append(
+        .transactionDataRow(overline: .requestTransactionDataChecksumAlgorithm, value: checksum.algorithm.displayValue)
+      )
+    }
+
+    if let signatureQualifier {
+      items.append(
+        .transactionDataRow(overline: .requestTransactionDataSignatureType, value: signatureQualifier.qesSignatureTypeDisplayValue)
+      )
+    }
+
+    if let signatureFormat {
+      items.append(
+        .transactionDataRow(overline: .requestTransactionDataSignatureFormat, value: signatureFormat.qesSignatureFormatDisplayValue)
+      )
+    }
+
+    if let conformanceLevel {
+      items.append(.transactionDataRow(overline: .requestTransactionDataConformanceLevel, value: conformanceLevel))
+    }
+
+    if !signedAttributes.isEmpty {
+      items.append(
+        .nested(
+          .init(
+            collapsed: .init(mainContent: .text(.requestTransactionDataSignedAttributes)),
+            expanded: signedAttributes.map { $0.toListItem() },
+            isExpanded: false
+          )
+        )
+      )
+    }
+
+    if let oneTimePassword {
+      items.append(.transactionDataRow(overline: .requestTransactionDataOneTimePassword, value: oneTimePassword))
+    }
+
+    if let responseUri {
+      items.append(.transactionDataRow(overline: .requestTransactionDataResponseUri, value: responseUri))
+    }
+
+    return items
+  }
+}
+
+private extension QesSignedAttribute {
+  func toListItem() -> PresentationExpandableListItem {
+    guard let value else {
+      return .transactionDataRow(value: name)
+    }
+    return .transactionDataRow(overline: .custom(name), value: value)
+  }
+}
+
+private extension String {
+  var qesSignatureTypeDisplayValue: String {
+    switch self {
+    case "eu_eidas_qes": LocalizableStringKey.requestTransactionDataSignatureQes.toString
+    case "eu_eidas_qeseal": LocalizableStringKey.requestTransactionDataSignatureQeseal.toString
+    case "eu_eidas_aes": LocalizableStringKey.requestTransactionDataSignatureAes.toString
+    case "eu_eidas_aeseal": LocalizableStringKey.requestTransactionDataSignatureAeseal.toString
+    case "eu_eidas_aesqc": LocalizableStringKey.requestTransactionDataSignatureAesqc.toString
+    case "eu_eidas_aesealqc": LocalizableStringKey.requestTransactionDataSignatureAesealqc.toString
+    default: self
+    }
+  }
+
+  var qesSignatureFormatDisplayValue: String {
+    switch self {
+    case "C": "CAdES"
+    case "X": "XAdES"
+    case "P": "PAdES"
+    case "J": "JAdES"
+    default: self
+    }
+  }
+}
+
 private extension QesHashAlgorithm {
   var displayValue: String {
     name ?? oid
@@ -549,6 +675,15 @@ private extension ExpandableListItem where T == DocumentElementClaim {
           mainContent: .text(.custom(value)),
           overlineText: overline
         ),
+        domainModel: nil
+      )
+    )
+  }
+
+  static func transactionDataRow(value: String) -> Self {
+    .single(
+      .init(
+        collapsed: .init(mainContent: .text(.custom(value))),
         domainModel: nil
       )
     )
