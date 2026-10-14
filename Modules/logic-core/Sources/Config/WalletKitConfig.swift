@@ -262,7 +262,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var supportedTransactionDataTypes: [SupportedTransactionDataType] {
     let types = [
-      TransactionDataTypeIdentifier.qesApproval.rawValue
+      TransactionDataTypeIdentifier.qesApproval.rawValue,
+      TransactionDataTypeIdentifier.qes.rawValue
     ]
     return [.default()] + types.compactMap {
       try? SupportedTransactionDataType(type: TransactionDataType(value: $0))

@@ -72,6 +72,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "request_transaction_data_type")
     case .requestTransactionDataTypeQes:
       bundle.localizedString(forKey: "request_transaction_data_type_qes")
+    case .requestTransactionDataTypeQesRequest:
+      bundle.localizedString(forKey: "request_transaction_data_type_qes_request")
     case .requestTransactionDataTrustFramework:
       bundle.localizedString(forKey: "request_transaction_data_trust_framework")
     case .requestTransactionDataRequestedCredentials:
@@ -92,6 +94,38 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "request_transaction_data_typed_hash_algorithm", arguments: args)
     case .requestTransactionDataNumberOfSignatures:
       bundle.localizedString(forKey: "request_transaction_data_number_of_signatures")
+    case .requestTransactionDataDocumentNumbered(let args):
+      bundle.localizedStringWithArguments(forKey: "request_transaction_data_document_numbered", arguments: args)
+    case .requestTransactionDataDocumentLocation:
+      bundle.localizedString(forKey: "request_transaction_data_document_location")
+    case .requestTransactionDataExpectedChecksum:
+      bundle.localizedString(forKey: "request_transaction_data_expected_checksum")
+    case .requestTransactionDataChecksumAlgorithm:
+      bundle.localizedString(forKey: "request_transaction_data_checksum_algorithm")
+    case .requestTransactionDataSignatureType:
+      bundle.localizedString(forKey: "request_transaction_data_signature_type")
+    case .requestTransactionDataSignatureFormat:
+      bundle.localizedString(forKey: "request_transaction_data_signature_format")
+    case .requestTransactionDataConformanceLevel:
+      bundle.localizedString(forKey: "request_transaction_data_conformance_level")
+    case .requestTransactionDataSignedAttributes:
+      bundle.localizedString(forKey: "request_transaction_data_signed_attributes")
+    case .requestTransactionDataOneTimePassword:
+      bundle.localizedString(forKey: "request_transaction_data_one_time_password")
+    case .requestTransactionDataResponseUri:
+      bundle.localizedString(forKey: "request_transaction_data_response_uri")
+    case .requestTransactionDataSignatureQes:
+      bundle.localizedString(forKey: "request_transaction_data_signature_qes")
+    case .requestTransactionDataSignatureQeseal:
+      bundle.localizedString(forKey: "request_transaction_data_signature_qeseal")
+    case .requestTransactionDataSignatureAes:
+      bundle.localizedString(forKey: "request_transaction_data_signature_aes")
+    case .requestTransactionDataSignatureAeseal:
+      bundle.localizedString(forKey: "request_transaction_data_signature_aeseal")
+    case .requestTransactionDataSignatureAesqc:
+      bundle.localizedString(forKey: "request_transaction_data_signature_aesqc")
+    case .requestTransactionDataSignatureAesealqc:
+      bundle.localizedString(forKey: "request_transaction_data_signature_aesealqc")
     case .documentAdded:
       bundle.localizedString(forKey: "document_added")
     case .okButton:

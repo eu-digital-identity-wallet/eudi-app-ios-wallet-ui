@@ -131,7 +131,7 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
       itemSets: session.disclosedDocumentSets.map(\.docElements),
       relyingParty: session.readerCertIssuer ?? LocalizableStringKey.unknownVerifier.toString,
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableStringKey.requestDataInfoNotice.toString,
-      isTrusted: session.readerCertIssuerValid == true,
+      isTrusted: session.readerAuthenticationStatus == .authenticated,
       overaskedClaims: overaskedClaims,
       transactionDataSets: []
     )
