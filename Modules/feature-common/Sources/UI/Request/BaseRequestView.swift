@@ -107,7 +107,9 @@ private struct BaseRequestViewContainer: View {
       viewState.errorTitle
       ?? (viewState.items.isEmpty ? .requestDataNoDocument : nil)
 
-    if let errorTitle {
+    if viewState.isTrustBlocked {
+      EmptyView()
+    } else if let errorTitle {
       noDocumentsFound(errorTitle: errorTitle)
     } else {
       scrollableContent()
@@ -333,7 +335,8 @@ private struct BaseRequestViewContainer: View {
         "We will use your identity and age to verify you for a new current account. Your data will be used once to complete onboarding and to meet anti-money laundering requirements."
       )
     ),
-    registrationWarning: nil
+    registrationWarning: nil,
+    isTrustBlocked: false
   )
 
   ContentScreenView {

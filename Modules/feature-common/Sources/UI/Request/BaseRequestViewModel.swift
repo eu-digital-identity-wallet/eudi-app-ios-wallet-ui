@@ -35,6 +35,7 @@ public struct RequestViewState: ViewState {
   public let initialized: Bool
   public let relyingPartyRegistration: RelyingPartyRegistrationData?
   public let registrationWarning: RegistrationWarning?
+  public let isTrustBlocked: Bool
 }
 
 @Observable
@@ -61,7 +62,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         originator: originator,
         initialized: false,
         relyingPartyRegistration: nil,
-        registrationWarning: nil
+        registrationWarning: nil,
+        isTrustBlocked: false
       )
     )
   }
@@ -189,7 +191,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         originator: previous.originator,
         initialized: false,
         relyingPartyRegistration: nil,
-        registrationWarning: nil
+        registrationWarning: nil,
+        isTrustBlocked: false
       )
     }
   }
@@ -238,7 +241,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         items: [],
         combinations: [],
         allowShare: false,
-        initialized: true
+        initialized: true,
+        isTrustBlocked: true
       ).copy(error: nil)
     }
     isTrustBlockedAlertShowing = true
