@@ -17,12 +17,14 @@ import Foundation
 import MdocDataModel18013
 import logic_business
 import logic_storage
+import struct OpenID4VP.SupportedTransactionDataType
 
 extension TransactionEntry {
   func toTransactionLogDomain(
     id: String,
     parentPresentationId: String?,
-    actionChannel: TransactionActionChannel? = nil
+    actionChannel: TransactionActionChannel? = nil,
+    transactionDataTypes: [SupportedTransactionDataType] = []
   ) -> TransactionLogDomain? {
     switch self {
     case .presentation(let entry):
@@ -40,7 +42,10 @@ extension TransactionEntry {
           intermediary: entry.intermediaryDomain,
           registration: entry.registrationDomain,
           claimsRequested: entry.listOfClaimsRequested.toDomain(),
-          claimsPresented: entry.listOfClaimsPresented.toDomain()
+          claimsPresented: entry.listOfClaimsPresented.toDomain(),
+          transactionData: entry.transactionalData?.toPresentationTransactionDataDomains(
+            supportedTypes: transactionDataTypes
+          ) ?? []
         )
       )
     case .credentialIssuance(let entry):
@@ -160,11 +165,14 @@ extension logic_storage.TransactionLog {
     return try? JSONDecoder().decode(TransactionEntry.self, from: data)
   }
 
-  func toTransactionLogDomain() -> TransactionLogDomain? {
+  func toTransactionLogDomain(
+    transactionDataTypes: [SupportedTransactionDataType] = []
+  ) -> TransactionLogDomain? {
     toTransactionEntry()?.toTransactionLogDomain(
       id: identifier,
       parentPresentationId: parentPresentationId,
-      actionChannel: actionChannel.flatMap { TransactionActionChannel(rawValue: $0) }
+      actionChannel: actionChannel.flatMap { TransactionActionChannel(rawValue: $0) },
+      transactionDataTypes: transactionDataTypes
     )
   }
 }

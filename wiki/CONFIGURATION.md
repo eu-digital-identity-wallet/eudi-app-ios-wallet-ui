@@ -67,8 +67,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
                 parUsage: .required(authorizationCodeDPoPBinding: should_bind_par_dpop_bool),
                 allowPlainJwtProof: should_allow_plain_jwt_proof_bool,
-                requireDpop: should_use_dpop_bool,
-                cacheIssuerMetadata: should_cache_metadata_bool
+                requireDpop: should_use_dpop_bool
             ),
             order: issuer_order_int
           )
@@ -84,8 +83,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
                   authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
                   parUsage: .required(authorizationCodeDPoPBinding: should_bind_par_dpop_bool),
                   allowPlainJwtProof: should_allow_plain_jwt_proof_bool,
-                  requireDpop: should_use_dpop_bool,
-                  cacheIssuerMetadata: should_cache_metadata_bool
+                  requireDpop: should_use_dpop_bool
               ),
               order: issuer_order_int
             )
@@ -185,6 +183,7 @@ The primary trust source is an ETSI LoTE (List of Trusted Entities) source that 
       ],
       requireSignedMetadata: true,
       statusTrustPolicy: .warning,
+      readerTrustPolicy: .enforce,
       wrprcVpTrustPolicy: .warning,
       wrprcVciTrustPolicy: .enforce
     )
@@ -259,6 +258,13 @@ them governs presentation as well:
 the flow. A single policy governed both directions until wallet-kit 0.40.2, which could not express
 that asymmetry.
 
+`readerTrustPolicy` decides what an untrusted access certificate (WRPAC) does to an OpenID4VP
+request, independently of both. The app keeps it at `.enforce`, as `enforceIfPresent()` does on
+Android: a signed request whose reader certificate chain is not trusted is refused. Under
+`.warning` (wallet-kit 0.56.0 and later) such a request proceeds and reports
+`ReaderAuthenticationStatus.authenticatedWithUntrustedCertificate`; the app treats only
+`.authenticated` as a trusted reader, so it is not shown as trusted.
+
 Note what neither policy covers: a status list that cannot be retrieved is always a warning, never a
 refusal, so a transient network failure does not block on its own.
 
@@ -305,8 +311,9 @@ struct WalletKitConfigImpl: WalletKitConfig {
           [
             PreregisteredClient(
               clientId: "your_verifier_id",
-              verifierApiUri: "your_verifier_url",
-              verifierLegalName: "your_verifier_legal_name"
+              verifierLegalName: "your_verifier_legal_name",
+              webKeys: your_verifier_web_key_set,
+              jarSigningAlg: your_verifier_signing_algorithm
             )
           ]
         )
@@ -315,6 +322,9 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 }
 ```
+
+`jarSigningAlg` defaults to RS256. Set it when the verifier signs its requests with another
+algorithm, for example `JWSAlgorithm(.ES256)`.
 
 5. RQES
 

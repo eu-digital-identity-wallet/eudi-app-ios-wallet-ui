@@ -77,6 +77,7 @@ public enum TransactionLogDomain: Sendable, Equatable {
     public let registration: PresentationRegistrationDomain?
     public let claimsRequested: [CredentialClaimsDomain]
     public let claimsPresented: [CredentialClaimsDomain]
+    public let transactionData: [PresentationTransactionDataDomain]
 
     public init(
       id: String,
@@ -86,7 +87,8 @@ public enum TransactionLogDomain: Sendable, Equatable {
       intermediary: InteractingPartyDomain?,
       registration: PresentationRegistrationDomain?,
       claimsRequested: [CredentialClaimsDomain],
-      claimsPresented: [CredentialClaimsDomain]
+      claimsPresented: [CredentialClaimsDomain],
+      transactionData: [PresentationTransactionDataDomain] = []
     ) {
       self.id = id
       self.time = time
@@ -96,6 +98,7 @@ public enum TransactionLogDomain: Sendable, Equatable {
       self.registration = registration
       self.claimsRequested = claimsRequested
       self.claimsPresented = claimsPresented
+      self.transactionData = transactionData
     }
   }
 

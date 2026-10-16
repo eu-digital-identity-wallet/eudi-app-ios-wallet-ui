@@ -305,6 +305,48 @@ final class TestTransactionLogUi: EudiTest {
     XCTAssertEqual(ui.sections[0].fields.map(\.id), ["document:name"])
   }
 
+  func testToUiModel_WhenPresentationRecordsTransactionData_ThenTheSigningRequestFollowsTheSharedData() {
+    let log = TransactionLogDomain.presentation(
+      .init(
+        id: "1", time: time, result: .completed, party: noParty, intermediary: nil, registration: nil,
+        claimsRequested: [], claimsPresented: [],
+        transactionData: [
+          .qes(.init(credentialIds: ["pid"], signatureRequests: [])),
+          .unavailable
+        ]
+      )
+    )
+
+    let ui = log.toUiModel()
+
+    XCTAssertEqual(ui.sections.map(\.id), ["requested", "shared", "transaction-data"])
+    let signingRequest = ui.sections[2]
+    XCTAssertEqual(signingRequest.title, .transactionDetailsSigningRequest)
+    XCTAssertTrue(signingRequest.fields.isEmpty)
+    XCTAssertEqual(signingRequest.groups.map(\.title), [LocalizableStringKey.requestTransactionDataSignatureDetails.toString])
+    XCTAssertEqual(
+      signingRequest.groups[0].listItems.map(\.id),
+      [
+        "transaction-data/framework",
+        "transaction-data/transaction-0/title",
+        "transaction-data/transaction-0/query-0",
+        "transaction-data/transaction-1/title",
+        "transaction-data/transaction-1/unavailable"
+      ]
+    )
+  }
+
+  func testToUiModel_WhenPresentationRecordsNoTransactionData_ThenThereIsNoSigningRequest() {
+    let log = TransactionLogDomain.presentation(
+      .init(
+        id: "1", time: time, result: .completed, party: noParty, intermediary: nil, registration: nil,
+        claimsRequested: [], claimsPresented: []
+      )
+    )
+
+    XCTAssertEqual(log.toUiModel().sections.map(\.id), ["requested", "shared"])
+  }
+
   func testContacts_WhenNothingWasPresented_ThenDeletionCannotBeRequested() {
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .notCompleted(reason: nil),

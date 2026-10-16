@@ -17,7 +17,7 @@ import logic_core
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel: Sendable {
-  var requestDataCombinations: [[RequestDataUiModel]]
+  var requestDataCombinations: [RequestCombinationUiModel]
   var relyingParty: String
   var dataRequestInfo: String
   var isTrusted: Bool
@@ -62,6 +62,8 @@ public protocol PresentationInteractor: Sendable {
 private struct RequestCombination {
   let elements: [DocElements]
   let uiModels: [RequestDataUiModel]
+  let transactionData: RequestTransactionDataUiModel?
+  let requestName: String?
 }
 
 final actor PresentationInteractorImpl: PresentationInteractor {
@@ -70,6 +72,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   private let walletKitController: WalletKitController
 
   private var requestedItemSets: [[DocElements]] = []
+  private var requestedRequestNames: [String?] = []
 
   init(
     with presentationCoordinator: RemoteSessionCoordinator,
@@ -114,25 +117,32 @@ final actor PresentationInteractorImpl: PresentationInteractor {
       let registrationPolicy = coordinator.relyingPartyRegistration
       let overaskedClaims = response.overaskedClaims
       let transactionDataSets = response.transactionDataSets
+      let requestNames = response.requestNames
       let presentable = response.itemSets
         .enumerated()
         .map { index, documentSet in
           let documentSet = documentSet.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
+          let uiModels = documentSet.toUiModels(
+            with: self.walletKitController,
+            claimsAreSelectable: false,
+            overaskedPaths: documentSet.overaskedPaths(from: overaskedClaims)
+          )
           let transactionData = transactionDataSets.indices.contains(index) ? transactionDataSets[index] : [:]
+          let transactions = uiModels.flatMap { transactionData[$0.section.id] ?? [] }
           return RequestCombination(
             elements: documentSet,
-            uiModels: documentSet.toUiModels(
-              with: self.walletKitController,
-              claimsAreSelectable: false,
-              overaskedPaths: documentSet.overaskedPaths(from: overaskedClaims),
-              transactionData: transactionData
-            )
+            uiModels: uiModels,
+            transactionData: transactions.toRequestTransactionDataUiModel(sectionId: "transaction-data:\(index)"),
+            requestName: requestNames.indices.contains(index) ? requestNames[index] : nil
           )
         }
         .filter { !$0.uiModels.isEmpty }
 
       self.requestedItemSets = presentable.map(\.elements)
-      let combinations = presentable.map(\.uiModels)
+      self.requestedRequestNames = presentable.map(\.requestName)
+      let combinations = presentable.map {
+        RequestCombinationUiModel(documents: $0.uiModels, transactionData: $0.transactionData)
+      }
 
       return .success(
         .init(
@@ -160,9 +170,14 @@ final actor PresentationInteractorImpl: PresentationInteractor {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
-    let requestConvertible = requestedItemSets[combinationIndex].items
+    let requestConvertible = RequestItemsWrapper(
+      dictionary: requestedItemSets[combinationIndex].items,
+      requestName: requestedRequestNames.indices.contains(combinationIndex)
+        ? requestedRequestNames[combinationIndex]
+        : nil
+    )
 
-    guard requestConvertible.isEmpty == false else {
+    guard requestConvertible.items.isEmpty == false else {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
@@ -176,7 +191,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
       return .failure(error)
     }
 
-    return .success(requestConvertible.items)
+    return .success(requestConvertible)
   }
 
   public func onSendResponse() async -> RemoteSentResponsePartialState {

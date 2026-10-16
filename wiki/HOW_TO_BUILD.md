@@ -181,8 +181,7 @@ var issuersConfig: [String: VciConfig] {
             parUsage: .required(authorizationCodeDPoPBinding: true),
             allowPlainJwtProof: false,
             requireDpop: true,
-            issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-            cacheIssuerMetadata: true
+            issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy
           ),
           order: 1
         )
@@ -204,8 +203,7 @@ var issuersConfig: [String: VciConfig] {
             parUsage: .required(authorizationCodeDPoPBinding: true),
             allowPlainJwtProof: false,
             requireDpop: true,
-            issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-            cacheIssuerMetadata: true
+            issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy
           ),
           order: 1
         )
@@ -217,7 +215,7 @@ var issuersConfig: [String: VciConfig] {
 }
 ```
 
-In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `parUsage`, `allowPlainJwtProof` (kept `false` so only HAIP-compliant attested proofs are sent), `requireDpop`, `keyAttestationsConfig`, `issuerMetadataPolicy` (derived from `trustConfiguration`), and `cacheIssuerMetadata`, based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`). The snippet is trimmed to one issuer per variant for brevity; the live `WalletKitConfigImpl` returns **two** issuers per variant — the primary (`order: 1`) plus a backend issuer (`order: 0`): `https://issuer-backend.eudiw.dev` for `.DEMO` and `https://dev.issuer-backend.eudiw.dev` for `.DEV`.
+In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `parUsage`, `allowPlainJwtProof` (kept `false` so only HAIP-compliant attested proofs are sent), `requireDpop`, `keyAttestationsConfig`, and `issuerMetadataPolicy` (derived from `trustConfiguration`), based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`). The snippet is trimmed to one issuer per variant for brevity; the live `WalletKitConfigImpl` returns **two** issuers per variant — the primary (`order: 1`) plus a backend issuer (`order: 0`): `https://issuer-backend.eudiw.dev` for `.DEMO` and `https://dev.issuer-backend.eudiw.dev` for `.DEV`.
 
 ### Running with local services
 

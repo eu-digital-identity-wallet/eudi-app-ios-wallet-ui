@@ -26,7 +26,7 @@ public struct RequestViewState: ViewState {
   public let errorTitle: LocalizableStringKey?
   public let showMissingCredentials: Bool
   public let items: [RequestDataUiModel]
-  public let combinations: [[RequestDataUiModel]]
+  public let combinations: [RequestCombinationUiModel]
   public let selectedCombinationIndex: Int
   public let relyingParty: LocalizableStringKey
   public let isTrusted: Bool
@@ -35,6 +35,7 @@ public struct RequestViewState: ViewState {
   public let initialized: Bool
   public let relyingPartyRegistration: RelyingPartyRegistrationData?
   public let registrationWarning: RegistrationWarning?
+  public let isTrustBlocked: Bool
 }
 
 @Observable
@@ -61,7 +62,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         originator: originator,
         initialized: false,
         relyingPartyRegistration: nil,
-        registrationWarning: nil
+        registrationWarning: nil,
+        isTrustBlocked: false
       )
     )
   }
@@ -130,7 +132,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     isTrusted: Bool
   ) {
     onReceivedCombinations(
-      with: [items],
+      with: [.init(documents: items)],
       title: title,
       relyingParty: relyingParty,
       isTrusted: isTrusted
@@ -138,12 +140,12 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   }
 
   public func onReceivedCombinations(
-    with combinations: [[RequestDataUiModel]],
+    with combinations: [RequestCombinationUiModel],
     title: LocalizableStringKey,
     relyingParty: LocalizableStringKey,
     isTrusted: Bool
   ) {
-    let selectedItems = combinations.first ?? []
+    let selectedItems = combinations.first?.documents ?? []
     setState {
       $0.copy(
         isLoading: false,
@@ -161,7 +163,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
   func onCombinationSelected(index: Int) {
     guard viewState.combinations.indices.contains(index) else { return }
-    let selectedItems = viewState.combinations[index]
+    let selectedItems = viewState.combinations[index].documents
     setState {
       $0.copy(
         showMissingCredentials: false,
@@ -189,7 +191,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         originator: previous.originator,
         initialized: false,
         relyingPartyRegistration: nil,
-        registrationWarning: nil
+        registrationWarning: nil,
+        isTrustBlocked: false
       )
     }
   }
@@ -238,7 +241,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         items: [],
         combinations: [],
         allowShare: false,
-        initialized: true
+        initialized: true,
+        isTrustBlocked: true
       ).copy(error: nil)
     }
     isTrustBlockedAlertShowing = true
@@ -257,7 +261,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   func onCombinationItemClick(combinationIndex: Int, id: String) async {
     guard viewState.combinations.indices.contains(combinationIndex) else { return }
 
-    if viewState.combinations[combinationIndex].hasSelectableClaims() && viewState.showMissingCredentials {
+    if viewState.combinations[combinationIndex].documents.hasSelectableClaims() && viewState.showMissingCredentials {
       itemsChanged = true
       setState {
         $0.copy(
@@ -265,14 +269,14 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         )
       }
     } else {
-      let updatedItems = viewState.combinations[combinationIndex].map { item in
+      let updatedItems = viewState.combinations[combinationIndex].documents.map { item in
         var updatedItem = item
         updatedItem.toggleSelection(id: id)
         return updatedItem
       }
 
       var combinations = viewState.combinations
-      combinations[combinationIndex] = updatedItems
+      combinations[combinationIndex] = combinations[combinationIndex].copy(documents: updatedItems)
 
       let isSelectedCombination = combinationIndex == viewState.selectedCombinationIndex
 

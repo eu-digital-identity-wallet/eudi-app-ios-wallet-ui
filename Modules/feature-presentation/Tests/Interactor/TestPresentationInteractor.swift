@@ -336,7 +336,7 @@ final class TestPresentationInteractor: EudiTest {
     // Then
     switch state {
     case .success(let successModel):
-      XCTAssertEqual(successModel.requestDataCombinations, [expectedUiModels])
+      XCTAssertEqual(successModel.requestDataCombinations, [.init(documents: expectedUiModels)])
       XCTAssertEqual(successModel.relyingParty, request.relyingParty)
       XCTAssertEqual(successModel.dataRequestInfo, request.dataRequestInfo)
       XCTAssertEqual(successModel.isTrusted, request.isTrusted)
@@ -413,6 +413,82 @@ final class TestPresentationInteractor: EudiTest {
     }
 
     verify(presentationCoordinator).setState(presentationState: any())
+  }
+
+  func testOnRequestReceived_WhenTheRequestCarriesTransactionData_ThenTheCombinationShowsItsSignatureDetails() async {
+    // Given
+    let transactions: [PresentationTransactionDataDomain] = [.unavailable]
+    let request = Self.presentationRequest(
+      transactionDataSets: [[Constants.isoMdlModelId: transactions]],
+      requestNames: ["option-1"]
+    )
+    await stubReceivedRequest(request)
+
+    // When
+    let state = await interactor.onRequestReceived()
+
+    // Then
+    switch state {
+    case .success(let successModel):
+      XCTAssertEqual(successModel.requestDataCombinations.count, 1)
+      XCTAssertEqual(
+        successModel.requestDataCombinations.first?.transactionData,
+        transactions.toRequestTransactionDataUiModel(sectionId: "transaction-data:0")
+      )
+    default:
+      XCTFail("Wrong state \(state)")
+    }
+  }
+
+  func testOnRequestReceived_WhenTheTransactionDataBelongsToAnotherDocument_ThenTheCombinationShowsNone() async {
+    // Given
+    let request = Self.presentationRequest(
+      transactionDataSets: [["another-document": [.unavailable]]],
+      requestNames: ["option-1"]
+    )
+    await stubReceivedRequest(request)
+
+    // When
+    let state = await interactor.onRequestReceived()
+
+    // Then
+    switch state {
+    case .success(let successModel):
+      XCTAssertEqual(successModel.requestDataCombinations.count, 1)
+      XCTAssertNil(successModel.requestDataCombinations.first?.transactionData)
+    default:
+      XCTFail("Wrong state \(state)")
+    }
+  }
+
+  func testOnResponsePrepare_WhenTheCombinationHasARequestName_ThenTheResponseToSendCarriesIt() async {
+    // Given
+    await stubReceivedRequest(
+      Self.presentationRequest(transactionDataSets: [], requestNames: ["option-1"])
+    )
+
+    stub(presentationCoordinator) { mock in
+      when(mock.setState(presentationState: any())).thenDoNothing()
+    }
+
+    // When
+    let state = await interactor.onResponsePrepare(combinationIndex: 0)
+
+    // Then
+    switch state {
+    case .success(let response):
+      XCTAssertEqual(response.items, Self.mockRequestItems)
+      XCTAssertEqual(response.requestName, "option-1")
+    default:
+      XCTFail("Wrong state \(state)")
+    }
+
+    let stateCaptor = ArgumentCaptor<PresentationState>()
+    verify(presentationCoordinator).setState(presentationState: stateCaptor.capture())
+    guard case .responseToSend(let response)? = stateCaptor.value else {
+      return XCTFail("Expected a response to send")
+    }
+    XCTAssertEqual(response.requestName, "option-1")
   }
 
   func testOnResponsePrepare_WhenSessionCoordinatorThrowsInvalidStateError_ThenReturnsFailureWithThatError() async {
@@ -653,6 +729,22 @@ private extension TestPresentationInteractor {
 
   static let mockPresentationRequest = Constants.mockPresentationRequest
 
+  static func presentationRequest(
+    transactionDataSets: [[String: [PresentationTransactionDataDomain]]],
+    requestNames: [String?]
+  ) -> PresentationRequest {
+    let request = Constants.mockPresentationRequest
+    return PresentationRequest(
+      itemSets: request.itemSets,
+      relyingParty: request.relyingParty,
+      dataRequestInfo: request.dataRequestInfo,
+      isTrusted: request.isTrusted,
+      overaskedClaims: request.overaskedClaims,
+      transactionDataSets: transactionDataSets,
+      requestNames: requestNames
+    )
+  }
+
   static func mockUiModels() -> [RequestDataUiModel] {
     let claim = DocumentElementClaim.primitive(
       id: Constants.randomIdentifier,
@@ -695,9 +787,9 @@ private extension TestPresentationInteractor {
     ]
   ]
 
-  func stubReceivedRequest() async {
+  func stubReceivedRequest(_ request: PresentationRequest = TestPresentationInteractor.mockPresentationRequest) async {
     stub(presentationCoordinator) { mock in
-      when(mock.requestReceived()).thenReturn(Self.mockPresentationRequest)
+      when(mock.requestReceived()).thenReturn(request)
     }
     stubFetchRevokedDocuments(with: [])
     stub(walletKitController) { mock in
