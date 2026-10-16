@@ -35,7 +35,7 @@ extension PresentationState: Equatable {
     case let (.requestReceived(a), .requestReceived(b)):
       a == b
     case let (.responseToSend(a), .responseToSend(b)):
-      a.items == b.items
+      a.items == b.items && a.requestName == b.requestName
     case let (.responseSent(a), .responseSent(b)):
       a == b
     case let (.error(a), .error(b)):

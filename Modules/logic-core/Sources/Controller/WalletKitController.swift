@@ -658,7 +658,9 @@ final actor WalletKitControllerImpl: WalletKitController {
   func fetchTransactionLog(with id: String) async throws -> TransactionLogDomain {
     guard
       let storedLog = try? await self.transactionLogStorageController.retrieve(id),
-      let log = storedLog.toTransactionLogDomain()
+      let log = storedLog.toTransactionLogDomain(
+        transactionDataTypes: walletKitConfig.supportedTransactionDataTypes
+      )
     else {
       throw WalletCoreError.unableToFetchTransactionLog
     }
@@ -680,7 +682,8 @@ final actor WalletKitControllerImpl: WalletKitController {
       guard
         let log = entry.toTransactionLogDomain(
           id: storedLog.identifier,
-          parentPresentationId: storedLog.parentPresentationId
+          parentPresentationId: storedLog.parentPresentationId,
+          transactionDataTypes: walletKitConfig.supportedTransactionDataTypes
         )
       else {
         continue

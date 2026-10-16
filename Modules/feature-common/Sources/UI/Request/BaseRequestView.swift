@@ -78,6 +78,8 @@ public struct BaseRequestView<Router: RouterHost>: View {
 
 private struct BaseRequestViewContainer: View {
 
+  @Environment(\.openURL) private var openURL
+
   let viewState: RequestViewState
   @Binding var isRiskAcknowledged: Bool
   let onShare: () -> Void
@@ -172,6 +174,10 @@ private struct BaseRequestViewContainer: View {
         locator: BaseRequestLocators.requestedDocument(index.string)
       )
     }
+
+    if let transactionData = viewState.combinations.first?.transactionData {
+      transactionDataSection(transactionData)
+    }
   }
 
   @MainActor
@@ -184,11 +190,15 @@ private struct BaseRequestViewContainer: View {
         onSelected: { onCombinationSelected(index) },
         content: {
           VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-            ForEach(viewState.combinations[index].indices, id: \.self) { sectionIndex in
+            ForEach(viewState.combinations[index].documents.indices, id: \.self) { sectionIndex in
               documentSection(
-                viewState.combinations[index][sectionIndex],
+                viewState.combinations[index].documents[sectionIndex],
                 onItemClick: { onCombinationItemClick(index, $0) }
               )
+            }
+
+            if let transactionData = viewState.combinations[index].transactionData {
+              transactionDataSection(transactionData)
             }
           }
         }
@@ -206,27 +216,17 @@ private struct BaseRequestViewContainer: View {
     _ section: RequestDataUiModel,
     onItemClick: @escaping (String) -> Void
   ) -> some View {
-    VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-      WrapExpandableListView(
-        header: .init(
-          mainContent: .text(.custom(section.section.title)),
-          supportingText: .viewDetails
-        ),
-        items: section.section.listItems,
-        backgroundColor: Theme.shared.color.groupedElevatedBackground,
-        hideSensitiveContent: false,
-        isLoading: viewState.isLoading,
-        onItemClick: { onItemClick($0.groupId) }
-      )
-
-      if !section.transactionData.isEmpty {
-        titledSection(.requestTransactionDataSectionTitle) {
-          ForEach(section.transactionData) { transaction in
-            transactionDataSection(transaction)
-          }
-        }
-      }
-    }
+    WrapExpandableListView(
+      header: .init(
+        mainContent: .text(.custom(section.section.title)),
+        supportingText: .viewDetails
+      ),
+      items: section.section.listItems,
+      backgroundColor: Theme.shared.color.groupedElevatedBackground,
+      hideSensitiveContent: false,
+      isLoading: viewState.isLoading,
+      onItemClick: { onItemClick($0.groupId) }
+    )
   }
 
   @MainActor
@@ -250,17 +250,24 @@ private struct BaseRequestViewContainer: View {
 
   @MainActor
   @ViewBuilder
-  private func transactionDataSection(_ transaction: PresentationListItemSection) -> some View {
-    WrapExpandableListView(
-      header: .init(
-        mainContent: .text(.custom(transaction.title)),
-        supportingText: .viewDetails
-      ),
-      items: transaction.listItems,
-      backgroundColor: Theme.shared.color.groupedElevatedBackground,
-      hideSensitiveContent: false,
-      isLoading: viewState.isLoading
-    )
+  private func transactionDataSection(_ transactionData: RequestTransactionDataUiModel) -> some View {
+    titledSection(.requestTransactionDataSectionTitle) {
+      WrapExpandableListView(
+        header: .init(
+          mainContent: .text(.custom(transactionData.details.title)),
+          supportingText: .viewDetails
+        ),
+        items: transactionData.details.listItems,
+        backgroundColor: Theme.shared.color.groupedElevatedBackground,
+        hideSensitiveContent: false,
+        isLoading: viewState.isLoading,
+        onItemClick: { item in
+          if let url = transactionData.documentUrlsByItemId[item.id] {
+            openURL(url)
+          }
+        }
+      )
+    }
   }
 
   @MainActor
@@ -308,7 +315,7 @@ private struct BaseRequestViewContainer: View {
     errorTitle: nil,
     showMissingCredentials: false,
     items: RequestDataUiModel.mockData(),
-    combinations: [RequestDataUiModel.mockData()],
+    combinations: [.init(documents: RequestDataUiModel.mockData())],
     selectedCombinationIndex: 0,
     relyingParty: .custom("relying party"),
     isTrusted: true,

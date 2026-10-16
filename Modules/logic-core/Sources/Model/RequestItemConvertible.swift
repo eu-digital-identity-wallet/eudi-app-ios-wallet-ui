@@ -19,18 +19,25 @@ public typealias RequestConvertibleItems = [String: [String: [RequestItem]]]
 
 public protocol RequestItemConvertible: Sendable {
   var items: RequestConvertibleItems { get }
+  var requestName: String? { get }
+}
+
+public extension RequestItemConvertible {
+  var requestName: String? { nil }
 }
 
 public struct RequestItemsWrapper: RequestItemConvertible {
 
   public var items: RequestConvertibleItems
+  public var requestName: String?
 
   public init() {
     items = RequestConvertibleItems()
   }
 
-  public init(dictionary: RequestConvertibleItems) {
+  public init(dictionary: RequestConvertibleItems, requestName: String? = nil) {
     self.items = dictionary
+    self.requestName = requestName
   }
 }
 
