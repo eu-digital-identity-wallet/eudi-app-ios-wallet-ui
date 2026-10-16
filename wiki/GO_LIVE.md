@@ -756,7 +756,7 @@ Production meaning:
 | --- | --- | --- |
 | `.x509SanDns` | Verifier client identity is bound to a DNS name in an X.509 certificate. | Use when verifier certificates and trust anchors are managed and audited. |
 | `.x509Hash` | Verifier identity is bound to a certificate hash. | Use when the verifier ecosystem requires hash-based certificate binding. |
-| `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add production verifier API URL, legal name, and client ID. |
+| `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add the production client ID, legal name and request-signing keys, and the request signing algorithm when it is not RS256. |
 | `supportedTransactionDataTypes` | OpenID4VP `transaction_data` types the wallet accepts. The OpenID4VP library rejects any request whose transaction data type is not listed; an empty list rejects every request that carries transaction data. The app accepts the CSC `https://cloudsignatureconsortium.org/2025/qes-approval` (`.qesApprovalRequest`) and `https://cloudsignatureconsortium.org/2025/qes` (`.qesRequest`) types. The same list is used to read the transaction data recorded in presentation logs. | Keep both QES types when supporting signing flows. Add another type only once the wallet can display it, since WalletKit exposes it as raw JSON and the app shows it as unavailable. |
 | `validateRegistrationCertificate` | Whether the verifier's WRP registration certificate is validated during OpenID4VP. Set from `validateIssuerRegistrationCertificate`. | See [Registration Certificates: The Second Trust Layer](#registration-certificates-the-second-trust-layer). |
 
@@ -774,8 +774,9 @@ var vpConfig: OpenId4VpConfiguration {
         [
           PreregisteredClient(
             clientId: "my-production-verifier-client-id",
-            verifierApiUri: "https://verifier.example.eu",
-            verifierLegalName: "Example Member State Verifier"
+            verifierLegalName: "Example Member State Verifier",
+            webKeys: productionVerifierWebKeys,
+            jarSigningAlg: JWSAlgorithm(.ES256)
           )
         ]
       )
@@ -788,7 +789,8 @@ var vpConfig: OpenId4VpConfiguration {
 
 Rules:
 
-* `verifierApiUri` must be HTTPS.
+* `webKeys` must hold the verifier's production request-signing public keys.
+* `jarSigningAlg` must match the algorithm the verifier signs its requests with. It defaults to RS256.
 * `verifierLegalName` must be the official entity name shown to users.
 * `clientId` must match verifier registration and protocol profile.
 * Do not include development verifier URLs in production.
@@ -974,6 +976,9 @@ Production guidance:
 
 * Replace the demo LoTE endpoints in `trustConfiguration` with your production trusted-list locations.
 * Review `defaultPolicy`, `requireSignedMetadata`, and `statusTrustPolicy` for production assurance.
+* Keep `readerTrustPolicy` at `.enforce`, so an OpenID4VP request whose reader access certificate
+  chain is not trusted is refused. `.warning` lets such a signed request proceed with an untrusted
+  certificate.
 * Configure `wrprcProviders` as well; without it the registration certificates covered in the next
   section have no trust source, and no registration can be validated in either direction.
 * Remove demo and staging fallback trust anchors that are not part of the production trust framework.
@@ -1084,8 +1089,7 @@ case .PROD:
         authFlowRedirectionURI: URL(string: "eu.example.wallet://authorization")!,
         parUsage: .required(authorizationCodeDPoPBinding: true),
         allowPlainJwtProof: false,
-        requireDpop: true,
-        cacheIssuerMetadata: true
+        requireDpop: true
       ),
       order: 0
     )
@@ -1101,7 +1105,6 @@ case .PROD:
 | `parUsage` | Pushed authorization request (PAR) usage policy. Use `.required(authorizationCodeDPoPBinding:)` to require PAR, optionally binding the authorization code to DPoP. | Prefer `.required(authorizationCodeDPoPBinding: true)` where the production profile requires PAR with sender-constrained authorization codes. |
 | `allowPlainJwtProof` | Credential proof policy. `false` (default) is HAIP-compliant: only attested proofs are sent (`attestation`, or `jwt` with a Wallet Provider key attestation). `true` additionally accepts plain `jwt` proofs (ES256/ES384/ES512) without key attestation, so the proof key is no longer attested. | Keep `false`. Set `true` only for a specific issuer that does not support key attestation, after a documented risk decision. |
 | `requireDpop` | Whether DPoP is required. | Prefer `true` where the production profile requires sender-constrained tokens. |
-| `cacheIssuerMetadata` | Whether issuer metadata is cached. | Enable only with a metadata refresh and incident strategy. |
 | `order` | Display/order preference for scoped issuance. | Use deterministic ordering approved by product owners. |
 
 Rules:

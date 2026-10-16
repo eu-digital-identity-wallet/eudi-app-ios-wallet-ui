@@ -161,8 +161,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               allowPlainJwtProof: false,
               requireDpop: true,
               issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
-              cacheIssuerMetadata: false
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate
             ),
             order: 1
           ),
@@ -182,8 +181,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               allowPlainJwtProof: false,
               requireDpop: true,
               issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
-              cacheIssuerMetadata: false
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate
             ),
             order: 0
           )
@@ -206,8 +204,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               allowPlainJwtProof: false,
               requireDpop: true,
               issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
-              cacheIssuerMetadata: false
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate
             ),
             order: 1
           ),
@@ -227,8 +224,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
               allowPlainJwtProof: false,
               requireDpop: true,
               issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
-              cacheIssuerMetadata: false
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate
             ),
             order: 0
           )
@@ -296,6 +292,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
       ],
       requireSignedMetadata: true,
       statusTrustPolicy: .warning,
+      readerTrustPolicy: .enforce,
       wrprcVpTrustPolicy: .warning,
       wrprcVciTrustPolicy: .enforce
     )
