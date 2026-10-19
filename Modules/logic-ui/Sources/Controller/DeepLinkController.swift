@@ -101,7 +101,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
     removeCachedDeepLinkURL()
 
     switch deepLinkExecutable.action {
-    case .openid4vp, .haip_vp:
+    case .openid4vp, .haip_vp, .eu_eaap:
       guard let remoteSessionCoordinator else {
         fatalError("DeepLink Action OpenId4VP Requires Remote Session Coordinator")
       }
@@ -130,7 +130,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
       }
     case .external:
       deepLinkExecutable.plainUrl.open()
-    case .credential_offer, .haip_vci:
+    case .credential_offer, .haip_vci, .eu_eaa_offer:
       let config = UIConfig.Generic(
         arguments: ["uri": deepLinkExecutable.plainUrl.absoluteString],
         navigationSuccessType: routerHost.userIsLoggedInWithDocuments()
@@ -200,6 +200,9 @@ public extension DeepLink {
     case credential_offer
     case haip_vci
     case haip_vp
+    // ETSI TS 119 472-2 (presentation) and TS 119 472-3 (issuance) wallet invocation schemes.
+    case eu_eaap
+    case eu_eaa_offer
     case rqes
     case external
 
@@ -219,10 +222,12 @@ public extension DeepLink {
     ) -> Action? {
       switch scheme {
       case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme),
-        _ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
+        _ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme),
+        _ where eu_eaap.getSchemas(with: urlSchemaController).contains(scheme):
         return .openid4vp
       case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme),
-        _ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme):
+        _ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme),
+        _ where eu_eaa_offer.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
       case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
         return .rqes
