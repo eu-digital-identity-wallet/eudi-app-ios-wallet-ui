@@ -407,15 +407,15 @@ struct WalletKitConfigImpl: WalletKitConfig {
       DocumentIssuanceConfig(
         defaultCredentialOptions: CredentialOptions(
           credentialPolicy: .rotateUse,
-          batchSize: 1
+          batchSize: 10
         ),
         documentSpecificCredentialOptions: [
           DocumentTypeIdentifier.mDocPid: CredentialOptions(
-            credentialPolicy: .oneTimeUse,
+            credentialPolicy: .rotateUse,
             batchSize: 10
           ),
           DocumentTypeIdentifier.sdJwtPid: CredentialOptions(
-            credentialPolicy: .oneTimeUse,
+            credentialPolicy: .rotateUse,
             batchSize: 10
           )
         ],
@@ -427,15 +427,15 @@ struct WalletKitConfigImpl: WalletKitConfig {
       DocumentIssuanceConfig(
         defaultCredentialOptions: CredentialOptions(
           credentialPolicy: .rotateUse,
-          batchSize: 1
+          batchSize: 10
         ),
         documentSpecificCredentialOptions: [
           DocumentTypeIdentifier.mDocPid: CredentialOptions(
-            credentialPolicy: .oneTimeUse,
+            credentialPolicy: .rotateUse,
             batchSize: 60
           ),
           DocumentTypeIdentifier.sdJwtPid: CredentialOptions(
-            credentialPolicy: .oneTimeUse,
+            credentialPolicy: .rotateUse,
             batchSize: 60
           )
         ],
