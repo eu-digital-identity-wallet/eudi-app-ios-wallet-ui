@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Swinject
+import MdocDataModel18013
 
 public final class LogicBusinessAssembly: Assembly {
 
@@ -33,8 +34,8 @@ public final class LogicBusinessAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.container)
 
-    container.register(ConfigLogic.self) { _ in
-      ConfigLogicImpl()
+    container.register(ConfigLogic.self) { r in
+      ConfigLogicImpl(transactionLogger: r.resolve(TransactionLogger.self))
     }
     .inObjectScope(ObjectScope.container)
 

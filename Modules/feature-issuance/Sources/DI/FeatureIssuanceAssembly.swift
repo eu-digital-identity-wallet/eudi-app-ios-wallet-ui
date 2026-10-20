@@ -23,7 +23,9 @@ public final class FeatureIssuanceAssembly: Assembly {
 
   public func assemble(container: Container) {
     container.register(AddDocumentInteractor.self) { r in
-      AddDocumentInteractorImpl(walletController: r.force(WalletKitController.self))
+      AddDocumentInteractorImpl(
+        walletController: r.force(WalletKitController.self)
+      )
     }
     .inObjectScope(ObjectScope.transient)
 

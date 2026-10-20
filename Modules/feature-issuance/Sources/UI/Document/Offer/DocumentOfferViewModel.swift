@@ -17,6 +17,8 @@ import Foundation
 import logic_ui
 import logic_resources
 import feature_common
+import logic_core
+import Observation
 
 @Copyable
 struct DocumentOfferViewState: ViewState {
@@ -27,7 +29,7 @@ struct DocumentOfferViewState: ViewState {
   let offerUri: String
   let allowIssue: Bool
   let initialized: Bool
-  let contentHeaderConfig: ContentHeaderConfig
+  let issuerRegistration: RelyingPartyRegistrationData?
 
   var title: LocalizableStringKey {
     return .requestCredentialOfferTitle([documentOfferUiModel.issuerName])
@@ -42,7 +44,11 @@ struct DocumentOfferViewState: ViewState {
   }
 }
 
+@Observable
 final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, DocumentOfferViewState> {
+
+  var isTrustBlockedAlertShowing: Bool = false
+  var isRegistrationBlockedAlertShowing: Bool = false
 
   private let interactor: DocumentOfferInteractor
 
@@ -68,11 +74,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
         offerUri: offerUri,
         allowIssue: false,
         initialized: false,
-        contentHeaderConfig: .init(
-          appIconAndTextData: AppIconAndTextData(
-            appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
-          )
-        )
+        issuerRegistration: nil
       )
     )
   }
@@ -89,28 +91,42 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
     let state = await interactor.processOfferRequest(with: offerUri)
 
     switch state {
-    case .success(let uiModel):
+    case .success(let uiModel, let issuerRegistration):
       setState {
         $0.copy(
           isLoading: false,
           documentOfferUiModel: uiModel,
           allowIssue: !uiModel.uiOffers.isEmpty,
-          initialized: true,
-          contentHeaderConfig: .init(
-            appIconAndTextData: AppIconAndTextData(
-              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
-            ),
-            description: .dataSharingTitle,
-            mainText: .issuanceRequest,
-            icon: .remoteImage(uiModel.issuerLogo, nil),
-            relyingPartyData: RelyingPartyData(
-              isVerified: false,
-              name: .custom(uiModel.issuerName),
-              description: .issuerWantWalletAddition
-            )
+          initialized: true
+        )
+        .copy(error: nil)
+        .copy(
+          issuerRegistration: issuerRegistration.toRegistrationData(
+            issuerName: uiModel.issuerName,
+            issuerLogo: uiModel.issuerLogo
           )
+        )
+      }
+    case .registrationBlocked:
+      setState {
+        $0.copy(
+          isLoading: false,
+          documentOfferUiModel: DocumentOfferUIModel.empty(),
+          allowIssue: false,
+          initialized: false
         ).copy(error: nil)
       }
+      isRegistrationBlockedAlertShowing = true
+    case .issuerNotTrusted:
+      setState {
+        $0.copy(
+          isLoading: false,
+          documentOfferUiModel: DocumentOfferUIModel.empty(),
+          allowIssue: false,
+          initialized: false
+        ).copy(error: nil)
+      }
+      isTrustBlockedAlertShowing = true
     case .failure(let error):
       setState {
         $0.copy(
@@ -179,6 +195,9 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
             )
           )
         )
+      case .issuerNotTrusted:
+        setState { $0.copy(isLoading: false).copy(error: nil) }
+        isTrustBlockedAlertShowing = true
       case .failure(let error):
         setState {
           $0.copy(
@@ -195,6 +214,16 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
         router.push(with: route)
       }
     }
+  }
+
+  func onRegistrationBlockedClose() {
+    isRegistrationBlockedAlertShowing = false
+    onPop()
+  }
+
+  func onTrustBlockedClose() {
+    isTrustBlockedAlertShowing = false
+    onPop()
   }
 
   func onPop() {
@@ -227,6 +256,7 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
           initialized: false
         )
         .copy(error: nil)
+        .copy(issuerRegistration: nil)
     }
     Task {
       await self.initialize()
@@ -249,6 +279,9 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
       router.push(with: route)
     case .noPending:
       setState { $0.copy(isLoading: false) }
+    case .issuerNotTrusted:
+      setState { $0.copy(isLoading: false).copy(error: nil) }
+      isTrustBlockedAlertShowing = true
     case .failure(let error):
       setState {
         $0.copy(

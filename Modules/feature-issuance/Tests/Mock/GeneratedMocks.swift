@@ -99,6 +99,20 @@ import logic_resources
 
 
 
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Config/TrustMarkUiConfig.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Extension/DocClaimsDecodable+Extensions.swift'
 
 import Cuckoo
@@ -1050,6 +1064,134 @@ public class ScannerInteractorStub:ScannerInteractor, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/Interactor/TrustMarkInteractor.swift'
+
+import Cuckoo
+import Foundation
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+public class MockTrustMarkInteractor: TrustMarkInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = any TrustMarkInteractor
+    public typealias Stubbing = __StubbingProxy_TrustMarkInteractor
+    public typealias Verification = __VerificationProxy_TrustMarkInteractor
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any TrustMarkInteractor)?
+
+    public func enableDefaultImplementation(_ stub: any TrustMarkInteractor) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public func getTrustMark() async -> LoadTrustMarkPartialState {
+        return await cuckoo_manager.call(
+            "getTrustMark() async -> LoadTrustMarkPartialState",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getTrustMark()
+        )
+    }
+
+    public func completeIntroduction() async {
+        return await cuckoo_manager.call(
+            "completeIntroduction() async",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.completeIntroduction()
+        )
+    }
+
+    public struct __StubbingProxy_TrustMarkInteractor: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func getTrustMark() -> Cuckoo.ProtocolStubFunction<(), LoadTrustMarkPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockTrustMarkInteractor.self,
+                method: "getTrustMark() async -> LoadTrustMarkPartialState",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func completeIntroduction() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockTrustMarkInteractor.self,
+                method: "completeIntroduction() async",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_TrustMarkInteractor: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func getTrustMark() -> Cuckoo.__DoNotUse<(), LoadTrustMarkPartialState> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getTrustMark() async -> LoadTrustMarkPartialState",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func completeIntroduction() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "completeIntroduction() async",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class TrustMarkInteractorStub:TrustMarkInteractor, @unchecked Sendable {
+
+
+    
+    public func getTrustMark() async -> LoadTrustMarkPartialState {
+        return DefaultValueRegistry.defaultValue(for: (LoadTrustMarkPartialState).self)
+    }
+    
+    public func completeIntroduction() async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+}
+
+
+
+
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Accessibility/BaseRequestLocators.swift'
 
 import Cuckoo
@@ -1262,6 +1404,21 @@ import Observation
 
 
 
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Request/Model/RelyingPartyRegistrationUiModel.swift'
+
+import Cuckoo
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Request/Model/RequestDataUIModel.swift'
 
 import Cuckoo
@@ -1360,6 +1517,53 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/Success/Generic/GenericSuccessViewModel.swift'
 
 import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/TrustMark/Model/TrustMarkUIModel.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/TrustMark/TrustMarkView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/feature-common/Sources/UI/TrustMark/TrustMarkViewModel.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -1811,6 +2015,7 @@ import logic_resources
 import Cuckoo
 import logic_resources
 import OrderedCollections
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -1905,6 +2110,7 @@ import logic_resources
 import Cuckoo
 import Foundation
 import logic_resources
+import Observation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -2795,7 +3001,7 @@ import Cuckoo
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-api/Sources/Model/Response/WalletUnitAttestation.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-api/Sources/Model/Response/WalletKeyAttestation.swift'
 
 import Cuckoo
 @testable import logic_core
@@ -2922,14 +3128,14 @@ public class MockWalletAttestationRepository: WalletAttestationRepository, Cucko
     }
 
 
-    public func issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation {
+    public func issueWalletKeyAttestation(host p0: String, payload p1: Data) async throws -> WalletKeyAttestation {
         return try await cuckoo_manager.callThrows(
-            "issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation",
+            "issueWalletKeyAttestation(host p0: String, payload p1: Data) async throws -> WalletKeyAttestation",
             parameters: (p0, p1),
             escapingParameters: (p0, p1),
             errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.issueWalletUnitAttestation(host: p0, payload: p1)
+            defaultCall: await __defaultImplStub!.issueWalletKeyAttestation(host: p0, payload: p1)
         )
     }
 
@@ -2951,10 +3157,10 @@ public class MockWalletAttestationRepository: WalletAttestationRepository, Cucko
             self.cuckoo_manager = manager
         }
         
-        func issueWalletUnitAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(String, Data), WalletUnitAttestation,Swift.Error> where M1.MatchedType == String, M2.MatchedType == Data {
+        func issueWalletKeyAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(String, Data), WalletKeyAttestation,Swift.Error> where M1.MatchedType == String, M2.MatchedType == Data {
             let matchers: [Cuckoo.ParameterMatcher<(String, Data)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletAttestationRepository.self,
-                method: "issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation",
+                method: "issueWalletKeyAttestation(host p0: String, payload p1: Data) async throws -> WalletKeyAttestation",
                 parameterMatchers: matchers
             ))
         }
@@ -2981,10 +3187,10 @@ public class MockWalletAttestationRepository: WalletAttestationRepository, Cucko
         
         
         @discardableResult
-        func issueWalletUnitAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.__DoNotUse<(String, Data), WalletUnitAttestation> where M1.MatchedType == String, M2.MatchedType == Data {
+        func issueWalletKeyAttestation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(host p0: M1, payload p1: M2) -> Cuckoo.__DoNotUse<(String, Data), WalletKeyAttestation> where M1.MatchedType == String, M2.MatchedType == Data {
             let matchers: [Cuckoo.ParameterMatcher<(String, Data)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
-                "issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation",
+                "issueWalletKeyAttestation(host p0: String, payload p1: Data) async throws -> WalletKeyAttestation",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -3009,8 +3215,8 @@ public class WalletAttestationRepositoryStub:WalletAttestationRepository, @unche
 
 
     
-    public func issueWalletUnitAttestation(host p0: String, payload p1: Data) async throws -> WalletUnitAttestation {
-        return DefaultValueRegistry.defaultValue(for: (WalletUnitAttestation).self)
+    public func issueWalletKeyAttestation(host p0: String, payload p1: Data) async throws -> WalletKeyAttestation {
+        return DefaultValueRegistry.defaultValue(for: (WalletKeyAttestation).self)
     }
     
     public func issueWalletInstanceAttestation(host p0: String, payload p1: Data) async throws -> WalletInstanceAttestation {
@@ -3998,6 +4204,7 @@ import Cuckoo
 import Cuckoo
 import Foundation
 import EudiRQESUi
+import MdocDataModel18013
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -4239,6 +4446,7 @@ import Cuckoo
 
 import Cuckoo
 import Foundation
+import Security
 import KeychainAccess
 @testable import logic_core
 @testable import logic_business
@@ -4405,9 +4613,9 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
         )
     }
 
-    public func clear() {
+    public func clear() -> Bool {
         return cuckoo_manager.call(
-            "clear()",
+            "clear() -> Bool",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -4478,10 +4686,10 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
             ))
         }
         
-        func clear() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+        func clear() -> Cuckoo.ProtocolStubFunction<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockKeyChainController.self,
-                method: "clear()",
+                method: "clear() -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -4584,10 +4792,10 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
         
         
         @discardableResult
-        func clear() -> Cuckoo.__DoNotUse<(), Void> {
+        func clear() -> Cuckoo.__DoNotUse<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "clear()",
+                "clear() -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -4628,8 +4836,8 @@ public class KeyChainControllerStub:KeyChainController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func clear() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    public func clear() -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
 }
 
@@ -6875,7 +7083,10 @@ import EudiWalletKit
 import Cuckoo
 import Foundation
 import EudiWalletKit
-import Security
+import EudiEtsi1196x2
+import MdocDataModel18013
+import struct OpenID4VP.SupportedTransactionDataType
+import struct OpenID4VP.TransactionDataType
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -6911,6 +7122,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         }
     }
 
+    var validateIssuerRegistrationCertificate: Bool {
+        get {
+            return cuckoo_manager.getter(
+                "validateIssuerRegistrationCertificate",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.validateIssuerRegistrationCertificate
+            )
+        }
+    }
+
     var vpConfig: OpenId4VpConfiguration {
         get {
             return cuckoo_manager.getter(
@@ -6921,12 +7142,22 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         }
     }
 
-    var trustedReaderRootCertificates: [x5chain] {
+    var supportedTransactionDataTypes: [SupportedTransactionDataType] {
         get {
             return cuckoo_manager.getter(
-                "trustedReaderRootCertificates",
+                "supportedTransactionDataTypes",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.trustedReaderRootCertificates
+                defaultCall: __defaultImplStub!.supportedTransactionDataTypes
+            )
+        }
+    }
+
+    var trustConfiguration: TrustConfiguration {
+        get {
+            return cuckoo_manager.getter(
+                "trustConfiguration",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.trustConfiguration
             )
         }
     }
@@ -7001,6 +7232,16 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         }
     }
 
+    var trustMarkSource: TrustMarkSource {
+        get {
+            return cuckoo_manager.getter(
+                "trustMarkSource",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.trustMarkSource
+            )
+        }
+    }
+
 
     struct __StubbingProxy_WalletKitConfig: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -7013,12 +7254,20 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "issuersConfig")
         }
         
+        var validateIssuerRegistrationCertificate: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,Bool> {
+            return .init(manager: cuckoo_manager, name: "validateIssuerRegistrationCertificate")
+        }
+        
         var vpConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,OpenId4VpConfiguration> {
             return .init(manager: cuckoo_manager, name: "vpConfig")
         }
         
-        var trustedReaderRootCertificates: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,[x5chain]> {
-            return .init(manager: cuckoo_manager, name: "trustedReaderRootCertificates")
+        var supportedTransactionDataTypes: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,[SupportedTransactionDataType]> {
+            return .init(manager: cuckoo_manager, name: "supportedTransactionDataTypes")
+        }
+        
+        var trustConfiguration: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,TrustConfiguration> {
+            return .init(manager: cuckoo_manager, name: "trustConfiguration")
         }
         
         var userAuthenticationRequired: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,Bool> {
@@ -7048,6 +7297,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         var documentIssuanceConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,DocumentIssuanceConfig> {
             return .init(manager: cuckoo_manager, name: "documentIssuanceConfig")
         }
+        
+        var trustMarkSource: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockWalletKitConfig,TrustMarkSource> {
+            return .init(manager: cuckoo_manager, name: "trustMarkSource")
+        }
     }
 
     struct __VerificationProxy_WalletKitConfig: Cuckoo.VerificationProxy {
@@ -7065,12 +7318,20 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
             return .init(manager: cuckoo_manager, name: "issuersConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
+        var validateIssuerRegistrationCertificate: Cuckoo.VerifyReadOnlyProperty<Bool> {
+            return .init(manager: cuckoo_manager, name: "validateIssuerRegistrationCertificate", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
         var vpConfig: Cuckoo.VerifyReadOnlyProperty<OpenId4VpConfiguration> {
             return .init(manager: cuckoo_manager, name: "vpConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var trustedReaderRootCertificates: Cuckoo.VerifyReadOnlyProperty<[x5chain]> {
-            return .init(manager: cuckoo_manager, name: "trustedReaderRootCertificates", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var supportedTransactionDataTypes: Cuckoo.VerifyReadOnlyProperty<[SupportedTransactionDataType]> {
+            return .init(manager: cuckoo_manager, name: "supportedTransactionDataTypes", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var trustConfiguration: Cuckoo.VerifyReadOnlyProperty<TrustConfiguration> {
+            return .init(manager: cuckoo_manager, name: "trustConfiguration", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var userAuthenticationRequired: Cuckoo.VerifyReadOnlyProperty<Bool> {
@@ -7100,6 +7361,10 @@ class MockWalletKitConfig: WalletKitConfig, Cuckoo.ProtocolMock, @unchecked Send
         var documentIssuanceConfig: Cuckoo.VerifyReadOnlyProperty<DocumentIssuanceConfig> {
             return .init(manager: cuckoo_manager, name: "documentIssuanceConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
+        
+        var trustMarkSource: Cuckoo.VerifyReadOnlyProperty<TrustMarkSource> {
+            return .init(manager: cuckoo_manager, name: "trustMarkSource", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
     }
 }
 
@@ -7111,15 +7376,27 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
         }
     }
     
+    var validateIssuerRegistrationCertificate: Bool {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Bool).self)
+        }
+    }
+    
     var vpConfig: OpenId4VpConfiguration {
         get {
             return DefaultValueRegistry.defaultValue(for: (OpenId4VpConfiguration).self)
         }
     }
     
-    var trustedReaderRootCertificates: [x5chain] {
+    var supportedTransactionDataTypes: [SupportedTransactionDataType] {
         get {
-            return DefaultValueRegistry.defaultValue(for: ([x5chain]).self)
+            return DefaultValueRegistry.defaultValue(for: ([SupportedTransactionDataType]).self)
+        }
+    }
+    
+    var trustConfiguration: TrustConfiguration {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (TrustConfiguration).self)
         }
     }
     
@@ -7162,6 +7439,12 @@ class WalletKitConfigStub:WalletKitConfig, @unchecked Sendable {
     var documentIssuanceConfig: DocumentIssuanceConfig {
         get {
             return DefaultValueRegistry.defaultValue(for: (DocumentIssuanceConfig).self)
+        }
+    }
+    
+    var trustMarkSource: TrustMarkSource {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (TrustMarkSource).self)
         }
     }
 
@@ -7414,11 +7697,12 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
 
-    public func clearAllDocuments() async {
-        return await cuckoo_manager.call(
-            "clearAllDocuments() async",
+    public func clearAllDocuments() async throws {
+        return try await cuckoo_manager.callThrows(
+            "clearAllDocuments() async throws",
             parameters: (),
             escapingParameters: (),
+            errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.clearAllDocuments()
         )
@@ -7446,9 +7730,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
 
-    public func issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> [WalletStorage.Document] {
+    public func issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> IssuanceResult {
         return try await cuckoo_manager.callThrows(
-            "issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> [WalletStorage.Document]",
+            "issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> IssuanceResult",
             parameters: (p0, p1, p2),
             escapingParameters: (p0, p1, p2),
             errorType: Swift.Error.self,
@@ -7465,6 +7749,16 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
             errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.reIssueDocument(identifier: p0, isBackgroundOperation: p1)
+        )
+    }
+
+    public func getDocumentCredentialOptions(with p0: String) async -> CredentialOptions? {
+        return await cuckoo_manager.call(
+            "getDocumentCredentialOptions(with p0: String) async -> CredentialOptions?",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getDocumentCredentialOptions(with: p0)
         )
     }
 
@@ -7490,9 +7784,9 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
 
-    public func issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], txCodeValue p2: String?) async throws -> [WalletStorage.Document] {
+    public func issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], txCodeValue p2: String?) async throws -> IssuanceResult {
         return try await cuckoo_manager.callThrows(
-            "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], txCodeValue p2: String?) async throws -> [WalletStorage.Document]",
+            "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], txCodeValue p2: String?) async throws -> IssuanceResult",
             parameters: (p0, p1, p2),
             escapingParameters: (p0, p1, p2),
             errorType: Swift.Error.self,
@@ -7556,12 +7850,11 @@ return await cuckoo_manager.call(
         )
     }
 
-    public func getScopedDocuments() async throws -> [ScopedDocument] {
-        return try await cuckoo_manager.callThrows(
-            "getScopedDocuments() async throws -> [ScopedDocument]",
+    public func getScopedDocuments() async -> ScopedDocumentsResult {
+        return await cuckoo_manager.call(
+            "getScopedDocuments() async -> ScopedDocumentsResult",
             parameters: (),
             escapingParameters: (),
-            errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.getScopedDocuments()
         )
@@ -7609,9 +7902,9 @@ return await cuckoo_manager.call(
         )
     }
 
-    public func fetchTransactionLog(with p0: String) async throws -> TransactionLogItem {
+    public func fetchTransactionLog(with p0: String) async throws -> TransactionLogDomain {
         return try await cuckoo_manager.callThrows(
-            "fetchTransactionLog(with p0: String) async throws -> TransactionLogItem",
+            "fetchTransactionLog(with p0: String) async throws -> TransactionLogDomain",
             parameters: (p0),
             escapingParameters: (p0),
             errorType: Swift.Error.self,
@@ -7620,14 +7913,58 @@ return await cuckoo_manager.call(
         )
     }
 
-    public func fetchTransactionLogs() async throws -> [TransactionLogItem] {
+    public func fetchTransactionLogs() async throws -> [TransactionLogDomain] {
         return try await cuckoo_manager.callThrows(
-            "fetchTransactionLogs() async throws -> [TransactionLogItem]",
+            "fetchTransactionLogs() async throws -> [TransactionLogDomain]",
             parameters: (),
             escapingParameters: (),
             errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.fetchTransactionLogs()
+        )
+    }
+
+    public func deleteTransactionLog(with p0: String) async throws {
+        return try await cuckoo_manager.callThrows(
+            "deleteTransactionLog(with p0: String) async throws",
+            parameters: (p0),
+            escapingParameters: (p0),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.deleteTransactionLog(with: p0)
+        )
+    }
+
+    public func fetchPresentationActions(parentPresentationId p0: String) async throws -> [TransactionLogDomain] {
+        return try await cuckoo_manager.callThrows(
+            "fetchPresentationActions(parentPresentationId p0: String) async throws -> [TransactionLogDomain]",
+            parameters: (p0),
+            escapingParameters: (p0),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.fetchPresentationActions(parentPresentationId: p0)
+        )
+    }
+
+    public func recordDataDeletionRequest(for p0: TransactionLogDomain.Presentation, contactUrl p1: URL) async throws {
+        return try await cuckoo_manager.callThrows(
+            "recordDataDeletionRequest(for p0: TransactionLogDomain.Presentation, contactUrl p1: URL) async throws",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.recordDataDeletionRequest(for: p0, contactUrl: p1)
+        )
+    }
+
+    public func recordDpaReport(for p0: TransactionLogDomain.Presentation, contactUrl p1: URL) async throws {
+        return try await cuckoo_manager.callThrows(
+            "recordDpaReport(for p0: TransactionLogDomain.Presentation, contactUrl p1: URL) async throws",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.recordDpaReport(for: p0, contactUrl: p1)
         )
     }
 
@@ -7674,9 +8011,9 @@ return await cuckoo_manager.call(
         )
     }
 
-    public func getDocumentStatus(for p0: StatusIdentifier) async throws -> CredentialStatus {
+    public func getDocumentStatus(for p0: MdocDataModel18013.StatusList) async throws -> CredentialStatus {
         return try await cuckoo_manager.callThrows(
-            "getDocumentStatus(for p0: StatusIdentifier) async throws -> CredentialStatus",
+            "getDocumentStatus(for p0: MdocDataModel18013.StatusList) async throws -> CredentialStatus",
             parameters: (p0),
             escapingParameters: (p0),
             errorType: Swift.Error.self,
@@ -7725,6 +8062,46 @@ return await cuckoo_manager.call(
             errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.refreshUsageCounters()
+        )
+    }
+
+    public func getIssuerRegistration(for p0: OfferedIssuanceModel) async -> IssuerRegistration? {
+        return await cuckoo_manager.call(
+            "getIssuerRegistration(for p0: OfferedIssuanceModel) async -> IssuerRegistration?",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getIssuerRegistration(for: p0)
+        )
+    }
+
+    public func getIssuerRegistration(issuerId p0: String, configIds p1: [String]) async -> IssuerRegistration? {
+        return await cuckoo_manager.call(
+            "getIssuerRegistration(issuerId p0: String, configIds p1: [String]) async -> IssuerRegistration?",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getIssuerRegistration(issuerId: p0, configIds: p1)
+        )
+    }
+
+    public func getVerifierRegistration(policy p0: WrpRegistrationPolicy?, trustViolations p1: [String], overaskedClaims p2: [logic_core.OveraskedClaim], verifierName p3: String?, verifierIsTrusted p4: Bool) async -> RelyingPartyRegistration {
+        return await cuckoo_manager.call(
+            "getVerifierRegistration(policy p0: WrpRegistrationPolicy?, trustViolations p1: [String], overaskedClaims p2: [logic_core.OveraskedClaim], verifierName p3: String?, verifierIsTrusted p4: Bool) async -> RelyingPartyRegistration",
+            parameters: (p0, p1, p2, p3, p4),
+            escapingParameters: (p0, p1, p2, p3, p4),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getVerifierRegistration(policy: p0, trustViolations: p1, overaskedClaims: p2, verifierName: p3, verifierIsTrusted: p4)
+        )
+    }
+
+    public func getVerifierRegistrationForFailedRequest() async -> RelyingPartyRegistration? {
+        return await cuckoo_manager.call(
+            "getVerifierRegistrationForFailedRequest() async -> RelyingPartyRegistration?",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getVerifierRegistrationForFailedRequest()
         )
     }
 
@@ -7835,10 +8212,10 @@ return await cuckoo_manager.call(
             ))
         }
         
-        func clearAllDocuments() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+        func clearAllDocuments() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(),Swift.Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "clearAllDocuments() async",
+                method: "clearAllDocuments() async throws",
                 parameterMatchers: matchers
             ))
         }
@@ -7859,10 +8236,10 @@ return await cuckoo_manager.call(
             ))
         }
         
-        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, identifiers p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.ProtocolStubThrowingFunction<(String, [String], DocumentTypeIdentifier), [WalletStorage.Document],Swift.Error> where M1.MatchedType == String, M2.MatchedType == [String], M3.MatchedType == DocumentTypeIdentifier {
+        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, identifiers p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.ProtocolStubThrowingFunction<(String, [String], DocumentTypeIdentifier), IssuanceResult,Swift.Error> where M1.MatchedType == String, M2.MatchedType == [String], M3.MatchedType == DocumentTypeIdentifier {
             let matchers: [Cuckoo.ParameterMatcher<(String, [String], DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> [WalletStorage.Document]",
+                method: "issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> IssuanceResult",
                 parameterMatchers: matchers
             ))
         }
@@ -7871,6 +8248,14 @@ return await cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<(String, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "reIssueDocument(identifier p0: String, isBackgroundOperation p1: Bool) async throws -> WalletStorage.Document",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getDocumentCredentialOptions<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubFunction<(String), CredentialOptions?> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "getDocumentCredentialOptions(with p0: String) async -> CredentialOptions?",
                 parameterMatchers: matchers
             ))
         }
@@ -7891,10 +8276,10 @@ return await cuckoo_manager.call(
             ))
         }
         
-        func issueDocumentsByOfferUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(offerUri p0: M1, docTypes p1: M2, txCodeValue p2: M3) -> Cuckoo.ProtocolStubThrowingFunction<(String, [OfferedDocModel], String?), [WalletStorage.Document],Swift.Error> where M1.MatchedType == String, M2.MatchedType == [OfferedDocModel], M3.OptionalMatchedType == String {
+        func issueDocumentsByOfferUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(offerUri p0: M1, docTypes p1: M2, txCodeValue p2: M3) -> Cuckoo.ProtocolStubThrowingFunction<(String, [OfferedDocModel], String?), IssuanceResult,Swift.Error> where M1.MatchedType == String, M2.MatchedType == [OfferedDocModel], M3.OptionalMatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String, [OfferedDocModel], String?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], txCodeValue p2: String?) async throws -> [WalletStorage.Document]",
+                method: "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], txCodeValue p2: String?) async throws -> IssuanceResult",
                 parameterMatchers: matchers
             ))
         }
@@ -7939,10 +8324,10 @@ return await cuckoo_manager.call(
             ))
         }
         
-        func getScopedDocuments() -> Cuckoo.ProtocolStubThrowingFunction<(), [ScopedDocument],Swift.Error> {
+        func getScopedDocuments() -> Cuckoo.ProtocolStubFunction<(), ScopedDocumentsResult> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "getScopedDocuments() async throws -> [ScopedDocument]",
+                method: "getScopedDocuments() async -> ScopedDocumentsResult",
                 parameterMatchers: matchers
             ))
         }
@@ -7979,18 +8364,50 @@ return await cuckoo_manager.call(
             ))
         }
         
-        func fetchTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), TransactionLogItem,Swift.Error> where M1.MatchedType == String {
+        func fetchTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), TransactionLogDomain,Swift.Error> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchTransactionLog(with p0: String) async throws -> TransactionLogItem",
+                method: "fetchTransactionLog(with p0: String) async throws -> TransactionLogDomain",
                 parameterMatchers: matchers
             ))
         }
         
-        func fetchTransactionLogs() -> Cuckoo.ProtocolStubThrowingFunction<(), [TransactionLogItem],Swift.Error> {
+        func fetchTransactionLogs() -> Cuckoo.ProtocolStubThrowingFunction<(), [TransactionLogDomain],Swift.Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchTransactionLogs() async throws -> [TransactionLogItem]",
+                method: "fetchTransactionLogs() async throws -> [TransactionLogDomain]",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func deleteTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String),Swift.Error> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "deleteTransactionLog(with p0: String) async throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func fetchPresentationActions<M1: Cuckoo.Matchable>(parentPresentationId p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), [TransactionLogDomain],Swift.Error> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "fetchPresentationActions(parentPresentationId p0: String) async throws -> [TransactionLogDomain]",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func recordDataDeletionRequest<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(for p0: M1, contactUrl p1: M2) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(TransactionLogDomain.Presentation, URL),Swift.Error> where M1.MatchedType == TransactionLogDomain.Presentation, M2.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(TransactionLogDomain.Presentation, URL)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "recordDataDeletionRequest(for p0: TransactionLogDomain.Presentation, contactUrl p1: URL) async throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func recordDpaReport<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(for p0: M1, contactUrl p1: M2) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(TransactionLogDomain.Presentation, URL),Swift.Error> where M1.MatchedType == TransactionLogDomain.Presentation, M2.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(TransactionLogDomain.Presentation, URL)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "recordDpaReport(for p0: TransactionLogDomain.Presentation, contactUrl p1: URL) async throws",
                 parameterMatchers: matchers
             ))
         }
@@ -8027,10 +8444,10 @@ return await cuckoo_manager.call(
             ))
         }
         
-        func getDocumentStatus<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(StatusIdentifier), CredentialStatus,Swift.Error> where M1.MatchedType == StatusIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(StatusIdentifier)>] = [wrap(matchable: p0) { $0 }]
+        func getDocumentStatus<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(MdocDataModel18013.StatusList), CredentialStatus,Swift.Error> where M1.MatchedType == MdocDataModel18013.StatusList {
+            let matchers: [Cuckoo.ParameterMatcher<(MdocDataModel18013.StatusList)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "getDocumentStatus(for p0: StatusIdentifier) async throws -> CredentialStatus",
+                method: "getDocumentStatus(for p0: MdocDataModel18013.StatusList) async throws -> CredentialStatus",
                 parameterMatchers: matchers
             ))
         }
@@ -8063,6 +8480,38 @@ return await cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "refreshUsageCounters() async throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getIssuerRegistration<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(OfferedIssuanceModel), IssuerRegistration?> where M1.MatchedType == OfferedIssuanceModel {
+            let matchers: [Cuckoo.ParameterMatcher<(OfferedIssuanceModel)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "getIssuerRegistration(for p0: OfferedIssuanceModel) async -> IssuerRegistration?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getIssuerRegistration<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(issuerId p0: M1, configIds p1: M2) -> Cuckoo.ProtocolStubFunction<(String, [String]), IssuerRegistration?> where M1.MatchedType == String, M2.MatchedType == [String] {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [String])>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "getIssuerRegistration(issuerId p0: String, configIds p1: [String]) async -> IssuerRegistration?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getVerifierRegistration<M1: Cuckoo.OptionalMatchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.OptionalMatchable, M5: Cuckoo.Matchable>(policy p0: M1, trustViolations p1: M2, overaskedClaims p2: M3, verifierName p3: M4, verifierIsTrusted p4: M5) -> Cuckoo.ProtocolStubFunction<(WrpRegistrationPolicy?, [String], [logic_core.OveraskedClaim], String?, Bool), RelyingPartyRegistration> where M1.OptionalMatchedType == WrpRegistrationPolicy, M2.MatchedType == [String], M3.MatchedType == [logic_core.OveraskedClaim], M4.OptionalMatchedType == String, M5.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<(WrpRegistrationPolicy?, [String], [logic_core.OveraskedClaim], String?, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }, wrap(matchable: p4) { $0.4 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "getVerifierRegistration(policy p0: WrpRegistrationPolicy?, trustViolations p1: [String], overaskedClaims p2: [logic_core.OveraskedClaim], verifierName p3: String?, verifierIsTrusted p4: Bool) async -> RelyingPartyRegistration",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getVerifierRegistrationForFailedRequest() -> Cuckoo.ProtocolStubFunction<(), RelyingPartyRegistration?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "getVerifierRegistrationForFailedRequest() async -> RelyingPartyRegistration?",
                 parameterMatchers: matchers
             ))
         }
@@ -8232,7 +8681,7 @@ return await cuckoo_manager.call(
         func clearAllDocuments() -> Cuckoo.__DoNotUse<(), Void> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "clearAllDocuments() async",
+                "clearAllDocuments() async throws",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8265,10 +8714,10 @@ return await cuckoo_manager.call(
         
         
         @discardableResult
-        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, identifiers p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.__DoNotUse<(String, [String], DocumentTypeIdentifier), [WalletStorage.Document]> where M1.MatchedType == String, M2.MatchedType == [String], M3.MatchedType == DocumentTypeIdentifier {
+        func issueDocuments<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(issuerId p0: M1, identifiers p1: M2, docTypeIdentifier p2: M3) -> Cuckoo.__DoNotUse<(String, [String], DocumentTypeIdentifier), IssuanceResult> where M1.MatchedType == String, M2.MatchedType == [String], M3.MatchedType == DocumentTypeIdentifier {
             let matchers: [Cuckoo.ParameterMatcher<(String, [String], DocumentTypeIdentifier)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return cuckoo_manager.verify(
-                "issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> [WalletStorage.Document]",
+                "issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> IssuanceResult",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8281,6 +8730,18 @@ return await cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<(String, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
                 "reIssueDocument(identifier p0: String, isBackgroundOperation p1: Bool) async throws -> WalletStorage.Document",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getDocumentCredentialOptions<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), CredentialOptions?> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getDocumentCredentialOptions(with p0: String) async -> CredentialOptions?",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8313,10 +8774,10 @@ return await cuckoo_manager.call(
         
         
         @discardableResult
-        func issueDocumentsByOfferUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(offerUri p0: M1, docTypes p1: M2, txCodeValue p2: M3) -> Cuckoo.__DoNotUse<(String, [OfferedDocModel], String?), [WalletStorage.Document]> where M1.MatchedType == String, M2.MatchedType == [OfferedDocModel], M3.OptionalMatchedType == String {
+        func issueDocumentsByOfferUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.OptionalMatchable>(offerUri p0: M1, docTypes p1: M2, txCodeValue p2: M3) -> Cuckoo.__DoNotUse<(String, [OfferedDocModel], String?), IssuanceResult> where M1.MatchedType == String, M2.MatchedType == [OfferedDocModel], M3.OptionalMatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String, [OfferedDocModel], String?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }]
             return cuckoo_manager.verify(
-                "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], txCodeValue p2: String?) async throws -> [WalletStorage.Document]",
+                "issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], txCodeValue p2: String?) async throws -> IssuanceResult",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8385,10 +8846,10 @@ return await cuckoo_manager.call(
         
         
         @discardableResult
-        func getScopedDocuments() -> Cuckoo.__DoNotUse<(), [ScopedDocument]> {
+        func getScopedDocuments() -> Cuckoo.__DoNotUse<(), ScopedDocumentsResult> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "getScopedDocuments() async throws -> [ScopedDocument]",
+                "getScopedDocuments() async -> ScopedDocumentsResult",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8445,10 +8906,10 @@ return await cuckoo_manager.call(
         
         
         @discardableResult
-        func fetchTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), TransactionLogItem> where M1.MatchedType == String {
+        func fetchTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), TransactionLogDomain> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "fetchTransactionLog(with p0: String) async throws -> TransactionLogItem",
+                "fetchTransactionLog(with p0: String) async throws -> TransactionLogDomain",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8457,10 +8918,58 @@ return await cuckoo_manager.call(
         
         
         @discardableResult
-        func fetchTransactionLogs() -> Cuckoo.__DoNotUse<(), [TransactionLogItem]> {
+        func fetchTransactionLogs() -> Cuckoo.__DoNotUse<(), [TransactionLogDomain]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "fetchTransactionLogs() async throws -> [TransactionLogItem]",
+                "fetchTransactionLogs() async throws -> [TransactionLogDomain]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func deleteTransactionLog<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "deleteTransactionLog(with p0: String) async throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func fetchPresentationActions<M1: Cuckoo.Matchable>(parentPresentationId p0: M1) -> Cuckoo.__DoNotUse<(String), [TransactionLogDomain]> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "fetchPresentationActions(parentPresentationId p0: String) async throws -> [TransactionLogDomain]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func recordDataDeletionRequest<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(for p0: M1, contactUrl p1: M2) -> Cuckoo.__DoNotUse<(TransactionLogDomain.Presentation, URL), Void> where M1.MatchedType == TransactionLogDomain.Presentation, M2.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(TransactionLogDomain.Presentation, URL)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "recordDataDeletionRequest(for p0: TransactionLogDomain.Presentation, contactUrl p1: URL) async throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func recordDpaReport<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(for p0: M1, contactUrl p1: M2) -> Cuckoo.__DoNotUse<(TransactionLogDomain.Presentation, URL), Void> where M1.MatchedType == TransactionLogDomain.Presentation, M2.MatchedType == URL {
+            let matchers: [Cuckoo.ParameterMatcher<(TransactionLogDomain.Presentation, URL)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "recordDpaReport(for p0: TransactionLogDomain.Presentation, contactUrl p1: URL) async throws",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8517,10 +9026,10 @@ return await cuckoo_manager.call(
         
         
         @discardableResult
-        func getDocumentStatus<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(StatusIdentifier), CredentialStatus> where M1.MatchedType == StatusIdentifier {
-            let matchers: [Cuckoo.ParameterMatcher<(StatusIdentifier)>] = [wrap(matchable: p0) { $0 }]
+        func getDocumentStatus<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(MdocDataModel18013.StatusList), CredentialStatus> where M1.MatchedType == MdocDataModel18013.StatusList {
+            let matchers: [Cuckoo.ParameterMatcher<(MdocDataModel18013.StatusList)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "getDocumentStatus(for p0: StatusIdentifier) async throws -> CredentialStatus",
+                "getDocumentStatus(for p0: MdocDataModel18013.StatusList) async throws -> CredentialStatus",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8569,6 +9078,54 @@ return await cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
                 "refreshUsageCounters() async throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getIssuerRegistration<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(OfferedIssuanceModel), IssuerRegistration?> where M1.MatchedType == OfferedIssuanceModel {
+            let matchers: [Cuckoo.ParameterMatcher<(OfferedIssuanceModel)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getIssuerRegistration(for p0: OfferedIssuanceModel) async -> IssuerRegistration?",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getIssuerRegistration<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(issuerId p0: M1, configIds p1: M2) -> Cuckoo.__DoNotUse<(String, [String]), IssuerRegistration?> where M1.MatchedType == String, M2.MatchedType == [String] {
+            let matchers: [Cuckoo.ParameterMatcher<(String, [String])>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "getIssuerRegistration(issuerId p0: String, configIds p1: [String]) async -> IssuerRegistration?",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getVerifierRegistration<M1: Cuckoo.OptionalMatchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.OptionalMatchable, M5: Cuckoo.Matchable>(policy p0: M1, trustViolations p1: M2, overaskedClaims p2: M3, verifierName p3: M4, verifierIsTrusted p4: M5) -> Cuckoo.__DoNotUse<(WrpRegistrationPolicy?, [String], [logic_core.OveraskedClaim], String?, Bool), RelyingPartyRegistration> where M1.OptionalMatchedType == WrpRegistrationPolicy, M2.MatchedType == [String], M3.MatchedType == [logic_core.OveraskedClaim], M4.OptionalMatchedType == String, M5.MatchedType == Bool {
+            let matchers: [Cuckoo.ParameterMatcher<(WrpRegistrationPolicy?, [String], [logic_core.OveraskedClaim], String?, Bool)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }, wrap(matchable: p4) { $0.4 }]
+            return cuckoo_manager.verify(
+                "getVerifierRegistration(policy p0: WrpRegistrationPolicy?, trustViolations p1: [String], overaskedClaims p2: [logic_core.OveraskedClaim], verifierName p3: String?, verifierIsTrusted p4: Bool) async -> RelyingPartyRegistration",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getVerifierRegistrationForFailedRequest() -> Cuckoo.__DoNotUse<(), RelyingPartyRegistration?> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getVerifierRegistrationForFailedRequest() async -> RelyingPartyRegistration?",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -8635,7 +9192,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: ([any DocClaimsDecodable]).self)
     }
     
-    public func clearAllDocuments() async {
+    public func clearAllDocuments() async throws {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -8647,12 +9204,16 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> [WalletStorage.Document] {
-        return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
+    public func issueDocuments(issuerId p0: String, identifiers p1: [String], docTypeIdentifier p2: DocumentTypeIdentifier) async throws -> IssuanceResult {
+        return DefaultValueRegistry.defaultValue(for: (IssuanceResult).self)
     }
     
     public func reIssueDocument(identifier p0: String, isBackgroundOperation p1: Bool) async throws -> WalletStorage.Document {
         return DefaultValueRegistry.defaultValue(for: (WalletStorage.Document).self)
+    }
+    
+    public func getDocumentCredentialOptions(with p0: String) async -> CredentialOptions? {
+        return DefaultValueRegistry.defaultValue(for: (CredentialOptions?).self)
     }
     
     public func requestDeferredIssuance(with p0: WalletStorage.Document) async throws -> any DocClaimsDecodable {
@@ -8663,8 +9224,8 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (OfferedIssuanceModel).self)
     }
     
-    public func issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], txCodeValue p2: String?) async throws -> [WalletStorage.Document] {
-        return DefaultValueRegistry.defaultValue(for: ([WalletStorage.Document]).self)
+    public func issueDocumentsByOfferUrl(offerUri p0: String, docTypes p1: [OfferedDocModel], txCodeValue p2: String?) async throws -> IssuanceResult {
+        return DefaultValueRegistry.defaultValue(for: (IssuanceResult).self)
     }
     
     public func parseDocClaim(docId p0: String, groupId p1: String, docClaim p2: DocClaim, type p3: DocumentElementType, parser p4: (String) -> String) async -> [DocumentElementClaim] {
@@ -8687,8 +9248,8 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (DynamicIssuancePendingData?).self)
     }
     
-    public func getScopedDocuments() async throws -> [ScopedDocument] {
-        return DefaultValueRegistry.defaultValue(for: ([ScopedDocument]).self)
+    public func getScopedDocuments() async -> ScopedDocumentsResult {
+        return DefaultValueRegistry.defaultValue(for: (ScopedDocumentsResult).self)
     }
     
     public func getDocumentCategories() async -> DocumentCategories {
@@ -8707,12 +9268,28 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func fetchTransactionLog(with p0: String) async throws -> TransactionLogItem {
-        return DefaultValueRegistry.defaultValue(for: (TransactionLogItem).self)
+    public func fetchTransactionLog(with p0: String) async throws -> TransactionLogDomain {
+        return DefaultValueRegistry.defaultValue(for: (TransactionLogDomain).self)
     }
     
-    public func fetchTransactionLogs() async throws -> [TransactionLogItem] {
-        return DefaultValueRegistry.defaultValue(for: ([TransactionLogItem]).self)
+    public func fetchTransactionLogs() async throws -> [TransactionLogDomain] {
+        return DefaultValueRegistry.defaultValue(for: ([TransactionLogDomain]).self)
+    }
+    
+    public func deleteTransactionLog(with p0: String) async throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func fetchPresentationActions(parentPresentationId p0: String) async throws -> [TransactionLogDomain] {
+        return DefaultValueRegistry.defaultValue(for: ([TransactionLogDomain]).self)
+    }
+    
+    public func recordDataDeletionRequest(for p0: TransactionLogDomain.Presentation, contactUrl p1: URL) async throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func recordDpaReport(for p0: TransactionLogDomain.Presentation, contactUrl p1: URL) async throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
     public func isDocumentRevoked(with p0: String) async -> Bool {
@@ -8731,7 +9308,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func getDocumentStatus(for p0: StatusIdentifier) async throws -> CredentialStatus {
+    public func getDocumentStatus(for p0: MdocDataModel18013.StatusList) async throws -> CredentialStatus {
         return DefaultValueRegistry.defaultValue(for: (CredentialStatus).self)
     }
     
@@ -8749,6 +9326,116 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
     
     public func refreshUsageCounters() async throws {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func getIssuerRegistration(for p0: OfferedIssuanceModel) async -> IssuerRegistration? {
+        return DefaultValueRegistry.defaultValue(for: (IssuerRegistration?).self)
+    }
+    
+    public func getIssuerRegistration(issuerId p0: String, configIds p1: [String]) async -> IssuerRegistration? {
+        return DefaultValueRegistry.defaultValue(for: (IssuerRegistration?).self)
+    }
+    
+    public func getVerifierRegistration(policy p0: WrpRegistrationPolicy?, trustViolations p1: [String], overaskedClaims p2: [logic_core.OveraskedClaim], verifierName p3: String?, verifierIsTrusted p4: Bool) async -> RelyingPartyRegistration {
+        return DefaultValueRegistry.defaultValue(for: (RelyingPartyRegistration).self)
+    }
+    
+    public func getVerifierRegistrationForFailedRequest() async -> RelyingPartyRegistration? {
+        return DefaultValueRegistry.defaultValue(for: (RelyingPartyRegistration?).self)
+    }
+}
+
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Controller/WalletKitTrustMarkController.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+public class MockWalletKitTrustMarkController: WalletKitTrustMarkController, Cuckoo.ProtocolMock, @unchecked Sendable {
+    public typealias MocksType = any WalletKitTrustMarkController
+    public typealias Stubbing = __StubbingProxy_WalletKitTrustMarkController
+    public typealias Verification = __VerificationProxy_WalletKitTrustMarkController
+
+    // Original typealiases
+
+    public let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any WalletKitTrustMarkController)?
+
+    public func enableDefaultImplementation(_ stub: any WalletKitTrustMarkController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    public func getTrustMark() async throws -> TrustMarkDomain {
+        return try await cuckoo_manager.callThrows(
+            "getTrustMark() async throws -> TrustMarkDomain",
+            parameters: (),
+            escapingParameters: (),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getTrustMark()
+        )
+    }
+
+    public struct __StubbingProxy_WalletKitTrustMarkController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        public init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func getTrustMark() -> Cuckoo.ProtocolStubThrowingFunction<(), TrustMarkDomain,Swift.Error> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitTrustMarkController.self,
+                method: "getTrustMark() async throws -> TrustMarkDomain",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    public struct __VerificationProxy_WalletKitTrustMarkController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        public init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func getTrustMark() -> Cuckoo.__DoNotUse<(), TrustMarkDomain> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getTrustMark() async throws -> TrustMarkDomain",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+public class WalletKitTrustMarkControllerStub:WalletKitTrustMarkController, @unchecked Sendable {
+
+
+    
+    public func getTrustMark() async throws -> TrustMarkDomain {
+        return DefaultValueRegistry.defaultValue(for: (TrustMarkDomain).self)
     }
 }
 
@@ -8834,6 +9521,26 @@ public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cucko
                 "sendableCurrentValueSubject",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
                 defaultCall: __defaultImplStub!.sendableCurrentValueSubject
+            )
+        }
+    }
+
+    public var relyingPartyRegistration: WrpRegistrationPolicy? {
+        get {
+            return cuckoo_manager.getter(
+                "relyingPartyRegistration",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.relyingPartyRegistration
+            )
+        }
+    }
+
+    public var relyingPartyWarningViolations: [String] {
+        get {
+            return cuckoo_manager.getter(
+                "relyingPartyWarningViolations",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.relyingPartyWarningViolations
             )
         }
     }
@@ -8935,6 +9642,14 @@ public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cucko
             return .init(manager: cuckoo_manager, name: "sendableCurrentValueSubject")
         }
         
+        var relyingPartyRegistration: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockProximitySessionCoordinator,WrpRegistrationPolicy?> {
+            return .init(manager: cuckoo_manager, name: "relyingPartyRegistration")
+        }
+        
+        var relyingPartyWarningViolations: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockProximitySessionCoordinator,[String]> {
+            return .init(manager: cuckoo_manager, name: "relyingPartyWarningViolations")
+        }
+        
         func initialize() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(),Swift.Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximitySessionCoordinator.self,
@@ -9013,6 +9728,14 @@ public class MockProximitySessionCoordinator: ProximitySessionCoordinator, Cucko
         
         var sendableCurrentValueSubject: Cuckoo.VerifyReadOnlyProperty<SendableCurrentValueSubject<PresentationState>> {
             return .init(manager: cuckoo_manager, name: "sendableCurrentValueSubject", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var relyingPartyRegistration: Cuckoo.VerifyReadOnlyProperty<WrpRegistrationPolicy?> {
+            return .init(manager: cuckoo_manager, name: "relyingPartyRegistration", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var relyingPartyWarningViolations: Cuckoo.VerifyReadOnlyProperty<[String]> {
+            return .init(manager: cuckoo_manager, name: "relyingPartyWarningViolations", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         
@@ -9120,6 +9843,18 @@ public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unche
             return DefaultValueRegistry.defaultValue(for: (SendableCurrentValueSubject<PresentationState>).self)
         }
     }
+    
+    public var relyingPartyRegistration: WrpRegistrationPolicy? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (WrpRegistrationPolicy?).self)
+        }
+    }
+    
+    public var relyingPartyWarningViolations: [String] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([String]).self)
+        }
+    }
 
     
     public required init(session p0: PresentationSession) {}
@@ -9201,6 +9936,26 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
         }
     }
 
+    public var relyingPartyRegistration: WrpRegistrationPolicy? {
+        get {
+            return cuckoo_manager.getter(
+                "relyingPartyRegistration",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.relyingPartyRegistration
+            )
+        }
+    }
+
+    public var relyingPartyWarningViolations: [String] {
+        get {
+            return cuckoo_manager.getter(
+                "relyingPartyWarningViolations",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.relyingPartyWarningViolations
+            )
+        }
+    }
+
     public required init(session p0: PresentationSession) {}
 
     public func initialize() async {
@@ -9232,6 +9987,17 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
             errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.sendResponse(response: p0)
+        )
+    }
+
+    public func declineResponse() async throws {
+        return try await cuckoo_manager.callThrows(
+            "declineResponse() async throws",
+            parameters: (),
+            escapingParameters: (),
+            errorType: Swift.Error.self,
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.declineResponse()
         )
     }
 
@@ -9286,6 +10052,14 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
             return .init(manager: cuckoo_manager, name: "sendableCurrentValueSubject")
         }
         
+        var relyingPartyRegistration: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockRemoteSessionCoordinator,WrpRegistrationPolicy?> {
+            return .init(manager: cuckoo_manager, name: "relyingPartyRegistration")
+        }
+        
+        var relyingPartyWarningViolations: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockRemoteSessionCoordinator,[String]> {
+            return .init(manager: cuckoo_manager, name: "relyingPartyWarningViolations")
+        }
+        
         func initialize() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
@@ -9306,6 +10080,14 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
             let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
                 method: "sendResponse(response p0: RequestItemConvertible) async throws",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func declineResponse() -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(),Swift.Error> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRemoteSessionCoordinator.self,
+                method: "declineResponse() async throws",
                 parameterMatchers: matchers
             ))
         }
@@ -9358,6 +10140,14 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
             return .init(manager: cuckoo_manager, name: "sendableCurrentValueSubject", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
+        var relyingPartyRegistration: Cuckoo.VerifyReadOnlyProperty<WrpRegistrationPolicy?> {
+            return .init(manager: cuckoo_manager, name: "relyingPartyRegistration", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var relyingPartyWarningViolations: Cuckoo.VerifyReadOnlyProperty<[String]> {
+            return .init(manager: cuckoo_manager, name: "relyingPartyWarningViolations", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
         
         @discardableResult
         func initialize() -> Cuckoo.__DoNotUse<(), Void> {
@@ -9388,6 +10178,18 @@ public class MockRemoteSessionCoordinator: RemoteSessionCoordinator, Cuckoo.Prot
             let matchers: [Cuckoo.ParameterMatcher<(RequestItemConvertible)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
                 "sendResponse(response p0: RequestItemConvertible) async throws",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func declineResponse() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "declineResponse() async throws",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -9451,6 +10253,18 @@ public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator, @unchecked S
             return DefaultValueRegistry.defaultValue(for: (SendableCurrentValueSubject<PresentationState>).self)
         }
     }
+    
+    public var relyingPartyRegistration: WrpRegistrationPolicy? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (WrpRegistrationPolicy?).self)
+        }
+    }
+    
+    public var relyingPartyWarningViolations: [String] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([String]).self)
+        }
+    }
 
     
     public required init(session p0: PresentationSession) {}
@@ -9465,6 +10279,10 @@ public class RemoteSessionCoordinatorStub:RemoteSessionCoordinator, @unchecked S
     }
     
     public func sendResponse(response p0: RequestItemConvertible) async throws {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func declineResponse() async throws {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -9749,25 +10567,13 @@ public class MockDocumentRegistrationManager: DocumentRegistrationManager, Cucko
     }
 
 
-    public func addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws {
-        return try await cuckoo_manager.callThrows(
-            "addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws",
-            parameters: (p0, p1, p2, p3),
-            escapingParameters: (p0, p1, p2, p3),
-            errorType: Swift.Error.self,
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.addRegistration(mobileDocumentType: p0, supportedAuthorityKeyIdentifiers: p1, documentIdentifier: p2, invalidationDate: p3)
-        )
-    }
-
-    public func removeRegistration(documentIdentifiers p0: [String]) async throws {
-        return try await cuckoo_manager.callThrows(
-            "removeRegistration(documentIdentifiers p0: [String]) async throws",
+    public func reconcile(desired p0: [RegistrationDescriptor]) async {
+        return await cuckoo_manager.call(
+            "reconcile(desired p0: [RegistrationDescriptor]) async",
             parameters: (p0),
             escapingParameters: (p0),
-            errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.removeRegistration(documentIdentifiers: p0)
+            defaultCall: await __defaultImplStub!.reconcile(desired: p0)
         )
     }
 
@@ -9778,18 +10584,10 @@ public class MockDocumentRegistrationManager: DocumentRegistrationManager, Cucko
             self.cuckoo_manager = manager
         }
         
-        func addRegistration<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.OptionalMatchable>(mobileDocumentType p0: M1, supportedAuthorityKeyIdentifiers p1: M2, documentIdentifier p2: M3, invalidationDate p3: M4) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(String, [Data], String, Date?),Swift.Error> where M1.MatchedType == String, M2.MatchedType == [Data], M3.MatchedType == String, M4.OptionalMatchedType == Date {
-            let matchers: [Cuckoo.ParameterMatcher<(String, [Data], String, Date?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func reconcile<M1: Cuckoo.Matchable>(desired p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<([RegistrationDescriptor])> where M1.MatchedType == [RegistrationDescriptor] {
+            let matchers: [Cuckoo.ParameterMatcher<([RegistrationDescriptor])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockDocumentRegistrationManager.self,
-                method: "addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func removeRegistration<M1: Cuckoo.Matchable>(documentIdentifiers p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<([String]),Swift.Error> where M1.MatchedType == [String] {
-            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockDocumentRegistrationManager.self,
-                method: "removeRegistration(documentIdentifiers p0: [String]) async throws",
+                method: "reconcile(desired p0: [RegistrationDescriptor]) async",
                 parameterMatchers: matchers
             ))
         }
@@ -9808,22 +10606,10 @@ public class MockDocumentRegistrationManager: DocumentRegistrationManager, Cucko
         
         
         @discardableResult
-        func addRegistration<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable, M4: Cuckoo.OptionalMatchable>(mobileDocumentType p0: M1, supportedAuthorityKeyIdentifiers p1: M2, documentIdentifier p2: M3, invalidationDate p3: M4) -> Cuckoo.__DoNotUse<(String, [Data], String, Date?), Void> where M1.MatchedType == String, M2.MatchedType == [Data], M3.MatchedType == String, M4.OptionalMatchedType == Date {
-            let matchers: [Cuckoo.ParameterMatcher<(String, [Data], String, Date?)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }, wrap(matchable: p2) { $0.2 }, wrap(matchable: p3) { $0.3 }]
+        func reconcile<M1: Cuckoo.Matchable>(desired p0: M1) -> Cuckoo.__DoNotUse<([RegistrationDescriptor]), Void> where M1.MatchedType == [RegistrationDescriptor] {
+            let matchers: [Cuckoo.ParameterMatcher<([RegistrationDescriptor])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func removeRegistration<M1: Cuckoo.Matchable>(documentIdentifiers p0: M1) -> Cuckoo.__DoNotUse<([String]), Void> where M1.MatchedType == [String] {
-            let matchers: [Cuckoo.ParameterMatcher<([String])>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "removeRegistration(documentIdentifiers p0: [String]) async throws",
+                "reconcile(desired p0: [RegistrationDescriptor]) async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -9836,15 +10622,26 @@ public class DocumentRegistrationManagerStub:DocumentRegistrationManager, @unche
 
 
     
-    public func addRegistration(mobileDocumentType p0: String, supportedAuthorityKeyIdentifiers p1: [Data], documentIdentifier p2: String, invalidationDate p3: Date?) async throws {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func removeRegistration(documentIdentifiers p0: [String]) async throws {
+    public func reconcile(desired p0: [RegistrationDescriptor]) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }
 
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Error/RegistrationRefusedError.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
 
 
 
@@ -9922,6 +10719,26 @@ import Cuckoo
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/Error+IssuerTrust.swift'
+
+import Cuckoo
+import Foundation
+import EudiWalletKit
+import MdocSecurity18013
+import enum OpenID4VP.ValidationError
+import enum OpenID4VCI.WRPRCError
+import enum OpenID4VCI.CredentialIssuerMetadataError
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/OfferedDocModel+Extensions.swift'
 
 import Cuckoo
@@ -9981,6 +10798,40 @@ import OpenID4VCI
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/PolicyPurpose+Localized.swift'
+
+import Cuckoo
+import Foundation
+import EudiWalletKit
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/PresentationPolicyViolation+Overasking.swift'
+
+import Cuckoo
+import Foundation
+import EudiWalletKit
+import MdocDataModel18013
+import struct OpenID4VP.ClaimPath
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/String+Extensions.swift'
 
 import Cuckoo
@@ -9995,11 +10846,44 @@ import Cuckoo
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/TransactionLog+Extensions.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/TransactionEntry+Extensions.swift'
 
 import Cuckoo
-import logic_storage
 import Foundation
+import MdocDataModel18013
+import logic_storage
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/TransactionLogDomain+Entry.swift'
+
+import Cuckoo
+import Foundation
+import MdocDataModel18013
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/TrustMarkResource+Extensions.swift'
+
+import Cuckoo
+import Foundation
+import MdocDataModel18013
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -10015,6 +10899,25 @@ import Foundation
 
 import Cuckoo
 import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/UserRequestInfo+TransactionData.swift'
+
+import Cuckoo
+import Foundation
+import EudiWalletKit
+import MdocDataTransfer18013
+import SwiftyJSON
+import struct OpenID4VP.OpenId4VPSpec
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -10145,6 +11048,38 @@ import Foundation
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/PresentationTransactionData.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/RelyingPartyRegistration.swift'
+
+import Cuckoo
+import Foundation
+import WalletStorage
+import struct OpenID4VP.ClaimPath
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/RequestItemConvertible.swift'
 
 import Cuckoo
@@ -10242,9 +11177,55 @@ import Cuckoo
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/TransactionLogItem.swift'
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/TransactionActionChannel.swift'
 
 import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/TransactionDataProtectionAction.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/TransactionLogDomain.swift'
+
+import Cuckoo
+import Foundation
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/TrustMarkDomain.swift'
+
+import Cuckoo
+import Foundation
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -11574,6 +12555,22 @@ import logic_resources
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Content/ContentHeader/RelyingPartyRegistrationView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Content/ContentHeader/RelyingPartyView.swift'
 
 import Cuckoo
@@ -11926,6 +12923,22 @@ import logic_resources
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/List/WrapSelectableCardView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/SearchableList/SearchableListView.swift'
 
 import Cuckoo
@@ -11959,6 +12972,22 @@ import logic_resources
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Unavailable/ContentUnavailableView.swift'
+
+import Cuckoo
+import SwiftUI
+import logic_resources
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_issuance
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Warning/WarningAcknowledgementView.swift'
 
 import Cuckoo
 import SwiftUI

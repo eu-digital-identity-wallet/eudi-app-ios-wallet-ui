@@ -80,11 +80,6 @@ struct RequestAuthorizationView: View {
                 locator: BaseRequestLocators.requestedDocument(index.string)
               )
             }
-
-            Text(.shareDataReview)
-              .typography(Theme.shared.font.bodyMedium)
-              .foregroundColor(Theme.shared.color.primaryLabel)
-              .multilineTextAlignment(.leading)
           }
           .padding(.horizontal, Theme.shared.dimension.padding)
           .padding(.top, SPACING_MEDIUM)

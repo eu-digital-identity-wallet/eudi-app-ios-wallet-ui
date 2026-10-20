@@ -29,6 +29,8 @@ public protocol SettingsInteractor: Sendable {
   func openBiometrySettings(action: @escaping @Sendable () -> Void) async
   func setBatchCounter(isEnabled: Bool) async
   func isBatchCounterEnabled() async -> Bool
+  func setIssuerRegistrationValidation(isEnabled: Bool) async
+  func isIssuerRegistrationValidationEnabled() async -> Bool
 }
 
 final actor SettingsInteractorImpl: SettingsInteractor {
@@ -88,5 +90,13 @@ final actor SettingsInteractorImpl: SettingsInteractor {
 
   func setBatchCounter(isEnabled: Bool) async {
     prefsController.setValue(isEnabled, forKey: .batchCounter)
+  }
+
+  func isIssuerRegistrationValidationEnabled() async -> Bool {
+    prefsController.getBool(forKey: .validateIssuerRegistrationCertificate)
+  }
+
+  func setIssuerRegistrationValidation(isEnabled: Bool) async {
+    prefsController.setValue(isEnabled, forKey: .validateIssuerRegistrationCertificate)
   }
 }

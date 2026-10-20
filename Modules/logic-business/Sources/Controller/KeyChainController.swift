@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import Security
 @preconcurrency import KeychainAccess
 
 public protocol KeyChainWrapper {
@@ -28,7 +29,7 @@ public protocol KeyChainController: Sendable {
   func removeObject(key: KeyChainWrapper)
   func validateKeyChainBiometry() throws
   func clearKeyChainBiometry()
-  func clear()
+  @discardableResult func clear() -> Bool
 }
 
 final class KeyChainControllerImpl: KeyChainController {
@@ -77,12 +78,27 @@ final class KeyChainControllerImpl: KeyChainController {
     try? self.keyChain.remove(self.biometryKey)
   }
 
-  public func clear() {
+  @discardableResult
+  public func clear() -> Bool {
     try? keyChain.removeAll()
+    return clearDocumentStorage()
   }
 }
 
 private extension KeyChainControllerImpl {
+  func clearDocumentStorage() -> Bool {
+    var query: [String: Any] = [
+      kSecClass as String: kSecClassGenericPassword,
+      kSecUseDataProtectionKeychain as String: true
+    ]
+    let accessGroup = configLogic.keyChainConfig.keychainAccessGroup
+    if !accessGroup.isEmpty {
+      query[kSecAttrAccessGroup as String] = accessGroup
+    }
+    let status = SecItemDelete(query as CFDictionary)
+    return status == errSecSuccess || status == errSecItemNotFound
+  }
+
   func setBiometricKey() throws {
     try self.keyChain
       .accessibility(

@@ -40,12 +40,14 @@ public struct IssuerDocumentDetailsCardUIModel: Equatable, Sendable {
       return .documentDetailsIssuerCardIssuedMessageText
     case .revoked:
       return .documentDetailsIssuerCardRevokedMessageText
+    case .expired:
+      return .documentDetailsIssuerCardExpiredMessageText
     }
   }
 
   var expandedActionButtonText: LocalizableStringKey? {
     switch documentState {
-    case .issued:
+    case .issued, .expired:
       return .documentDetailsIssuerCardIssuedActionButtonText
     case .revoked:
       return nil
@@ -59,6 +61,9 @@ public struct IssuerDocumentDetailsCardUIModel: Equatable, Sendable {
       return .documentDetailsExpiresOn([date])
     case .revoked:
       return .documentDetailsRevokedDocument
+    case .expired(_, let expirationDate):
+      guard let date = expirationDate else { return nil }
+      return .documentDetailsExpiredOn([date])
     }
   }
 
@@ -66,14 +71,14 @@ public struct IssuerDocumentDetailsCardUIModel: Equatable, Sendable {
     switch documentState {
     case .issued:
       return Theme.shared.color.secondaryLabel
-    case .revoked:
+    case .revoked, .expired:
       return Theme.shared.color.red
     }
   }
 
   var expandedDateText: LocalizableStringKey? {
     switch documentState {
-    case .issued(let issuanceDate, _):
+    case .issued(let issuanceDate, _), .expired(let issuanceDate, _):
       guard let date = issuanceDate else { return nil }
       return .documentDetailsIssuedOn([date])
     case .revoked:
@@ -84,6 +89,7 @@ public struct IssuerDocumentDetailsCardUIModel: Equatable, Sendable {
   public enum DocumentState: Equatable, Sendable {
     case issued(issuanceDate: String?, expirationDate: String?)
     case revoked
+    case expired(issuanceDate: String?, expirationDate: String?)
   }
 }
 
@@ -92,14 +98,21 @@ public extension DocClaimsDecodable {
     isRevoked: Bool
   ) -> IssuerDocumentDetailsCardUIModel {
     let documentState: IssuerDocumentDetailsCardUIModel.DocumentState
+    let issuanceDate = self.createdAt.formattedForDocumentDetails()
+    let expirationDate = self.getExpiryDate(parser: {
+      Locale.current.localizedDateTime(date: $0, uiFormatter: "dd MMM yyyy")
+    }) ?? ""
     if isRevoked {
       documentState = .revoked
+    } else if self.hasExpired {
+      documentState = .expired(
+        issuanceDate: issuanceDate,
+        expirationDate: expirationDate
+      )
     } else {
       documentState = .issued(
-        issuanceDate: self.createdAt.formattedForDocumentDetails(),
-        expirationDate: self.getExpiryDate(parser: {
-          Locale.current.localizedDateTime(date: $0, uiFormatter: "dd MMM yyyy")
-        }) ?? ""
+        issuanceDate: issuanceDate,
+        expirationDate: expirationDate
       )
     }
 

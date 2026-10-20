@@ -84,6 +84,22 @@ public struct WrapButtonView: View {
     self.onAction = onAction
   }
 
+  private var isVisiblyDisabled: Bool {
+    !isEnabled && !isLoading
+  }
+
+  private var resolvedBackgroundColor: Color {
+    isVisiblyDisabled ? Theme.shared.color.secondaryBackground : backgroundColor
+  }
+
+  private var resolvedTextColor: Color {
+    isVisiblyDisabled ? Theme.shared.color.secondaryLabel : textColor
+  }
+
+  private var resolvedIconColor: Color {
+    isVisiblyDisabled ? Theme.shared.color.secondaryLabel : iconColor
+  }
+
   public var body: some View {
     Button(
       action: { onAction() },
@@ -99,7 +115,7 @@ public struct WrapButtonView: View {
               .resizable()
               .scaledToFit()
               .frame(width: 22, height: 22)
-              .foregroundColor(iconColor)
+              .foregroundColor(resolvedIconColor)
 
             HSpacer.small()
           }
@@ -107,7 +123,7 @@ public struct WrapButtonView: View {
           Text(title)
             .typography(Theme.shared.font.bodyLarge)
             .fontWeight(.semibold)
-            .foregroundColor(textColor)
+            .foregroundColor(resolvedTextColor)
 
           if gravity == .center || gravity == .start {
             Spacer()
@@ -119,11 +135,8 @@ public struct WrapButtonView: View {
         }
       }
     )
-    .if(!isEnabled && !isLoading) {
-      $0.opacity(0.38)
-    }
     .buttonStyle(.borderedProminent)
-    .tint(backgroundColor)
+    .tint(resolvedBackgroundColor)
     .disabled(isLoading || !isEnabled)
     .shimmer(isLoading: isLoading)
   }

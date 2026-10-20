@@ -96,6 +96,7 @@ platform :ios do
     build_app(
       scheme: ENV["APP_SCHEME"],
       include_bitcode: true,
+      xcargs: "-skipPackagePluginValidation -skipMacroValidation",
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {

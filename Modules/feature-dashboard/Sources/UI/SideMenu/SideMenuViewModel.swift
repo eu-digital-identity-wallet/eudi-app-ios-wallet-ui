@@ -43,6 +43,16 @@ final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuVie
     )
   }
 
+  func about() {
+    router.push(
+      with: .featureCommonModule(
+        .trustMark(
+          config: TrustMarkUiConfig(mode: .about)
+        )
+      )
+    )
+  }
+
   func updatePin() {
     router.push(
       with: .featureCommonModule(
@@ -81,8 +91,13 @@ final class SideMenuViewModel<Router: RouterHost>: ViewModel<Router, SideMenuVie
           .init(
             title: .settings,
             icon: Theme.shared.image.gearshape,
-            showDivider: false,
             action: self.settings()
+          ),
+          .init(
+            title: .trustMarkAboutTitle,
+            icon: Theme.shared.image.infoCircle,
+            showDivider: false,
+            action: self.about()
           )
         ]
       )

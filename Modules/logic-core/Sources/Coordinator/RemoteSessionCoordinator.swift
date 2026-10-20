@@ -20,12 +20,15 @@ import UIKit
 public protocol RemoteSessionCoordinator: Sendable {
 
   var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> { get }
+  var relyingPartyRegistration: WrpRegistrationPolicy? { get }
+  var relyingPartyWarningViolations: [String] { get }
 
   init(session: PresentationSession)
 
   func initialize() async
   func requestReceived() async throws -> PresentationRequest
   func sendResponse(response: RequestItemConvertible) async throws
+  func declineResponse() async throws
   func getState() async -> PresentationState
 
   func getStream() -> AsyncStream<PresentationState>
@@ -39,6 +42,14 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
 
   private let sendableAnyCancellable: SendableAnyCancellable = .init()
   private let session: PresentationSession
+  private let transactionDataSets: SendableCurrentValueSubject<[[String: [PresentationTransactionData]]]> = .init([])
+
+  var relyingPartyRegistration: WrpRegistrationPolicy? { session.wrpVerifierPolicy }
+  var relyingPartyWarningViolations: [String] { (session.wrpVerifierWarnings?[""] ?? []).map(\.message) }
+
+  private var overaskedClaims: [OveraskedClaim] {
+    (session.wrpVerifierWarnings?.values.flatMap { $0 } ?? []).toOveraskedClaims()
+  }
 
   init(session: PresentationSession) {
     self.session = session
@@ -66,12 +77,13 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
   }
 
   public func initialize() async {
-    _ = await session.receiveRequest()
+    let requests = await session.receiveRequest()
+    transactionDataSets.setValue(requests?.toTransactionDataSets() ?? [])
   }
 
   public func requestReceived() async throws -> PresentationRequest {
-    guard session.disclosedDocuments.isEmpty == false else {
-      throw session.uiError ?? .init(description: "Failed to Find known documents to send")
+    guard session.disclosedDocumentSets.contains(where: { !$0.docElements.isEmpty }) else {
+      throw session.uiError ?? .init(description: "Failed to Find known documents to send", code: .noDocumentsAvailable)
     }
     return createRequest()
   }
@@ -80,6 +92,10 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
     try await session.sendResponse(userAccepted: true, itemsToSend: response.items, onCancel: nil) { url in
       self.sendableCurrentValueSubject.setValue(.responseSent(url))
     }
+  }
+
+  public func declineResponse() async throws {
+    try await session.sendResponse(userAccepted: false, itemsToSend: [:], onCancel: nil)
   }
 
   public func getState() async -> PresentationState {
@@ -101,10 +117,12 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
 
   private func createRequest() -> PresentationRequest {
     PresentationRequest(
-      items: session.disclosedDocuments,
+      itemSets: session.disclosedDocumentSets.map(\.docElements),
       relyingParty: session.readerCertIssuer ?? LocalizableStringKey.unknownVerifier.toString,
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableStringKey.requestDataInfoNotice.toString,
-      isTrusted: session.readerCertIssuerValid == true
+      isTrusted: session.readerAuthenticationStatus == .authenticated,
+      overaskedClaims: overaskedClaims,
+      transactionDataSets: transactionDataSets.getValue()
     )
   }
 }

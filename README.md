@@ -53,6 +53,10 @@ The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.co
  
 - OpenID4VCI v1 (issuing)
  
+- ETSI TS 119 602 trusted lists (LoTE) for trust management — issuer trust, status-list signer
+  trust, reader/verifier authentication, and the registration certificates that establish what an
+  issuer or verifier is registered to do (see [wiki/CONFIGURATION.md](wiki/CONFIGURATION.md))
+ 
 - Issuer functionality, to support development and testing, one can access an OID4VCI test/demo service for issuing at:
 
   - [EUDI Issuer](https://issuer.eudiw.dev/)
@@ -86,6 +90,14 @@ If you're planning to use this application in production, we recommend reviewing
 - The Pin storage configuration matches your security requirements, or provide your own by following this guide [Pin Storage Configuration](wiki/CONFIGURATION.md#pin-storage-configuration)
 - The application meets the OWASP MASVS industry standard. Please refer to the following links for further information on the controls you must implement to ensure maximum compliance:
     - [OWASP MASVS](https://mas.owasp.org/MASVS/)
+- Issuers and verifiers are trusted on two independent layers: an access certificate proves who
+  they are, and a registration certificate establishes what they are registered to do. Issuance
+  requires both — a provider that cannot be authenticated, or that is not registered for the
+  document it offers, is refused and nothing is stored. On presentation, while registration checking
+  is enabled, the registration is shown to the user and a request beyond its scope requires explicit
+  acknowledgement before sharing. See
+  [wiki/GO_LIVE.md](wiki/GO_LIVE.md#registration-certificates-the-second-trust-layer) for the
+  production requirements this places on your backends.
 
 Do not treat `Release Dev` or `Release Demo` as production-ready artifacts. They use demo services,
 demo/development trust anchors, and reference-implementation defaults that an implementer must
@@ -127,6 +139,10 @@ You will also need to download the EUDI Verifier app. More information can be fo
 6. After submission, a success screen will appear. Tap "Close".
 7. You will be redirected back to the "Documents" tab within the "Dashboard" screen. The flow is now complete.
 
+Both issuance flows require the provider to be registered for what it offers. If its registration
+certificate cannot be validated, or does not cover the offered document, the flow stops on an
+"Issuance blocked" alert and nothing is added to the Wallet.
+
 To delete a document, navigate to the 'Documents' tab within the 'Dashboard' screen, tap on the document you wish to remove, and then tap the 'Delete Document' button in the 'Document Details' screen.
 
 ### Presentation (Online authentication/Same device) flow.
@@ -139,7 +155,14 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
 4. Choose the fields you want to request from the Wallet (e.g., "Family Name" and "Given Name").
 5. Review your presentation request, tap "Next", and then select "Open with your Wallet".
 6. When prompted to open the wallet app, tap "Open".
-7. You will be redirected to the app's "Request" screen, where you can select or deselect which attributes to share with the Verifier. You must select at least one attribute to proceed.
+7. You will be redirected to the app's "Request" screen, which shows the attributes the Verifier
+   requested. These are disclosed as requested; this flow has no per-attribute selection. If the
+   request can be satisfied in more than one way, choose the option you prefer.
+   The screen also shows who is asking. With "Check Registration Certificates" enabled in Settings
+   that identity comes from the Verifier's registration certificate, and if that certificate is
+   missing or cannot be validated, or if the request reaches beyond what the Verifier registered
+   for, a warning appears and "Share" stays disabled until you acknowledge it. With the setting off
+   — its default — no registration is evaluated and the Verifier is named by its access certificate.
 8. Tap "Share".
 9. Enter the PIN you set up during the initial steps.
 10. Upon successful submission, tap "Close".
@@ -154,7 +177,10 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
 4. Select "In person".
 5. You will be prompted to enable Bluetooth (if it is not already enabled) and grant the necessary permissions for the app to use it (if you have not already done so).
 6. The Verifier scans the presented QR code.
-7. The app's "Request" screen will load. Here, you can select or deselect which attributes to share with the Verifier. You must select at least one attribute to proceed.
+7. The app's "Request" screen will load. Here, you can select or deselect which attributes to share
+   with the Verifier. You must select at least one attribute to proceed. As in the remote flow, and
+   subject to the same setting, a reader whose registration certificate cannot be validated raises a
+   warning that keeps "Share" disabled until you acknowledge it.
 8. Tap "Share".
 9. Enter the PIN you set up during the initial steps.
 10. Upon successful authentication, tap "Close".

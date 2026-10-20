@@ -70,9 +70,9 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
 
     for document in issuedDocuments {
 
-      guard let identifier = document.statusIdentifier else { continue }
+      guard let statusList = document.statusList else { continue }
 
-      let status = try await walletKitController.getDocumentStatus(for: identifier)
+      let status = try await walletKitController.getDocumentStatus(for: statusList)
       let isInRevokedStorage = revokedStoredDocuments.first(where: { $0 == document.id }) != nil
 
       switch status {

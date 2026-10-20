@@ -20,6 +20,8 @@ import logic_business
 public protocol ProximitySessionCoordinator: Sendable {
 
   var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> { get }
+  var relyingPartyRegistration: WrpRegistrationPolicy? { get }
+  var relyingPartyWarningViolations: [String] { get }
 
   init(session: PresentationSession)
 
@@ -40,6 +42,13 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
 
   private let session: PresentationSession
   private let sendableAnyCancellable: SendableAnyCancellable = .init()
+
+  var relyingPartyRegistration: WrpRegistrationPolicy? { session.wrpVerifierPolicy }
+  var relyingPartyWarningViolations: [String] { (session.wrpVerifierWarnings?[""] ?? []).map(\.message) }
+
+  private var overaskedClaims: [OveraskedClaim] {
+    (session.wrpVerifierWarnings?.values.flatMap { $0 } ?? []).toOveraskedClaims()
+  }
 
   init(session: PresentationSession) {
     self.session = session
@@ -82,15 +91,15 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
       let qrImage = DeviceEngagement.getQrCodeImage(qrCode: deviceEngagement),
       let qrImageData = qrImage.pngData()
     else {
-      throw session.uiError ?? .init(description: "Failed To Generate QR Code")
+      throw session.uiError ?? .init(description: "Failed To Generate QR Code", code: .internalError)
     }
     self.sendableCurrentValueSubject.setValue(.qrReady(imageData: qrImageData))
     return qrImage
   }
 
   public func requestReceived() async throws -> PresentationRequest {
-    guard session.disclosedDocuments.isEmpty == false else {
-      throw session.uiError ?? .init(description: "Failed to Find knonw documents to send")
+    guard session.disclosedDocumentSets.contains(where: { !$0.docElements.isEmpty }) else {
+      throw session.uiError ?? .init(description: "Failed to Find knonw documents to send", code: .noDocumentsAvailable)
     }
     return createRequest()
   }
@@ -119,10 +128,12 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
 
   private func createRequest() -> PresentationRequest {
     PresentationRequest(
-      items: session.disclosedDocuments,
+      itemSets: session.disclosedDocumentSets.map(\.docElements),
       relyingParty: session.readerCertIssuer ?? LocalizableStringKey.unknownVerifier.toString,
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableStringKey.requestDataInfoNotice.toString,
-      isTrusted: session.readerCertIssuerValid == true
+      isTrusted: session.readerAuthenticationStatus == .authenticated,
+      overaskedClaims: overaskedClaims,
+      transactionDataSets: []
     )
   }
 }

@@ -16,14 +16,33 @@
 import Foundation
 import logic_business
 import EudiWalletKit
-import Security
+import EudiEtsi1196x2
+import MdocDataModel18013
+import struct OpenID4VP.SupportedTransactionDataType
+import struct OpenID4VP.TransactionDataType
 
 protocol WalletKitConfig: Sendable {
 
   /**
-   * VCI Configuration
+   * VCI Configuration, keyed by issuer host.
+   *
+   * `allowPlainJwtProof` is set per issuer and defaults to `false`, which keeps the HAIP-compliant
+   * proof policy: only attested proofs (`attestation`, or `jwt` with key attestation) are sent.
+   * Set it to `true` only for an issuer that does not support key attestation and requires a plain
+   * JWT proof; the proof is then bound to a key without wallet attestation, using ES256/ES384/ES512.
    */
   var issuersConfig: [String: VciConfig] { get }
+
+  /**
+   * Whether the issuer's WRP registration certificate (WRPRC), delivered in the issuer metadata
+   * `issuer_info`, is validated during issuance.
+   *
+   * Requires `trustConfiguration.requireSignedMetadata`, which supplies the WRPAC the certificate
+   * is bound to. Note that a missing WRPRC is a hard failure in the OpenID4VCI library, not a
+   * warning: enabling this against an issuer that does not publish `issuer_info` fails every
+   * issuance.
+   */
+  var validateIssuerRegistrationCertificate: Bool { get }
 
   /**
    * VP Configuration
@@ -31,9 +50,18 @@ protocol WalletKitConfig: Sendable {
   var vpConfig: OpenId4VpConfiguration { get }
 
   /**
-   * Reader Configuration
+   * Transaction data types the wallet accepts in an OpenID4VP request.
+   *
+   * The OpenID4VP library rejects any request carrying `transaction_data` whose type is not
+   * listed here, so an empty list rejects every request with transaction data.
    */
-  var trustedReaderRootCertificates: [x5chain] { get }
+  var supportedTransactionDataTypes: [SupportedTransactionDataType] { get }
+
+  /**
+   * Trust configuration: ETSI LoTE (List of Trusted Entities) trust sources,
+   * verification-context mappings and trust policies used for reader / issuer validation.
+   */
+  var trustConfiguration: TrustConfiguration { get }
 
   /**
    * User authentication required accessing core's secure storage
@@ -69,6 +97,12 @@ protocol WalletKitConfig: Sendable {
    * Configuration for document issuance, including default rules and specific overrides.
    */
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
+
+  /**
+   * Provides the information used to display the wallet's Trust Mark and link to its
+   * certification page and the list of certified wallets.
+   */
+  var trustMarkSource: TrustMarkSource { get }
 }
 
 struct WalletKitConfigImpl: WalletKitConfig {
@@ -76,15 +110,18 @@ struct WalletKitConfigImpl: WalletKitConfig {
   let configLogic: ConfigLogic
   let transactionLoggerImpl: TransactionLogger
   let walletKitAttestationProvider: WalletKitAttestationProvider
+  let prefsController: PrefsController
 
   init(
     configLogic: ConfigLogic,
     transactionLogger: TransactionLogger,
-    walletKitAttestationProvider: WalletKitAttestationProvider
+    walletKitAttestationProvider: WalletKitAttestationProvider,
+    prefsController: PrefsController
   ) {
     self.configLogic = configLogic
     self.transactionLoggerImpl = transactionLogger
     self.walletKitAttestationProvider = walletKitAttestationProvider
+    self.prefsController = prefsController
   }
 
   var userAuthenticationRequired: Bool {
@@ -95,8 +132,12 @@ struct WalletKitConfigImpl: WalletKitConfig {
     KeyOptions(
       curve: .P256,
       secureAreaName: SecureEnclaveSecureArea.name,
-      accessControl: []
+      accessControl: .empty
     )
+  }
+
+  var validateIssuerRegistrationCertificate: Bool {
+    prefsController.getBool(forKey: .validateIssuerRegistrationCertificate)
   }
 
   var issuersConfig: [String: VciConfig] {
@@ -108,30 +149,91 @@ struct WalletKitConfigImpl: WalletKitConfig {
           .init(
             config: .init(
               credentialIssuerURL: "https://utsteder.test.eidas2sandkasse.net/pid",
-              clientId: "demo-lommebok-test",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-              authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: .empty
+                )
+              ),
+              parUsage: .required(authorizationCodeDPoPBinding: true),
+              allowPlainJwtProof: false,
               requireDpop: true,
-              cacheIssuerMetadata: true
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
+              cacheIssuerMetadata: false
             ),
             order: 1
+          ),
+          /*
+          .init(
+            config: .init(
+              credentialIssuerURL: "https://issuer-backend.eudiw.dev",
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: .empty
+                )
+              ),
+              authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+              parUsage: .required(authorizationCodeDPoPBinding: true),
+              allowPlainJwtProof: false,
+              requireDpop: true,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
+              cacheIssuerMetadata: false
+            ),
+            order: 0
           )
+           */
         ]
       case .DEV:
         return [
           .init(
             config: .init(
               credentialIssuerURL: "https://utsteder.eidas2sandkasse.dev/pid",
-              clientId: "demo-lommebok-dev",
-              keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
-              authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
-              requirePAR: true,
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: .empty
+                )
+              ),
+              parUsage: .required(authorizationCodeDPoPBinding: true),
+              allowPlainJwtProof: false,
               requireDpop: true,
-              cacheIssuerMetadata: true
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
+              validateRegistrationCertificate: false,
+              cacheIssuerMetadata: false
             ),
             order: 1
+          ),/*
+          .init(
+            config: .init(
+              credentialIssuerURL: "https://dev.issuer-backend.eudiw.dev",
+              clientId: "eudiw-abca",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: .empty
+                )
+              ),
+              authFlowRedirectionURI: URL(string: "eu.europa.ec.euidi://authorization")!,
+              parUsage: .required(authorizationCodeDPoPBinding: true),
+              allowPlainJwtProof: false,
+              requireDpop: true,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
+              cacheIssuerMetadata: false
+            ),
+            order: 0
           )
+          */
         ]
       }
     }()
@@ -153,29 +255,93 @@ struct WalletKitConfigImpl: WalletKitConfig {
   var vpConfig: OpenId4VpConfiguration {
     .init(
       clientIdSchemes: [.x509SanDns, .x509Hash],
-      allowPresentingPartialClaims: true
+      supportedTransactionDataTypes: supportedTransactionDataTypes,
+      validateRegistrationCertificate: validateIssuerRegistrationCertificate
     )
   }
 
-  var trustedReaderRootCertificates: [x5chain] {
+  var supportedTransactionDataTypes: [SupportedTransactionDataType] {
+    let types = [
+      TransactionDataTypeIdentifier.qesApproval.rawValue,
+      TransactionDataTypeIdentifier.qes.rawValue
+    ]
+    return [.default()] + types.compactMap {
+      try? SupportedTransactionDataType(type: TransactionDataType(value: $0))
+    }
+  }
+
+  var trustConfiguration: TrustConfiguration {
+    
+    let loteLocations: SupportedLists<NSString>
+    switch configLogic.appBuildVariant {
+    case .DEMO:
+      loteLocations = SupportedLists<NSString>(
+        pidProviders: "https://tillitsliste.test.eidas2sandkasse.net/no_eidas2sandkasse_test_pid.jws",
+        walletProviders: "https://tillitsliste.test.eidas2sandkasse.net/no_eidas2sandkasse_test_wallet.jws",
+        wrpacProviders: "https://tillitsliste.test.eidas2sandkasse.net/no_eidas2sandkasse_test_aca.jws",
+        wrprcProviders: nil,
+        pubEaaProviders: nil,
+        qeaProviders: "https://tillitsliste.test.eidas2sandkasse.net/no_eidas2sandkasse_test_tsl.xtsl",
+        eaaProviders: [:]
+      )
+    case .DEV:
+      loteLocations = SupportedLists<NSString>(
+        pidProviders: "https://tillitsliste.eidas2sandkasse.dev/no_eidas2sandkasse_dev_pid.jws",
+        walletProviders: "https://tillitsliste.eidas2sandkasse.dev/no_eidas2sandkasse_dev_wallet.jws",
+        wrpacProviders: "https://tillitsliste.eidas2sandkasse.dev/no_eidas2sandkasse_dev_aca.jws",
+        wrprcProviders: nil,
+        pubEaaProviders: nil,
+        qeaProviders: "https://tillitsliste.eidas2sandkasse.dev/no_eidas2sandkasse_dev_tsl.xtsl",
+        eaaProviders: [:]
+      )
+    }
+
+    
+    let classifications: EtsiContextTypeMappings = [
+      DocumentTypeIdentifier.mDocPid.rawValue: .pid,
+      DocumentTypeIdentifier.sdJwtPid.rawValue: .pid
+    ]
+    
+
+    return TrustConfiguration(
+      trustSource: .etsi(
+        EtsiTrustSource(
+          loteLocations: loteLocations,
+          contextTypeMappings: classifications,
+          isRevocationEnabled: false
+        )
+      ),
+      fallbackTrustSource: .staticList(  // Fallback to trust our bundled Norwegian eidas2sandkasse root CAs.
+        StaticListTrustSource(rootCertificates: staticRootCertificates)
+      ),
+      defaultPolicy: .warning,
+      docTypePolicies: [
+        DocumentTypeIdentifier.mDocPid.rawValue: .warning,
+        DocumentTypeIdentifier.sdJwtPid.rawValue: .warning
+      ],
+      requireSignedMetadata: false,
+      statusTrustPolicy: .warning,
+      wrprcVpTrustPolicy: .warning,
+      wrprcVciTrustPolicy: .warning
+    )
+  }
+
+  var staticRootCertificates: [Data] {
     let certificates: [String]
     switch configLogic.appBuildVariant {
     case .DEMO:
-        certificates = [
-            "eidas2sandkasse_net_access_CA",
-            "eidas2sandkasse_net_access2_CA"
-        ]
+      certificates = [
+          "eidas2sandkasse_net_access_CA",
+          "eidas2sandkasse_net_access2_CA"
+      ]
     case .DEV:
-        certificates = [
-            "eidas2sandkasse_net_access_CA",
-            "eidas2sandkasse_dev_access_CA",
-            "eidas2sandkasse_dev_access2_CA"
-        ]
+      certificates = [
+          "eidas2sandkasse_net_access_CA",
+          "eidas2sandkasse_dev_access_CA",
+          "eidas2sandkasse_dev_access2_CA"
+      ]
     }
-      
-    return certificates
-      .compactMap { loadCertificate($0) }
-      .map { [$0] }
+    return certificates.compactMap { loadCertificate($0) }
   }
 
   var logFileName: String {
@@ -239,58 +405,63 @@ struct WalletKitConfigImpl: WalletKitConfig {
     return switch configLogic.appBuildVariant {
     case .DEMO:
       DocumentIssuanceConfig(
-        defaultRule: DocumentIssuanceRule(
-          policy: .rotateUse,
-          numberOfCredentials: 50
+        defaultCredentialOptions: CredentialOptions(
+          credentialPolicy: .rotateUse,
+          batchSize: 10
         ),
-        documentSpecificRules: [
-          DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
-            policy: .rotateUse,
-            numberOfCredentials: 50
+        documentSpecificCredentialOptions: [
+          DocumentTypeIdentifier.mDocPid: CredentialOptions(
+            credentialPolicy: .rotateUse,
+            batchSize: 10
           ),
-          DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
-            policy: .rotateUse,
-            numberOfCredentials: 50
+          DocumentTypeIdentifier.sdJwtPid: CredentialOptions(
+            credentialPolicy: .rotateUse,
+            batchSize: 10
           )
         ],
-        reIssuanceRule: ReIssuanceRule(
-          minNumberOfCredentials: 2,
-          minExpirationHours: 14,
+        reIssuanceBackgroundRule: ReIssuanceBackgroundRule(
           backgroundIntervalSeconds: 300
         )
       )
     case .DEV:
       DocumentIssuanceConfig(
-        defaultRule: DocumentIssuanceRule(
-          policy: .rotateUse,
-          numberOfCredentials: 60
+        defaultCredentialOptions: CredentialOptions(
+          credentialPolicy: .rotateUse,
+          batchSize: 10
         ),
-        documentSpecificRules: [
-          DocumentTypeIdentifier.mDocPid: DocumentIssuanceRule(
-            policy: .rotateUse,
-            numberOfCredentials: 60
+        documentSpecificCredentialOptions: [
+          DocumentTypeIdentifier.mDocPid: CredentialOptions(
+            credentialPolicy: .rotateUse,
+            batchSize: 60
           ),
-          DocumentTypeIdentifier.sdJwtPid: DocumentIssuanceRule(
-            policy: .rotateUse,
-            numberOfCredentials: 60
+          DocumentTypeIdentifier.sdJwtPid: CredentialOptions(
+            credentialPolicy: .rotateUse,
+            batchSize: 60
           )
         ],
-        reIssuanceRule: ReIssuanceRule(
-          minNumberOfCredentials: 2,
-          minExpirationHours: 14,
+        reIssuanceBackgroundRule: ReIssuanceBackgroundRule(
           backgroundIntervalSeconds: 300
         )
       )
     }
   }
+
+  var trustMarkSource: TrustMarkSource {
+    .static(
+      information: TrustMarkInformation(
+        trustMarkResourceURL: "https://gist.githubusercontent.com/sraptis-scy/025334375fe26177d9a7bcb60fd8a93f/raw/TrustMarkResource.json",
+        listOfCertifiedWalletsURL: "https://eidas.ec.europa.eu/efda/wallet/certified",
+        walletSolutionInfoPageURL: "https://eidas.ec.europa.eu/efda/wallet/certified?id=WALLET_SOLUTION_ID"
+      )
+    )
+  }
 }
 
 private extension WalletKitConfigImpl {
-  func loadCertificate(_ name: String) -> SecCertificate? {
-    guard
-      let url = Bundle.main.url(forResource: name, withExtension: "der"),
-      let data = try? Data(contentsOf: url)
-    else { return nil }
-    return SecCertificateCreateWithData(nil, data as CFData)
+  func loadCertificate(_ name: String) -> Data? {
+    guard let url = Bundle.main.url(forResource: name, withExtension: "der") else {
+      return nil
+    }
+    return try? Data(contentsOf: url)
   }
 }

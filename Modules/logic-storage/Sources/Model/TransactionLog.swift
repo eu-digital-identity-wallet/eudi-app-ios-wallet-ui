@@ -20,10 +20,19 @@ final class SDTransactionLog: IdentifiableObject {
 
   @Attribute(.unique) var identifier: String
   var value: String
+  var parentPresentationId: String?
+  var actionChannel: String?
 
-  init(identifier: String, value: String) {
+  init(
+    identifier: String,
+    value: String,
+    parentPresentationId: String? = nil,
+    actionChannel: String? = nil
+  ) {
     self.identifier = identifier
     self.value = value
+    self.parentPresentationId = parentPresentationId
+    self.actionChannel = actionChannel
   }
 }
 
@@ -31,22 +40,41 @@ public struct TransactionLog: Sendable {
 
   public let identifier: String
   public let value: String
+  public let parentPresentationId: String?
+  public let actionChannel: String?
 
-  public init(identifier: String, value: String) {
+  public init(
+    identifier: String,
+    value: String,
+    parentPresentationId: String? = nil,
+    actionChannel: String? = nil
+  ) {
     self.identifier = identifier
     self.value = value
+    self.parentPresentationId = parentPresentationId
+    self.actionChannel = actionChannel
   }
 }
 
 extension SDTransactionLog {
   func toTransactionLog() -> TransactionLog {
-    TransactionLog(identifier: identifier, value: value)
+    TransactionLog(
+      identifier: identifier,
+      value: value,
+      parentPresentationId: parentPresentationId,
+      actionChannel: actionChannel
+    )
   }
 }
 
 extension TransactionLog {
   func toSdModel() -> SDTransactionLog {
-    SDTransactionLog(identifier: identifier, value: value)
+    SDTransactionLog(
+      identifier: identifier,
+      value: value,
+      parentPresentationId: parentPresentationId,
+      actionChannel: actionChannel
+    )
   }
 }
 

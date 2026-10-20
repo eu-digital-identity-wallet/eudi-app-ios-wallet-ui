@@ -51,87 +51,90 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
       var order: Int = 0
     }
 
-    do {
-      let scoped = try await walletController.getScopedDocuments()
-      var buckets: [String: IssuerBucket] = [:]
-
-      for doc in scoped {
-        switch flow {
-        case .noDocument:
-          guard doc.isPid else { continue }
-
-        case .extraDocument(let identifier):
-          if let identifier, doc.docTypeIdentifier != identifier { continue }
-        }
-
-        let issuerId = doc.issuer
-        var bucket = buckets[issuerId, default: IssuerBucket()]
-
-        if doc.isPid {
-          bucket.pidConfigIds.append(doc.configId)
-          bucket.pidDocTypeIdentifier = doc.docTypeIdentifier
-          bucket.issuerId = issuerId
-          bucket.order = doc.order
-        } else {
-          bucket.items.append(
-            AddDocumentUIModel(
-              listItem: .init(
-                mainContent: .text(.custom(doc.name)),
-                trailingContent: .icon(Theme.shared.image.plus)
-              ),
-              isEnabled: true,
-              configIds: [doc.configId],
-              issuerId: issuerId,
-              order: doc.order,
-              docTypeIdentifier: doc.docTypeIdentifier
-            )
-          )
-        }
-
-        buckets[issuerId] = bucket
-      }
-
-      let grouped: [String: [AddDocumentUIModel]] = buckets.mapValues { bucket in
-
-        var items = bucket.items
-
-        if !bucket.pidConfigIds.isEmpty {
-          items.append(
-            AddDocumentUIModel(
-              listItem: .init(
-                mainContent: .text(.pidCombined),
-                trailingContent: .icon(Theme.shared.image.plus)
-              ),
-              isEnabled: true,
-              configIds: bucket.pidConfigIds,
-              issuerId: bucket.issuerId,
-              order: bucket.order,
-              docTypeIdentifier: bucket.pidDocTypeIdentifier
-            )
-          )
-        }
-
-        items.sort(by: compare)
-        return items
-      }
-
-      let orderedPairs: [(String, [AddDocumentUIModel])] = grouped
-        .sorted { lhs, rhs in
-          let lhsOrder = lhs.value.map(\.order).max() ?? Int.min
-          let rhsOrder = rhs.value.map(\.order).max() ?? Int.min
-
-          if lhsOrder != rhsOrder { return lhsOrder > rhsOrder }
-          return lhs.key.localizedCompare(rhs.key) == .orderedAscending
-        }
-
-      let ordered = OrderedDictionary<String, [AddDocumentUIModel]>(
-        uniqueKeysWithValues: orderedPairs
-      )
-
-      return .success(ordered)
-    } catch {
-      return .failure(error)
+    let result = await walletController.getScopedDocuments()
+    if result.allIssuersFailed {
+      return result.errors.contains(where: { $0.isTrustBlocked })
+      ? .issuerNotTrusted
+      : .failure(result.errors.first ?? WalletCoreError.unableFetchDocuments)
     }
+
+    let scoped = result.documents
+    var buckets: [String: IssuerBucket] = [:]
+
+    for doc in scoped {
+      switch flow {
+      case .noDocument:
+        guard doc.isPid else { continue }
+
+      case .extraDocument(let identifier):
+        if let identifier, doc.docTypeIdentifier != identifier { continue }
+      }
+
+      let issuerId = doc.issuer
+      var bucket = buckets[issuerId, default: IssuerBucket()]
+
+      if doc.isPid {
+        bucket.pidConfigIds.append(doc.configId)
+        bucket.pidDocTypeIdentifier = doc.docTypeIdentifier
+        bucket.issuerId = issuerId
+        bucket.order = doc.order
+      } else {
+        bucket.items.append(
+          AddDocumentUIModel(
+            listItem: .init(
+              mainContent: .text(.custom(doc.name)),
+              trailingContent: .icon(Theme.shared.image.plus)
+            ),
+            isEnabled: true,
+            configIds: [doc.configId],
+            issuerId: issuerId,
+            order: doc.order,
+            docTypeIdentifier: doc.docTypeIdentifier
+          )
+        )
+      }
+
+      buckets[issuerId] = bucket
+    }
+
+    let grouped: [String: [AddDocumentUIModel]] = buckets.mapValues { bucket in
+
+      var items = bucket.items
+
+      if !bucket.pidConfigIds.isEmpty {
+        items.append(
+          AddDocumentUIModel(
+            listItem: .init(
+              mainContent: .text(.pidCombined),
+              trailingContent: .icon(Theme.shared.image.plus)
+            ),
+            isEnabled: true,
+            configIds: bucket.pidConfigIds,
+            issuerId: bucket.issuerId,
+            order: bucket.order,
+            docTypeIdentifier: bucket.pidDocTypeIdentifier
+          )
+        )
+      }
+
+      items.sort(by: compare)
+      return items
+    }
+
+    let orderedPairs: [(String, [AddDocumentUIModel])] = grouped
+      .sorted { lhs, rhs in
+        let lhsOrder = lhs.value.map(\.order).max() ?? Int.min
+        let rhsOrder = rhs.value.map(\.order).max() ?? Int.min
+
+        if lhsOrder != rhsOrder { return lhsOrder > rhsOrder }
+        return lhs.key.localizedCompare(rhs.key) == .orderedAscending
+      }
+
+    let ordered = OrderedDictionary<String, [AddDocumentUIModel]>(
+      uniqueKeysWithValues: orderedPairs
+    )
+
+    return .success(ordered)
 
     func compare(_ a: AddDocumentUIModel, _ b: AddDocumentUIModel) -> Bool {
       a.listItem.mainContent.asString
@@ -144,13 +147,24 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
     configIds: [String],
     docTypeIdentifier: DocumentTypeIdentifier
   ) async -> IssueResultPartialState {
+
+    if case .blocked(let reason) = await walletController.getIssuerRegistration(issuerId: issuerId, configIds: configIds) {
+      return .registrationBlocked(reason)
+    }
+
     do {
 
-      let docs = try await walletController.issueDocuments(
+      let issuance = try await walletController.issueDocuments(
         issuerId: issuerId,
         identifiers: configIds,
         docTypeIdentifier: docTypeIdentifier
       )
+      let docs = issuance.documents
+
+      if !issuance.issuerRegistration.vouchesForIssuer {
+        await discard(docs)
+        return .issuerNotTrusted
+      }
 
       guard !docs.isEmpty else {
         return .failure(WalletCoreError.unableToIssueAndStore)
@@ -200,7 +214,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
       }
 
     } catch {
-      return .failure(error)
+      return error.isTrustBlocked ? .issuerNotTrusted : .failure(error)
     }
   }
 
@@ -226,7 +240,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
       }
 
     } catch {
-      return .failure(error)
+      return error.isTrustBlocked ? .issuerNotTrusted : .failure(error)
     }
   }
 
@@ -242,8 +256,14 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
     return .success(documentsDetails)
   }
 
+  private func discard(_ documents: [WalletStorage.Document]) async {
+    for document in documents {
+      try? await walletController.deleteDocument(with: document.id, status: document.status)
+    }
+  }
+
   private func getScopedDocument(configId: String) async throws -> ScopedDocument {
-    try await walletController.getScopedDocuments().first {
+    await walletController.getScopedDocuments().documents.first {
       $0.configId == configId
     } ?? ScopedDocument.empty()
   }
@@ -251,6 +271,7 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
 
 public enum ScopedDocumentsPartialState: Sendable {
   case success(OrderedDictionary<String, [AddDocumentUIModel]>)
+  case issuerNotTrusted
   case failure(Error)
 }
 
@@ -258,6 +279,8 @@ public enum IssueResultPartialState: Sendable {
   case success([String])
   case deferredSuccess(ScopedDocument)
   case dynamicIssuance(RemoteSessionCoordinator)
+  case issuerNotTrusted
+  case registrationBlocked(IssuerRegistration.BlockedReason)
   case failure(Error)
 }
 
@@ -265,6 +288,7 @@ public enum IssueDynamicDocumentPartialState: Sendable {
   case success(String)
   case noPending
   case deferredSuccess
+  case issuerNotTrusted
   case failure(Error)
 }
 

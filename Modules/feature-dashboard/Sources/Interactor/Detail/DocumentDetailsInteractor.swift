@@ -48,14 +48,10 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     let isBookmarked = await walletController.isDocumentBookmarked(with: documentId)
     let isRevoked = await walletController.isDocumentRevoked(with: documentId)
 
-    let documentIsLowOnCredentials = await walletController.isDocumentLowOnCredentials(document: document)
     let issuerDetailsCard = document?.transformToIssuerDetailsCardDataUi(isRevoked: isRevoked)
 
     if isBatchCounterEnabled() {
-      let info = getCredentialsUsageCount(
-        credentialsUsageCounts: document?.credentialsUsageCounts,
-        documentIsLowOnCredentials: documentIsLowOnCredentials
-      )
+      let info = documentCredentialsInfoUi(usageCounts: document?.credentialsUsageCounts)
       return .success(documentDetails, issuerDetailsCard, info, isBookmarked, isRevoked)
     }
 
@@ -70,7 +66,7 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
       )
       return .success
     } catch {
-      return .failure(error)
+      return error.isTrustBlocked ? .issuerNotTrusted : .failure(error)
     }
   }
 
@@ -98,7 +94,7 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     do {
 
       if await shouldDeleteAllDocuments(type: type) {
-        await walletController.clearAllDocuments()
+        try await walletController.clearAllDocuments()
         successState = .success(shouldReboot: true)
       } else {
         try await walletController.deleteDocument(with: documentId, status: .issued)
@@ -117,17 +113,6 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
 
   func delete(_ identifier: String) async throws {
     try await walletController.removeBookmarkedDocument(with: identifier)
-  }
-
-  private func getCredentialsUsageCount(
-    credentialsUsageCounts: CredentialsUsageCounts?,
-    documentIsLowOnCredentials: Bool
-  ) -> DocumentCredentialsInfoUi? {
-    if let usageCounts = credentialsUsageCounts {
-      return documentCredentialsInfoUi(usageCounts: usageCounts)
-    } else {
-      return nil
-    }
   }
 
   private func documentCredentialsInfoUi(
@@ -167,5 +152,6 @@ public enum DocumentDetailsDeletionPartialState: Sendable {
 
 public enum DocumentDetailsReIssuancePartialState: Sendable {
   case success
+  case issuerNotTrusted
   case failure(Error)
 }

@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_ui
+import logic_core
 import logic_resources
 import feature_common
 
@@ -26,8 +27,11 @@ struct TransactionDetailsViewState: ViewState {
   let transactionId: String
 }
 
+@Observable
 final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, TransactionDetailsViewState> {
+  var isDeletionModalShowing: Bool = false
 
+  @ObservationIgnored
   private let interactor: TransactionDetailsInteractor
 
   init(
@@ -77,12 +81,68 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
     }
   }
 
-  func onReportModal() {}
+  func onShowDeleteModal() {
+    guard !viewState.isLoading else { return }
+    isDeletionModalShowing = true
+  }
 
-  func onShowDeleteModal() {}
+  func onDeleteTransaction() {
+    isDeletionModalShowing = false
+    self.setState { $0.copy(isLoading: true).copy(error: nil) }
+    Task {
+      switch await interactor.deleteTransaction(transactionId: viewState.transactionId) {
+      case .success:
+        pop()
+      case .failure:
+        self.setState {
+          $0.copy(
+            isLoading: false,
+            error: .init(
+              description: .transactionDetailsDeleteError,
+              cancelAction: self.dismissError(),
+              action: { self.onDeleteTransaction() }
+            )
+          )
+        }
+      }
+    }
+  }
+
+  func onReportModal() {
+    onDataProtectionAction(.reportSuspiciousTransaction)
+  }
+
+  func onRequestDataDeletion() {
+    onDataProtectionAction(.requestDataDeletion)
+  }
+
+  func onPreviousActions(_ action: TransactionDataProtectionAction) {
+    guard !viewState.isLoading, viewState.transactionDetailsUi?.presentationActions != nil else { return }
+    router.push(with: .featureDashboardModule(.transactionActionHistory(id: viewState.transactionId, action: action)))
+  }
+
+  private func onDataProtectionAction(_ action: TransactionDataProtectionAction) {
+    guard
+      !viewState.isLoading,
+      let actions = viewState.transactionDetailsUi?.presentationActions,
+      !actions.contacts(for: action).isEmpty
+    else {
+      return
+    }
+    router.push(with: .featureDashboardModule(.transactionAction(id: viewState.transactionId, action: action)))
+  }
 
   func toolbarContent() -> ToolBarContent? {
     .init(
+      trailingActions: [
+        .init(
+          image: Theme.shared.image.trash,
+          accessibilityLocator: TransactionDetailsLocators.deleteNavigationBarButton,
+          disabled: viewState.isLoading || viewState.error != nil
+        ) {
+          self.onShowDeleteModal()
+        }
+      ],
       leadingActions: [
         .init(
           image: Theme.shared.image.chevronLeft,
@@ -96,5 +156,9 @@ final class TransactionDetailsViewModel<Router: RouterHost>: ViewModel<Router, T
 
   func pop() {
     router.popTo(with: .featureDashboardModule(.dashboard))
+  }
+
+  private func dismissError() {
+    self.setState { $0.copy(error: nil) }
   }
 }

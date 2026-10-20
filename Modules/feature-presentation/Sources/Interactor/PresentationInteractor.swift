@@ -17,10 +17,11 @@ import logic_core
 import feature_common
 
 public struct OnlineAuthenticationRequestSuccessModel: Sendable {
-  var requestDataCells: [RequestDataUiModel]
+  var requestDataCombinations: [[RequestDataUiModel]]
   var relyingParty: String
   var dataRequestInfo: String
   var isTrusted: Bool
+  var relyingPartyRegistration: RelyingPartyRegistration
 }
 
 public enum PresentationCoordinatorPartialState: Sendable {
@@ -38,22 +39,37 @@ public enum RemoteSentResponsePartialState: Sendable {
   case failure(Error)
 }
 
+public enum PresentationRequestPartialState: Sendable {
+  case success(OnlineAuthenticationRequestSuccessModel)
+  case notSecuredRequest
+  case failure(Error)
+}
+
 public protocol PresentationInteractor: Sendable {
   func getSessionStatePublisher() async -> RemotePublisherPartialState
   func getCoordinator() async -> PresentationCoordinatorPartialState
-  func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
-  func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error>
-  func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error>
+  func onDeviceEngagement() async -> PresentationRequestPartialState
+  func onResponsePrepare(combinationIndex: Int) async -> Result<RequestItemConvertible, Error>
+  func onRequestReceived() async -> PresentationRequestPartialState
   func onSendResponse() async -> RemoteSentResponsePartialState
+  func onDeclineRequest() async
   func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) async
   func storeDynamicIssuancePendingUrl(with url: URL) async
   func stopPresentation() async
+  func registrationForFailedRequest() async -> RelyingPartyRegistration?
+}
+
+private struct RequestCombination {
+  let elements: [DocElements]
+  let uiModels: [RequestDataUiModel]
 }
 
 final actor PresentationInteractorImpl: PresentationInteractor {
 
   private let sessionCoordinatorHolder: SessionCoordinatorHolder
   private let walletKitController: WalletKitController
+
+  private var requestedItemSets: [[DocElements]] = []
 
   init(
     with presentationCoordinator: RemoteSessionCoordinator,
@@ -85,37 +101,68 @@ final actor PresentationInteractorImpl: PresentationInteractor {
     await self.sessionCoordinatorHolder.setActiveRemoteCoordinator(coordinator)
   }
 
-  public func onDeviceEngagement() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
+  public func onDeviceEngagement() async -> PresentationRequestPartialState {
     try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().initialize()
     return await onRequestReceived()
   }
 
-  public func onRequestReceived() async -> Result<OnlineAuthenticationRequestSuccessModel, Error> {
+  public func onRequestReceived() async -> PresentationRequestPartialState {
     do {
-      let response = try await sessionCoordinatorHolder.getActiveRemoteCoordinator().requestReceived()
+      let coordinator = try await sessionCoordinatorHolder.getActiveRemoteCoordinator()
+      let response = try await coordinator.requestReceived()
       let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
-      let documents = response.items.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
-      guard !documents.isEmpty else { return .failure(WalletCoreError.unableFetchDocuments) }
+      let registrationPolicy = coordinator.relyingPartyRegistration
+      let overaskedClaims = response.overaskedClaims
+      let transactionDataSets = response.transactionDataSets
+      let presentable = response.itemSets
+        .enumerated()
+        .map { index, documentSet in
+          let documentSet = documentSet.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
+          let transactionData = transactionDataSets.indices.contains(index) ? transactionDataSets[index] : [:]
+          return RequestCombination(
+            elements: documentSet,
+            uiModels: documentSet.toUiModels(
+              with: self.walletKitController,
+              claimsAreSelectable: false,
+              overaskedPaths: documentSet.overaskedPaths(from: overaskedClaims),
+              transactionData: transactionData
+            )
+          )
+        }
+        .filter { !$0.uiModels.isEmpty }
+
+      self.requestedItemSets = presentable.map(\.elements)
+      let combinations = presentable.map(\.uiModels)
+
       return .success(
         .init(
-          requestDataCells: documents.toUiModels(
-            with: self.walletKitController
-          ),
+          requestDataCombinations: combinations,
           relyingParty: response.relyingParty,
           dataRequestInfo: response.dataRequestInfo,
-          isTrusted: response.isTrusted
+          isTrusted: response.isTrusted,
+          relyingPartyRegistration: await walletKitController.getVerifierRegistration(
+            policy: registrationPolicy,
+            trustViolations: coordinator.relyingPartyWarningViolations,
+            overaskedClaims: overaskedClaims,
+            verifierName: response.relyingParty,
+            verifierIsTrusted: response.isTrusted
+          )
         )
       )
     } catch {
-      return .failure(error)
+      return error.isTrustBlocked ? .notSecuredRequest : .failure(error)
     }
   }
 
-  public func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> Result<RequestItemConvertible, Error> {
+  public func onResponsePrepare(combinationIndex: Int) async -> Result<RequestItemConvertible, Error> {
 
-    let requestConvertible = requestItems.prepareRequest()
+    guard requestedItemSets.indices.contains(combinationIndex) else {
+      return .failure(PresentationSessionError.conversionToRequestItemModel)
+    }
 
-    guard requestConvertible.items.isEmpty == false else {
+    let requestConvertible = requestedItemSets[combinationIndex].items
+
+    guard requestConvertible.isEmpty == false else {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
@@ -149,8 +196,17 @@ final actor PresentationInteractorImpl: PresentationInteractor {
     }
   }
 
+  public func onDeclineRequest() async {
+    try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().declineResponse()
+    await stopPresentation()
+  }
+
   public func storeDynamicIssuancePendingUrl(with url: URL) async {
     await walletKitController.storeDynamicIssuancePendingUrl(with: url)
+  }
+
+  public func registrationForFailedRequest() async -> RelyingPartyRegistration? {
+    await walletKitController.getVerifierRegistrationForFailedRequest()
   }
 
   public func stopPresentation() async {

@@ -76,6 +76,17 @@ public extension DocumentOfferUIModel {
 }
 
 public extension DocumentOfferUIModel {
+
+  static func empty() -> DocumentOfferUIModel {
+    .init(
+      issuerName: LocalizableStringKey.unknownIssuer.toString,
+      issuerLogo: nil,
+      txCode: nil,
+      uiOffers: [],
+      docOffers: []
+    )
+  }
+
   static func mock() -> DocumentOfferUIModel {
     return .init(
       issuerName: LocalizableStringKey.unknownIssuer.toString,

@@ -72,10 +72,10 @@ final class ReachabilityControllerImpl: ReachabilityController, BKAvailabilityOb
   }
 
   public func getBleAvailibity() -> AnyPublisher<Reachability.BleAvailibity, Never> {
-    return Deferred {
-      Future { [weak self] promise in
+    return Deferred { [weak self] in
+      Future { promise in
 
-        guard let self = self else { return }
+        guard let self else { return }
 
         self.$bleAvailibity
           .dropFirst()

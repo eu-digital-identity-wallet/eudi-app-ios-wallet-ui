@@ -10,6 +10,7 @@ import Cuckoo
 import Cuckoo
 import Foundation
 import EudiRQESUi
+import MdocDataModel18013
 @testable import logic_business
 
 public class MockConfigLogic: ConfigLogic, Cuckoo.ProtocolMock, @unchecked Sendable {
@@ -237,6 +238,7 @@ import Cuckoo
 
 import Cuckoo
 import Foundation
+import Security
 import KeychainAccess
 @testable import logic_business
 
@@ -396,9 +398,9 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
         )
     }
 
-    public func clear() {
+    public func clear() -> Bool {
         return cuckoo_manager.call(
-            "clear()",
+            "clear() -> Bool",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -469,10 +471,10 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
             ))
         }
         
-        func clear() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+        func clear() -> Cuckoo.ProtocolStubFunction<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockKeyChainController.self,
-                method: "clear()",
+                method: "clear() -> Bool",
                 parameterMatchers: matchers
             ))
         }
@@ -575,10 +577,10 @@ public class MockKeyChainController: KeyChainController, Cuckoo.ProtocolMock, @u
         
         
         @discardableResult
-        func clear() -> Cuckoo.__DoNotUse<(), Void> {
+        func clear() -> Cuckoo.__DoNotUse<(), Bool> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "clear()",
+                "clear() -> Bool",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -619,8 +621,8 @@ public class KeyChainControllerStub:KeyChainController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
-    public func clear() {
-        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    public func clear() -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
 }
 

@@ -30,7 +30,7 @@ final class RouterHostImpl: RouterHost {
   @ObservationIgnored
   private let analyticsController: AnalyticsController
   @ObservationIgnored
-  private let lockInterval: Int = 1000
+  private let lockInterval: Int = 500
   @ObservationIgnored
   private var queueNavigation: [QueueItem] = []
   @ObservationIgnored

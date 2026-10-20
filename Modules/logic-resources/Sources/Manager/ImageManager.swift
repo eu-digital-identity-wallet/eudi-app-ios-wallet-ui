@@ -29,7 +29,10 @@ public protocol ImageManagerProtocol: Sendable {
   var chevronLeft: Image { get }
   var xmark: Image { get }
   var exclamationmarkCircle: Image { get }
+  var exclamationmarkTriangleFill: Image { get }
   var circle: Image { get }
+  var radioButtonSelected: Image { get }
+  var radioButtonUnselected: Image { get }
   var eye: Image { get }
   var eyeSlash: Image { get }
   var checkmarkCircleFill: Image { get }
@@ -41,6 +44,9 @@ public protocol ImageManagerProtocol: Sendable {
   var checkMarkSealFill: Image { get }
   var photo: Image { get }
   var trash: Image { get }
+  var phone: Image { get }
+  var envelope: Image { get }
+  var link: Image { get }
   var viewFinder: Image { get }
   var clock: Image { get }
   var clockIndicator: Image { get }
@@ -72,8 +78,10 @@ public protocol ImageManagerProtocol: Sendable {
   var copy: Image { get }
   var changePin: Image { get }
   var batchCounter: Image { get }
+  var issuerRegistration: Image { get }
   var retrieveLogs: Image { get }
   var changelog: Image { get }
+  var arrowUpRightSquare: Image { get }
 }
 
 final class ImageManager: ImageManagerProtocol {
@@ -93,7 +101,10 @@ final class ImageManager: ImageManagerProtocol {
     case chevronLeft = "chevron.left"
     case xmark = "xmark"
     case exclamationmarkCircle = "exclamationmark.circle"
+    case exclamationmarkTriangleFill = "exclamationmark.triangle.fill"
     case circle = "circle.fill"
+    case radioButtonSelected = "largecircle.fill.circle"
+    case radioButtonUnselected = "circle"
     case eye = "eye"
     case eyeSlash = "eye.slash"
     case checkmarkCircleFill = "checkmark.circle.fill"
@@ -105,6 +116,9 @@ final class ImageManager: ImageManagerProtocol {
     case checkMarkSealFill = "checkmark.seal.fill"
     case photo = "photo.fill"
     case trash = "trash"
+    case phone = "phone"
+    case envelope = "envelope"
+    case link = "link"
     case viewFinder = "viewfinder"
     case clock = "ic-clock"
     case clockIndicator = "clock.fill"
@@ -139,8 +153,10 @@ final class ImageManager: ImageManagerProtocol {
     case copy = "doc.on.doc"
     case changePin = "123.rectangle"
     case batchCounter = "number"
+    case issuerRegistration = "checkmark.seal"
     case retrieveLogs = "arrow.up.forward.square"
     case changelog = "clock.arrow.trianglehead.2.counterclockwise.rotate.90"
+    case arrowUpRightSquare = "arrow.up.right.square"
   }
 
   // MARK: - Properties
@@ -195,8 +211,17 @@ final class ImageManager: ImageManagerProtocol {
   var exclamationmarkCircle: Image {
     Image(systemName: ImageEnum.exclamationmarkCircle.rawValue)
   }
+  var exclamationmarkTriangleFill: Image {
+    Image(systemName: ImageEnum.exclamationmarkTriangleFill.rawValue)
+  }
   var circle: Image {
     Image(systemName: ImageEnum.circle.rawValue)
+  }
+  var radioButtonSelected: Image {
+    Image(systemName: ImageEnum.radioButtonSelected.rawValue)
+  }
+  var radioButtonUnselected: Image {
+    Image(systemName: ImageEnum.radioButtonUnselected.rawValue)
   }
   var eye: Image {
     Image(systemName: ImageEnum.eye.rawValue)
@@ -230,6 +255,15 @@ final class ImageManager: ImageManagerProtocol {
   }
   var trash: Image {
     Image(systemName: ImageEnum.trash.rawValue)
+  }
+  var phone: Image {
+    Image(systemName: ImageEnum.phone.rawValue)
+  }
+  var envelope: Image {
+    Image(systemName: ImageEnum.envelope.rawValue)
+  }
+  var link: Image {
+    Image(systemName: ImageEnum.link.rawValue)
   }
   var viewFinder: Image {
     Image(systemName: ImageEnum.viewFinder.rawValue)
@@ -332,6 +366,10 @@ final class ImageManager: ImageManagerProtocol {
   var changePin: Image {
     Image(systemName: ImageEnum.changePin.rawValue)
   }
+  var issuerRegistration: Image {
+    Image(systemName: ImageEnum.issuerRegistration.rawValue)
+  }
+
   var batchCounter: Image {
     Image(systemName: ImageEnum.batchCounter.rawValue)
   }
@@ -340,5 +378,8 @@ final class ImageManager: ImageManagerProtocol {
   }
   var changelog: Image {
     Image(systemName: ImageEnum.changelog.rawValue)
+  }
+  var arrowUpRightSquare: Image {
+    Image(systemName: ImageEnum.arrowUpRightSquare.rawValue)
   }
 }

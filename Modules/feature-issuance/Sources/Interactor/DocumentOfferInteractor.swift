@@ -79,9 +79,14 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
         return .failure(WalletCoreError.missingPid)
       }
 
-      return .success(offer.transformToDocumentOfferUi())
+      let issuerRegistration = await walletController.getIssuerRegistration(for: offer)
+      if case .blocked(let reason) = issuerRegistration {
+        return .registrationBlocked(reason)
+      }
+
+      return .success(offer.transformToDocumentOfferUi(), issuerRegistration)
     } catch {
-      return .failure(error)
+      return error.isTrustBlocked ? .issuerNotTrusted : .failure(error)
     }
   }
 
@@ -94,11 +99,17 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
   ) async -> OfferResultPartialState {
     do {
 
-      let issuedDocuments = try await walletController.issueDocumentsByOfferUrl(
+      let issuance = try await walletController.issueDocumentsByOfferUrl(
         offerUri: uri,
         docTypes: docOffers,
         txCodeValue: txCodeValue
       )
+      let issuedDocuments = issuance.documents
+
+      if !issuance.issuerRegistration.vouchesForIssuer {
+        await discard(issuedDocuments)
+        return .issuerNotTrusted
+      }
 
       if issuedDocuments.isEmpty {
         return .failure(WalletCoreError.unableToIssueAndStore)
@@ -143,7 +154,7 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
       }
 
     } catch {
-      return .failure(error)
+      return error.isTrustBlocked ? .issuerNotTrusted : .failure(error)
     }
   }
 
@@ -196,7 +207,7 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
       }
 
     } catch {
-      return .failure(error)
+      return error.isTrustBlocked ? .issuerNotTrusted : .failure(error)
     }
   }
 
@@ -210,6 +221,12 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
       return .failure(WalletCoreError.unableFetchDocument)
     }
     return .success(documentsDetails)
+  }
+
+  private func discard(_ documents: [WalletStorage.Document]) async {
+    for document in documents {
+      try? await walletController.deleteDocument(with: document.id, status: document.status)
+    }
   }
 
   private func fetchAndHandleDocuments(
@@ -305,7 +322,9 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
 }
 
 public enum OfferRequestPartialState: Sendable {
-  case success(DocumentOfferUIModel)
+  case success(DocumentOfferUIModel, IssuerRegistration?)
+  case registrationBlocked(IssuerRegistration.BlockedReason)
+  case issuerNotTrusted
   case failure(Error)
 }
 
@@ -314,11 +333,13 @@ public enum OfferResultPartialState: Sendable {
   case partialSuccess(AppRoute)
   case deferredSuccess(AppRoute)
   case dynamicIssuance(RemoteSessionCoordinator)
+  case issuerNotTrusted
   case failure(Error)
 }
 
 public enum OfferDynamicIssuancePartialState: Sendable {
   case success(AppRoute)
+  case issuerNotTrusted
   case noPending
   case failure(Error)
 }

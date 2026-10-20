@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
+import EudiWalletKit
 
 @testable import logic_core
 @testable import logic_test
@@ -29,6 +30,22 @@ final class TestAddDocumentInteractor: EudiTest {
   override func setUp() {
     super.setUp()
     self.walletKitController = MockWalletKitController()
+
+    stub(walletKitController) { mock in
+      when(mock.getIssuerRegistration(issuerId: any(), configIds: any())).thenReturn(
+        .verified(
+          details: RegistrationDetails(
+            tradeName: "issuer",
+            uniqueId: "issuer",
+            logoUrl: nil,
+            intendedUse: nil,
+            privacyPolicyUrl: nil,
+            serviceDescription: nil
+          )
+        )
+      )
+    }
+
     self.interactor = AddDocumentInteractorImpl(
       walletController: walletKitController
     )
@@ -114,6 +131,83 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
+  func testFetchScopedDocuments_whenOneIssuerFailsAndAnotherSucceeds_thenReturnsSuccessSilently() async throws {
+    // Given
+    stubGetScopedDocuments(
+      documents: [Constants.scopedDocument],
+      errors: [WalletError(description: "trust", code: .trustError)],
+      totalIssuers: 2
+    )
+
+    // When
+    let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: nil))
+
+    // Then
+    switch result {
+    case .success(let documents):
+      XCTAssertEqual(documents.count, 1)
+    default:
+      XCTFail("Expected success but got \(result)")
+    }
+  }
+
+  func testFetchScopedDocuments_whenAllIssuersFailAndOneIsUntrusted_thenReturnsIssuerNotTrusted() async {
+    // Given a mix of a generic and a trust failure, the trust failure wins.
+    stubGetScopedDocuments(
+      documents: [],
+      errors: [
+        WalletCoreError.unableFetchDocument,
+        WalletError(description: "trust", code: .trustError)
+      ],
+      totalIssuers: 2
+    )
+
+    // When
+    let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: nil))
+
+    // Then
+    switch result {
+    case .issuerNotTrusted:
+      break
+    default:
+      XCTFail("Expected issuerNotTrusted but got \(result)")
+    }
+  }
+
+  func testIssueDocument_whenIssuerRegistrationDoesNotVouch_thenBlocksAndDiscardsTheDocuments() async {
+    // Given
+    let issuerId = "issuer.dev"
+    let configIds = ["doc"]
+    let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
+    let document = Constants.issuedPendingDocument
+
+    stub(walletKitController) { mock in
+      when(mock.issueDocuments(
+        issuerId: equal(to: issuerId),
+        identifiers: equal(to: configIds),
+        docTypeIdentifier: equal(to: identifier)
+      )).thenReturn(
+        IssuanceResult(documents: [document], issuerRegistration: .blocked(reason: .notRegisteredAsProvider))
+      )
+      when(mock.deleteDocument(with: any(), status: any())).thenDoNothing()
+    }
+
+    // When
+    let result = await interactor.issueDocument(
+      issuerId: issuerId,
+      configIds: configIds,
+      docTypeIdentifier: identifier
+    )
+
+    // Then
+    switch result {
+    case .issuerNotTrusted:
+      verify(walletKitController).deleteDocument(with: equal(to: document.id), status: any())
+    default:
+      XCTFail("Expected issuerNotTrusted, got \(result)")
+    }
+  }
+
   func testIssueDocument_whenDefferedPendingDocument_thenReturnSuccess() async {
     // Given
     let configIds = ["deferred-doc"]
@@ -197,6 +291,66 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
+  func testIssueDocument_whenWalletThrowsTrustError_thenReturnsIssuerNotTrusted() async {
+    // Given
+    let configIds = ["untrusted-doc"]
+    let issuerId = "issuer.dev"
+    let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
+
+    stub(walletKitController) { mock in
+      when(
+        mock.issueDocuments(
+          issuerId: equal(to: issuerId),
+          identifiers: equal(to: configIds),
+          docTypeIdentifier: equal(to: identifier)
+        )
+      ).thenThrow(WalletError(description: "issuer not trusted", code: .trustError))
+    }
+
+    // When
+    let result = await interactor.issueDocument(
+      issuerId: issuerId,
+      configIds: configIds,
+      docTypeIdentifier: identifier
+    )
+
+    // Then
+    switch result {
+    case .issuerNotTrusted:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Expected .issuerNotTrusted but got \(result)")
+    }
+  }
+
+  func testResumeDynamicIssuance_whenWalletThrowsTrustError_thenReturnsIssuerNotTrusted() async {
+    // Given
+    let pendingData = DynamicIssuancePendingData(
+      pendingDoc: Constants.issuedPendingDocument,
+      url: URL(string: "https://example.com")!
+    )
+
+    stub(walletKitController) { mock in
+      when(mock.getDynamicIssuancePendingData()).thenReturn(pendingData)
+
+      when(mock.resumePendingIssuance(
+        pendingDoc: any(),
+        webUrl: equal(to: pendingData.url)
+      )).thenThrow(WalletError(description: "issuer not trusted", code: .trustError))
+    }
+
+    // When
+    let result = await interactor.resumeDynamicIssuance()
+
+    // Then
+    switch result {
+    case .issuerNotTrusted:
+      XCTAssertTrue(true)
+    default:
+      XCTFail("Expected .issuerNotTrusted but got \(result)")
+    }
+  }
+
   func testResumeDynamicIssuance_whenDefferedPending_thenReturnDefferedSuccess() async {
     // Given
     let pendingDoc = Constants.defferedPendingDocument
@@ -419,7 +573,7 @@ final class TestAddDocumentInteractor: EudiTest {
         issuerId: equal(to: issuerId),
         identifiers: equal(to: configIds),
         docTypeIdentifier: equal(to: identifier)
-      )).thenReturn([])
+      )).thenReturn(IssuanceResult(documents: [], issuerRegistration: nil))
     }
 
     // When
@@ -460,7 +614,7 @@ final class TestAddDocumentInteractor: EudiTest {
         issuerId: equal(to: issuerId),
         identifiers: equal(to: configIds),
         docTypeIdentifier: equal(to: identifier)
-      )).thenReturn([deferredDocNoMeta])
+      )).thenReturn(IssuanceResult(documents: [deferredDocNoMeta], issuerRegistration: nil))
     }
 
     // When
@@ -544,27 +698,74 @@ final class TestAddDocumentInteractor: EudiTest {
       XCTFail("Expected success but got \(result)")
     }
   }
+
+  func testIssueDocument_WhenProviderRegistrationIsBlocked_ThenIssuanceNeverStarts() async {
+    // Given
+    stubIssuerRegistration(.blocked(reason: .notRegisteredAsProvider))
+
+    // When
+    let result = await interactor.issueDocument(
+      issuerId: "issuer.dev",
+      configIds: ["doc"],
+      docTypeIdentifier: DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
+    )
+
+    // Then
+    switch result {
+    case .registrationBlocked(let reason):
+      XCTAssertEqual(reason, .notRegisteredAsProvider)
+      verify(walletKitController, never()).issueDocuments(
+        issuerId: any(),
+        identifiers: any(),
+        docTypeIdentifier: any()
+      )
+    default:
+      XCTFail("Expected .registrationBlocked, got \(result)")
+    }
+  }
+}
+
+private extension TestAddDocumentInteractor {
+
+  /// Issuer registration now comes from the wallet controller rather than a dedicated controller,
+  /// so scenarios are expressed by stubbing the lookup.
+  func stubIssuerRegistration(_ registration: IssuerRegistration) {
+    stub(walletKitController) { stub in
+      when(stub.getIssuerRegistration(issuerId: any(), configIds: any())).thenReturn(registration)
+    }
+  }
 }
 
 private extension TestAddDocumentInteractor {
   func stubGetScopedDocuments(with document: [ScopedDocument]) {
+    stubGetScopedDocumentsSuccess(with: document)
+  }
+
+  func stubGetScopedDocuments(documents: [ScopedDocument], errors: [Error], totalIssuers: Int) {
     stub(walletKitController) { stub in
       when(stub.getScopedDocuments())
-        .thenReturn(document)
+        .thenReturn(
+          ScopedDocumentsResult(documents: documents, errors: errors, totalIssuers: totalIssuers)
+        )
     }
   }
-  
+
   func stubGetScopedDocumentsSuccess(with documents: [ScopedDocument]) {
     stub(walletKitController) { stub in
-      when(stub.getScopedDocuments()
-      ).thenReturn(documents)
+      when(stub.getScopedDocuments())
+        .thenReturn(
+          ScopedDocumentsResult(documents: documents, errors: [], totalIssuers: 1)
+        )
     }
   }
-  
-  func stubGetScopedDocumentsFailure() {
+
+  /// Every configured issuer failed, which is the only case that surfaces an error to the caller.
+  func stubGetScopedDocumentsFailure(with error: Error = WalletCoreError.unableFetchDocument) {
     stub(walletKitController) { stub in
-      when(stub.getScopedDocuments()
-      ).thenThrow(WalletCoreError.unableFetchDocument)
+      when(stub.getScopedDocuments())
+        .thenReturn(
+          ScopedDocumentsResult(documents: [], errors: [error], totalIssuers: 1)
+        )
     }
   }
   
@@ -591,7 +792,7 @@ private extension TestAddDocumentInteractor {
           docTypeIdentifier: equal(to: DocumentTypeIdentifier.init(rawValue: "eu.europa.ec.eudi.pid.1"))
         )
       )
-      .thenReturn([document])
+      .thenReturn(IssuanceResult(documents: [document], issuerRegistration: nil))
     }
   }
   

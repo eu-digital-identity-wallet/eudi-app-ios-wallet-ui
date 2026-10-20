@@ -23,6 +23,7 @@ public struct RelyingPartyData {
   public let nameTextConfig: TextConfig?
   public let description: LocalizableStringKey?
   public let descriptionTextConfig: TextConfig?
+  public let alignment: HorizontalAlignment
 
   public init(
     logo: RemoteImageView.ImageContentOption? = nil,
@@ -30,7 +31,8 @@ public struct RelyingPartyData {
     name: LocalizableStringKey? = nil,
     nameTextConfig: TextConfig? = nil,
     description: LocalizableStringKey? = nil,
-    descriptionTextConfig: TextConfig? = nil
+    descriptionTextConfig: TextConfig? = nil,
+    alignment: HorizontalAlignment = .center
   ) {
     self.logo = logo
     self.isVerified = isVerified
@@ -38,6 +40,7 @@ public struct RelyingPartyData {
     self.nameTextConfig = nameTextConfig
     self.description = description
     self.descriptionTextConfig = descriptionTextConfig
+    self.alignment = alignment
   }
 }
 
@@ -49,7 +52,7 @@ public struct RelyingPartyView: View {
   }
 
   public var body: some View {
-    VStack(alignment: .center, spacing: SPACING_SMALL) {
+    VStack(alignment: relyingPartyData.alignment, spacing: SPACING_SMALL) {
       if let logo = relyingPartyData.logo {
         switch logo {
           case .none: EmptyView()
@@ -102,6 +105,9 @@ public struct RelyingPartyView: View {
         )
       }
     }
-    .frame(maxWidth: .infinity, alignment: .center)
+    .frame(
+      maxWidth: .infinity,
+      alignment: Alignment(horizontal: relyingPartyData.alignment, vertical: .center)
+    )
   }
 }

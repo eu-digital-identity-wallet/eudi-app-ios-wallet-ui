@@ -39,41 +39,31 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
     switch result {
     case .success(let authenticationRequest):
-      self.onReceivedItems(
-        with: authenticationRequest.requestDataCells,
+      self.onReceivedCombinations(
+        with: authenticationRequest.requestDataCombinations,
         title: .requestDataTitle(
           [authenticationRequest.relyingParty]
         ),
         relyingParty: .custom(authenticationRequest.relyingParty),
         isTrusted: authenticationRequest.isTrusted
       )
-      setState {
-        $0.copy(
-          contentHeaderConfig: .init(
-            appIconAndTextData: AppIconAndTextData(
-              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
-            ),
-            description: .dataSharingTitle,
-            mainText: getTitle(),
-            relyingPartyData: RelyingPartyData(
-              isVerified: viewState.isTrusted,
-              name: getRelyingParty(),
-              description: getCaption()
-            )
-          )
-        )
-      }
+      self.onReceivedRegistration(authenticationRequest.relyingPartyRegistration)
+    case .notSecuredRequest:
+      self.onTrustBlocked()
     case .failure(let error):
       self.onEmptyDocuments(error: error.errorMessage)
+      if let registration = await interactor.registrationForFailedRequest() {
+        self.onReceivedRegistration(registration)
+      }
     }
   }
 
   override func onShare() {
     Task {
 
-      let items = self.viewState.items
-
-      let result = await interactor.onResponsePrepare(requestItems: items)
+      let result = await interactor.onResponsePrepare(
+        combinationIndex: self.viewState.selectedCombinationIndex
+      )
 
       switch result {
       case .success:
@@ -122,36 +112,16 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     return getOriginator()
   }
 
-  override func getTitle() -> LocalizableStringKey {
-    .dataSharingRequest
+  override func stopPresentation() async {
+    await interactor.stopPresentation()
   }
 
-  override func getCaption() -> LocalizableStringKey {
-    .requestsTheFollowing
-  }
-
-  override func getDataRequestInfo() -> LocalizableStringKey {
-    .requestDataInfoNotice
+  override func declineRequest() async {
+    await interactor.onDeclineRequest()
   }
 
   override func getRelyingParty() -> LocalizableStringKey {
     viewState.relyingParty
-  }
-
-  override func getRelyingPartyIsTrusted() -> Bool {
-    viewState.isTrusted
-  }
-
-  override func getTitleCaption() -> LocalizableStringKey {
-    .requestDataTitle([""])
-  }
-
-  override func getTrustedRelyingParty() -> LocalizableStringKey {
-    .requestDataVerifiedEntity
-  }
-
-  override func getTrustedRelyingPartyInfo() -> LocalizableStringKey {
-    .requestDataVerifiedEntityMessage
   }
 
   func handleDeepLinkNotification(with info: [AnyHashable: Any]) {

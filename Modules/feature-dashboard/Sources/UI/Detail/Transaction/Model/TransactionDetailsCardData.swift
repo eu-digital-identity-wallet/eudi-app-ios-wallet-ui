@@ -13,38 +13,37 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import logic_resources
-import logic_business
 
-public struct TransactionDetailsCardData: Equatable, Identifiable, Sendable {
-
-  @EquatableNoop
-  public var id: String
+public struct TransactionDetailsCardData: Equatable, Sendable {
 
   public let transactionTypeLabel: LocalizableStringKey
   public let transactionStatusLabel: LocalizableStringKey
   public let transactionIsCompleted: Bool
   public let transactionDate: LocalizableStringKey
-  public let relyingPartyName: LocalizableStringKey?
-  public let relyingPartyIsVerified: Bool?
+  public let partyName: LocalizableStringKey?
+  public let partyType: LocalizableStringKey?
+  public let nonCompletionReason: LocalizableStringKey?
+  public let details: [[TransactionDetailsFieldUi]]
 
   init(
-    id: String = UUID().uuidString,
     transactionTypeLabel: LocalizableStringKey,
     transactionStatusLabel: LocalizableStringKey,
     transactionIsCompleted: Bool,
     transactionDate: LocalizableStringKey,
-    relyingPartyName: LocalizableStringKey? = nil,
-    relyingPartyIsVerified: Bool? = false
+    partyName: LocalizableStringKey? = nil,
+    partyType: LocalizableStringKey? = nil,
+    nonCompletionReason: LocalizableStringKey? = nil,
+    details: [[TransactionDetailsFieldUi]] = []
   ) {
-    self.id = id
     self.transactionTypeLabel = transactionTypeLabel
     self.transactionStatusLabel = transactionStatusLabel
     self.transactionIsCompleted = transactionIsCompleted
     self.transactionDate = transactionDate
-    self.relyingPartyName = relyingPartyName
-    self.relyingPartyIsVerified = relyingPartyIsVerified
+    self.partyName = partyName
+    self.partyType = partyType
+    self.nonCompletionReason = nonCompletionReason
+    self.details = details
   }
 }
 
@@ -52,9 +51,10 @@ extension TransactionDetailsCardData {
   static func mock() -> TransactionDetailsCardData {
     TransactionDetailsCardData(
       transactionTypeLabel: .custom("Presentation"),
-      transactionStatusLabel: .custom("EUDI remote verifier"),
+      transactionStatusLabel: .custom("Completed"),
       transactionIsCompleted: true,
-      transactionDate: .custom("24 Apr 2025 10:30")
+      transactionDate: .custom("24 Apr 2025 10:30"),
+      partyName: .custom("EUDI remote verifier")
     )
   }
 }

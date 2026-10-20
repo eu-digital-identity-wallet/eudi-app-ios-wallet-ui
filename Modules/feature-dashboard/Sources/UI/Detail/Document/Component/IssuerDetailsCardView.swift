@@ -40,8 +40,8 @@ struct IssuerDetailsCardView: View {
         mainContent: .text(issuerDetails.issuerName),
         supportingText: issuerDetails.dateText ?? .viewDetails,
         supportingTextColor: issuerDetails.dateTextColor,
-        leadingIcon: .init(
-          imageUrl: issuerDetails.issuerLogo,
+        leadingContent: .remoteImage(
+          url: issuerDetails.issuerLogo,
           image: Theme.shared.image.id
         )
       ),

@@ -36,6 +36,7 @@ public enum FeatureCommonRouteModule: AppRouteModule {
   case qrScanner(config: any UIConfigType)
   case biometry(config: any UIConfigType)
   case genericSuccess(config: any UIConfigType)
+  case trustMark(config: any UIConfigType)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -47,6 +48,8 @@ public enum FeatureCommonRouteModule: AppRouteModule {
       (key: "QuickPin", arguments: ["config": config.log])
     case .qrScanner(config: let config):
       (key: "QRScanner", arguments: ["config": config.log])
+    case .trustMark(let config):
+      (key: "TrustMark", arguments: ["config": config.log])
     }
   }
 }
@@ -60,6 +63,8 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
   case issuanceOption
   case documentDetails(id: String)
   case transactionDetails(id: String)
+  case transactionAction(id: String, action: TransactionDataProtectionAction)
+  case transactionActionHistory(id: String, action: TransactionDataProtectionAction)
 
   public var info: (key: String, arguments: [String: String]) {
     return switch self {
@@ -77,6 +82,10 @@ public enum FeatureDashboardRouteModule: AppRouteModule {
       (key: "DocumentDetails", arguments: ["id": id])
     case .transactionDetails(let id):
       (key: "TransactionDetails", arguments: ["id": id])
+    case .transactionAction(let id, let action):
+      (key: "TransactionAction", arguments: ["id": id, "action": action.rawValue])
+    case .transactionActionHistory(let id, let action):
+      (key: "TransactionActionHistory", arguments: ["id": id, "action": action.rawValue])
     }
   }
 }

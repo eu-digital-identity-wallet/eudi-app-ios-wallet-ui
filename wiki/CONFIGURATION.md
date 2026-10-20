@@ -12,6 +12,7 @@
 * [PIN throttle configuration](#pin-throttle-configuration)
 * [Analytics configuration](#analytics-configuration)
 * [Document Provider extension configuration](#document-provider-extension-configuration)
+* [Trust Mark configuration](#trust-mark-configuration)
 
 ## General configuration
 
@@ -24,7 +25,12 @@ Via the *WalletKitConfig* protocol inside the logic-core module.
 ```swift
 protocol WalletKitConfig: Sendable {
   /**
-   * VCI Configuration
+   * VCI Configuration, keyed by issuer host.
+   *
+   * `allowPlainJwtProof` is set per issuer and defaults to `false`, which keeps the HAIP-compliant
+   * proof policy: only attested proofs (`attestation`, or `jwt` with key attestation) are sent.
+   * Set it to `true` only for an issuer that does not support key attestation and requires a plain
+   * JWT proof; the proof is then bound to a key without wallet attestation, using ES256/ES384/ES512.
    */
   var issuersConfig: [String: VciConfig] { get }
 }
@@ -35,9 +41,17 @@ Based on the Build Variant of the Wallet (e.g., Dev)
 struct WalletKitConfigImpl: WalletKitConfig {
 
   let configLogic: ConfigLogic
+  let transactionLoggerImpl: TransactionLogger
+  let walletKitAttestationProvider: WalletKitAttestationProvider
 
-  init(configLogic: ConfigLogic) {
+  init(
+    configLogic: ConfigLogic,
+    transactionLogger: TransactionLogger,
+    walletKitAttestationProvider: WalletKitAttestationProvider
+  ) {
     self.configLogic = configLogic
+    self.transactionLoggerImpl = transactionLogger
+    self.walletKitAttestationProvider = walletKitAttestationProvider
   }
 
   var issuersConfig: [String: VciConfig] {
@@ -51,7 +65,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
                 clientId: "your_demo_client_id_or_nil",
                 keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
                 authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
-                requirePAR: should_use_par_bool,
+                parUsage: .required(authorizationCodeDPoPBinding: should_bind_par_dpop_bool),
+                allowPlainJwtProof: should_allow_plain_jwt_proof_bool,
                 requireDpop: should_use_dpop_bool,
                 cacheIssuerMetadata: should_cache_metadata_bool
             ),
@@ -67,7 +82,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
                   clientId: "your_dev_client_id_or_nil",
                   keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
                   authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
-                  requirePAR: should_use_par_bool,
+                  parUsage: .required(authorizationCodeDPoPBinding: should_bind_par_dpop_bool),
+                  allowPlainJwtProof: should_allow_plain_jwt_proof_bool,
                   requireDpop: should_use_dpop_bool,
                   cacheIssuerMetadata: should_cache_metadata_bool
               ),
@@ -81,6 +97,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
 	}
 }
 ```
+
+`allowPlainJwtProof` selects the credential proof policy for that issuer. Leave it `false` (the default) to stay HAIP-compliant: the wallet sends only attested proofs, either the `attestation` proof type or a `jwt` proof carrying a key attestation from the Wallet Provider. Set it to `true` only for an issuer that does not support key attestation and requires a plain JWT proof; the wallet then also accepts plain `jwt` proofs signed with ES256, ES384 or ES512, and the proof key is no longer attested. The reference issuers require attested proofs, so every issuer in this repo sets it to `false`.
 
 2. Wallet Attestation Provider
 
@@ -114,26 +132,66 @@ final class WalletProviderAttestationConfigImpl: WalletProviderAttestationConfig
 }
 ```
 
-3. Trusted certificates
+3. Trust configuration
 
 Via the *WalletKitConfig* protocol inside the logic-core module.
 
 ```swift
 protocol WalletKitConfig: Sendable {
   /**
-   * Reader Configuration
+   * Trust configuration: ETSI LoTE (List of Trusted Entities) trust sources,
+   * verification-context mappings and trust policies used for reader / issuer validation.
    */
-  var trustedReaderRootCertificates: [x5chain] { get }
+  var trustConfiguration: TrustConfiguration { get }
 }
 ```
 
-The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can be located inside the logic-core module.
+The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can be located inside the logic-core module. The resulting `TrustConfiguration` is passed to `EudiWallet` as the `trustConfig` argument in `WalletKitController`.
 
-The reader/IACA trust-anchor certificates ship with this repo as DER files in [`Wallet/Certificate`](../Wallet/Certificate) (e.g. `pidissuerca02_eu.der`, `r45_staging.der`). The file names — without the `.der` extension — must match the `certificates` array in `WalletKitConfigImpl.trustedReaderRootCertificates`, which loads each via `loadCertificate(_:)`. Replace these with your production trust anchors before go-live.
+The primary trust source is an ETSI LoTE (List of Trusted Entities) source that fetches signed trusted lists (PID / WRPAC / PubEAA providers) at runtime. A static list of bundled root certificates is configured as the `fallbackTrustSource`. These fallback certificates ship with this repo as DER files in [`Wallet/Certificate`](../Wallet/Certificate) (e.g. `pidissuerca02_eu.der`, `r45_staging.der`). The file names — without the `.der` extension — must match the array in `WalletKitConfigImpl.staticRootCertificates`, which loads each via `loadCertificate(_:)`. Replace the LoTE endpoints and the fallback anchors with your production values before go-live.
 
 ```swift
-  var trustedReaderRootCertificates: [x5chain] {
-    let certificates = [
+  var trustConfiguration: TrustConfiguration {
+    let loteLocations = SupportedLists<NSString>(
+      pidProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/PIDProviders.jwt",
+      walletProviders: nil,
+      wrpacProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/WRPACProviders.jwt",
+      wrprcProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/WRPRCProviders.jwt",
+      pubEaaProviders: "https://trustedlist.serviceproviders.eudiw.dev/LOTE/json/PubEAAProviders.jwt",
+      qeaProviders: nil,
+      eaaProviders: [:]
+    )
+
+    let classifications: EtsiContextTypeMappings = [
+      DocumentTypeIdentifier.mDocPid.rawValue: .pid,
+      DocumentTypeIdentifier.sdJwtPid.rawValue: .pid
+    ]
+
+    return TrustConfiguration(
+      trustSource: .etsi(
+        EtsiTrustSource(
+          loteLocations: loteLocations,
+          contextTypeMappings: classifications,
+          isRevocationEnabled: false
+        )
+      ),
+      fallbackTrustSource: .staticList(
+        StaticListTrustSource(rootCertificates: staticRootCertificates)
+      ),
+      defaultPolicy: .warning,
+      docTypePolicies: [
+        DocumentTypeIdentifier.mDocPid.rawValue: .enforce,
+        DocumentTypeIdentifier.sdJwtPid.rawValue: .enforce
+      ],
+      requireSignedMetadata: true,
+      statusTrustPolicy: .warning,
+      wrprcVpTrustPolicy: .warning,
+      wrprcVciTrustPolicy: .enforce
+    )
+  }
+
+  var staticRootCertificates: [Data] {
+    [
       "pidissuerca02_cz",
       "pidissuerca02_ee",
       "pidissuerca02_eu",
@@ -142,12 +200,67 @@ The reader/IACA trust-anchor certificates ship with this repo as DER files in [`
       "pidissuerca02_pt",
       "pidissuerca02_ut",
       "r45_staging"
-    ]
-    return certificates
-      .compactMap { loadCertificate($0) }
-      .map { [$0] }
+    ].compactMap { loadCertificate($0) }
   }
 ```
+
+**Document signer trust.** `defaultPolicy` applies to the certificate that signs each issued
+document, validated against the issuer trusted lists above. With `.enforce`, an issued document
+whose signer chain is not trusted is refused and not stored, and the issuance ends on the
+"Issuance blocked" alert. With `.warning`, the failure is only logged and the document is stored.
+`docTypePolicies` overrides the policy for specific doc types. A doc type with no verification
+context in either trust source cannot be validated, so under `.enforce` it is refused even when
+its issuer is legitimate. Map every doc type the wallet issues before enforcing.
+
+The app enforces signer trust for the PID only and warns for every other
+attestation: those doc types have no verification context, so enforcing them would refuse every
+EAA. `isRevocationEnabled: false` turns off PKIX revocation checks for the dev trust lists, as
+`relaxPkixRevocation()` does on Android; set it to `true` for production.
+
+**Two trust layers.** An access certificate (WRPAC) answers *who is this party*, a registration
+certificate (WRPRC) answers *what is it registered to do* — the registered identity, declared
+purpose, privacy policy, and the attestation types and claims the party may issue or request. They
+are validated independently and against separate trusted lists, so passing one says nothing about
+the other. `wrprcProviders` is what makes the second layer possible; leave it `nil` and no
+registration certificate can be validated in either direction.
+
+The app treats the two directions differently, and the asymmetry is deliberate:
+
+* **Issuance refuses.** A document is stored only when the issuer's registration is verified and
+  covers what is being issued. A registration that fails validation, or that does not list the
+  offered attestation, stops the flow on the "Issuance blocked" alert. A credential offer is
+  resolved before anything is issued, so that refusal happens up front; the issuer-list flow only
+  learns the outcome after the kit has issued, so any document it already wrote to storage is
+  deleted behind the scenes. The same applies to a registration that was never established at all —
+  but only while `wrprcVciTrustPolicy` is `.enforce`; see below.
+* **Presentation warns.** A request whose registration could not be validated, or that reaches
+  beyond the registered scope, still reaches the consent screen. It is shown without the verified
+  badge, the claims outside the registered scope are marked, and Share stays disabled until the user
+  acknowledges the warning. The acknowledgement is deliberately not remembered between requests. A
+  certificate that failed validation still describes the requester where it decoded far enough to
+  do so, since the warning and the missing badge already carry the verdict.
+
+All of the presentation behaviour above is conditional on `validateIssuerRegistrationCertificate`.
+With it off no verifier registration is resolved or displayed on either flow, and the requester is
+identified by its access certificate alone. Remote presentation skips the check outright, since the
+setting reaches `OpenId4VpConfiguration` and no registration policy is installed. Proximity still
+performs it inside WalletKit, which exposes no equivalent flag, but the app ignores the result.
+
+Two settings govern the issuance side, and both must be on for it to refuse anything. The first of
+them governs presentation as well:
+
+| Setting | Where | Effect |
+|---|---|---|
+| `validateIssuerRegistrationCertificate` | `WalletKitConfig` | Turns WRPRC validation on, for OpenID4VCI and for presentation alike. It is exposed as **Check Registration Certificates** in Settings and **defaults to off**. Off means no registration is ever evaluated: issuance never refuses on this basis, and no verifier registration is resolved or shown. An issuer that publishes no `issuer_info` never reaches the validation hook at all, so no registration is established and the app refuses on that basis; enabling this against such an issuer fails every issuance. |
+| `wrprcVciTrustPolicy` | `TrustConfiguration` | Decides what a failed WRPRC check does to an **issuance**. `.enforce` refuses: an expired, revoked or suspended certificate, a missing status list, a broken trust chain, or an offer reaching past the registered scope all stop the flow. `.warning` records the problem and lets the issuance through. |
+
+`wrprcVpTrustPolicy` is the same decision for **presentations**, and the app deliberately sets it to
+`.warning` so a failed check reaches the consent screen behind an acknowledgement rather than ending
+the flow. A single policy governed both directions until wallet-kit 0.40.2, which could not express
+that asymmetry.
+
+Note what neither policy covers: a status list that cannot be retrieved is always a warning, never a
+refusal, so a transient network failure does not block on its own.
 
 4. VP API
 
@@ -162,17 +275,25 @@ protocol WalletKitConfig: Sendable {
 }
 ```
 
-The preregistered scheme is optional. If you want to use it, please add the following: the `SiopOpenID4VP` import and the `.preregistered` option in the `clientIdSchemes` array.
+The preregistered scheme is optional. If you want to use it, please add the following: the `OpenID4VP` import and the `.preregistered` option in the `clientIdSchemes` array.
 
 ```swift
-import SiopOpenID4VP
+import OpenID4VP
 
 struct WalletKitConfigImpl: WalletKitConfig {
 
   let configLogic: ConfigLogic
+  let transactionLoggerImpl: TransactionLogger
+  let walletKitAttestationProvider: WalletKitAttestationProvider
 
-  init(configLogic: ConfigLogic) {
+  init(
+    configLogic: ConfigLogic,
+    transactionLogger: TransactionLogger,
+    walletKitAttestationProvider: WalletKitAttestationProvider
+  ) {
     self.configLogic = configLogic
+    self.transactionLoggerImpl = transactionLogger
+    self.walletKitAttestationProvider = walletKitAttestationProvider
   }
 
   var vpConfig: OpenId4VpConfiguration {
@@ -199,9 +320,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
 Via the *RQESConfig* class, which implements the *EudiRQESUiConfig* protocol from the RQESUi SDK, inside the logic-business module.
 
-The SDK protocol defines four members. `rssps` and `printLogs` are required; `translations` and
-`theme` have SDK-provided default implementations, so the wallet may omit them (and the reference app
-does — it overrides neither):
+The SDK protocol defines five members. `rssps` and `printLogs` are required; `translations`, `theme`
+and `transactionLogger` have SDK-provided default implementations, so the wallet may omit them. The
+reference app overrides neither `translations` nor `theme`, and supplies `transactionLogger` so that
+signing transactions are recorded alongside the presentation and issuance ones:
 
 ```swift
 public protocol EudiRQESUiConfig: Sendable {
@@ -209,8 +331,12 @@ public protocol EudiRQESUiConfig: Sendable {
   var printLogs: Bool { get }                                    // Required.
   var translations: [String: [LocalizableKey: String]] { get }  // Optional — defaults to [:] (English).
   var theme: ThemeProtocol { get }                               // Optional — defaults to the SDK theme.
+  var transactionLogger: (any TransactionLogger)? { get }       // Optional — defaults to nil (no logging).
 }
 ```
+
+The SDK emits one signing transaction entry per signed document, stored or updated by its
+`transactionIdentifier`. Failures inside the logger never interrupt signing.
 
 Based on the Build Variant and Type of the Wallet (e.g., Dev Debug)
 
@@ -219,10 +345,16 @@ final class RQESConfig: EudiRQESUiConfig {
 
   let buildVariant: AppBuildVariant
   let buildType: AppBuildType
+  let transactionLogger: (any TransactionLogger)?
 
-  init(buildVariant: AppBuildVariant, buildType: AppBuildType) {
+  init(
+    buildVariant: AppBuildVariant,
+    buildType: AppBuildType,
+    transactionLogger: (any TransactionLogger)? = nil
+  ) {
     self.buildVariant = buildVariant
     self.buildType = buildType
+    self.transactionLogger = transactionLogger
   }
 
   var rssps: [QTSPData] {
@@ -288,7 +420,7 @@ production values for every config surface listed below.
 | Configuration area | Source file | Production value to provide |
 | --- | --- | --- |
 | Build variant/type | `Wallet/Config/*.xcconfig`, `ConfigLogic.swift` | `BUILD_VARIANT = PROD`, `BUILD_TYPE = RELEASE` for production archives. |
-| Issuers | `WalletKitConfig.swift` | Production OpenID4VCI issuer URLs, client IDs, redirect URIs, PAR/DPoP policy, metadata caching policy, and display order. |
+| Issuers | `WalletKitConfig.swift` | Production OpenID4VCI issuer URLs, client IDs, redirect URIs, PAR/DPoP policy, proof-type policy (`allowPlainJwtProof`), metadata caching policy, and display order. |
 | Wallet provider attestation | `WalletProviderAttestationConfig.swift` | Production Wallet Provider host used for wallet/key attestation. |
 | Reader trust anchors | `WalletKitConfig.swift`, certificate resources | Production IACA/reader/verifier trust anchors only. |
 | OpenID4VP | `WalletKitConfig.swift` | Approved client ID schemes, preregistered verifier entries where needed, and partial claim disclosure policy. |
@@ -301,6 +433,7 @@ production values for every config surface listed below.
 | Remote presentation ephemeral key handling | `WalletKitConfig.swift`, `WalletKitController.startRemotePresentation(...)`, WalletKit OpenID4VP integration | Ephemeral protocol key material must be generated per transaction, not reused across verifiers, and not persisted beyond the protocol flow. If WalletKit exposes a dedicated ephemeral key-storage option, configure it in the production integration and document the exact SDK API. |
 | Document issuance | `WalletKitConfig.swift` | Production credential policy, batch size, and reissuance thresholds. |
 | Revocation/status | `WalletKitConfig.swift` | Production status-check interval and failure behavior. |
+| Trust Mark | `WalletKitConfig.swift` (`trustMarkSource`) | Production Trust Mark resource URL, list of certified wallets URL, and the wallet's certification page URL. See [Trust Mark configuration](#trust-mark-configuration). |
 | RQES | `RQESConfig.swift` | Production QTSP/RSSP endpoint, TSA, client ID, redirect URI, hash policy, and logging policy. Do not hardcode production secrets. |
 | Deep links | `Wallet/Wallet.plist`, deep-link parsing code | Production URI schemes and strict validation. |
 | Entitlements | `EudiWallet.entitlements`, extension entitlements | Production App Groups, Keychain access groups, document-provider capabilities, and mobile document types. |
@@ -371,9 +504,9 @@ public extension DeepLink {
   enum Action: String, Equatable, Sendable {
 
     case openid4vp
-	case haip_vp
     case credential_offer
-	case haip_vci
+    case haip_vci
+    case haip_vp
     case rqes
     case external
 
@@ -383,10 +516,10 @@ public extension DeepLink {
     ) -> Action? {
       switch scheme {
       case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme),
-		_ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
+        _ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
         return .openid4vp
       case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme),
-		_ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme):
+        _ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
       case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
         return .rqes
@@ -405,9 +538,9 @@ public extension DeepLink {
   enum Action: String, Equatable, Sendable {
 
     case openid4vp
-	case haip_vp
     case credential_offer
-	case haip_vci
+    case haip_vci
+    case haip_vp
     case rqes
     case custom_my_offer
     case external
@@ -418,11 +551,11 @@ public extension DeepLink {
     ) -> Action? {
       switch scheme {
       case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme),
-		_ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
+        _ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
         return .openid4vp
       case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme),
-		_ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme),
-		_ where custom_my_offer.getSchemas(with: urlSchemaController).contains(scheme):
+        _ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme),
+        _ where custom_my_offer.getSchemas(with: urlSchemaController).contains(scheme):
         return .credential_offer
       case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
         return .rqes
@@ -744,6 +877,8 @@ In `Modules/logic-core/Sources/Controller/WalletKitController.swift`, documents 
 
 Only CBOR documents are registered (`document.docDataFormat == .cbor`), which controls what the extension can serve for Identity Document requests.
 
+Registrations are reconciled against wallet storage after every operation that adds or removes a document, and on startup: a registration whose document is no longer held is removed.
+
 ### Validation checklist
 
 - Wallet app and extension both sign correctly with your Team ID.
@@ -751,3 +886,52 @@ Only CBOR documents are registered (`document.docDataFormat == .cbor`), which co
 - `SHARED_APP_GROUP_IDENTIFIER` is present for all extension configurations.
 - Main app and extension resolve to the same runtime keychain access group.
 - On iOS 26+, registered CBOR documents appear in the extension request flow.
+
+## Trust Mark configuration
+
+[`WalletKitConfig.trustMarkSource`](../Modules/logic-core/Sources/Config/WalletKitConfig.swift)
+selects how Trust Mark information is supplied. All build variants use this static default:
+
+```swift
+var trustMarkSource: TrustMarkSource {
+  .static(
+    information: TrustMarkInformation(
+      trustMarkResourceURL: "https://gist.githubusercontent.com/sraptis-scy/025334375fe26177d9a7bcb60fd8a93f/raw/TrustMarkResource.json",
+      listOfCertifiedWalletsURL: "https://eidas.ec.europa.eu/efda/wallet/certified",
+      walletSolutionInfoPageURL: "https://eidas.ec.europa.eu/efda/wallet/certified?id=WALLET_SOLUTION_ID"
+    )
+  )
+}
+```
+
+`WalletKitController` passes the configured source to `EudiWallet`:
+
+```swift
+EudiWallet(
+  eudiWalletConfig: EudiWalletConfiguration(
+    // ...
+  ),
+  trustConfig: walletKitConfig.trustConfiguration,
+  // ...
+  trustMarkSource: walletKitConfig.trustMarkSource
+)
+```
+
+To change the Trust Mark settings, return a different `trustMarkSource` from `WalletKitConfigImpl`,
+switching on `configLogic.appBuildVariant` when the values differ per variant. Use `.static` for
+predefined information, or `.dynamic(provider:)` with a `TrustMarkProvider` that supplies the
+information at runtime.
+
+WalletKit fetches JSON from `trustMarkResourceURL`. The Trust Mark screen displays the image from
+`image.url` above the localized text from the resource. A relative `image.url` is resolved against
+`trustMarkResourceURL`, and SVG images are supported.
+
+"EUDI Wallet Provider Trusted List" opens `listOfCertifiedWalletsURL` in the browser.
+"Certification information page" opens `walletSolutionInfoPageURL` in the browser.
+Both links include an external-link icon and are available in the introduction and About views.
+
+Static configuration does not bundle the resource or make it available offline. The configured
+Gist is a development sample and `WALLET_SOLUTION_ID` is a literal placeholder. Displaying the
+information does not verify certification, recognition, expiry, revocation or wallet instance
+attestation. See [Trust Mark deployment](GO_LIVE.md#trust-mark-deployment) before using a production
+configuration.

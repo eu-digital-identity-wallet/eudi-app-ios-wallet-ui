@@ -28,3 +28,19 @@ public extension ScopedDocument {
     .init(name: "", issuer: "", order: 0, configId: "", isPid: false, docTypeIdentifier: .mDocPid)
   }
 }
+
+public struct ScopedDocumentsResult: Sendable {
+  public let documents: [ScopedDocument]
+  public let errors: [Error]
+  public let totalIssuers: Int
+
+  public init(documents: [ScopedDocument], errors: [Error], totalIssuers: Int) {
+    self.documents = documents
+    self.errors = errors
+    self.totalIssuers = totalIssuers
+  }
+
+  public var allIssuersFailed: Bool {
+    totalIssuers > 0 && errors.count == totalIssuers
+  }
+}

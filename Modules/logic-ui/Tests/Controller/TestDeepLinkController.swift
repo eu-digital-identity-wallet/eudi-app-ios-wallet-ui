@@ -462,10 +462,78 @@ final class TestDeepLinkController: EudiTest {
     // Then
     XCTAssertEqual(action?.action, .rqes)
   }
+
+  func testHasDeepLink_WhenSchemeIsEuEaap_ThenActionIsOpenId4VP() {
+    // Given
+    stubSchemasAsInWalletPlist()
+    let url = URL(string: "eu-eaap://?client_id=x509_san_dns:verifier.example.com&request_uri=https://verifier.example.com/request.jwt/1234")!
+
+    // When
+    let action = controller.hasDeepLink(url: url)
+
+    // Then
+    XCTAssertEqual(action?.action, .openid4vp)
+    XCTAssertEqual(action?.requiresCoordinator, true)
+  }
+
+  func testHasDeepLink_WhenSchemeIsEuEaaOffer_ThenActionIsCredentialOffer() {
+    // Given
+    stubSchemasAsInWalletPlist()
+    let url = URL(string: "eu-eaa-offer://?credential_offer_uri=https://issuer.example.com/credential-offer/1234")!
+
+    // When
+    let action = controller.hasDeepLink(url: url)
+
+    // Then
+    XCTAssertEqual(action?.action, .credential_offer)
+    XCTAssertEqual(action?.requiresCoordinator, false)
+  }
+
+  func testHasDeepLink_WhenExistingSchemes_ThenActionsAreUnchanged() {
+    // Given
+    stubSchemasAsInWalletPlist()
+    let expectations: [(String, DeepLink.Action)] = [
+      ("eudi-openid4vp", .openid4vp),
+      ("mdoc-openid4vp", .openid4vp),
+      ("openid4vp", .openid4vp),
+      ("haip-vp", .openid4vp),
+      ("openid-credential-offer", .credential_offer),
+      ("haip-vci", .credential_offer),
+      ("rqes", .rqes)
+    ]
+
+    for (scheme, expected) in expectations {
+      // When
+      let action = controller.hasDeepLink(url: URL(string: "\(scheme)://host?param=value")!)
+
+      // Then
+      XCTAssertEqual(action?.action, expected, "Unexpected action for \(scheme)://")
+    }
+  }
 }
 
 private extension TestDeepLinkController {
-  
+
+  // Mirrors CFBundleURLSchemes in Wallet.plist and the substring filter in UrlSchemaControllerImpl.
+  func stubSchemasAsInWalletPlist() {
+    let schemes = [
+      "eudi-openid4vp",
+      "mdoc-openid4vp",
+      "openid4vp",
+      "haip-vp",
+      "eu-eaap",
+      "openid-credential-offer",
+      "haip-vci",
+      "eu-eaa-offer",
+      "rqes"
+    ]
+    stub(urlSchemaController) { mock in
+      when(mock.retrieveSchemas(with: any())).then { name in
+        schemes.filter { $0.contains(name) }
+      }
+    }
+  }
+
   func stubHandleDeepLink(
     action: DeepLink.Executable,
     route: AppRoute?,
@@ -540,33 +608,37 @@ private extension TestDeepLinkController {
 private extension TestDeepLinkController {
   struct MockPresentationService: PresentationService {
     var zkpDocumentIds: [WalletStorage.Document.ID]?
-    
+
+    var wrpVerifierPolicy: WrpRegistrationPolicy?
+
+    var wrpVerifierWarnings: [String: [PresentationPolicyViolation]]?
+
     func waitForDisconnect() async throws {}
     
-    var transactionLog: TransactionLog
+    var transactionLog: TransactionEntry
+    var transactionLogger: (any TransactionLogger)?
     
     func startQrEngagement(secureAreaName: String?, keyOptions: MdocDataModel18013.KeyOptions) async throws -> String {
       ""
     }
     
-    func receiveRequest() async throws -> MdocDataTransfer18013.UserRequestInfo {
-      .init(docDataFormats: [DocumentTypeIdentifier.mDocPid.rawValue : .cbor], itemsRequested: RequestItems())
+    func receiveRequest() async throws -> [MdocDataTransfer18013.UserRequestInfo] {
+      [.init(docDataFormats: [DocumentTypeIdentifier.mDocPid.rawValue : .cbor], itemsRequested: RequestItems())]
     }
     
     var flow: EudiWalletKit.FlowType
-    
-    func startQrEngagement() async throws -> String? { nil }
-    
-    func receiveRequest() async throws -> [String : Any] { [:] }
-    
-    func sendResponse(userAccepted: Bool, itemsToSend: EudiWalletKit.RequestItems, onSuccess: ((URL?) -> Void)?) async throws {}
+
+    func sendResponse(userAccepted: Bool, itemsToSend: EudiWalletKit.RequestItems, deviceNameSpacesToSend: MdocDataTransfer18013.RequestDeviceNameSpaces?, authenticationContext: ThreadSafeAuthContext, onSuccess: (@Sendable (URL?) -> Void)?) async throws {}
   }
   
-  static let mockTransactionLog: TransactionLog = .init(
-    timestamp: .min,
-    status: .completed,
-    type: .presentation,
-    dataFormat: .cbor
+  static let mockTransactionLog: TransactionEntry = .presentation(
+    .init(
+      transactionIdentifier: "transactionId0",
+      time: Date(timeIntervalSince1970: 0),
+      transactionResult: .completed,
+      listOfClaimsRequested: [],
+      listOfClaimsPresented: []
+    )
   )
   
   static let mockStorageService: DataStorageService = KeyChainStorageService(
@@ -583,6 +655,7 @@ private extension TestDeepLinkController {
     storageManager: .init(storageService: mockStorageService),
     docIdToPresentInfo: [:],
     documentKeyIndexes: [:],
-    userAuthenticationRequired: false
+    userAuthenticationRequired: false,
+    localAuthenticationContext: ThreadSafeAuthContext()
   )
 }

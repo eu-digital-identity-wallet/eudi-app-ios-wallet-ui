@@ -49,6 +49,20 @@ final actor StartupInteractorImpl: StartupInteractor {
     try? await walletKitController.loadDocuments()
     let hasDocuments = await !walletKitController.fetchAllDocuments().isEmpty
     try? await Task.sleep(nanoseconds: splashAnimationDuration.nanoseconds)
+    let continuationRoute = await getContinuationRoute(hasDocuments: hasDocuments)
+    guard !prefsController.getBool(forKey: .trustMarkIntroductionCompleted) else {
+      return continuationRoute
+    }
+    return .featureCommonModule(
+      .trustMark(
+        config: TrustMarkUiConfig(
+          mode: .welcome(continuationRoute: continuationRoute)
+        )
+      )
+    )
+  }
+
+  private func getContinuationRoute(hasDocuments: Bool) async -> AppRoute {
     if await quickPinInteractor.hasPin() {
       return .featureCommonModule(
         .biometry(
@@ -83,9 +97,11 @@ final actor StartupInteractorImpl: StartupInteractor {
   }
 
   private func manageStorageForFirstRun() async {
-    if !prefsController.getBool(forKey: .runAtLeastOnce) {
-      await walletKitController.clearAllDocuments()
-      keyChainController.clear()
+    guard !prefsController.getBool(forKey: .runAtLeastOnce) else { return }
+    try? await walletKitController.clearAllDocuments()
+
+    let didWipeStorage = keyChainController.clear()
+    if didWipeStorage {
       prefsController.setValue(true, forKey: .runAtLeastOnce)
     }
   }

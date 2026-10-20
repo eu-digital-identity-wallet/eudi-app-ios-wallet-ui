@@ -13,20 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import logic_storage
 import Foundation
 
-extension logic_storage.TransactionLog {
-  func toTransactionLogItem(
-    id: String,
-    parse: (MdocDataModel18013.TransactionLog) -> (TransactionLogData)
-  ) throws -> TransactionLogItem {
-    guard
-      let value = self.value.data(using: .utf8),
-      let coreLog = try? JSONDecoder().decode(MdocDataModel18013.TransactionLog.self, from: value)
-    else {
-      throw WalletCoreError.unableToFetchTransactionLog
-    }
-    return .init(id: id, transactionLogData: parse(coreLog))
-  }
+public struct RegistrationRefusedError: Error, Equatable {
+  public init() {}
 }

@@ -1,0 +1,9 @@
+{
+  "id" : "d9eda883-3fc8-4b78-9303-568b7d9fa0d9",
+  "targets" : [
+    {
+      "id" : "DBB50800-71F3-4372-A29A-EA51B1B99DB1",
+      "name" : "EudiWallet"
+    }
+  ]
+}

@@ -13,7 +13,19 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-public struct TransactionLogItem: Sendable {
-  public let id: String
-  public let transactionLogData: TransactionLogData
+import Foundation
+
+public enum TransactionActionChannel: String, Sendable, Equatable {
+  case phone
+  case email
+  case website
+
+  public init?(url: URL) {
+    switch url.scheme?.lowercased() {
+    case "tel": self = .phone
+    case "mailto": self = .email
+    case "http", "https": self = .website
+    default: return nil
+    }
+  }
 }

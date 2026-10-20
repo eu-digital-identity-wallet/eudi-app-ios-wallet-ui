@@ -108,8 +108,8 @@ extension DocClaimsDecodable {
         overlineText: .custom(issuerName),
         supportingText: supportingText(state, expiresAt),
         supportingTextColor: supportingColor(state),
-        leadingIcon: .init(
-          imageUrl: issuerLogo,
+        leadingContent: .remoteImage(
+          url: issuerLogo,
           image: Theme.shared.image.id
         ),
         trailingContent: .textWithIcon(

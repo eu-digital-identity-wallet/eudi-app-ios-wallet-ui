@@ -41,31 +41,21 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     let state = await interactor.onRequestReceived()
 
     switch state {
-    case .success(let items, let relyingParty, _, let isTrusted):
+    case .success(let items, let relyingParty, _, let isTrusted, let registration):
       self.onReceivedItems(
         with: items,
         title: .requestDataTitle([relyingParty]),
         relyingParty: .custom(relyingParty),
         isTrusted: isTrusted
       )
-      setState {
-        $0.copy(
-          contentHeaderConfig: .init(
-            appIconAndTextData: AppIconAndTextData(
-              appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
-            ),
-            description: .dataSharingTitle,
-            mainText: getTitle(),
-            relyingPartyData: RelyingPartyData(
-              isVerified: viewState.isTrusted,
-              name: getRelyingParty(),
-              description: getCaption()
-            )
-          )
-        )
-      }
+      self.onReceivedRegistration(registration)
+    case .notSecuredRequest:
+      self.onTrustBlocked()
     case .failure(let error):
       self.onEmptyDocuments(error: error.errorMessage)
+      if let registration = await interactor.registrationForFailedRequest() {
+        self.onReceivedRegistration(registration)
+      }
     }
   }
 
@@ -123,32 +113,12 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     return getOriginator()
   }
 
-  override func getTitle() -> LocalizableStringKey {
-    .dataSharingRequest
-  }
-
-  override func getCaption() -> LocalizableStringKey {
-    .requestsTheFollowing
-  }
-
-  override func getDataRequestInfo() -> LocalizableStringKey {
-    .requestDataInfoNotice
+  override func stopPresentation() async {
+    await interactor.stopPresentation()
   }
 
   override func getRelyingParty() -> LocalizableStringKey {
     viewState.relyingParty
-  }
-
-  override func getTitleCaption() -> LocalizableStringKey {
-    .requestDataTitle([""])
-  }
-
-  override func getTrustedRelyingParty() -> LocalizableStringKey {
-    .requestDataVerifiedEntity
-  }
-
-  override func getTrustedRelyingPartyInfo() -> LocalizableStringKey {
-    .requestDataVerifiedEntityMessage
   }
 
   private func startPublisherTask() {

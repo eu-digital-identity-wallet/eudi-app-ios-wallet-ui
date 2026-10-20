@@ -55,7 +55,7 @@ private func content<RequestItem: Sendable>(
         accessibilityDescription: DocumentSuccessLocators.documentSuccessDescription
       )
 
-      VSpacer.large()
+      VSpacer.mediumLarge()
 
       documents(
         viewState: viewState,

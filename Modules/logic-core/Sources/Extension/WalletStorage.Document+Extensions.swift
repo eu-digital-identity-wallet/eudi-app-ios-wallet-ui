@@ -28,7 +28,7 @@ extension WalletStorage.Document {
     let metadata = DocMetadata(from: self.metadata)
     return DeferrredDocument(
       id: self.id,
-      statusIdentifier: nil,
+      statusList: nil,
       createdAt: self.createdAt,
       displayName: metadata?.getDisplayName(Locale.current.systemLanguageCode),
       docType: "",

@@ -28,8 +28,10 @@ struct DocumentOfferView<Router: RouterHost>: View {
 
   var body: some View {
     ContentScreenView(
+      padding: .zero,
+      canScroll: true,
       errorConfig: viewModel.viewState.error,
-      navigationTitle: .addDocumentRequest,
+      navigationTitle: .issuanceRequestTitle,
       toolbarContent: viewModel.toolbarContent(),
       notificationActions: [
         .init(
@@ -46,6 +48,22 @@ struct DocumentOfferView<Router: RouterHost>: View {
         onIssueDocuments: viewModel.onIssueDocuments
       )
     }
+    .alertView(
+      isPresented: $viewModel.isTrustBlockedAlertShowing,
+      title: .issuanceBlockedTitle,
+      message: .issuanceBlockedMessage,
+      actions: {
+        Button(.close) { viewModel.onTrustBlockedClose() }
+      }
+    )
+    .alertView(
+      isPresented: $viewModel.isRegistrationBlockedAlertShowing,
+      title: .issuanceRegistrationBlockedTitle,
+      message: .issuanceRegistrationBlockedMessage,
+      actions: {
+        Button(.close) { viewModel.onRegistrationBlockedClose() }
+      }
+    )
     .task {
       await viewModel.initialize()
     }
@@ -64,7 +82,9 @@ private struct DocumentOfferViewContainer: View {
   @MainActor
   @ViewBuilder
   private func content() -> some View {
-    if viewState.documentOfferUiModel.uiOffers.isEmpty {
+    if !viewState.initialized, !viewState.isLoading {
+      Color.clear
+    } else if viewState.documentOfferUiModel.uiOffers.isEmpty {
       noDocumentsFound()
     } else {
       scrollableContent()
@@ -75,39 +95,41 @@ private struct DocumentOfferViewContainer: View {
   @ViewBuilder
   private func scrollableContent() -> some View {
     ScrollView {
-      VStack(spacing: .zero) {
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
-        ContentHeaderView(
-          config: viewState.contentHeaderConfig,
-          accessibilityDescription: DocumentOfferLocators.headerDescription
-        )
-
-        VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-
-          ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
-            WrapCardView(
-              backgroundColor: Theme.shared.color.groupedElevatedBackground
-            ) {
-              DocumentOfferCellView(
-                cellModel: cell,
-                isLoading: viewState.isLoading
-              )
-            }
-          }
-
-          Text(.shareDataReview)
-            .typography(Theme.shared.font.bodyMedium)
-            .foregroundColor(Theme.shared.color.primaryLabel)
-            .multilineTextAlignment(.leading)
+        if let issuerRegistration = viewState.issuerRegistration {
+          RelyingPartyRegistrationView(data: issuerRegistration)
             .shimmer(isLoading: viewState.isLoading)
-
-          VSpacer.medium()
         }
+
+        ForEach(viewState.documentOfferUiModel.uiOffers) { cell in
+          WrapCardView(
+            backgroundColor: Theme.shared.color.groupedElevatedBackground
+          ) {
+            DocumentOfferCellView(
+              cellModel: cell,
+              isLoading: viewState.isLoading
+            )
+          }
+        }
+
+        VSpacer.medium()
       }
+      .padding(Theme.shared.dimension.padding)
     }
-    .safeAreaInset(edge: .bottom) {
+    .safeAreaInset(edge: .bottom, spacing: .zero) {
+      bottomBar()
+    }
+  }
+
+  @MainActor
+  @ViewBuilder
+  private func bottomBar() -> some View {
+    VStack(spacing: SPACING_MEDIUM) {
       issueButton()
     }
+    .padding(.top, SPACING_MEDIUM)
+    .background(Theme.shared.color.background)
   }
 
   @MainActor
@@ -123,15 +145,18 @@ private struct DocumentOfferViewContainer: View {
     .combineChilrenAccessibility(
       locator: DocumentOfferLocators.issueButton
     )
+    .padding(.horizontal, SPACING_MEDIUM)
+    .padding(.bottom, SPACING_LARGE_MEDIUM)
   }
 
   @MainActor
   @ViewBuilder
   private func noDocumentsFound() -> some View {
     VStack(spacing: .zero) {
-      ContentHeaderView(
-        config: viewState.contentHeaderConfig
-      )
+      if let issuerRegistration = viewState.issuerRegistration {
+        RelyingPartyRegistrationView(data: issuerRegistration)
+          .padding(.horizontal, Theme.shared.dimension.padding)
+      }
       Spacer()
       ContentEmptyView(
         title: .requestCredentialOfferNoDocument
@@ -154,9 +179,15 @@ private struct DocumentOfferViewContainer: View {
     offerUri: "offer uri",
     allowIssue: true,
     initialized: true,
-    contentHeaderConfig: .init(
-      appIconAndTextData: AppIconAndTextData(
-        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
+    issuerRegistration: RelyingPartyRegistrationData(
+      primary: RegisteredParty(
+        name: .custom("EUDI Issuer"),
+        identifier: .relyingPartyId(["rp:eudi-issuer:prod"]),
+        isVerified: true
+      ),
+      privacyPolicyUrl: URL(string: "https://issuer.example/privacy"),
+      intendedUse: .custom(
+        "We will use your identity data to issue the documents included in this offer."
       )
     )
   )
@@ -188,9 +219,10 @@ private struct DocumentOfferViewContainer: View {
     offerUri: "offer uri",
     allowIssue: true,
     initialized: true,
-    contentHeaderConfig: .init(
-      appIconAndTextData: AppIconAndTextData(
-        appIcon: ThemeManager.shared.image.logoEuDigitalIndentityWallet
+    issuerRegistration: RelyingPartyRegistrationData(
+      primary: RegisteredParty(
+        name: .custom(LocalizableStringKey.unknownIssuer.toString),
+        isVerified: false
       )
     )
   )

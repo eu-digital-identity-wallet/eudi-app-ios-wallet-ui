@@ -14,15 +14,22 @@
  * governing permissions and limitations under the Licence.
  */
 import EudiRQESUi
+import MdocDataModel18013
 
 final class RQESConfig: EudiRQESUiConfig {
 
   let buildVariant: AppBuildVariant
   let buildType: AppBuildType
+  let transactionLogger: (any TransactionLogger)?
 
-  init(buildVariant: AppBuildVariant, buildType: AppBuildType) {
+  init(
+    buildVariant: AppBuildVariant,
+    buildType: AppBuildType,
+    transactionLogger: (any TransactionLogger)? = nil
+  ) {
     self.buildVariant = buildVariant
     self.buildType = buildType
+    self.transactionLogger = transactionLogger
   }
 
   var rssps: [QTSPData] {
