@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import feature_common
 import logic_ui
 import logic_core
 import logic_business
@@ -145,7 +146,7 @@ extension TransactionLogDomain {
       return [
         .claims(id: "requested", title: .transactionDetailsDataRequested, claims: log.claimsRequested, emptyText: .transactionDetailsNoDataRequested),
         .claims(id: "shared", title: .transactionDetailsDataShare, claims: log.claimsPresented, emptyText: .transactionDetailsNoDataShared)
-      ]
+      ] + TransactionDetailsSectionUi.transactionData(log.transactionData)
     case .credentialIssuance(let log):
       return TransactionDetailsSectionUi.credentialList(log.details.credentials, title: .transactionDetailsCredentialsIssuedSection)
     case .credentialReissuance(let log):
@@ -209,6 +210,26 @@ extension TransactionDetailsSectionUi {
       },
       emptyText: emptyText
     )
+  }
+
+  static func transactionData(_ transactions: [PresentationTransactionDataDomain]) -> [TransactionDetailsSectionUi] {
+    guard !transactions.isEmpty else { return [] }
+    let sectionId = "transaction-data"
+    return [
+      .init(
+        id: sectionId,
+        title: .transactionDetailsSigningRequest,
+        fields: [],
+        groups: [
+          .init(
+            id: sectionId,
+            title: LocalizableStringKey.requestTransactionDataSignatureDetails.toString,
+            listItems: transactions.toRecordedTransactionDataItems(sectionId: sectionId)
+          )
+        ],
+        emptyText: .transactionDetailsNoInformation
+      )
+    ]
   }
 
   static func signing(_ log: TransactionLogDomain.SigningSealing) -> [TransactionDetailsSectionUi] {

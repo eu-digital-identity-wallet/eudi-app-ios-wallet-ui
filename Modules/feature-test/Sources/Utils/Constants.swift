@@ -331,6 +331,7 @@ extension Constants {
     dataRequestInfo: "Data Request Info",
     isTrusted: true,
     overaskedClaims: [],
-    transactionDataSets: []
+    transactionDataSets: [],
+    requestNames: []
   )
 }

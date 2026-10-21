@@ -33,23 +33,23 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestCombinationTitle([String])
   case requestRequestedDataTitle
   case requestTransactionDataSectionTitle
-  case requestTransactionDataTitle
   case requestTransactionDataSignatureDetails
+  case requestTransactionDataNumbered([String])
   case requestTransactionDataType
   case requestTransactionDataTypeQes
   case requestTransactionDataTypeQesRequest
   case requestTransactionDataTrustFramework
+  case requestTransactionDataTrustFrameworkValue
   case requestTransactionDataRequestedCredentials
   case requestTransactionDataSigningCredentialId
   case requestTransactionDataDocument
   case requestTransactionDataHashRepresentation
-  case requestTransactionDataHash
   case requestTransactionDataTypedHash([String])
-  case requestTransactionDataHashAlgorithm
   case requestTransactionDataTypedHashAlgorithm([String])
   case requestTransactionDataNumberOfSignatures
   case requestTransactionDataDocumentNumbered([String])
   case requestTransactionDataDocumentLocation
+  case requestTransactionDataOpenDocument
   case requestTransactionDataExpectedChecksum
   case requestTransactionDataChecksumAlgorithm
   case requestTransactionDataSignatureType
@@ -58,6 +58,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestTransactionDataSignedAttributes
   case requestTransactionDataOneTimePassword
   case requestTransactionDataResponseUri
+  case requestTransactionDataUnavailable
   case requestTransactionDataSignatureQes
   case requestTransactionDataSignatureQeseal
   case requestTransactionDataSignatureAes
@@ -245,6 +246,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case transactionInformation
   case transactionDetailsDataShare
   case transactionDetailsDataSigned
+  case transactionDetailsSigningRequest
   case transactionDetailsScreenCardDateLabel
   case transactionDetailsCompleted
   case or
