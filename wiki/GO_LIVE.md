@@ -671,7 +671,7 @@ Current app-level configuration points:
 | `WalletKitConfig.userAuthenticationRequired` | Local authentication gate for WalletKit secure storage access. | Enable for LoA High PID and other high-assurance credentials unless an approved remote high-assurance hardware-backed design replaces local key use. |
 | `WalletKitConfig.keyOptions` | Per-issuance `KeyOptions` (curve, secure area, access protection, access control, key purposes) applied to attestation/proof keys created by `issueDocuments`, `issueDocumentsByOfferUrl`, `reIssueDocument`, `requestDeferredIssuance`, and `resumePendingIssuance`. | Set explicitly for production. For LoA High PID and high-assurance EAA/QEAA, require Secure Enclave (P-256) with appropriate `accessProtection` (e.g. `.whenUnlockedThisDeviceOnly`) and `accessControl` (e.g. `.requireUserPresence`), unless an approved remote high-assurance hardware-backed design replaces local key use. See [Attestation Key Options](#attestation-key-options-keyoptions). |
 | `WalletKitAttestationProviderImpl` and `WalletProviderAttestationConfig` | Wallet Provider host and wallet/key attestation calls. | Change when wallet attestation keys must be generated, stored, attested, or unlocked through a custom provider or remote high-assurance key service. |
-| `WalletKitConfig.issuersConfig` and `keyAttestationsConfig` | Issuance configuration and Wallet Provider attestation provider wiring. | Change when issuer policy requires different key attestation, DPoP, proof type (`allowPlainJwtProof`), or proof-of-possession behavior. |
+| `WalletKitConfig.issuersConfig` and `keyAttestationsConfig` | Issuance configuration and Wallet Provider attestation provider wiring. | Change when issuer policy requires different key attestation, DPoP, proof type (`allowPlainJwtProof`), credential encryption (`encryptionSupportConfig`), or proof-of-possession behavior. |
 | WalletKit storage and key-management APIs | WalletKit-owned document, credential, and protocol key handling. | If the selected WalletKit version exposes dedicated storage, key manager, Secure Enclave, remote signing, or ephemeral-key configuration, configure it in the production integration and record the exact SDK API. |
 
 Production implementation rules:
@@ -1089,7 +1089,8 @@ case .PROD:
         authFlowRedirectionURI: URL(string: "eu.example.wallet://authorization")!,
         parUsage: .required(authorizationCodeDPoPBinding: true),
         allowPlainJwtProof: false,
-        requireDpop: true
+        requireDpop: true,
+        encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
       ),
       order: 0
     )
@@ -1105,6 +1106,7 @@ case .PROD:
 | `parUsage` | Pushed authorization request (PAR) usage policy. Use `.required(authorizationCodeDPoPBinding:)` to require PAR, optionally binding the authorization code to DPoP. | Prefer `.required(authorizationCodeDPoPBinding: true)` where the production profile requires PAR with sender-constrained authorization codes. |
 | `allowPlainJwtProof` | Credential proof policy. `false` (default) is HAIP-compliant: only attested proofs are sent (`attestation`, or `jwt` with a Wallet Provider key attestation). `true` additionally accepts plain `jwt` proofs (ES256/ES384/ES512) without key attestation, so the proof key is no longer attested. | Keep `false`. Set `true` only for a specific issuer that does not support key attestation, after a documented risk decision. |
 | `requireDpop` | Whether DPoP is required. | Prefer `true` where the production profile requires sender-constrained tokens. |
+| `encryptionSupportConfig` | Credential request and response encryption. With `credentialResponseEncryptionPolicy: .supported` (wallet-kit's default) the wallet encrypts whenever the issuer's metadata advertises encryption, and otherwise exchanges plain JSON over TLS; `.required` refuses an issuer that does not support encryption. `ecConfig`, `rsaConfig` and `supportedEncryptionMethods` restrict key types and methods. | Prefer `.required` where the production profile mandates encrypted credential responses and every production issuer supports them. |
 | `order` | Display/order preference for scoped issuance. | Use deterministic ordering approved by product owners. |
 
 Rules:
@@ -1114,7 +1116,7 @@ Rules:
 * Do not point production wallets to development or staging issuers.
 * Confirm issuer metadata contains only production credential configurations.
 * Confirm issuer credential signing keys, status endpoints, and trust chains are production keys.
-* Confirm issuer and wallet agree on redirect URI, client ID, PAR, DPoP, proof type (`allowPlainJwtProof`), and attestation policy.
+* Confirm issuer and wallet agree on redirect URI, client ID, PAR, DPoP, proof type (`allowPlainJwtProof`), credential encryption (`encryptionSupportConfig`), and attestation policy.
 
 ## Wallet Provider Attestation
 

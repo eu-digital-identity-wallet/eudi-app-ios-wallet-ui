@@ -29,6 +29,12 @@ protocol WalletKitConfig: Sendable {
    * proof policy: only attested proofs (`attestation`, or `jwt` with key attestation) are sent.
    * Set it to `true` only for an issuer that does not support key attestation and requires a plain
    * JWT proof; the proof is then bound to a key without wallet attestation, using ES256/ES384/ES512.
+   *
+   * `encryptionSupportConfig` is set per issuer and keeps wallet-kit's default: with
+   * `credentialResponseEncryptionPolicy` `.supported`, the credential request and response are
+   * encrypted whenever the issuer's metadata advertises encryption, and sent in plain JSON over TLS
+   * otherwise. Set it to `.required` to refuse an issuer that does not support encryption.
+   * `ecConfig`, `rsaConfig` and `supportedEncryptionMethods` restrict the key types and methods used.
    */
   var issuersConfig: [String: VciConfig] { get }
 
@@ -161,7 +167,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
               allowPlainJwtProof: false,
               requireDpop: true,
               issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-              validateRegistrationCertificate: validateIssuerRegistrationCertificate
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
+              encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
             ),
             order: 1
           ),
@@ -181,7 +188,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
               allowPlainJwtProof: false,
               requireDpop: true,
               issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-              validateRegistrationCertificate: validateIssuerRegistrationCertificate
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
+              encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
             ),
             order: 0
           )
@@ -204,7 +212,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
               allowPlainJwtProof: false,
               requireDpop: true,
               issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-              validateRegistrationCertificate: validateIssuerRegistrationCertificate
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
+              encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
             ),
             order: 1
           ),
@@ -224,7 +233,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
               allowPlainJwtProof: false,
               requireDpop: true,
               issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-              validateRegistrationCertificate: validateIssuerRegistrationCertificate
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
+              encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
             ),
             order: 0
           )
