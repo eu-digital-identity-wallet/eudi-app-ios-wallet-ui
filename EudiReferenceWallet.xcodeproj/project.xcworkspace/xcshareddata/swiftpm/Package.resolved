@@ -1,5 +1,5 @@
 {
-  "originHash" : "a86aba5837353956c3cd1184c3f5d245f0fdaf94d738ab89c5acd00c11f34f5c",
+  "originHash" : "196ddc86c955c684290b3311f3a39a34d1562223e021c94abbeb06329f796a40",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -195,8 +195,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "efd30f6ac8df16c4c520e36029c7debc8e0967a3",
-        "version" : "0.56.5"
+        "revision" : "8a3b97da681c8d74056709d9b42eaf6523450eb7",
+        "version" : "0.56.6"
       }
     },
     {
