@@ -431,6 +431,32 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
+  func testOnRequestReceived_WhenTransactionDataIsReadableAndBoundToAShownDocument_ThenTheOptionShowsIt() async throws {
+    // Given
+    let transaction: PresentationTransactionDataDomain = .qes(.init(credentialIds: ["pid"], signatureRequests: []))
+    await stubReceivedRequest(
+      Self.presentationRequest(transactionDataSets: [[Constants.isoMdlModelId: [transaction]]], requestNames: ["option-1"])
+    )
+
+    // When
+    let state = await interactor.onRequestReceived()
+
+    // Then
+    guard case .success(let model) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    let transactionData = try XCTUnwrap(model.requestDataCombinations.first?.transactionData)
+    XCTAssertEqual(transactionData.details.id, "transaction-data:0")
+    XCTAssertEqual(
+      transactionData.details.listItems.map(\.id),
+      [
+        "transaction-data:0/framework",
+        "transaction-data:0/transaction-0/type",
+        "transaction-data:0/transaction-0/query-0"
+      ]
+    )
+  }
+
   func testOnRequestReceived_WhenAnOptionThatIsNotOfferedCarriesTransactionData_ThenTheOfferedOptionsAreCheckedOnTheirOwn() async {
     let request = Constants.mockPresentationRequest
     let revoked = DocElements.sdJwt(.init(docId: "pid-sd", vct: "urn:eudi:pid:1", sdJwtElements: []))
