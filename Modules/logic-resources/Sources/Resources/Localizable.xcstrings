@@ -2779,6 +2779,28 @@
         }
       }
     },
+    "request_transaction_data_trust_framework" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trust framework"
+          }
+        }
+      }
+    },
+    "request_transaction_data_trust_framework_value" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "eIDAS"
+          }
+        }
+      }
+    },
     "request_transaction_data_type" : {
       "extractionState" : "manual",
       "localizations" : {

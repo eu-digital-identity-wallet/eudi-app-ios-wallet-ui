@@ -48,6 +48,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     XCTAssertEqual(
       rows(model.details.listItems),
       [
+        Row("\(sectionId)/framework", .requestTransactionDataTrustFramework, "eIDAS"),
         Row("\(sectionId)/transaction-0/type", .requestTransactionDataType, LocalizableStringKey.requestTransactionDataTypeQes.toString),
         Row("\(sectionId)/transaction-0/signature-type", .requestTransactionDataSignatureType, LocalizableStringKey.requestTransactionDataSignatureQes.toString),
         Row("\(sectionId)/transaction-0/query-0", .requestTransactionDataRequestedCredentials, "pid"),
@@ -84,6 +85,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     XCTAssertEqual(
       rows(model.details.listItems),
       [
+        Row("\(sectionId)/framework", .requestTransactionDataTrustFramework, "eIDAS"),
         Row("\(sectionId)/transaction-0/type", .requestTransactionDataType, LocalizableStringKey.requestTransactionDataTypeQesRequest.toString),
         Row("\(sectionId)/transaction-0/query-0", .requestTransactionDataRequestedCredentials, "pid"),
         Row("\(sectionId)/transaction-0/data-hash-algorithm-0", .requestTransactionDataHashAlgorithms, "sha-256"),
@@ -108,7 +110,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     XCTAssertTrue(model.documentUrlsByItemId.isEmpty)
   }
 
-  func testToRequestTransactionDataUiModel_whenThereAreSeveralTransactions_thenNumbersThemWithoutATrustFrameworkRow() throws {
+  func testToRequestTransactionDataUiModel_whenThereAreSeveralTransactions_thenNumbersThemAndShowsTheTrustFrameworkOnce() throws {
     // Given
     let transactions: [PresentationTransactionDataDomain] = [approval(), .unavailable]
 
@@ -117,7 +119,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     let allRows = rows(model.details.listItems)
 
     // Then
-    XCTAssertTrue(allRows.filter { $0.id.hasSuffix("/framework") }.isEmpty)
+    XCTAssertEqual(allRows.filter { $0.id.hasSuffix("/framework") }.count, 1)
     XCTAssertEqual(
       allRows.filter { $0.id.hasSuffix("/title") },
       [

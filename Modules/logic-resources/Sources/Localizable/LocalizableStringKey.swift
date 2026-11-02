@@ -49,6 +49,8 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestTransactionDataType
   case requestTransactionDataTypeQes
   case requestTransactionDataTypeQesRequest
+  case requestTransactionDataTrustFramework
+  case requestTransactionDataTrustFrameworkValue
   case requestTransactionDataRequestedCredentials
   case requestTransactionDataSigningCredentialId
   case requestTransactionDataDocument

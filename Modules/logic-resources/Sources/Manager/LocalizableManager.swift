@@ -90,6 +90,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "request_transaction_data_type_qes")
     case .requestTransactionDataTypeQesRequest:
       bundle.localizedString(forKey: "request_transaction_data_type_qes_request")
+    case .requestTransactionDataTrustFramework:
+      bundle.localizedString(forKey: "request_transaction_data_trust_framework")
+    case .requestTransactionDataTrustFrameworkValue:
+      bundle.localizedString(forKey: "request_transaction_data_trust_framework_value")
     case .requestTransactionDataRequestedCredentials:
       bundle.localizedString(forKey: "request_transaction_data_requested_credentials")
     case .requestTransactionDataSigningCredentialId:

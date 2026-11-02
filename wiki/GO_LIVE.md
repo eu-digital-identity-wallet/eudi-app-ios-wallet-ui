@@ -823,7 +823,8 @@ Rules:
 
 When a presentation request includes transaction data for signing, each applicable option on the
 request screen shows a "Data to be signed" section below its requested data. Its "Signature details" row is
-open when the screen appears and lists each transaction, numbered when there is more than one, as on Android:
+open when the screen appears and lists the trust framework (eIDAS) once, then each transaction, numbered when there
+is more than one, as on Android:
 
 * A QES approval shows the transaction type, signature type, requested credential query ids,
   signing credential ID, number of signatures, locations, transaction-data hash algorithms and, for each document,
