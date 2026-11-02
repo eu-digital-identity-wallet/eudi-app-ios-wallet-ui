@@ -126,6 +126,22 @@ final class TestReIssuanceWorkManager: EudiTest {
     }
   }
 
+  func testCheckReIssuance_WhenTheRoundIsCancelled_ThenNoFailureIsRecorded() async {
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocumentStatuses()).thenReturn([:])
+      when(mock.fetchIssuedDocuments()).thenReturn(["a", "b"].map { StubDocument.make(id: $0) })
+      when(mock.reIssueDocument(identifier: any(), isBackgroundOperation: any())).then { _, _ in
+        withUnsafeCurrentTask { $0?.cancel() }
+        throw CancellationError()
+      }
+    }
+    let manager = workManager!
+
+    _ = await Task { try await manager.checkReIssuance() }.result
+
+    verify(walletKitController, never()).storeFailedReIssuedDocuments(ids: any())
+  }
+
   func testStop_WhenARoundIsUnderWay_ThenReturnsOnceItHasFinished() async {
     let runner = SerialCheckRunner()
     let manager = ReIssuanceWorkManagerImpl(

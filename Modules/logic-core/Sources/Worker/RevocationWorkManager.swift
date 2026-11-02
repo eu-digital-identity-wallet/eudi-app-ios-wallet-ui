@@ -131,6 +131,7 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
       do {
         status = try await walletKitController.getDocumentStatus(for: statusList)
       } catch {
+        guard !Task.isCancelled else { return }
         failed.append(document.id)
         continue
       }
