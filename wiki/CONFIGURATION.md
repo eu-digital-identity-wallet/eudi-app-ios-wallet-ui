@@ -1063,7 +1063,7 @@ The keychain access group for the extension is defined in `EudiReferenceWalletID
 
 `SHARED_APP_GROUP_IDENTIFIER` must match the main app's effective keychain group for the same build configuration (Dev or Demo), otherwise the extension cannot access the same keychain-backed wallet context.
 
-The extension also asks for the wallet PIN or biometrics before it shows a request. It reads the PIN record and the PIN lockout state from the same shared keychain group, and the biometry and "Offer documents to apps and websites" settings from the App Group (`com.apple.security.application-groups`, `group.$(SHARED_APP_GROUP_IDENTIFIER)`), so both entitlements must match the main app's.
+The extension also asks for the wallet PIN or biometrics before it shows a request. It reads the PIN record and the PIN lockout state from the same shared keychain group, and the biometry and "Allow requests from websites (DC API)" settings from the App Group (`com.apple.security.application-groups`, `group.$(SHARED_APP_GROUP_IDENTIFIER)`), so both entitlements must match the main app's.
 
 ### Step-by-step setup
 
@@ -1112,7 +1112,7 @@ At startup it initializes `DocumentProviderDIContainer`, which assembles `LogicI
 
 In `Modules/logic-core/Sources/Controller/WalletKitController.swift`, documents are registered to `IdentityDocumentProviderRegistrationStore` (iOS 26+) through `DocumentRegistrationManager`.
 
-Only CBOR documents without a revocation record are registered (`document.docDataFormat == .cbor`), which controls what the extension can serve for Identity Document requests. While "Offer documents to apps and websites" is off in Settings (`Prefs.Key.offerDocumentsToApps`, on by default), nothing is registered.
+Only CBOR documents without a revocation record are registered (`document.docDataFormat == .cbor`), which controls what the extension can serve for Identity Document requests. While "Allow requests from websites (DC API)" is off in Settings (`Prefs.Key.offerDocumentsToApps`, on by default), nothing is registered.
 
 The wallet registers while iOS reports its authorisation as `authorized` or `notDetermined`: iOS stays at `notDetermined` until the app's first registration, which is what authorises it. A user who turns the wallet off as a document provider (`notAuthorized`) gets no registrations.
 

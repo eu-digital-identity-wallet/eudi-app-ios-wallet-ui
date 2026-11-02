@@ -119,8 +119,8 @@ replace before launch.
 ### Minimum device requirements
 
 - Any device that supports iOS 17.0
-- Presentation to websites through the Digital Credentials API needs iOS 26.2 or later. To stop the wallet offering
-  its documents to apps and websites, turn off "Offer documents to apps and websites" in Settings.
+- Presentation to websites through the Digital Credentials API needs iOS 26.2 or later. To stop websites from
+  requesting the wallet's documents, turn off "Allow requests from websites (DC API)" in Settings.
 
 ### Prerequisites
 

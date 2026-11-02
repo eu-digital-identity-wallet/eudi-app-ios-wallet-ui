@@ -35,7 +35,7 @@ public extension Prefs {
     case transactionLogRevision
     /// Advances with every completed factory reset, so the ID Provider extension can clear its own caches and log.
     case walletResetGeneration
-    /// The "Offer documents to apps and websites" setting for the Digital Credential API: on until the user turns it
+    /// The "Allow requests from websites (DC API)" setting for the Digital Credential API: on until the user turns it
     /// off, as on Android (registered with the other defaults in `PrefsControllerImpl`).
     case offerDocumentsToApps
   }

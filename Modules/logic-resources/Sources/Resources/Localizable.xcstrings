@@ -887,7 +887,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This wallet does not offer documents to apps and websites. You can turn this on in the wallet's Settings."
+            "value" : "This wallet does not accept requests from websites. You can turn this on in the wallet's Settings."
           }
         }
       }
@@ -1806,7 +1806,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Offer documents to apps and websites"
+            "value" : "Allow requests from websites (DC API)"
           }
         }
       }
