@@ -16,6 +16,8 @@
 
 public protocol SessionCoordinatorHolder: Sendable {
   func clear() async
+  func clearRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) async
+  func clearProximityCoordinator(_ coordinator: ProximitySessionCoordinator) async
   func setActiveRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) async
   func setActiveProximityCoordinator(_ coordinator: ProximitySessionCoordinator) async
 }
@@ -40,6 +42,18 @@ final actor SessionCoordinatorHolderImpl: SessionCoordinatorHolder {
       stoppedProximityCoordinator = activeProximityCoordinator
     }
     activeRemoteCoordinator = nil
+    activeProximityCoordinator = nil
+  }
+
+  public func clearRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) {
+    guard activeRemoteCoordinator === coordinator else { return }
+    activeRemoteCoordinator = nil
+  }
+
+  public func clearProximityCoordinator(_ coordinator: ProximitySessionCoordinator) {
+    guard activeProximityCoordinator === coordinator else { return }
+    coordinator.stopPresentation()
+    stoppedProximityCoordinator = coordinator
     activeProximityCoordinator = nil
   }
 

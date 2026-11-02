@@ -18,7 +18,7 @@ import logic_business
 import UIKit
 import os
 
-public protocol RemoteSessionCoordinator: Sendable {
+public protocol RemoteSessionCoordinator: AnyObject, Sendable {
 
   var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> { get }
   var relyingPartyRegistration: WrpRegistrationPolicy? { get }

@@ -67,4 +67,98 @@ final class TestSessionCoordinatorHolderClear: EudiTest {
 
     XCTAssertNotNil(stopped)
   }
+
+  func testClearRemoteCoordinator_WhenABluetoothSessionStartedMeanwhile_ThenItKeepsRunning() async {
+    let holder = SessionCoordinatorHolderImpl()
+    let remote = MockRemoteSessionCoordinator(session: PresentationSession.fixture)
+    let proximity = MockProximitySessionCoordinator(session: PresentationSession.fixture)
+    stub(proximity) { mock in
+      when(mock.stopPresentation()).thenDoNothing()
+    }
+    await holder.setActiveRemoteCoordinator(remote)
+    await holder.clear()
+    await holder.setActiveProximityCoordinator(proximity)
+
+    await holder.clearRemoteCoordinator(remote)
+
+    verify(proximity, never()).stopPresentation()
+  }
+
+  func testClearRemoteCoordinator_WhenItIsTheActiveSession_ThenItIsLetGo() async {
+    let holder = SessionCoordinatorHolderImpl()
+    var remote: MockRemoteSessionCoordinator? = MockRemoteSessionCoordinator(session: PresentationSession.fixture)
+    weak let released = remote
+    await holder.setActiveRemoteCoordinator(remote!)
+
+    await holder.clearRemoteCoordinator(remote!)
+    remote = nil
+
+    XCTAssertNil(released)
+  }
+
+  func testClearRemoteCoordinator_WhenAnotherSessionIsActive_ThenTheActiveOneIsKept() async {
+    let holder = SessionCoordinatorHolderImpl()
+    var active: MockRemoteSessionCoordinator? = MockRemoteSessionCoordinator(session: PresentationSession.fixture)
+    weak let kept = active
+    await holder.setActiveRemoteCoordinator(active!)
+
+    await holder.clearRemoteCoordinator(MockRemoteSessionCoordinator(session: PresentationSession.fixture))
+    active = nil
+
+    XCTAssertNotNil(kept)
+  }
+
+  func testClearProximityCoordinator_WhenItIsTheActiveSession_ThenItIsStoppedAndKeptUntilTheNextOneStarts() async {
+    let holder = SessionCoordinatorHolderImpl()
+    var coordinator: MockProximitySessionCoordinator? = MockProximitySessionCoordinator(session: PresentationSession.fixture)
+    weak let stopped = coordinator
+    stub(coordinator!) { mock in
+      when(mock.stopPresentation()).thenDoNothing()
+    }
+    await holder.setActiveProximityCoordinator(coordinator!)
+
+    await holder.clearProximityCoordinator(coordinator!)
+
+    verify(coordinator!).stopPresentation()
+    coordinator = nil
+    XCTAssertNotNil(stopped)
+
+    await holder.setActiveProximityCoordinator(MockProximitySessionCoordinator(session: PresentationSession.fixture))
+
+    XCTAssertNil(stopped)
+  }
+
+  func testClearProximityCoordinator_WhenAnotherSessionIsActive_ThenTheActiveOneKeepsRunning() async {
+    let holder = SessionCoordinatorHolderImpl()
+    let active = MockProximitySessionCoordinator(session: PresentationSession.fixture)
+    let earlier = MockProximitySessionCoordinator(session: PresentationSession.fixture)
+    stub(active) { mock in
+      when(mock.stopPresentation()).thenDoNothing()
+    }
+    stub(earlier) { mock in
+      when(mock.stopPresentation()).thenDoNothing()
+    }
+    await holder.setActiveProximityCoordinator(active)
+
+    await holder.clearProximityCoordinator(earlier)
+
+    verify(active, never()).stopPresentation()
+  }
+
+  func testClearProximityCoordinator_WhenARemoteSessionIsActive_ThenItIsKept() async {
+    let holder = SessionCoordinatorHolderImpl()
+    var remote: MockRemoteSessionCoordinator? = MockRemoteSessionCoordinator(session: PresentationSession.fixture)
+    weak let kept = remote
+    let proximity = MockProximitySessionCoordinator(session: PresentationSession.fixture)
+    stub(proximity) { mock in
+      when(mock.stopPresentation()).thenDoNothing()
+    }
+    await holder.setActiveRemoteCoordinator(remote!)
+    await holder.setActiveProximityCoordinator(proximity)
+
+    await holder.clearProximityCoordinator(proximity)
+    remote = nil
+
+    XCTAssertNotNil(kept)
+  }
 }

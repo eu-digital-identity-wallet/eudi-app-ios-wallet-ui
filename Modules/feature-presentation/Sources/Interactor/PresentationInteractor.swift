@@ -232,7 +232,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   }
 
   public func stopPresentation() async {
-    await walletKitController.stopPresentation()
+    await walletKitController.stopRemotePresentation(presentationCoordinator)
     presentationCoordinator.stopPresentation()
   }
 }

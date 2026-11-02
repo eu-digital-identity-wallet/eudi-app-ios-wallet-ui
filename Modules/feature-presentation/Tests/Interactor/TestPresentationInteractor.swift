@@ -173,27 +173,36 @@ final class TestPresentationInteractor: EudiTest {
     verify(walletKitController).storeDynamicIssuancePendingUrl(with: any())
   }
 
-  func testStopPresentation_WhenInteractorMethodCalled_ThenCallsWalletKitControllerStopPresentation() async {
+  func testStopPresentation_WhenInteractorMethodCalled_ThenStopsOnlyItsOwnSession() async {
     // Given
+    let ownSession = presentationCoordinator!
     stub(walletKitController) { mock in
-      when(mock.stopPresentation()).thenDoNothing()
+      when(mock.stopRemotePresentation(any())).thenDoNothing()
     }
     // When
     await interactor.stopPresentation()
     // Then
-    verify(walletKitController).stopPresentation()
+    verify(walletKitController).stopRemotePresentation(ParameterMatcher { $0 === ownSession })
+    verify(walletKitController, never()).stopPresentation()
+    verify(presentationCoordinator).stopPresentation()
   }
 
-  func testStopPresentation_WhenInteractorCalled_ThenCallsWalletKitControllerStopPresentation() async {
+  func testOnDeclineRequest_WhenTheDeclineIsSent_ThenStopsOnlyItsOwnSession() async {
     // Given
+    let ownSession = presentationCoordinator!
+    stub(presentationCoordinator) { mock in
+      when(mock.declineResponse()).thenDoNothing()
+    }
     stub(walletKitController) { mock in
-      when(mock.stopPresentation()).thenDoNothing()
+      when(mock.stopRemotePresentation(any())).thenDoNothing()
     }
     // When
-    await interactor.stopPresentation()
+    await interactor.onDeclineRequest()
 
     // Then
-    verify(walletKitController).stopPresentation()
+    verify(presentationCoordinator).declineResponse()
+    verify(walletKitController).stopRemotePresentation(ParameterMatcher { $0 === ownSession })
+    verify(walletKitController, never()).stopPresentation()
   }
 
   func testOnDeviceEngagement_WhenRequestReceivedAndClaimsParsed_ThenReturnsSuccessWithModel() async {

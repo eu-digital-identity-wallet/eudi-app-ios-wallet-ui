@@ -33,6 +33,8 @@ public protocol WalletKitController: Sendable {
   func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator
   func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator
   func stopPresentation() async
+  func stopRemotePresentation(_ coordinator: RemoteSessionCoordinator) async
+  func stopProximityPresentation(_ coordinator: ProximitySessionCoordinator) async
 
   func fetchAllDocuments() async -> [any DocClaimsDecodable]
   func fetchDeferredDocuments() async -> [WalletStorage.Document]
@@ -364,6 +366,14 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func stopPresentation() async {
     await self.sessionCoordinatorHolder.clear()
+  }
+
+  func stopRemotePresentation(_ coordinator: RemoteSessionCoordinator) async {
+    await self.sessionCoordinatorHolder.clearRemoteCoordinator(coordinator)
+  }
+
+  func stopProximityPresentation(_ coordinator: ProximitySessionCoordinator) async {
+    await self.sessionCoordinatorHolder.clearProximityCoordinator(coordinator)
   }
 
   func fetchAllDocuments() async -> [any DocClaimsDecodable] {

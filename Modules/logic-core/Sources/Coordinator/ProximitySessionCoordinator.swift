@@ -27,7 +27,7 @@ protocol ProximityTransferService: Sendable {
   @MainActor var isReaderDisconnected: Bool { get }
 }
 
-public protocol ProximitySessionCoordinator: Sendable {
+public protocol ProximitySessionCoordinator: AnyObject, Sendable {
 
   var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> { get }
   var relyingPartyRegistration: WrpRegistrationPolicy? { get }
