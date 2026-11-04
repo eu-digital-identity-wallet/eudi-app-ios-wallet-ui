@@ -240,10 +240,15 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func resolveOfferUrlDocTypes(offerUri: String) async throws -> OfferedIssuanceModel {
     try requireConfiguredIssuer(of: offerUri)
-    return try await wallet.resolveOfferUrlDocTypes(
+    let offer = try await wallet.resolveOfferUrlDocTypes(
       offerUri: offerUri,
       authFlowRedirectionURI: nil
     )
+    try OfferIssuer.requireConfigured(
+      resolvedIssuer: offer.issuerMetadata?.credentialIssuerIdentifier.url.absoluteString,
+      configuredIssuers: configuredIssuers
+    )
+    return offer
   }
 
   /// Refuses an offer whose issuer is not configured before anything is fetched (`OfferIssuer`): wallet-kit would
@@ -251,8 +256,12 @@ final actor WalletKitControllerImpl: WalletKitController {
   private func requireConfiguredIssuer(of offerUri: String) throws {
     try OfferIssuer.requireConfigured(
       offerUri: offerUri,
-      configuredIssuers: walletKitConfig.issuersConfig.values.compactMap(\.config.credentialIssuerURL)
+      configuredIssuers: configuredIssuers
     )
+  }
+
+  private var configuredIssuers: [String] {
+    walletKitConfig.issuersConfig.values.compactMap(\.config.credentialIssuerURL)
   }
 
   private func resolveCredentialOptions(

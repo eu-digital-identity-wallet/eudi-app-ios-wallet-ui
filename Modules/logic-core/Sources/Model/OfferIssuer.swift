@@ -67,4 +67,10 @@ public enum OfferIssuer: Equatable, Sendable {
       throw WalletCoreError.issuerNotConfigured
     }
   }
+
+  public static func requireConfigured(resolvedIssuer: String?, configuredIssuers: [String]) throws {
+    guard let resolvedIssuer, configuredIssuers.contains(resolvedIssuer) else {
+      throw WalletCoreError.issuerNotConfigured
+    }
+  }
 }

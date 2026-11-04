@@ -118,6 +118,31 @@ final class TestOfferIssuer: EudiTest {
       try OfferIssuer.requireConfigured(offerUri: byValue(issuer: "https://issuer.example"), configuredIssuers: configured)
     )
   }
+
+  func testRequireConfigured_WhenTheResolvedOfferNamesAConfiguredIssuer_ThenPasses() {
+    XCTAssertNoThrow(
+      try OfferIssuer.requireConfigured(resolvedIssuer: "https://backend.example:8443", configuredIssuers: configured)
+    )
+  }
+
+  func testRequireConfigured_WhenTheResolvedOfferNamesAnotherIssuer_ThenThrowsIssuerNotConfigured() {
+    for issuer in ["https://attacker.example", "https://issuer.example/", "https://ISSUER.example"] {
+      XCTAssertThrowsError(
+        try OfferIssuer.requireConfigured(resolvedIssuer: issuer, configuredIssuers: configured),
+        issuer
+      ) { error in
+        XCTAssertEqual(error.localizedDescription, WalletCoreError.issuerNotConfigured.localizedDescription)
+      }
+    }
+  }
+
+  func testRequireConfigured_WhenTheResolvedOfferHasNoIssuerMetadata_ThenThrowsIssuerNotConfigured() {
+    XCTAssertThrowsError(
+      try OfferIssuer.requireConfigured(resolvedIssuer: nil, configuredIssuers: configured)
+    ) { error in
+      XCTAssertEqual(error.localizedDescription, WalletCoreError.issuerNotConfigured.localizedDescription)
+    }
+  }
 }
 
 private extension TestOfferIssuer {
