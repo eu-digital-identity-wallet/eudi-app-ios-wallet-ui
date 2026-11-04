@@ -65,6 +65,10 @@ protocol WalletKitConfig: Sendable {
   /**
    * Trust configuration: ETSI LoTE (List of Trusted Entities) trust sources,
    * verification-context mappings and trust policies used for reader / issuer validation.
+   *
+   * `revocationPolicy` is set on both trust sources, so that a library default does not change it:
+   * `.disabled` for the development trust lists, `.ocspOnly` for the static fallback. Choose a
+   * policy for production; see GO_LIVE Trust Store.
    */
   var trustConfiguration: TrustConfiguration { get }
 
@@ -295,11 +299,14 @@ struct WalletKitConfigImpl: WalletKitConfig {
         EtsiTrustSource(
           loteLocations: loteLocations,
           contextTypeMappings: classifications,
-          isRevocationEnabled: false
+          revocationPolicy: .disabled
         )
       ),
       fallbackTrustSource: .staticList(
-        StaticListTrustSource(rootCertificates: staticRootCertificates)
+        StaticListTrustSource(
+          rootCertificates: staticRootCertificates,
+          revocationPolicy: .ocspOnly
+        )
       ),
       defaultPolicy: .warning,
       docTypePolicies: [
