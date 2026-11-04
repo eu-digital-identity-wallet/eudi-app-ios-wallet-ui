@@ -838,6 +838,9 @@ is more than one, as on Android:
   rendered.
 * Every field WalletKit binds into the response is shown. History shows the same fields without one-time
   passwords.
+* "Trust framework: eIDAS" is shown once, in both live requests and transaction history. It is a static product
+  label: it does not come from the transaction data and does not establish that the issuer, relying party, document
+  or signature has been verified.
 * The signed attributes carry the line "Chosen by the relying party; not checked by the wallet" in the warning
   colour.
 * A request whose transaction data cannot be shown in full is declined with an explanation, never shown in part
@@ -1000,7 +1003,7 @@ Current registration behavior:
   updated whenever a revocation check stores or clears a record; when the records cannot be read nothing is
   registered, as on Android. The extension also declines a request that would include such a document
   (`RequestAuthorizationInteractor.loadRequestData`). See [Revocation And Status Checking](#revocation-and-status-checking).
-* Settings has a switch, "Allow requests from websites (DC API)", which is on by default and shown only on iOS 26
+* Settings has a switch, "Allow document requests from apps and websites (DC API)", which is on by default and shown only on iOS 26
   and later. While it is off, nothing is registered and every registration is withdrawn when the user turns it off
   (`Prefs.Key.offerDocumentsToApps`, on by default in `PrefsControllerImpl`). The extension declines a request that still arrives, after
   the login and before any requested data is shown, and again on Accept, as Android does.
@@ -2780,7 +2783,7 @@ Before release candidate approval, test:
   switch turned off and on again. Test the ID Provider extension before opening the app.
 * An offer from an issuer that is not configured refused; a partial issuance naming the documents not added.
 * The portrait notice, and Share or Accept asking for confirmation.
-* "Allow requests from websites (DC API)" off: registrations withdrawn, the extension declines.
+* "Allow document requests from apps and websites (DC API)" off: registrations withdrawn, the extension declines.
 * A proximity request that several document sets satisfy offers the choice.
 * PID issuance from list.
 * Credential offer issuance by QR.
