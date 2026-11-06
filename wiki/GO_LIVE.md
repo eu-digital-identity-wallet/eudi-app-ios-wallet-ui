@@ -384,7 +384,7 @@ Production identity values must be final before external testing.
 | Apple team | `DEVELOPMENT_TEAM`, App Store Connect | Use the production Apple Developer Program team. |
 | Version | `MARKETING_VERSION`, Fastlane lane mutation | Use the approved public versioning scheme. |
 | Build number | `CURRENT_PROJECT_VERSION`, `CFBundleVersion`, Fastlane lane mutation | Must monotonically increase for App Store Connect. |
-| Minimum iOS | Swift packages and project deployment target | Current packages target iOS 17. Confirm this with the device support policy. |
+| Minimum iOS | Swift packages and project deployment target | The packages and the app target iOS 17; the ID Provider extension targets iOS 26.0. Confirm this with the device support policy. |
 | Category | `INFOPLIST_KEY_LSApplicationCategoryType` | Review App Store category and public-sector distribution needs. |
 
 Recommended:

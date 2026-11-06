@@ -1132,7 +1132,7 @@ Registrations are reconciled against wallet storage after every operation that a
 - Extension target has `EudiReferenceWalletIDProvider.entitlements` assigned.
 - `SHARED_APP_GROUP_IDENTIFIER` is present for all extension configurations.
 - Main app and extension resolve to the same runtime keychain access group.
-- On iOS 26.2 and later, registered CBOR documents appear in the extension request flow.
+- On iOS 26.0 and later, registered CBOR documents appear in the extension request flow.
 - The extension asks for the PIN or biometrics before it shows a request, and again on Accept.
 - The requester is shown without the verified badge and with the warning that its identity could not be
   verified; Accept waits for its acknowledgement. `DcApiHandler` returns no reader trust verdict (see GO_LIVE).

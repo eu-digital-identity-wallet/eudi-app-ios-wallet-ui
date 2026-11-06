@@ -50,7 +50,7 @@ The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.co
 - ISO18013-5 (proximity presentation)
  
 - ISO/IEC 18013-7 Annex C over the Digital Credentials API (presentation to apps and websites), through the
-  Identity Document Provider extension, on iOS 26.2 and later
+  Identity Document Provider extension, on iOS 26.0 and later
  
 - OpenID4VCI v1 (issuing)
  
@@ -119,7 +119,7 @@ replace before launch.
 ### Minimum device requirements
 
 - Any device that supports iOS 17.0
-- Presentation to apps and websites through the Digital Credentials API needs iOS 26.2 or later. To stop apps and
+- Presentation to apps and websites through the Digital Credentials API needs iOS 26.0 or later. To stop apps and
   websites from requesting the wallet's documents, turn off "Allow document requests from apps and websites
   (DC API)" in Settings.
 
