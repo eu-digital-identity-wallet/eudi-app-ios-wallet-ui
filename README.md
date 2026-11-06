@@ -160,7 +160,9 @@ You will also need to download the EUDI Verifier app. More information can be fo
 1. Go to the "Dashboard" screen, navigate to the "Documents" tab, and tap the "+" icon (top-right of the screen). Select "Scan QR".
 2. Scan the QR code from the issuer's website [EUDI Issuer](https://issuer.eudiw.dev/credential_offer). Use the
    issuer of your build variant (Demo: issuer.eudiw.dev or issuer-backend.eudiw.dev; Dev: ec.dev.issuer.eudiw.dev or
-   dev.issuer-backend.eudiw.dev); an offer from any other issuer is refused.
+   dev.issuer-backend.eudiw.dev); an offer from any other issuer is refused. On the dev issuer's page keep
+   "By value" under "Credential Offer": its offers passed by address ("By reference") come from another host
+   (backend.dev.issuer.eudiw.dev), which the wallet refuses.
 3. Review the documents included in the credential offer and tap "Issue".
 4. In the web view that appears, select "Country Selection", then "FormEU", and tap "Submit".
 5. Fill in the form. Any data will suffice, but selecting a birth date over 18 is recommended, as it is required for certain app functionalities (e.g., RQES).
