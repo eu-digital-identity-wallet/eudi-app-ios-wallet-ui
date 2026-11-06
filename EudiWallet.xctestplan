@@ -74,6 +74,27 @@
     },
     {
       "target" : {
+        "containerPath" : "container:Modules\/logic-core",
+        "identifier" : "logic-core-tests",
+        "name" : "logic-core-tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-assembly",
+        "identifier" : "logic-assembly-tests",
+        "name" : "logic-assembly-tests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Modules\/logic-storage",
+        "identifier" : "logic-storage-tests",
+        "name" : "logic-storage-tests"
+      }
+    },
+    {
+      "target" : {
         "containerPath" : "container:Modules\/logic-ui",
         "identifier" : "logic-ui-tests",
         "name" : "logic-ui-tests"

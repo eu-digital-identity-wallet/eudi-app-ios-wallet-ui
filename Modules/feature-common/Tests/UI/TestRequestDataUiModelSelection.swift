@@ -78,6 +78,54 @@ final class TestRequestDataUiModelSelection: EudiTest {
     }
     XCTAssertNil(supportingText(of: group.expanded.first))
   }
+
+  func testRequestsUserImage_whenADocumentHasAPictureOfTheHolder_thenIsTrue() {
+    let models = [requestDataUiModel(rows: [pictureRow(isSelected: false)], userImageItemIds: ["portrait-id"])]
+
+    XCTAssertTrue(models.requestsUserImage())
+  }
+
+  func testRequestsUserImage_whenNoDocumentHasOne_thenIsFalse() {
+    let models = [requestDataUiModel(rows: [row(title: "Family name")])]
+
+    XCTAssertFalse(models.requestsUserImage())
+    XCTAssertFalse(models.sharesUserImage())
+  }
+
+  func testSharesUserImage_whenThePictureIsSelected_thenIsTrue() {
+    let models = [
+      requestDataUiModel(rows: [row(title: "Family name"), pictureRow(isSelected: true)], userImageItemIds: ["portrait-id"])
+    ]
+
+    XCTAssertTrue(models.sharesUserImage())
+  }
+
+  func testSharesUserImage_whenThePictureIsUnticked_thenIsFalse() {
+    let models = [
+      requestDataUiModel(rows: [row(title: "Family name"), pictureRow(isSelected: false)], userImageItemIds: ["portrait-id"])
+    ]
+
+    XCTAssertFalse(models.sharesUserImage())
+  }
+
+  func testSharesUserImage_whenTheClaimsAreDisclosedAsAWhole_thenIsTrue() {
+    let models = [requestDataUiModel(rows: [pictureRow(isSelected: nil)], userImageItemIds: ["portrait-id"])]
+
+    XCTAssertTrue(models.sharesUserImage())
+  }
+
+  func testSharesUserImage_whenThePictureIsInAGroup_thenItsSelectionCounts() {
+    let group: ExpandableListItem<DocumentElementClaim> = .nested(
+      .init(
+        collapsed: .init(groupId: "group", mainContent: .text(.custom("Group"))),
+        expanded: [pictureRow(isSelected: true)],
+        isExpanded: false
+      )
+    )
+    let models = [requestDataUiModel(rows: [group], userImageItemIds: ["portrait-id"])]
+
+    XCTAssertTrue(models.sharesUserImage())
+  }
 }
 
 private extension TestRequestDataUiModelSelection {
@@ -87,8 +135,35 @@ private extension TestRequestDataUiModelSelection {
     return data.collapsed.supportingText
   }
 
-  func requestDataUiModel(rows: [ExpandableListItem<DocumentElementClaim>]) -> RequestDataUiModel {
-    .init(section: .init(id: "doc-id", title: "Document", listItems: rows))
+  func requestDataUiModel(
+    rows: [ExpandableListItem<DocumentElementClaim>],
+    userImageItemIds: Set<String> = []
+  ) -> RequestDataUiModel {
+    .init(section: .init(id: "doc-id", title: "Document", listItems: rows), userImageItemIds: userImageItemIds)
+  }
+
+  /// The portrait row: with a checkbox in the given state, or none (`nil`) when the claims are disclosed as a whole.
+  func pictureRow(isSelected: Bool?) -> ExpandableListItem<DocumentElementClaim> {
+    .single(
+      .init(
+        collapsed: .init(
+          groupId: "portrait-id",
+          mainContent: .text(.custom("value")),
+          overlineText: .custom("Portrait"),
+          trailingContent: isSelected.map { .checkbox(true, $0, { _ in }) } ?? .empty
+        ),
+        domainModel: .primitive(
+          id: "portrait-id",
+          title: "Portrait",
+          documentId: "doc-id",
+          nameSpace: "nameSpace",
+          path: ["nameSpace", "portrait"],
+          type: .mdoc,
+          value: .string("value"),
+          status: .available(isRequired: false)
+        )
+      )
+    )
   }
 
   func row(

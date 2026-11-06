@@ -57,7 +57,7 @@ struct DashboardView<Router: RouterHost>: View {
             viewModel.viewState.historyTab.eraseToAnyView()
           }
         },
-        revokedDocuments: viewModel.viewState.revokedDocuments,
+        blockedDocuments: viewModel.viewState.blockedDocuments,
         onDocumentDetails: { viewModel.onDocumentDetails(documentId: $0) }
       )
     }
@@ -78,20 +78,19 @@ private struct DashboardViewContainer: View {
   @Binding var selectedTab: SelectedTab
   @Binding var isRevokedModalShowing: Bool
   let tabView: (SelectedTab) -> AnyView
-  let revokedDocuments: [String: String]
+  let blockedDocuments: [String: String]
   let onDocumentDetails: (String) -> Void
 
   var body: some View {
     content()
       .sheetDialog(isPresented: $isRevokedModalShowing) {
         VStack(spacing: .zero) {
-
           ContentTitleView(
             title: .revokedModalTitle,
             caption: .revokedModalDescription
           )
 
-          revokedNotificationList()
+          notificationList(for: blockedDocuments)
         }
       }
   }
@@ -142,14 +141,16 @@ private struct DashboardViewContainer: View {
     }
   }
 
+  /// One row per document, keyed by its identifier and sorted by name, so two documents with the same name are both
+  /// listed; a tap opens its details. `documents` maps each document's identifier to its name.
   @MainActor
   @ViewBuilder
-  private func revokedNotificationList() -> some View {
+  private func notificationList(for documents: [String: String]) -> some View {
     VStack(spacing: SPACING_SMALL) {
-      ForEach(revokedDocuments.sorted(by: >), id: \.key) { key, value in
+      ForEach(documents.sorted { ($0.value, $0.key) < ($1.value, $1.key) }, id: \.key) { documentId, name in
 
         HStack {
-          Text(.custom(key))
+          Text(.custom(name))
             .typography(Theme.shared.font.bodyLarge)
             .foregroundColor(Theme.shared.color.primaryLabel)
 
@@ -163,7 +164,7 @@ private struct DashboardViewContainer: View {
         .background(Theme.shared.color.groupedBackground)
         .clipShape(.rect(cornerRadius: 8))
         .onTapGesture {
-          onDocumentDetails(value)
+          onDocumentDetails(documentId)
         }
       }
     }
@@ -181,7 +182,7 @@ private struct DashboardViewContainer: View {
       selectedTab: .constant(.home),
       isRevokedModalShowing: .constant(false),
       tabView: { _ in EmptyView().eraseToAnyView() },
-      revokedDocuments: [:],
+      blockedDocuments: [:],
       onDocumentDetails: { _ in }
     )
   }

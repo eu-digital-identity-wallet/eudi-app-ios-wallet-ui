@@ -140,6 +140,7 @@ Use this checklist before the first production release.
 | Deep links | All inbound URI schemes, redirect URIs, hosts, and parameters are validated and threat-modeled. |
 | Presentation relay risk | Relay attack risk is documented, verifier compensating controls are defined, and residual risk is accepted for each presentation scenario. |
 | Logs | Production logs do not include PID, credentials, tokens, request objects, signatures, keys, or user decisions. |
+| Screen capture | `ConfigUiLogic.hideContentWhileCaptured` is true, so recording, mirroring, sharing and the app switcher card show a cover, over the ID Provider extension's screens too; screenshots cannot be blocked. See [Screenshots, Screen Recording, And Sensitive UI](#screenshots-screen-recording-and-sensitive-ui). |
 | App hardening | Apple App Attest/DeviceCheck, commercial protection, or a manual RASP strategy is implemented and connected to backend risk policy. |
 | MASVS | Controls are mapped to evidence and tested with static, dynamic, and manual security testing. |
 | Privacy | DPIA, data minimization, retention, telemetry, consent, privacy manifest, App Store privacy labels, and privacy notice are complete. |
@@ -155,14 +156,14 @@ The application is a modular iOS project. Important modules and targets for prod
 | `EudiReferenceWalletIDProvider` | Identity Document Provider extension for Digital Credentials API presentment on supported iOS versions. |
 | `logic-core` | WalletKit integration, issuer configuration, presentation, document issuance, document registration, revocation, transaction logging. |
 | `logic-business` | Global app config, build variant parsing, RQES config, Keychain controller, preferences, Bluetooth and shared helpers. |
-| `logic-authentication` | PIN storage provider, PIN controller, biometric controller, PIN throttle/lockout, authentication configuration. |
-| `logic-storage` | SwiftData storage for bookmarks, transactions, revoked documents, and failed reissuance data. |
+| `logic-authentication` | PIN storage provider, PIN controller, biometric controller, PIN throttle/lockout, session lock (`SessionController`), factory reset (`WalletResetController`), authentication configuration. |
+| `logic-storage` | SwiftData storage for bookmarks, transactions, revoked, suspended and unrecognised documents, status refresh failures, and failed reissuance data. |
 | `logic-api` | `URLSession` provider and network request helpers. |
 | `logic-analytics` | Optional analytics provider integration. |
 | `logic-resources` | Strings, images, theme, localized resources. |
-| `logic-ui` | Shared SwiftUI components, deep-link parsing, scanner, request UI. |
-| `logic-assembly` | Dependency injection graph and app routing assembly. |
-| `feature-*` | User-facing flows for startup, dashboard, issuance, presentation, proximity, and common features. |
+| `logic-ui` | Shared SwiftUI components, navigation, deep-link parsing and handling, interaction tracking for the idle lock, the screen-capture cover (`ScreenCaptureController`). |
+| `logic-assembly` | Dependency injection graph, app routing assembly, and the session lock's scene driver (`SessionLockController`). |
+| `feature-*` | User-facing flows for startup, dashboard, issuance, presentation, proximity, and common features; `feature-common` holds the QR scanner and the request screens. |
 | `logic-test` / `feature-test` | Shared test utilities, mock generation helpers, and test fixtures; not included in production targets. |
 | `fastlane` | Test, versioning, archive, TestFlight/App Store upload, tagging, and GitHub release automation. |
 
@@ -200,30 +201,40 @@ Keep these files under strict review:
 | File | Why it matters |
 | --- | --- |
 | `Wallet/Config/*.xcconfig` | Defines build type, build variant, changelog URL, and other compile-time values consumed by the plist and config logic. |
-| `Wallet/Wallet.plist` | Defines build metadata, URL schemes, Team ID, encryption export flag, and app-level plist values. |
+| `Wallet/Wallet.plist` | Defines build metadata, URL schemes, encryption export flag, and app-level plist values. |
 | `EudiReferenceWallet.xcodeproj/project.pbxproj` | Defines schemes, build configurations, bundle identifiers, signing style, provisioning profiles, app display name, usage descriptions, and extension settings. |
 | `EudiWallet.entitlements` | Defines main app Keychain Sharing, App Groups, and Identity Document Provider mobile document types. |
 | `EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements` | Defines extension App Groups and Keychain Sharing through `SHARED_APP_GROUP_IDENTIFIER`. |
-| `EudiReferenceWalletIDProvider/DocumentProviderExtension.swift` | Extension entry point for Identity Document Provider requests. |
+| `EudiReferenceWalletIDProvider/DocumentProviderExtension.swift` | Extension entry point for Identity Document Provider requests; starts the screen-capture cover for its screens. |
 | `EudiReferenceWalletIDProvider/Domain/DI/LogicIDPModule.swift` | Initializes `DcApiHandler` with shared service name and Keychain access group. |
 | `Modules/logic-business/Sources/Config/ConfigLogic.swift` | Parses app build type and build variant, exposes app behavior toggles, RQES config, and Keychain config. |
 | `Modules/logic-business/Sources/Config/RQESConfig.swift` | Defines QTSP/RSSP, TSA, OAuth client, redirect URI, hash algorithm, and RQES logging behavior. |
 | `Modules/logic-core/Sources/Config/WalletKitConfig.swift` | Main WalletKit production configuration: issuers, OpenID4VP, trust anchors, document categories, logging, revocation, and issuance rules. |
 | `Modules/logic-core/Sources/Config/WalletProviderAttestationConfig.swift` | Defines the wallet provider attestation host. |
 | `Modules/logic-core/Sources/Controller/WalletKitController.swift` | Constructs `EudiWallet`, wires WalletKit config, starts presentation, issuance, revocation, logging, and document registration. |
+| `Modules/logic-core/Sources/Worker/RevocationWorkManager.swift` | Status-list results: revoked, suspended, unrecognised, cleared, and refresh failures (`RevocationRecordUpdate`). |
 | `Modules/logic-authentication/Sources/Storage/KeychainPinStorageProvider.swift` | Defines PIN hashing, salt, PBKDF2 iteration count, and constant-time comparison. |
-| `Modules/logic-authentication/Sources/Config/AuthenticationConfig.swift` | PIN lockout policy (max failed attempts, escalating lockout durations). |
-| `Modules/logic-authentication/Sources/Storage/KeychainPinThrottleProvider.swift` | Keychain-persisted PIN failure counter, lockout level, lockout window timestamps; clock-rollback detection. |
-| `Modules/logic-business/Sources/Controller/KeyChainController.swift` | Defines Keychain service, access group, accessibility class, and biometric Keychain validation. |
-| `Modules/logic-storage/Sources/Config/StorageConfig.swift` | Defines SwiftData store location, App Group container selection, and local storage schema. |
+| `Modules/logic-authentication/Sources/Controller/SystemBiometryController.swift` | Biometric unlock: the policy evaluated on a fresh `LAContext` and the Keychain probe read with it. |
+| `Modules/feature-startup/Sources/Interactor/StartupInteractor.swift` | The start-up gate: login, PIN creation only for a wallet without documents, or an error. |
+| `Modules/logic-core/Sources/Storage/StoredDocumentPresence.swift` | Start-up's document check: queries wallet-storage's `pdoc` Keychain items; must change with the storage service. |
+| `EudiReferenceWalletIDProvider/UI/Authorization/RequestAuthorizationViewModel.swift` | The extension's PIN or biometric check before a request is shown and again on Accept. |
+| `Modules/logic-authentication/Sources/Config/AuthenticationConfig.swift` | PIN lockout policy (max failed attempts, escalating lockout durations), the session lock's timeouts, the weak-PIN list (`commonPins`) and whether a device passcode is required (`requireDeviceSecure`). |
+| `Modules/logic-authentication/Sources/Controller/SessionController.swift` | The session lock: unlocked by login or PIN creation, locked again after time in the background or idle. |
+| `Modules/logic-assembly/Sources/Controller/SessionLockController.swift` | Drives the lock from the scene: background, return, links, the idle check, and login after a lock. A lock, whatever caused it, also ends a running presentation, so a proximity session does not outlive its screens. |
+| `Modules/logic-ui/Sources/Controller/UserInteractionController.swift` | What counts as interaction for the idle lock: touches in the app's windows, text input, VoiceOver focus. |
+| `Modules/logic-ui/Sources/Config/ConfigUiLogic.swift` | The UI settings: the protected-flow and login routes, the screens that cover the wallet (`coveringScreenModules`), the holder-picture claims, and the screen-capture cover (`hideContentWhileCaptured`). |
+| `Modules/logic-ui/Sources/Controller/ScreenCaptureController.swift` | The screen-capture cover: a window above the wallet's, or the ID Provider extension's, while the scene is recorded, mirrored or shared, or not active (app switcher), when `hideContentWhileCaptured` is true. |
+| `Modules/logic-authentication/Sources/Storage/KeychainPinThrottleProvider.swift` | Keychain-persisted PIN failure counter, lockout level, and the lockout on the monotonic clock and boot session. |
+| `Modules/logic-business/Sources/Controller/KeyChainController.swift` | Keychain access with its accessibility class, and the biometric probe. The service name and access group come from `Bundle+Extensions.swift` and are worked out once in `ConfigLogicImpl.keyChainConfig`. |
+| `Modules/logic-storage/Sources/Config/StorageConfig.swift` | Defines SwiftData store location, App Group container selection, and local storage schema, and excludes the store's folder from backup (`StorageConfigImpl.storeURL`). |
 | `Modules/logic-api/Sources/Provider/NetworkSessionProvider.swift` | Defines the shared network session used by app network calls. |
 | `Modules/logic-analytics/Sources/Config/AnalyticsConfig.swift` | Defines analytics provider configuration. |
-| `.github/workflows/*.yml` | Defines SAST, SCA, and secret scanning workflows. |
+| `.github/workflows/*.yml` | Defines the SAST workflow (`sonar.yml`, SonarCloud). No SCA or secret-scanning workflow is included; `security/gitleaks/gitleaks.toml` holds secret-scanning rules for a pipeline that adds one. |
 | `security/gitleaks/gitleaks.toml` | Defines local secret scanning rules. |
 | `fastlane/Fastfile` | Defines iOS test, versioning, archive, upload, tag, and release lanes. |
 | `Modules/logic-resources/Sources/Resources/Color.xcassets` | Brand color palette (light and dark appearances) and system/semantic color overrides. See [THEMING.md](THEMING.md). |
 | `Modules/logic-resources/Sources/Resources/Images.xcassets` | In-app brand logos and illustrations used on the splash and headers. |
-| `Wallet/Assets.xcassets` | Per-variant app icons (`AppIcon`, `AppIconDev`) and the global `AccentColor`. |
+| `Wallet/Assets.xcassets` | Per-variant app icons (`AppIcon`, `AppIconDev`) and an `AccentColor` set. The app target names it as the global accent (`ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME`); it is empty, so the system default applies until it is filled in. |
 
 ## Create A Production Scheme And Configuration
 
@@ -370,10 +381,10 @@ Production identity values must be final before external testing.
 | Extension bundle identifier | Extension target `PRODUCT_BUNDLE_IDENTIFIER` | Use a child identifier of the main app, for example `eu.example.wallet.EudiReferenceWalletIDProvider`. |
 | App display name | `INFOPLIST_KEY_CFBundleDisplayName` | Use the official wallet name approved for the Member State or wallet provider. |
 | App icon | Asset catalogs and target settings | Replace reference assets with production brand assets. |
-| Apple team | `DEVELOPMENT_TEAM`, `APP_TEAM_ID`, App Store Connect | Use the production Apple Developer Program team. |
+| Apple team | `DEVELOPMENT_TEAM`, App Store Connect | Use the production Apple Developer Program team. |
 | Version | `MARKETING_VERSION`, Fastlane lane mutation | Use the approved public versioning scheme. |
 | Build number | `CURRENT_PROJECT_VERSION`, `CFBundleVersion`, Fastlane lane mutation | Must monotonically increase for App Store Connect. |
-| Minimum iOS | Swift packages and project deployment target | Current packages target iOS 17. Confirm this with the device support policy. |
+| Minimum iOS | Swift packages and project deployment target | The packages and the app target iOS 17; the ID Provider extension targets iOS 26.0. Confirm this with the device support policy. |
 | Category | `INFOPLIST_KEY_LSApplicationCategoryType` | Review App Store category and public-sector distribution needs. |
 
 Recommended:
@@ -397,7 +408,7 @@ Surfaces to review before release:
 | Color palette (light and dark) | `Modules/logic-resources/Sources/Resources/Color.xcassets` | Brand colorsets plus system/semantic overrides; add an `accent` colorset. Set both appearances and verify contrast. |
 | Typography and fonts | `Modules/logic-resources/Sources/Resources/` (+ a `WalletFontConfig.plist` you add) | Default is the system font (San Francisco). No font files or `WalletFontConfig.plist` ship by default; add them only if your brand requires a custom face. |
 | Shapes | `Modules/logic-resources/Sources/Manager/ShapeManager.swift` | Corner radii. |
-| In-app logos | `Modules/logic-resources/Sources/Resources/Images.xcassets` (`logo`, `EUDI-text`, illustrations) | Used on the splash and content headers; keep the imageset names. |
+| In-app logos | `Modules/logic-resources/Sources/Resources/Images.xcassets` (`logo`, `logo-eu-digital-indentity-wallet`, illustrations) | Used on the splash and content headers; keep the imageset names. |
 | App icon | `Wallet/Assets.xcassets` — `AppIcon` and `AppIconDev` | One per build variant. |
 | Splash / launch screen | in-app `StartupView` (`logo` on `background`) and the OS launch screen (`INFOPLIST_KEY_UILaunchScreen_Generation`) | The generated launch screen is blank by default. |
 | Status bar and toolbars | `Modules/logic-ui/Sources/Config/ConfigUiLogic.swift` | Per-screen toolbar background map. |
@@ -444,8 +455,11 @@ Signing checks:
 
 ```bash
 codesign -d --entitlements :- build/EudiWalletProd.xcarchive/Products/Applications/EudiWallet.app
-codesign -d --entitlements :- build/EudiWalletProd.xcarchive/Products/Applications/EudiWallet.app/PlugIns/EudiReferenceWalletIDProvider.appex
+codesign -d --entitlements :- build/EudiWalletProd.xcarchive/Products/Applications/EudiWallet.app/Extensions/EudiReferenceWalletIDProvider.appex
 ```
+
+The Identity Document Provider is an ExtensionKit extension, so it is embedded under `Extensions/`,
+not `PlugIns/`.
 
 Archive the output as release evidence.
 
@@ -490,6 +504,7 @@ Example production environment variables:
 | `APP_TAG` | Tag namespace or brand segment. |
 | `APP_BUNDLE_ID` | Production main app bundle identifier. |
 | `APP_PROVISION_PROFILE` | Main app distribution provisioning profile name. |
+| `APP_IPA_PATH` | IPA that the `upload_appstore` lane passes to `pilot`. |
 | `APP_EXTENSION_BUNDLE_ID` | Identity Document Provider extension bundle identifier. |
 | `APP_EXTENSION_PROVISION_PROFILE` | Extension distribution provisioning profile name. |
 | `CONNECT_KEY_ID` | App Store Connect API key ID. |
@@ -499,8 +514,9 @@ Example production environment variables:
 | `CONNECT_ITC_TEAM_ID` | App Store Connect team ID. |
 | `CONNECT_TEAM_NAME` | Developer team name. |
 | `CONNECT_TEAM_ID` | Developer team ID. |
-| `TESTFLIGHT_GROUPS` | Comma-separated TestFlight groups. |
+| `TESTFLIGHT_GROUPS` | Comma-separated TestFlight groups. Passed to `pilot`, which ignores them because the upload lane does not wait for build processing (see `fastlane/USAGE.md`). |
 | `PROD_REMOTE_REPO` | Optional remote used to push production tags. |
+| `DEV_REMOTE_REPO` | Optional second remote that receives the same tag. The `upload_tag` lane sets `origin` to each of these URLs in turn and does not restore it. |
 | `GITHUB_RELEASE_REPO` | Optional GitHub release repository. |
 | `GITHUB_RELEASE_TOKEN` | Optional token used to create GitHub releases. |
 
@@ -527,12 +543,15 @@ For the complete lane usage notes, see [../fastlane/USAGE.md](../fastlane/USAGE.
 
 ## Dependency Governance
 
-* Use released versions, not snapshots or branch dependencies, unless formally approved.
+* Use released versions, not snapshots or branch dependencies, unless formally approved. BluetoothKit is the one
+  exception in the reference app (see below): approve its pinned commit formally or replace the library.
 * Subscribe to security advisories for WalletKit, RQES UI, OpenID4VCI, OpenID4VP, ISO18013
   libraries, Wallet Storage, KeychainAccess, BluetoothKit, Swinject, and the Swift/Xcode toolchain.
 * Keep a dependency update SLA.
 * Keep `Package.resolved` committed and reviewed.
-* Avoid branch dependencies for production unless the commit is pinned and approved.
+* Avoid branch dependencies for production unless the commit is pinned and approved. The reference app has none:
+  BluetoothKit has no release Swift Package Manager can use (its last tag, 0.4.0, predates its `Package.swift`), so
+  `logic-business` pins it to a commit with `revision:`. Move that revision only after reviewing the new commits.
 * Generate and archive an SBOM for every release.
 * Run SCA before each release.
 * Review all transitive dependencies used by WalletKit, RQES, DC API, cryptography, parsing, and UI.
@@ -556,10 +575,11 @@ protocol WalletKitConfig: Sendable {
   var trustConfiguration: TrustConfiguration { get }
   var userAuthenticationRequired: Bool { get }
   var keyOptions: KeyOptions? { get }
-  var logFileName: String { get }
+  var logFileName: String? { get }
   var documentsCategories: DocumentCategories { get }
   var transactionLogger: TransactionLogger { get }
   var revocationIntervalSeconds: TimeInterval { get }
+  var workerStopTimeoutSeconds: TimeInterval { get }
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
   var trustMarkSource: TrustMarkSource { get }
 }
@@ -601,7 +621,7 @@ Production meaning:
 | `trustConfig` | Trust configuration (`TrustConfiguration`) for reader / issuer validation: ETSI LoTE trust sources, verification-context mappings, static fallback anchors, and trust policies. Passed as a separate `EudiWallet` argument, not inside `EudiWalletConfiguration`. | Replace demo LoTE endpoints and fallback anchors with production trust anchors, and review `defaultPolicy` / `statusTrustPolicy` before go-live. |
 | `deviceAuthMethod` | Device authentication method used by WalletKit. | Current value is `.deviceSignature`; confirm with WalletKit and assurance policy. |
 | `uiCulture` | Locale passed to WalletKit. | Confirm supported locales and fallback behavior. |
-| `logFileName` | WalletKit log file name. | Disable or heavily redact production logs unless support policy requires a controlled log export. |
+| `logFileName` | WalletKit log file name; `nil` outside debug builds (`WalletKitConfigImpl.logFileName(for:)`), so release builds write no file, delete one an earlier build left, and Settings offers no "Retrieve logs". wallet-kit logs authorization codes, access tokens and issued credentials to the file at `.info`. | Keep it off in production unless support policy requires a controlled log export, as on Android. |
 
 ### User Authentication For WalletKit Storage
 
@@ -666,7 +686,7 @@ Current app-level configuration points:
 
 | Configuration point | Purpose | When to change |
 | --- | --- | --- |
-| `ConfigLogic.keyChainConfig.documentStorageServiceName` | Keychain service name passed to WalletKit and the Identity Document Provider extension. | Change only through a planned migration, because it must remain stable across upgrades and extension access. |
+| `ConfigLogic.keyChainConfig.documentStorageServiceName` | Keychain service name passed to WalletKit, the start-up document check and the Identity Document Provider extension. | Change only through a planned migration, because it must remain stable across upgrades and extension access. |
 | `ConfigLogic.keyChainConfig.keychainAccessGroup` | Runtime Keychain access group used by the main app and extension. | Change when production entitlements, App Groups, or Keychain Sharing groups are finalized. |
 | `WalletKitConfig.userAuthenticationRequired` | Local authentication gate for WalletKit secure storage access. | Enable for LoA High PID and other high-assurance credentials unless an approved remote high-assurance hardware-backed design replaces local key use. |
 | `WalletKitConfig.keyOptions` | Per-issuance `KeyOptions` (curve, secure area, access protection, access control, key purposes) applied to attestation/proof keys created by `issueDocuments`, `issueDocumentsByOfferUrl`, `reIssueDocument`, `requestDeferredIssuance`, and `resumePendingIssuance`. | Set explicitly for production. For LoA High PID and high-assurance EAA/QEAA, require Secure Enclave (P-256) with appropriate `accessProtection` (e.g. `.whenUnlockedThisDeviceOnly`) and `accessControl` (e.g. `.requireUserPresence`), unless an approved remote high-assurance hardware-backed design replaces local key use. See [Attestation Key Options](#attestation-key-options-keyoptions). |
@@ -692,6 +712,8 @@ Production implementation rules:
 * Test custom storage or key-management behavior with device lock changes, biometric enrollment
   changes, app upgrade, app reinstall, backup/restore attempts, low-storage conditions, extension
   access, issuer reissuance, and revocation/status refresh.
+* A custom `DataStorageService` also needs its own start-up document check; see
+  [PIN Storage](#pin-storage).
 
 ### Attestation Key Options (`keyOptions`)
 
@@ -756,8 +778,8 @@ Production meaning:
 | --- | --- | --- |
 | `.x509SanDns` | Verifier client identity is bound to a DNS name in an X.509 certificate. | Use when verifier certificates and trust anchors are managed and audited. |
 | `.x509Hash` | Verifier identity is bound to a certificate hash. | Use when the verifier ecosystem requires hash-based certificate binding. |
-| `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add the production client ID, legal name and request-signing keys, and the request signing algorithm when it is not RS256. |
-| `supportedTransactionDataTypes` | OpenID4VP `transaction_data` types the wallet accepts. The OpenID4VP library rejects any request whose transaction data type is not listed; an empty list rejects every request that carries transaction data. The app accepts the CSC `https://cloudsignatureconsortium.org/2025/qes-approval` (`.qesApprovalRequest`) and `https://cloudsignatureconsortium.org/2025/qes` (`.qesRequest`) types. The same list is used to read the transaction data recorded in presentation logs. | Keep both QES types when supporting signing flows. Add another type only once the wallet can display it, since WalletKit exposes it as raw JSON and the app shows it as unavailable. |
+| `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add the production client ID, legal name and request-signing keys, and the request signing algorithm: ES256 for a Request Object fetched by `request_uri` (see the rules below). |
+| `supportedTransactionDataTypes` | OpenID4VP `transaction_data` types the wallet accepts. The OpenID4VP library rejects any request whose transaction data type is not listed; an empty list rejects every request that carries transaction data. The app accepts the CSC `https://cloudsignatureconsortium.org/2025/qes-approval` (`.qesApprovalRequest`) and `https://cloudsignatureconsortium.org/2025/qes` (`.qesRequest`) types. The same list is used to read the transaction data recorded in presentation logs. | Keep both QES types when supporting signing flows. Add another type only once the wallet can display it, since WalletKit exposes it as raw JSON, which the wallet cannot show, so the app declines the request (`WalletCoreError.transactionDataNotShown`). |
 | `validateRegistrationCertificate` | Whether the verifier's WRP registration certificate is validated during OpenID4VP. Set from `validateIssuerRegistrationCertificate`. | See [Registration Certificates: The Second Trust Layer](#registration-certificates-the-second-trust-layer). |
 
 If using preregistered verifiers, add the relevant import and production entries:
@@ -787,28 +809,68 @@ var vpConfig: OpenId4VpConfiguration {
 }
 ```
 
+`productionVerifierWebKeys` stands for the verifier's public request-signing keys, a `WebKeySet` that
+you define.
+
 Rules:
 
 * `webKeys` must hold the verifier's production request-signing public keys.
-* `jarSigningAlg` must match the algorithm the verifier signs its requests with. It defaults to RS256.
+* `jarSigningAlg` must match the algorithm the verifier signs its requests with. WalletKit 0.58.8 accepts only ES256
+  for a Request Object fetched by `request_uri`, so set `JWSAlgorithm(.ES256)`; the RS256 default works only for a
+  request passed by value.
 * `verifierLegalName` must be the official entity name shown to users.
 * `clientId` must match verifier registration and protocol profile.
 * Do not include development verifier URLs in production.
 * If a verifier is not trusted, the user interface must clearly show that status before disclosure.
+* WalletKit accepts a Request Object fetched with `request_uri_method=post` whether or not the verifier encrypts it,
+  and accepts ES256 signatures. The signature and the verifier's certificate are checked either way.
+  `OpenId4VpConfiguration.requiresJarEncryption` and `jarSigningAlgorithms` exist since WalletKit 0.57.3, but
+  WalletKit 0.58.8 does not apply them, so neither changes this, except that an empty `jarSigningAlgorithms` list
+  fails every request.
+* For an mdoc presentation, the session transcript binds the key that encrypts the response, whether or not the
+  verifier marks it with `use` (WalletKit 0.58.8 and later). OpenID4VP 1.0 does not require `use` on that key.
 
 When a presentation request includes transaction data for signing, each applicable option on the
-request screen shows a "Data to be signed" section below its requested data. Its initially
-collapsed "Signature details" row lists the trust framework once, then each transaction, numbered
-when there is more than one:
+request screen shows a "Data to be signed" section below its requested data. Its "Signature details" row is
+open when the screen appears and lists the trust framework (eIDAS) once, then each transaction, numbered when there
+is more than one, as on Android:
 
 * A QES approval shows the transaction type, signature type, requested credential query ids,
-  signing credential ID, number of signatures and, for each document, its label, location, expected
-  checksum and checksum algorithm, hash representation, hash, hash algorithm, signed attributes and
-  one-time password.
-* A QES request shows the transaction type, requested credential query ids and, for each signature
-  request, the document's label, location, expected checksum and checksum algorithm, signature
-  type, signature format, conformance level, signed attributes, one-time password and response URI.
-* Any transaction WalletKit cannot read as one of these types is shown as unavailable.
+  signing credential ID, number of signatures, locations, transaction-data hash algorithms and, for each document,
+  its label, location, expected checksum and checksum algorithm, hash representation, hash, hash algorithm, signed
+  attributes, circumstantial data, access mode and one-time password.
+* A QES request shows the transaction type, requested credential query ids, transaction-data hash algorithms and,
+  for each signature request, the document's label, location, expected checksum and checksum algorithm, signature
+  type, signature format, conformance level, signed envelope property, reference URI, circumstantial data,
+  signature algorithm and its parameters, signed attributes, access mode, one-time password and response URI. A
+  document carried in the request itself is shown as included, with its type and size; its content is not
+  rendered.
+* Every field WalletKit binds into the response is shown. History shows the same fields without one-time
+  passwords.
+* "Trust framework: eIDAS" is shown once, in both live requests and transaction history. It is a static product
+  label: it does not come from the transaction data and does not establish that the issuer, relying party, document
+  or signature has been verified.
+* The signed attributes carry the line "Chosen by the relying party; not checked by the wallet" in the warning
+  colour.
+* A request whose transaction data cannot be shown in full is declined with an explanation, never shown in part
+  (`PresentationInteractorImpl.canShowTransactionData`): an entry WalletKit cannot read, or an entry bound to a
+  document the consent screen does not show. Each option is checked against its own transaction data; an option
+  that is not offered, because its documents are blocked, is not checked. WalletKit 0.58.8 binds transaction data
+  to SD-JWT and mdoc documents alike.
+* When WalletKit itself cannot take a remote request (transaction data it cannot process, no document that satisfies
+  the query, a reader certificate whose authentication was required and not established), it sends the error to the
+  verifier's response endpoint, and the wallet then shows its error screen, or for the certificate the trust alert
+  (WalletKit 0.57.1 and later; the app has no setting for these). A request whose reader certificate is not trusted is
+  reported too, because WalletKit's `OpenId4VpConfiguration.errorDispatchPolicy` defaults to `.allClients`. The
+  reference app keeps the default; set `errorDispatchPolicy: .onlyAuthenticatedClients` in
+  `WalletKitConfigImpl.vpConfig` to withhold that report from a verifier that did not authenticate.
+* Back on the request screen declines a remote request (`RemoteSessionCoordinator.declineResponse`), unless the wallet
+  has already tried to send its response: after a failed send, whether WalletKit reported the failure, the verifier
+  rejected the response or the network failed, Back closes the request without a second answer, so the history keeps
+  the first result. A failure before anything left the device, or a WalletKit authentication prompt cancelled with
+  `userAuthenticationRequired` on (it is off), then leaves the verifier to its own timeout. After a failed send, Retry
+  on the error screen sends nothing (WalletKit has put the session in its error state); Share on the request screen
+  sends the response again, as in the upstream app.
 
 Where a document location is an HTTP(S) link, "Open document" opens it in the browser. These
 details are informational: sharing still uses the existing share flow, and WalletKit binds each
@@ -938,8 +1000,47 @@ Current registration behavior:
 
 * `WalletKitController` registers documents through `DocumentRegistrationManager`.
 * Registration is only attempted on iOS 26 and later where the Digital Credentials API is available.
+* iOS reports the app's authorisation as `notDetermined` until its first registration, even when "Allow on websites"
+  is on in Settings, and that first registration authorises it. The wallet therefore registers while the status is
+  `authorized` or `notDetermined`, and stops only on `notAuthorized` (the user turned it off) or `notSupported`
+  (`DocumentRegistrationManagerImpl.mayRegister(with:)`). Waiting for `authorized` meant a new install never
+  registered, and websites reported "no eligible IDs". While `notDetermined` the store is touched only to register a
+  document: reading its registrations in that state did not return on the simulator.
 * Only CBOR documents are registered (`document.docDataFormat == .cbor`).
-* Registrations are reconciled against storage rather than tracked incrementally, so a document deleted in the app is deregistered, and a registration left behind by an earlier build is removed on the next launch.
+* Registrations are reconciled against storage rather than tracked incrementally, so a document deleted in the app is deregistered, and a registration left behind by an earlier build is removed after login by a pass that runs in a task of its own once the dashboard has loaded the documents, so a slow registration store holds up neither the tabs nor the background checks. Passes run one at a time (`SerialCheckRunner`).
+* A document with a revocation record (revoked, suspended or unrecognised) is not registered, and the registrations are
+  updated whenever a revocation check stores or clears a record; when the records cannot be read nothing is
+  registered, as on Android. The extension also declines a request that would include such a document
+  (`RequestAuthorizationInteractor.loadRequestData`). See [Revocation And Status Checking](#revocation-and-status-checking).
+* Settings has a switch, "Allow document requests from apps and websites (DC API)", which is on by default and shown
+  only on iOS 26 and later. While it is off, nothing is registered and every registration is withdrawn when the user
+  turns it off (`Prefs.Key.offerDocumentsToApps`, on by default in `PrefsControllerImpl`). The extension declines a
+  request that still arrives, after the login and before any requested data is shown, and again on Accept, as Android
+  does.
+
+Current request handling:
+
+* The extension is a separate process and does not share the app's unlocked session. It therefore
+  asks for the wallet PIN or biometrics first, with the same screen as the app's login, and reads the
+  request's documents only after that. No requested value is shown before the user has authenticated.
+* Accept asks for the PIN or biometrics again before the response is sent.
+* The request is validated once, when it is loaded, so each request writes one history entry. Accept sends only the
+  documents and claims the sheet showed (`DocumentProviderSelection`), after reading their revocation records
+  again, and then completes that entry. Each document's claims are worked out from that document alone, and a
+  document with none of them is left out, so documents of the same type with different claims are each sent with
+  their own (`av-lib-ios-w3c-dc-api` 0.28.2 and `eudi-lib-ios-iso18013-data-transfer` 0.28.5). Before those versions,
+  one of two such documents could be sent in full. A request declined while it loads, after its validation, or one
+  the user rejects with the Reject button, is recorded as not completed, with the reason; once Accept or a decline has
+  recorded the outcome, Reject only closes the sheet. A sheet dismissed another way leaves the entry not completed,
+  without a reason.
+* The requester is shown without the verified badge and behind the warning "The identity of this
+  relying party could not be verified"; Accept stays disabled until the user acknowledges it, as on
+  Android. Without a website origin the requester gets the generic name, not the one in its
+  certificate. `DcApiHandler` validates no reader certificate chain and returns no trust verdict, so the
+  extension has nothing to badge. The interactor keeps the authority key identifier of the first
+  certificate in the request's reader-authentication chain on `AuthorizationUIModel` (empty when the
+  request carries none) for a trust-list lookup the reference app does not perform; only a real verdict
+  from such a lookup may set `isRelyingPartyVerified`.
 
 Production validation:
 
@@ -948,7 +1049,7 @@ Production validation:
 * Confirm the document is registered with the system.
 * Trigger a web presentment request.
 * Confirm the extension appears and can authorize or deny the request.
-* Delete or revoke the document and confirm registration is removed or no longer usable.
+* Delete the document and confirm its registration is removed; revoke or suspend it and confirm that its registration is withdrawn and that the extension declines a request for it.
 
 ## Trust Store
 
@@ -972,10 +1073,54 @@ var staticRootCertificates: [Data] {
 }
 ```
 
+`trustConfiguration` also decides how each check applies:
+
+* `defaultPolicy` governs the certificate that signs each issued document, validated against the
+  issuer trusted lists. `.enforce` refuses a document whose signer chain is not trusted: it is not
+  stored and the issuance fails. `.warning` stores the document anyway, and WalletKit does not report
+  the failure to the app. `docTypePolicies` sets the policy per doc type. The reference app enforces
+  for the PID only (`mDocPid` and `sdJwtPid`) and warns for every other attestation, because only the
+  PID doc types are classified (`contextTypeMappings`): a doc type with no verification context
+  cannot be validated, so enforcing it would refuse every issuance of it.
+* An SD-JWT whose header carries no `x5c` chain is not checked against the trusted lists, even under
+  `.enforce`. WalletKit takes the signing key from the issuer's published metadata by `kid` instead.
+  This holds for the SD-JWT PID as well.
+* `requireSignedMetadata: true` requires signed issuer metadata and validates its signing
+  certificate against the access-certificate list (`wrpacProviders`). It authenticates the metadata
+  document, not the certificate that signs the issued documents, which is the `defaultPolicy` check.
+  The app passes it to each issuer as `issuerMetadataPolicy`; see
+  [Issuer Configuration: `issuersConfig`](#issuer-configuration-issuersconfig).
+* `statusTrustPolicy` governs the signer of each status list, validated against the
+  access-certificate list. `.enforce` fails the status check when the signer is not trusted; the app
+  then records a refresh failure and the document keeps its last known state. `.warning`, the
+  reference value, accepts the list whatever its signer.
+* `revocationPolicy` (`PkixRevocationPolicy`) on `EtsiTrustSource` and on `StaticListTrustSource` decides whether
+  and how PKIX chain validation checks certificate revocation: `.disabled`, `.ocspOnly`, `.ocspPriority` (OCSP, then
+  CRL), `.crlOnly` or `.crlPriority` (CRL, then OCSP). Every policy other than `.disabled` needs a positive answer:
+  there is no soft-fail, so a chain whose revocation status cannot be obtained is not trusted. iOS checks revocation
+  in its own trust evaluation (the ETSI library sets a `SecPolicyCreateRevocation` policy), outside the app's
+  network session and App Transport Security. Unlike on Android, where the wallet refuses cleartext revocation
+  downloads, an `http://` OCSP or CRL address is not refused. The reference app sets `.disabled` on the
+  `EtsiTrustSource` for every build variant, and `.ocspOnly` on the fallback `StaticListTrustSource`, so a chain
+  the fallback validates needs a positive OCSP answer. That is what the fallback did before MdocSecurity 0.28.4;
+  the library default is now `.crlPriority`, so the policy is set explicitly. The CRL policies have not been
+  tested on a device.
+
 Production guidance:
 
 * Replace the demo LoTE endpoints in `trustConfiguration` with your production trusted-list locations.
-* Review `defaultPolicy`, `requireSignedMetadata`, and `statusTrustPolicy` for production assurance.
+* Set a `revocationPolicy` other than `.disabled` on the production `EtsiTrustSource`. `.disabled` suits only the
+  development trust lists. Choose the method your PKI serves: with `.ocspOnly` or `.ocspPriority`, every
+  certificate below a list entry, in every chain the wallet validates, must name an OCSP responder that answers for
+  it; with `.crlOnly` or `.crlPriority`, a CRL distribution point that can be fetched. Set the fallback's policy
+  explicitly as well, since a library update can change the default. Test issuance, presentation and the
+  registration checks with revocation on before release.
+* Keep the PID at `.enforce`. Classify every other doc type your trust framework covers and enforce
+  it too, or record why it stays at `.warning`.
+* Confirm that every SD-JWT PID issuer sends an `x5c` chain, since only then is the signer checked
+  against the trusted lists.
+* Keep `requireSignedMetadata` at `true`. Set `statusTrustPolicy` to `.enforce` once the status-list
+  signers of your issuers validate against the access-certificate list.
 * Keep `readerTrustPolicy` at `.enforce`, so an OpenID4VP request whose reader access certificate
   chain is not trusted is refused. `.warning` lets such a signed request proceed with an untrusted
   certificate.
@@ -1015,37 +1160,61 @@ The app treats the two directions differently, and the asymmetry is intentional:
   covers the credential being issued. A registration that fails validation, or that does not list
   the offered attestation, stops the flow on the "Issuance blocked" alert and reports it the same
   way an authentication failure does, because the distinction does not change what the user can do
-  about it. *When* it is caught depends on the flow. A credential offer is resolved before anything
-  is issued, so the offer screen already knows the issuer's registration and refuses up front. The
-  issuer-list flow has no such step — WalletKit validates that issuance's certificate as part of
-  issuing and only reports the outcome afterwards, and because it writes the documents to storage
-  before the app sees that outcome, the app deletes them itself when it refuses.
+  about it. Both flows refuse up front. A credential offer is resolved before anything is issued,
+  so the offer screen already knows the issuer's registration. The issuer-list flow asks for the
+  issuer's registration before it starts the issuance (`AddDocumentInteractorImpl.issueDocument`),
+  and so does a re-issue. A lookup that fails stops the flow: a trust failure as "Issuance blocked",
+  any other error as a failure the user can retry; it never reads as "no registration". WalletKit validates the certificate again as part of issuing and reports that outcome only after
+  it has written the documents to storage; the app checks it as a fallback and deletes the
+  documents itself when it refuses.
 * **Presentation warns rather than blocks.** A request whose registration could not be validated
   still reaches the consent screen, shown without the verified badge and behind a warning the user
-  must acknowledge before sharing. A request whose registration *is* verified but that reaches
+  must acknowledge before sharing. So does an OpenID4VP request that carries no registration
+  certificate (WalletKit 0.57.3 and later); its history entry records the registration as not
+  verified. A proximity request without one gets no registration warning, as WalletKit checks only a
+  certificate that is there. A request whose registration *is* verified but that reaches
   beyond the registered scope keeps the badge, marks each requested claim outside that scope as
   "Not registered data", and gates sharing behind the same acknowledgement. The acknowledgement is
   not remembered between requests. Access-certificate failures continue to block outright where the
-  protocol allows it.
+  protocol allows it. A proximity (BLE) reader that did not authenticate (no reader certificate, or
+  one that failed validation) is not refused: ISO/IEC 18013-5 makes reader authentication optional,
+  and WalletKit checks it only for OpenID4VP. It gets a warning of its own, "The identity of this
+  relying party could not be verified", ahead of any registration outcome and whatever
+  `validateIssuerRegistrationCertificate` says: no badge, the generic name instead of the one in its
+  certificate (a verified registration certificate still names it, as on Android), and Share disabled
+  until the user acknowledges it. The Android wallet shows the same warning
+  (`ACCESS_CERTIFICATE_NOT_TRUSTED`).
 
 Production requirements:
 
 * Set `wrprcProviders` to the production registration trusted list. It is the only trust source for
   this layer.
-* Keep `validateIssuerRegistrationCertificate` enabled, and confirm every production issuer
-  publishes `issuer_info`. An issuer that publishes none never reaches the validation hook, so no
+* Turn `validateIssuerRegistrationCertificate` on, and confirm every production issuer publishes
+  `issuer_info`. An issuer that publishes none never reaches the validation hook, so no
   registration is established and the app refuses; enabling this against such an issuer fails every
-  issuance. The setting defaults to off and governs presentation too, so leaving it off ships a
-  wallet that neither refuses an unregistered issuer nor shows a verifier's registration.
-* Keep `wrprcVciTrustPolicy` at `.enforce`. It decides whether a failed WRPRC check refuses the
-  issuance — under `.warning` such an issuance proceeds and the app stores the document. Leave
-  `wrprcVpTrustPolicy` at `.warning`: presentations are required to reach the consent screen behind
-  an acknowledgement rather than terminate.
+  issuance. The value is the user switch "Check Registration Certificates" in Settings, kept in
+  UserDefaults and off by default (`WalletKitConfigImpl` reads it from `PrefsController`); a change takes effect after
+  the app restarts, as the app and WalletKit's presentations both use the value read at launch. It
+  governs presentation too, so leaving it off ships a wallet that neither refuses an unregistered
+  issuer nor shows a verifier's registration. Decide whether the switch stays reachable: any user
+  can turn the check off. Returning `true` from
+  `WalletKitConfigImpl.validateIssuerRegistrationCertificate` and removing the switch is the
+  stricter choice.
+* Keep `wrprcVciTrustPolicy` at `.enforce`. With the registration check on, the app refuses an
+  issuance unless the registration is verified, whatever the policy
+  (`WalletKitController.makeIssuerRegistration`, the same rule as the Android wallet's
+  `isBlockedForIssuance`): any warning refuses, and so does a registration that was never
+  established, such as a certificate that cannot be decoded. `.warning` therefore lets no such
+  failure through. Leave `wrprcVpTrustPolicy` at `.warning`:
+  presentations are required to reach the consent screen behind an acknowledgement rather than
+  terminate.
 * Confirm each issuer's registered scope actually covers what it offers, before release. An issuer
   authenticated but not registered for a credential it issues is refused at runtime.
-* Note what neither policy covers: a status list that cannot be retrieved is always a warning and
-  never a refusal on its own. Still confirm the status endpoints of your issuers are as available as
-  the issuers themselves, since an unreachable list means revocation goes unnoticed.
+* WalletKit reports a registration certificate's status list that cannot be retrieved only as a
+  warning, under either policy. The app refuses an issuance on any such warning, so an unreachable
+  status list stops the issuance on the "Issuance blocked" alert; on presentation it is a warning
+  the user acknowledges. Confirm the status endpoints of the registration certificates are as
+  available as the issuers themselves.
 * Test both directions: a party on the registration list succeeds; one that is absent, expired, or
   out of scope is refused on issuance and warned about on presentation.
 
@@ -1061,6 +1230,34 @@ narrower question — the issuer's badge reflects its registration alone, since 
 carries no reader authentication to combine it with.
 
 ## Issuer Configuration: `issuersConfig`
+
+Credential offers are accepted only from the issuers in `issuersConfig` (`OfferIssuer`; the link is checked before
+anything is fetched). An offer that carries itself in the link must name a configured issuer as its
+`credential_issuer`, written exactly as its `credentialIssuerURL`; an offer passed by address must be fetched over
+`https` from a configured issuer's origin. Any other offer is refused with "This offer comes from an issuer that
+this wallet is not set up to use", as on Android, because wallet-kit would otherwise give an unknown issuer the
+first configured issuer's client settings. The link is read with the OpenID4VCI library's own parser
+(`CredentialOfferRequest(urlString:)`), as on Android, so the wallet checks the offer the library will use: a link
+whose offer parameter is not written in lower case, is given more than once, or is empty is refused. To accept an
+issuer's offers, add a `VciConfig` entry for it to `issuersConfig` in the build variants that need it. The wallet
+fetches an offer passed by address itself, through the app's session, and the issuer that offer names as its
+`credential_issuer` must be configured too, compared exactly (`WalletKitControllerImpl.checkedOfferLink(for:)`, for
+the resolution and the issuance alike). An offer that cannot be fetched or read fails with WalletKit's "Credential
+offer from server cannot be trusted." WalletKit then gets the offer by value, so it does not fetch it again and
+contacts no issuer the wallet is not set up to use, and the issuance uses the offer that was checked. The Android
+wallet compares the same issuer once Wallet Core has resolved the offer, by which time Wallet Core has fetched that
+issuer's metadata. The fetched offer may name a configured issuer other than the one whose origin served it, and
+redirects are followed; the Android wallet does the same. The OpenID4VCI library does not compare the metadata's
+`credential_issuer` with the issuer it was fetched from; with `requireSignedMetadata` on, the signed metadata's
+`sub` must name that issuer, and a trusted access certificate must sign it.
+
+When an issuer issues only some of the documents of an offer, the success screen names the ones not added
+(`DocumentSuccessUIConfig.notIssuedDocumentNames`), as on Android; the cause wallet-kit reports is not shown.
+WalletKit 0.58.0 and later returns the documents it stored together with the ones that failed; before, the first
+failure failed the whole issuance, and the wallet showed an error although documents had been stored. The
+"Add document" flow does the same for its combined PID entry, which asks for every PID format at once: a format the
+issuer did not issue is named, found by the configuration identifier each issued document records
+(`AddDocumentInteractorImpl.notIssuedConfigIds`).
 
 Current demo/dev code contains issuer URLs such as (two per build variant — a primary at `order: 1`
 and a backend at `order: 0`):
@@ -1085,11 +1282,19 @@ case .PROD:
       config: .init(
         credentialIssuerURL: "https://issuer.pid.example.eu",
         clientId: "wallet-prod",
-        keyAttestationsConfig: .init(walletAttestationsProvider: walletKitAttestationProvider),
+        keyAttestationsConfig: .init(
+          walletAttestationsProvider: walletKitAttestationProvider,
+          popKeyOptions: KeyOptions(
+            secureAreaName: SecureEnclaveSecureArea.name,
+            accessControl: .empty
+          )
+        ),
         authFlowRedirectionURI: URL(string: "eu.example.wallet://authorization")!,
         parUsage: .required(authorizationCodeDPoPBinding: true),
         allowPlainJwtProof: false,
         requireDpop: true,
+        issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
+        validateRegistrationCertificate: validateIssuerRegistrationCertificate,
         encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
       ),
       order: 0
@@ -1101,13 +1306,16 @@ case .PROD:
 | --- | --- | --- |
 | `credentialIssuerURL` | Base URL of an OpenID4VCI credential issuer. | Your production issuer base URL. It must expose valid issuer and authorization metadata. |
 | `clientId` | Wallet client identifier known to the issuer or authorization server. | Use the registered production wallet client ID. |
-| `keyAttestationsConfig` | Wallet/key attestation provider used during issuance. | Use the production wallet attestation provider. |
+| `keyAttestationsConfig` | Wallet/key attestation provider used during issuance. `popKeyOptions` keeps the client-attestation proof-of-possession key in the Secure Enclave; without it WalletKit creates a software key. | Use the production wallet attestation provider, and keep `popKeyOptions`. |
 | `authFlowRedirectionURI` | Redirect URI used after authorization. | Must match production URL scheme registration and issuer client registration. |
 | `parUsage` | Pushed authorization request (PAR) usage policy. Use `.required(authorizationCodeDPoPBinding:)` to require PAR, optionally binding the authorization code to DPoP. | Prefer `.required(authorizationCodeDPoPBinding: true)` where the production profile requires PAR with sender-constrained authorization codes. |
 | `allowPlainJwtProof` | Credential proof policy. `false` (default) is HAIP-compliant: only attested proofs are sent (`attestation`, or `jwt` with a Wallet Provider key attestation). `true` additionally accepts plain `jwt` proofs (ES256/ES384/ES512) without key attestation, so the proof key is no longer attested. | Keep `false`. Set `true` only for a specific issuer that does not support key attestation, after a documented risk decision. |
 | `requireDpop` | Whether DPoP is required. | Prefer `true` where the production profile requires sender-constrained tokens. |
+| `issuerMetadataPolicy` | Signed-metadata policy. `trustConfiguration.issuerMetadataPolicy` requires signed issuer metadata whose signer validates against the access-certificate list (`wrpacProviders`), since `requireSignedMetadata` is `true`. WalletKit's default, `.ignoreSigned`, accepts unsigned metadata. | Keep `trustConfiguration.issuerMetadataPolicy`. |
+| `validateRegistrationCertificate` | Whether the issuer's registration certificate is validated during issuance. WalletKit's default is `false`. | Pass `validateIssuerRegistrationCertificate`; see [Registration Certificates: The Second Trust Layer](#registration-certificates-the-second-trust-layer). |
 | `encryptionSupportConfig` | Credential request and response encryption. With `credentialResponseEncryptionPolicy: .supported` (wallet-kit's default) the wallet encrypts whenever the issuer's metadata advertises encryption, and otherwise exchanges plain JSON over TLS; `.required` refuses an issuer that does not support encryption. `ecConfig`, `rsaConfig` and `supportedEncryptionMethods` restrict key types and methods. | Prefer `.required` where the production profile mandates encrypted credential responses and every production issuer supports them. |
 | `order` | Display/order preference for scoped issuance. | Use deterministic ordering approved by product owners. |
+| `logoOrigins` | Origins, besides the issuer's own, that this issuer's logo may load from (`IssuerLogoOrigins`); default none. | List only the origins your issuer serves its logo from. See [CONFIGURATION.md](CONFIGURATION.md). |
 
 Rules:
 
@@ -1195,14 +1403,30 @@ Current code configures `documentIssuanceConfig` with:
 * PID document-specific options (`documentSpecificCredentialOptions`): `credentialPolicy: .oneTimeUse`.
 * Current Demo PID batch size: `10`.
 * Current Dev PID batch size: `60`.
+* The combined PID entry of "Add document" issues every PID format with one set of options
+  (`WalletKitController.issueDocuments`), so keep the options of `mDocPid` and `sdJwtPid` the same. WalletKit's
+  `DocumentIssuanceConfiguration` (0.58.7 and later) takes options per document, if they have to differ.
 * Background reissuance rule (`reIssuanceBackgroundRule`):
   * `backgroundIntervalSeconds: 300`
+
+The revocation and re-issuance workers start when the dashboard first opens, after login or PIN
+creation, never at launch; see [Revocation And Status Checking](#revocation-and-status-checking).
+
+`.rotateUse` with `batchSize: 1`, the default for every document type other than the PID, gives a document one
+credential and one device key for its whole validity. Every presentation of it, to every verifier, carries the same
+issuer signature and is signed with the same device key, so verifiers who compare notes can link the presentations of
+a multi-year mDL or diploma to one holder. The app sets no maximum key age or presentation count of its own:
+`ReIssuanceWorkManager` re-issues a `.rotateUse` document only by its remaining validity and a `.oneTimeUse` document
+only by its remaining unused credentials, with thresholds from the document's stored credential options, else the
+configuration's, else a default, and no floor or ceiling of the wallet's own. Nothing rotates keys after a suspected
+compromise. The issuer's `validUntil` is the effective bound on a device key's life.
 
 Production decisions:
 
 | Decision | Guidance |
 | --- | --- |
-| Credential policy | Align with issuer policy, privacy goals, and verifier ecosystem. |
+| Credential policy | Align with issuer policy, privacy goals, and verifier ecosystem. Where presentations must not be linkable, prefer `.oneTimeUse` with a batch over `.rotateUse` with `batchSize: 1`, which reuses one device key for the whole validity. |
+| Key lifetime | Decide whether the wallet needs a maximum key age or presentation count besides the issuer's `validUntil`; the reference app enforces neither. |
 | Batch size | Use the smallest value that supports expected offline or high-availability needs. |
 | Reissuance threshold | Choose values that avoid user disruption without excessive unused credential material. |
 | Background behavior | Confirm iOS background execution constraints and user consent. |
@@ -1234,6 +1458,76 @@ var revocationIntervalSeconds: TimeInterval {
   300
 }
 ```
+
+The revocation and re-issuance workers start when the dashboard first opens, after login or PIN
+creation, and the documents are loaded at the same point. Start-up loads none, and a presentation link
+opened before login is kept without starting its session (see
+[Deep Links And Redirect URIs](#deep-links-and-redirect-uris)). The first revocation check
+runs 30 seconds after the workers start, and later checks follow every `revocationIntervalSeconds`.
+WalletKit (0.58.4 and later) keeps each status list it has verified, per address and while the app runs, until the
+list's `ttl` or `exp` ends. A check within that time reads the kept list, so a change of status shows once the list
+is fetched again, not at the next check. A list that cannot be fetched or verified is not kept.
+Only the factory reset calls `WalletWorkScheduler.stop()`; otherwise the workers run until the process ends. A
+failed reset starts them again at once, and after a reset they start with the dashboard, after the next login. The
+scheduler (`schedule()`, `scheduleRevocationCheck(afterReIssueOf:)`, `stop()`) is the only way to reach them, as the
+work managers are internal to `logic-core`. If an integrator calls `stop()` and then `schedule()` after the first
+revocation check, the next revocation check waits the full interval; the re-issuance worker always waits 30 seconds
+after a start, then `backgroundIntervalSeconds`. The workers are tasks in the app's process; iOS background
+execution is not used.
+
+How the check treats what a status list reports (`RevocationWorkManager.checkRevocation()`):
+
+The rules are the Android wallet's (`RevocationRecordUpdate`, Android's `revocationUpdateFor`):
+
+* An Invalid status stores the document as revoked. A revocation is permanent: no later status
+  clears or changes it.
+* A Suspended status stores the document as suspended, unless it is already revoked. A later Valid
+  clears the suspension, and a later Invalid turns it into a revocation.
+* A status value the wallet cannot interpret (application-specific or reserved) stores the document
+  as unrecognised, unless it is already revoked. A later Valid clears it; a later Invalid or Suspended
+  records that status. A record stored before the status was kept counts as unrecognised too, so the
+  next check that reads the document's status replaces or clears it.
+* Every record blocks the document. A revoked, suspended or unrecognised document is left out of
+  remote and proximity presentations; if the records cannot be read, the request fails rather than
+  offer a blocked document. The Digital Credentials API registrations leave them out; the extension declines a
+  request that would include one, when it loads and again on Accept, and declines when the records cannot be read
+  (`WalletKitController.reconcileRegistrations`, `DocumentProviderPolicy.checkRequest`). The documents list,
+  the details screen and the issuer card show a suspended document as suspended and the others as
+  revoked; the list's "Revoked" filter lists all of them.
+* When the records cannot be read, the documents tab shows every document as revoked, as the sharing flows refuse.
+* The dashboard notice, "Revoked or suspended documents", lists only the documents a check blocks for
+  the first time. A change from one blocked status to another (suspended to revoked) refreshes the
+  screens without a new notice.
+* **Re-issue** is disabled for a blocked document, and a manual re-issue that reaches
+  `DocumentDetailsInteractor.reIssueDocument` for one, for example a document blocked while its details
+  are open, is refused before the issuer is contacted ("The issuer has revoked or suspended this
+  document, so it cannot be reissued."). A document whose records cannot be read is also stopped before the issuer
+  is contacted, with the read error and Try again. The background
+  re-issuance worker skips blocked documents: a re-issued copy would get a new identifier and no record,
+  which would undo the block. If the records cannot be read, that round re-issues nothing.
+  `WalletKitController.reIssueDocument` checks again just before it asks the issuer, for a document
+  blocked after the worker chose it. Closing the refusal reloads the details, so the card shows the
+  block. If the original is blocked while a re-issue is already under way (the issuer's sign-in), the
+  re-issue still completes, as the issuer chose to issue; the revocation check then runs at once
+  (`WalletWorkScheduler.scheduleRevocationCheck(afterReIssueOf:)`), so the new copy's own status is read without waiting
+  for the interval. The background worker does the same after each renewal, and so does the documents tab when a
+  deferred re-issuance delivers its credential. The check runs only if the original had a record, and not while the
+  checks are stopped. The Android wallet applies the same rules.
+* A renewed document, manual or background, keeps the original's bookmark, as on Android.
+* Deleting a document deletes its revocation record, refresh failure, bookmark and failed re-issuance record
+  (`WalletKitControllerImpl.deleteRecords(of:)`, as Android's `deleteDocumentRecords`); its history stays. A
+  re-issued or deferred original loses its records too, but a re-issued original keeps its revocation record until
+  the check after the re-issue has read it.
+* A background re-issuance that cannot renew a document leaves a failed re-issuance record
+  (`FailedReIssuedDocument`): the document's issuer card opens by itself and says "The wallet could not
+  renew this document automatically. Use Reissue document to try again." Each background round replaces
+  the records.
+* A status that cannot be fetched leaves that document's record as it is, and the check goes on with
+  the other documents. The document gets a refresh-failure record (`StatusRefreshFailure`): its issuer
+  card opens by itself and says "The document's status could not be refreshed. The state shown is from
+  the last successful check." The next check that fetches the status removes the record. A failure
+  does not block the document. If the stored records or the failure records cannot be read, the check
+  changes nothing.
 
 Production decisions:
 
@@ -1287,7 +1581,12 @@ Production rules:
 * If the QTSP requires confidential-client behavior, place secret-bearing operations on a backend.
 * Register production redirect URIs with the QTSP/authorization server.
 * Use a production-specific URI scheme.
-* Confirm `includeRevocationInfo` with the signing policy and QTSP.
+* Confirm `includeRevocationInfo` with the signing policy and QTSP. With `true`, a B-LT or B-LTA signature makes
+  the app fetch the CRLs and the OCSP response itself (`rqes-csc-swift`'s `PodofoManager`, through
+  `URLSession.shared`), where App Transport Security refuses plain `http`. Every CRL distribution point and OCSP
+  address in the signing and timestamp certificates must then be an `https://` URL: a CRL of the signing chain
+  that cannot be fetched stops the signature, and an OCSP response that cannot be fetched is left out of it. The reference flow signs
+  at rqes-kit's default level, B-B, which fetches neither.
 * Disable verbose logs in production.
 * Test success, cancellation, network failure, expired authorization, and rejected signing flows.
 
@@ -1374,10 +1673,53 @@ Production guidance:
 * Reject malformed, oversized, unexpected, or cross-flow URLs.
 * Threat-model same-device flows, QR flows, browser redirects, and extension flows.
 
+How the reference app handles a wallet link (`DeepLinkController.handleDeepLinkAction`):
+
+* Before login, and while the wallet is locked, the link is kept for after login and starts nothing. A
+  presentation link starts its session only when it is opened after login, just before its request
+  screen is shown. The kept link lives in memory, for the current process only: a link received before
+  the app was killed does not open at the next launch. When the app returns, the session lock's timeout
+  is applied before the link is looked at.
+* While the wallet is logged in, a presentation, signing or credential-offer link that arrives away from
+  the dashboard ends the flow on screen: the wallet returns to the dashboard, which opens the link. A
+  wallet without documents returns to the add-document screen for an offer. A presentation or an offer in
+  progress, proximity included, is not replaced in place, and the flow that was ended does not resume.
+  The Android wallet behaves the same way, with one exception iOS does not need: an OpenID4VP link that
+  arrives while an issuance screen or document details is open is handled there as the issuance's own
+  presentation (`DYNAMIC_PRESENTATION`). On iOS, wallet-kit hands that presentation to the issuance
+  inside the app, without a link.
+* An offer whose transaction code has no length, a length outside 4 to 6 digits, or text input is refused
+  with the transaction-code error (`DocumentOfferInteractor.processOfferRequest`).
+* Each presentation screen works on the session its route carries (`PresentationInteractorImpl`,
+  `ProximityInteractorImpl`); a session started later cannot take its place.
+* Back on a request screen ends that presentation only: a remote request sends the decline, and a proximity
+  request stops its Bluetooth session, so the reader can no longer read from the wallet
+  (`BaseRequestViewModel.declineRequest()`).
+* The verifier's `redirect_uri` after a presentation is never treated as a wallet link: the success screen
+  opens it in the browser only if it is an `https` link with a host (`URL.openInBrowser(using:)`,
+  `URL.isHttpsWebLink`), and returns to the dashboard either way. A credential-offer, OpenID4VP, RQES or
+  any other redirect opens nothing. The Android wallet applies the same rule. A presentation made during
+  an issuance is the exception: its redirect is kept to resume the issuance
+  (`storeDynamicIssuancePendingUrl`), nothing opens, and the success screen returns to the issuance
+  screen.
+* A link of no wallet type is dropped, locked or not, as on Android: `DeepLink.Action.parseType`
+  returns nil for it, so the wallet neither opens it nor keeps it. The app registers custom schemes only
+  and no associated domains, so iOS delivers none today; a deployment that adds associated domains must
+  add a route for its own links.
+* An `rqes` link counts only when its host and path are a signing service's callback
+  (`authFlowRedirectionURI` in `RQESConfig`, `rqes://oauth/callback` in the reference build), as Android matches the
+  RQES host; any app can open a custom scheme, so anything else on it is dropped (`DeepLinkControllerImpl.hasDeepLink`).
+  A deployment that changes the redirect URI's host or path changes it there only; a new scheme must also be
+  registered in the first `CFBundleURLTypes` entry of `Wallet.plist` and must contain `rqes`, since the scheme is
+  matched with `retrieveSchemas(with: "rqes")`.
+
 Files to review:
 
 * `Wallet/Wallet.plist`
-* `Modules/logic-ui/Sources/Controller/DeepLinkController.swift` (the `DeepLink.Action` enum and `parseType(with:and:)` scheme parsing)
+* `Modules/logic-ui/Sources/Model/DeepLink.swift` (the `DeepLink.Action` enum and its `parseType(with:and:)` scheme parsing) and `Modules/logic-ui/Sources/Controller/DeepLinkController.swift` (what each link does before and after login)
+* `Modules/logic-ui/Sources/Extension/URL+Extensions.swift` (`openInBrowser`) and
+  `Modules/logic-business/Sources/Extension/URL+Extensions.swift` (`isHttpsWebLink`)
+* `Modules/logic-assembly/Sources/Controller/SessionLockController.swift` (the timeout applied before a link is handled)
 * Issuance and presentation interactors that consume parsed deep links.
 
 ## Entitlements, Plist Values, And Permissions
@@ -1404,18 +1746,34 @@ before App Store submission, and keep declarations aligned with App Store privac
 
 ## Network Security
 
-The app uses `URLSession.shared` through:
+The app uses one ephemeral `URLSession` that keeps no cookies and no response cache, also handed to WalletKit
+(`NetworkSessionProviderImpl.makeConfiguration()`):
 
 ```text
 Modules/logic-api/Sources/Provider/NetworkSessionProvider.swift
 ```
+
+A cookie one relying party sets is therefore never sent to another through that session. Three paths sit outside it,
+and the app cannot change them:
+
+* WalletKit 0.58.8 fetches an SD-JWT issuer's keys, when the credential carries no `x5c` chain, with
+  `URLSession.shared`.
+* WalletKit's sign-in sheet for issuers (`ASWebAuthenticationSession` in `OpenId4VciService`) is not ephemeral, so
+  it shares Safari's cookies: an issuer can recognise the browser across issuances, and the wallet's reset does not
+  clear them.
+* The RQES library (`rqes-csc-swift` 0.10.0, `HTTPService`) calls the QTSP with `URLSession.shared`, whose cookies
+  and response cache the app shares; the reset clears both.
+
+These are residuals for the WalletKit and RQES library teams.
 
 iOS App Transport Security applies to `URLSession` connections by default. Production must keep TLS
 validation strict.
 
 Production rules:
 
-* Use HTTPS for issuers, verifiers, wallet provider, QTSP, TSA, changelog, and analytics endpoints.
+* Use HTTPS for issuers, verifiers, wallet provider, QTSP, TSA, changelog, and analytics endpoints, and for the
+  CRL and OCSP addresses the RQES library fetches inside the app (see [RQES Configuration](#rqes-configuration)).
+  Trusted-list revocation checks run in iOS's own trust evaluation instead (see [Trust Store](#trust-store)).
 * Do not add trust-all `URLSessionDelegate` logic to production.
 * Do not disable ATS globally.
 * Avoid broad `NSExceptionDomains`; any exception must be documented, justified, and time-bounded.
@@ -1444,8 +1802,9 @@ Production storage includes:
 * SwiftData local store.
 * UserDefaults values.
 * App Group container data.
-* WalletKit log file.
-* Transaction and revoked document records.
+* WalletKit log file (debug builds only).
+* Transaction records, bookmarks, revocation records (revoked, suspended, unrecognised), status refresh failures and
+  failed re-issuance records.
 
 ### Keychain
 
@@ -1456,7 +1815,7 @@ keyChain = Keychain(
   service: service,
   accessGroup: accessGroup
 )
-.accessibility(.whenUnlocked)
+.accessibility(Self.accessibility) // .whenUnlockedThisDeviceOnly
 ```
 
 Biometric validation key:
@@ -1464,17 +1823,40 @@ Biometric validation key:
 ```swift
 .accessibility(
   .whenPasscodeSetThisDeviceOnly,
-  authenticationPolicy: [.biometryAny]
+  authenticationPolicy: [.biometryCurrentSet]
 )
 ```
 
+The item is written once, when the user turns biometric unlock on (`KeyChainController.storeBiometricProbe()`),
+or, on an install from before the binding, at its first biometric login (`Prefs.Key.biometricUnlockBound`).
+A biometric unlock has the system evaluate `.deviceOwnerAuthenticationWithBiometrics` on a new `LAContext`,
+then reads the item with the evaluated context, so the user sees one prompt. The unlock fails when the
+evaluation fails or returns `false`, or when the item cannot be read (`SystemBiometryController`,
+`KeyChainController`). After a fingerprint or face is added or removed, `.biometryCurrentSet` makes the item
+unreadable, so the PIN is needed until the user turns biometric unlock off and on again. The prompt offers no
+device-passcode button (`localizedFallbackTitle` is empty): the wallet PIN is the fallback.
+
+`.whenUnlockedThisDeviceOnly` keeps every item `KeyChainController` writes, the PIN salt, hash and
+iteration count and the PIN lockout state included, in backups only under a key bound to this device: they can be
+restored only to the same device, so the salt and hash never reach another device and the 6-digit PIN cannot be
+searched offline elsewhere. Items an earlier build wrote as
+`.whenUnlocked` move to the new class at the next start
+(`KeyChainControllerImpl.moveItemsFromThePreviousClass`); while the device is locked the move fails, and the next
+Keychain read, at the latest the PIN check at login, tries again. wallet-storage writes its own items as `.whenPasscodeSetThisDeviceOnly`.
+
 Production decisions:
 
-* Confirm the default Keychain accessibility class.
-* Consider `ThisDeviceOnly` classes where migration/backup is not allowed.
+* Keep `KeyChainControllerImpl.accessibility` a `ThisDeviceOnly` class, so the PIN record and the
+  lockout state can be restored only to the same device.
 * Confirm whether Keychain items should survive device restore.
-* Confirm behavior when the device passcode is removed.
-* Confirm behavior when biometric enrollment changes.
+* Confirm behavior when the device passcode is removed. iOS then deletes every Keychain item kept
+  `.whenPasscodeSetThisDeviceOnly`: wallet-storage's documents and their keys, and the biometric probe. The PIN record
+  (`.whenUnlockedThisDeviceOnly`) stays, so the login screen shows the passcode warning and the user logs in to a
+  wallet without documents (the transaction history stays); with `requireDeviceSecure` login is refused until a
+  passcode is set. Biometric login fails until a passcode is set again and the user turns biometric unlock off and on
+  in Settings. This follows Apple's documented rule for that class; confirm it on a device.
+* After a change in biometric enrolment, biometric unlock fails and login needs the PIN until the user turns it off
+  and on again (see Biometric enrollment change); confirm this suits policy.
 * Confirm app and extension Keychain sharing.
 
 ### PIN Storage
@@ -1488,9 +1870,38 @@ Current PIN storage uses:
 * Constant-time comparison.
 * Keychain storage for salt, hash, and iteration count.
 
+The start-up gate fails closed:
+
+* A Keychain read that fails is reported (`KeyChainError.readFailed`), never taken for a missing PIN.
+  The start-up screen then shows an error with "Try again" instead of PIN creation.
+* PIN creation is offered only when the PIN record is absent and the Keychain holds no document.
+  Start-up loads no document: it asks the Keychain whether wallet-storage keeps a document item in any
+  status, deferred included, reading neither its attributes nor its data (`StoredDocumentPresence`). With
+  documents present, or when that check fails, the app shows an error instead. The check reads
+  wallet-storage's `KeyChainStorageService` item layout; an integrator who supplies another
+  `DataStorageService` must replace it. Otherwise the check finds nothing and start-up offers PIN
+  creation over existing documents.
+  The reference app offers no recovery from that state other than reinstalling. The Keychain survives
+  an uninstall; on the first launch after a reinstall the app deletes every document and its own
+  Keychain items (`StartupInteractor.manageStorageForFirstRun()`).
+* `setPin` writes the salt, hash and iteration count with their status checked. When a write fails it
+  puts back the previous record, or removes the partial one, and reports the error; the PIN screen
+  shows it. If putting the previous record back fails as well, all three items are removed; that
+  removal reports no error, so a failure there can still leave a mix. The three writes are not one
+  transaction. A process killed between them while the first PIN is set leaves a partial record,
+  which the gate treats as no PIN. Killed during a PIN change, after the salt and before the hash,
+  it leaves the new salt beside the old hash: a complete record that no PIN matches, so the user is
+  locked out until biometrics unlock the wallet or it is reinstalled.
+
 Production tasks:
 
-* Confirm PIN length, complexity, and retry UX.
+* Confirm PIN length, complexity, and retry UX. PINs that are easy to guess are refused (one digit repeated,
+  ascending or descending runs, `AuthenticationConfig.commonPins`), and an empty PIN is never stored; decide whether
+  setup and login need a device passcode (`requireDeviceSecure`, off by default, which only warns). Changing the PIN
+  of a set-up wallet does not need the passcode, as on Android (`QuickPinInteractor.updatePin`). The setup screen and
+  the login screen (the ID Provider extension's too) check the passcode again whenever the app comes back. While a
+  passcode is required, PIN entry stays disabled, and at login Face ID or Touch ID is refused as well. See
+  CONFIGURATION.
 * Consider binding PIN verification to a hardware-backed key operation (Secure Enclave) for additional defense in depth.
 * Benchmark PBKDF2 iterations on the slowest supported device.
 * Consider memory-hard KDF options if supported by your platform/security policy.
@@ -1502,16 +1913,20 @@ Failure counting and lockout are handled separately by `PinThrottleController` �
 
 ### PIN Throttle And Lockout
 
-The reference implementation includes an escalating client-side lockout enforced by `PinThrottleController` and persisted in the iOS Keychain via `KeyChainController` (using the shared App-Group access group, so the main app and the document-provider extension share state). Policy is configured through `AuthenticationConfig` (see [CONFIGURATION.md#pin-throttle-configuration](CONFIGURATION.md#pin-throttle-configuration)).
+The reference implementation includes an escalating client-side lockout enforced by `PinThrottleController` and persisted in the iOS Keychain via `KeyChainController` (in the Keychain access group the main app and the document-provider extension share, `$(AppIdentifierPrefix)` followed by the main app's bundle identifier, so both see the same state). Policy is configured through `AuthenticationConfig` (see [CONFIGURATION.md#pin-throttle-configuration](CONFIGURATION.md#pin-throttle-configuration)).
 
 Persisted state keys (`KeychainPinThrottleProvider.KeyIdentifier`):
 
 * `pinFailedAttempts` — current consecutive failure counter (`Int`, stored as `String`).
 * `pinLockoutLevel` — monotonic counter indexing `AuthenticationConfig.pinLockoutDurations` (`Int`, stored as `String`).
-* `pinLockoutStartedAt` — wall-clock timestamp (`Date().timeIntervalSince1970`) when the current lockout began. Used for clock-rollback detection.
-* `pinLockoutEndsAt` — wall-clock timestamp when the current lockout ends.
+* `pinLockoutStartedAtUptime` — the monotonic clock (`MonotonicClock.now()`, which counts sleep and ignores the date
+  and time settings) when the current lockout began.
+* `pinLockoutDuration` — the length of the current lockout, in seconds.
+* `pinLockoutBootSession` — the boot the lockout began in (`MonotonicClock.bootSessionIdentifier`).
+* `pinLockoutStartedAt`, `pinLockoutEndsAt` — wall-clock values of earlier builds, removed at the next successful PIN
+  or biometric authentication (`recordSuccess()`).
 
-The values are stored as Strings in the Keychain (e.g. `"3"`, `"1762345678.123"`). The Keychain item accessibility class follows `KeyChainController`'s default (`.whenUnlocked`), which means the values are readable only while the device is unlocked and are excluded from iCloud backup under the standard Keychain backup rules.
+The values are stored as Strings in the Keychain (e.g. `"3"`, `"812345.123"`). The Keychain item accessibility class follows `KeyChainController`'s default (`.whenUnlockedThisDeviceOnly`): the values are readable only while the device is unlocked, and a backup can restore them only to the same device; see [Keychain](#keychain).
 
 Default policy (`AuthenticationConfigImpl`):
 
@@ -1522,11 +1937,15 @@ Default policy (`AuthenticationConfigImpl`):
 | 3 more failures after that | Third lockout: 5 minutes. |
 | Each subsequent batch of 3 failures | 5 minutes (last list entry reused). |
 | Successful PIN or biometric authentication | Counters and lockout level reset. |
-| App kill or device reboot | Lockout window persists (wall-clock based). |
-| Device clock rolled back | Detected via stored start timestamp; user remains locked for the full duration. |
-| App reinstall | State is wiped together with app data. Require re-enrollment unless secure backup/recovery is explicitly implemented. |
+| App kill | Lockout window persists. |
+| Device reboot during a lockout | The lockout begins again in full: the monotonic clock restarts at boot. |
+| Device date or time changed | No effect: the lockout runs on the monotonic clock, so moving the date forward does not end it early. |
+| Keychain read fails | Counts as a lockout of the longest configured duration, never as extra attempts. |
+| Lockout over, then device reboot | No new lockout once the wallet has seen it end (the PIN screen counting down to it, or a PIN entered after it), which clears it and keeps its level; otherwise the reboot begins it again in full. |
+| Update from a build with the wall-clock lockout | Ends a lockout in progress: those values are not read; the level is kept. An update between builds that use the monotonic clock keeps the lockout running. |
+| App reinstall | The state survives the uninstall, as the Keychain does; the first launch after a reinstall deletes it with the PIN and every document (`StartupInteractor.manageStorageForFirstRun()`). Require re-enrollment unless secure backup/recovery is explicitly implemented. |
 
-Lockout counters are persisted, not just held in UI state. The PIN input is disabled in both the login screen (`BiometryViewModel`) and the change-PIN validation step (`QuickPinViewModel`) while locked. The biometric icon on the login screen stays enabled during PIN lockout and acts as an escape hatch — a successful biometric authentication clears the throttle.
+Lockout counters are persisted, not just held in UI state. While locked, the PIN input is disabled wherever `BiometryViewModel` asks for the PIN (the login, the confirmations before sharing, the factory reset and the biometric unlock switch, and the ID Provider extension) and in the change-PIN validation step (`QuickPinViewModel`). The biometric icon on the login screen stays enabled during PIN lockout, except at login while a required passcode is missing, and acts as an escape hatch — a successful biometric authentication clears the throttle.
 
 Production gaps to address:
 
@@ -1535,7 +1954,6 @@ Production gaps to address:
 * Add server-side risk signals; the current lockout is purely client-side and is wiped by reinstall.
 * Add telemetry for lockout events without logging PIN values.
 * Combine with App Attest / DeviceCheck / RASP and server-side risk checks where applicable (see [App Attest, DeviceCheck, And App Hardening](#app-attest-devicecheck-and-app-hardening)).
-* Clock-rollback mitigation is best-effort; a fully tampered device with reset clock could still bypass parts of the wall-clock window.
 
 ### SwiftData Store
 
@@ -1547,12 +1965,56 @@ container identifier is built by `Bundle.getAppGroupIdentifier()` in
 return "group.\(mainAppBundleID)"
 ```
 
+The transaction history is a legal record. It has no retention limit and nothing deletes it automatically:
+removing a document leaves its entries in place. Entries go only through the per-entry deletion the user
+confirms, through the factory reset, and through the cleanup that drops an entry the app can no longer
+decode (`WalletKitController.fetchTransactionLogs`), as on Android. The store is read in batches of 100
+(`SwiftDataServiceImpl`), and the transactions tab reads it again only when the history changed: every write
+or deletion, by the app or the ID Provider extension, stores a fresh token in `Prefs.Key.transactionLogRevision`
+(`TransactionLogStorageController.retrieveRevision()`), and `TransactionTabInteractorImpl.fetchTransactions()` reuses
+its last read while that value is unchanged. The tab still holds the whole history in memory, because its
+filters, search and date range work over all entries.
+
+**Transaction log contents.** WalletKit produces each history entry in the TS10 model (`TransactionEntry`, from
+`eudi-lib-ios-iso18013-data-model`), and the app stores it as JSON in the store's `TransactionLog` table. The log
+records the relying party, the attestation types and the identifiers of the attributes requested and presented, never
+their values; this is the rule the ARF and the Implementing Acts set for it (HLR.64, HLR.65 and IA.34, as the security
+review maps them). With WalletKit 0.58.8:
+
+* a presentation entry records the requested and presented claims as attestation type (mdoc `docType` or SD-JWT VC
+  `vct`) and claim paths, without values, and the relying party's details WalletKit has for it: name, identifier,
+  contacts, intermediary, purpose, privacy policy, registrar and data protection authority;
+* the entry also records the transaction data the request carried, decoded and otherwise unchanged
+  (`transactionalData`). For a signing request this includes document labels, locations, hashes, any one-time password
+  for document access and the whole content of a document carried in the request. History shows the same fields
+  without the one-time passwords;
+* issuance entries record the attestation types, the number of credentials requested and issued, and the issuer.
+  Signing entries, written by the RQES library, record the signing service, the signing certificate's identifier, the
+  document's name and size, and its digest (DTBSR).
+
+Beside each presentation entry the app records whether the relying party's registration was verified
+(`registrationCheck`); WalletKit does not keep it in the entry.
+
+The store has no explicit file-protection class: nothing in the project sets one, so iOS's default applies
+(`completeUntilFirstUserAuthentication`). The file is encrypted at rest and readable from the first unlock after a
+restart, by the app and by the ID Provider extension, which shares the App Group container. Rows carry no integrity
+tag.
+
 Production tasks:
 
 * Confirm which data is stored in SwiftData.
 * Confirm whether the store is in the shared App Group container.
-* Apply file protection where required.
-* Exclude sensitive files from backup if policy requires it.
+* Apply file protection to every store that holds personal data, the transaction history included: set the class
+  explicitly instead of relying on iOS's default, and confirm that the ID Provider extension and the background checks
+  can still open the store under it.
+* Decide whether one-time passwords and documents carried inline belong in the transaction log at all for your
+  deployment.
+* The store's folder is excluded from iCloud backup and device-to-device transfer (`isExcludedFromBackup`, set by
+  `StorageConfigImpl.storeURL`), as the Android wallet's backup rules exclude its data. A restore is expected to
+  bring back no document: wallet-storage keeps documents and their keys as `.whenPasscodeSetThisDeviceOnly`, a class
+  iOS leaves out of backups. On the same device the PIN record returns, so the user logs in to an empty wallet
+  without history and issues the documents again. Confirm this with an encrypted backup and restore on a device
+  before release.
 * Define migration behavior before release.
 * Test upgrade from previous production builds.
 * Test extension access to shared data.
@@ -1562,22 +2024,87 @@ Production tasks:
 Current preferences include:
 
 * `biometryEnabled`
-* `cachedDeepLink`
+* `biometricUnlockBound`
 * `runAtLeastOnce`
 * `language`
+* `batchCounter`
+* `validateIssuerRegistrationCertificate`
+* `trustMarkIntroductionCompleted`
+* `transactionLogRevision`
+* `walletResetGeneration`
+* `offerDocumentsToApps`
 
 Production rules:
 
 * Do not store tokens, credential payloads, PID attributes, private keys, or secrets in UserDefaults.
-* Treat cached deep links as sensitive if they may contain request details.
+* A link kept for after login lives in memory only. Earlier builds kept it under `cachedDeepLink`;
+  `DeepLinkControllerImpl` removes that value at start.
 * Clear transient values after use.
+
+### Factory Reset
+
+Settings offer "Reset wallet", as on Android. A confirmation lists what will be deleted, the PIN or biometrics
+confirm it, and a screen runs the reset (`WalletResetControllerImpl`, `logic-authentication`). In this order:
+
+1. The background checks stop (`WalletWorkScheduler.stop()`). A start of the checks already under way finishes
+   first and the checks are then stopped, as on Android. The reset waits for that start and for a check under way
+   for at most `WalletKitConfig.workerStopTimeoutSeconds` (30 s) in all, and fails without deleting anything if a
+   check is still running then, so a re-issuance cannot store a document halfway through. Once the stop has begun
+   no extra revocation check runs, and the checks cannot be scheduled again while the reset runs.
+2. WalletKit deletes every document, issued, deferred and pending, in up to two passes, and logs each deletion
+   before it returns; the Digital Credential API registrations are updated with it, also when a deletion
+   fails. The reset fails if the keychain still holds a document afterwards.
+3. The transaction history, then the bookmarks, revocation records, re-issuance failures and status refresh
+   failures; then the SwiftData store is erased and opened empty, so no deleted row stays readable in its
+   write-ahead log.
+4. The keychain: the app's keychain service, with the PIN salt, hash and lockout state and the biometric key, and
+   every generic-password and key item in the wallet's access group: document storage, the documents' keys that
+   WalletKit's secure areas keep there (`KeyChainSecureKeyStorage`), those of deferred documents included, and
+   WalletKit's DPoP keys, so an issuer cannot link the wallet before and after the reset
+   (`KeyChainController.clear()`).
+5. Every preference except `language`, `transactionLogRevision` and `walletResetGeneration`, so that onboarding
+   runs again; the two counters never go back. "Check Registration Certificates" returns to off, which WalletKit
+   applies at the next start.
+6. The app's Caches and temporary files, WalletKit's log file and the image cache among them, the cookies and the
+   URL cache, as far as they can be removed: a file that cannot be removed does not stop the reset, whereas the
+   Android wallet's reset fails then. `walletResetGeneration` advances, and the ID Provider extension clears its
+   own Caches and temporary files, its WalletKit log among them, the next time it starts.
+7. The session locks, and the app starts again at start-up (`RouterHost.restartAtStartup()`), which leads to
+   onboarding.
+
+Once started, the reset runs to the end even if its screen goes away, and its screen is a protected flow, so the
+background lock waits 10 minutes. The app asks iOS to keep it running while the reset runs
+(`UIApplication.keepRunningInBackground`), so leaving the app does not suspend it halfway, as far as iOS allows.
+Links that arrive meanwhile are dropped, and a link kept for after login is forgotten, so none opens after
+onboarding. A failed step shows an error with "Try again"; every step can run again. After a failure the background
+checks restart at once; after a reset they start with the dashboard, after the next login.
+
+The reset does not reach: files the app or an integrator writes outside Caches and the temporary directory; the
+cookies of WalletKit's sign-in sheet, which are Safari's (see [Network Security](#network-security)); the RQES SDK's
+signing session, which `EudiRQESUi` (0.4.7) keeps in memory and the app cannot clear, so a matching `rqes://` callback
+can reopen it at its last step until the app restarts, which also holds after a lock (reported to the SDK's owner);
+and a request the ID Provider extension answers while the reset runs, since the extension runs in its own process.
+Data already shared with relying parties is outside the wallet.
 
 ## Logging And Audit
 
 Logging appears in several areas:
 
-* WalletKit log file through `logFileName`.
+* WalletKit log file through `logFileName`, written by debug builds only; it holds authorization codes, access
+  tokens and issued credentials.
 * Transaction logging through `TransactionLogger`.
+* Each presentation's history entry keeps the outcome of the relying party's registration check
+  (`RecordedRegistrationCheck`, stored beside the entry). Unless the registration was verified (it was not verified,
+  not checked, or no outcome was recorded), history warns that its contacts may not be the party's; when the
+  certificate was issued to another party than the one that asked, no deletion request is offered, as on Android.
+  The outcome is recorded by WalletKit's transaction identifier (`RegistrationCheckProvider`), as on Android, so it
+  reaches only its own presentation's entry. A registration counts as verified only for a requester that
+  authenticated: WalletKit binds a registration to the reader certificate even when that certificate failed
+  validation, so an unauthenticated requester's registration is recorded as not verified.
+* Data-protection requests from history (a data deletion request, a report to the DPA) are recorded only after
+  the system has handed them to the mail, phone or browser app (`TransactionDetailsInteractor.recordDataProtectionAction`),
+  as on Android, so a failed attempt and its retry leave one record. A request handed off but not recorded offers to
+  record it again, never to send it again.
 * Analytics providers through `logic-analytics`.
 * Debug logs from SDKs where enabled.
 * RQES `printLogs`.
@@ -1613,6 +2140,41 @@ Avoid:
 
 iOS does not provide a universal way to block screenshots. Production should still reduce leakage.
 
+The reference app offers a cover as a setting, as the Android wallet's `ConfigUILogic.shouldPreventScreenCapture` sets
+`FLAG_SECURE`. With `ConfigUiLogic.hideContentWhileCaptured` set to true, `ScreenCaptureController` follows each
+window scene's `sceneCaptureState` and activation, and shows a window of its own above the wallet's windows (sheets, alerts and the
+RQES SDK's screens included). The system keyboard's window sits above it, so the keyboard is put away whenever the
+cover shows, and again if a field takes focus under it:
+
+* While the screen is recorded, mirrored through AirPlay or QuickTime, or shared, the cover shows the wallet's mark
+  (`Theme.shared.image.logo`), the title `screen_capture_cover_title` and the message `screen_capture_cover_message`, so
+  that no screen and no PIN typed on the on-screen keypad can be read from the recording. Touches go to the cover until
+  the capture ends: unlike `FLAG_SECURE` on Android, the wallet cannot be used on the device itself while the screen is
+  recorded, mirrored or shared.
+* While the app is inactive or in the background, the cover shows only the wallet's mark, as the start-up screen
+  (`StartupView`) does, so that the app switcher card shows none of the wallet's screens, as Android's recent-apps
+  preview with `FLAG_SECURE`. The cover also shows whenever the app goes inactive: behind a system prompt such as Face
+  ID, Control Center or Notification Center, or on the way to another app. A field that had focus loses it, and the
+  user taps it again on return.
+
+The cover window never becomes key, so the session lock's checks still find the wallet's own window, and VoiceOver stays
+on the cover while it is shown. A tap on the cover counts as activity for the idle lock; unlike the RQES SDK's or the
+sign-in screens, the cover does not pause the idle timeout. The setting is false in the reference configuration, so that
+the screens can be recorded in development and testing: set it to true for production. `ConfigUiLogicImpl` applies one
+value to every build variant; to keep recording in Dev and Demo builds only, derive it from
+`ConfigLogic.appBuildVariant` (`logic-ui` already depends on `logic-business`); the ID Provider extension reads the
+setting in its own process, and its `WalletIdProvider.plist` has no `Build Variant` key, so it reads `DEV` there unless
+you add the key to it too. A screenshot cannot be blocked: iOS
+tells an app about one only after it is taken, and the reference app does not react to it. Hiding content from captures
+through a secure text field's layer is undocumented and not used. The ID Provider extension runs in its own process and
+starts the same controller (`DocumentProviderExtension`), so the PIN entry and the request it shows over the requesting
+app are covered too: while the screen is captured, when the request cannot be answered on the device, and in that app's
+card in the app switcher. The system's title and close button around the extension's screens stay visible.
+
+With the setting false, the app switcher card shows the blur that `Application` lays over the wallet's own screens while
+the scene is inactive or in the background. Sheets, alerts and the RQES SDK's screens are presented over those screens
+and are not blurred, so they show in the card.
+
 Review screens that show:
 
 * PID attributes.
@@ -1625,12 +2187,18 @@ Review screens that show:
 
 Production actions:
 
-* Observe screen capture state where useful.
-* Hide or blur highly sensitive content when the app enters background.
-* Ensure the app switcher snapshot does not expose sensitive data.
+* Set `ConfigUiLogic.hideContentWhileCaptured` to true; it also covers the app switcher card.
+* If the setting stays false, also hide the sheets, alerts and RQES SDK screens that `Application`'s blur does not cover
+  when the app enters the background, and the ID Provider extension's screens, which have no blur.
+* Ensure the app switcher snapshot does not expose sensitive data. The setting also covers the ID Provider extension's
+  screens, which show over the requesting app.
 * Avoid putting secrets or full credential data in notifications.
 * Avoid copying sensitive values to the clipboard.
-* Add manual tests for screenshots, app switching, screen recording, and AirPlay/mirroring behavior.
+* Add manual tests for screenshots, app switching, screen recording, and AirPlay/mirroring behavior: with
+  `hideContentWhileCaptured` true, recording or mirroring shows the cover over every screen, sheet and alert, and the
+  wallet returns when it stops; the app switcher shows the wallet's mark and no keyboard; a field that takes focus under
+  the cover brings up no keyboard; the ID Provider extension's screens show the cover too, while the screen is captured
+  and in the requesting app's card in the app switcher; a screenshot still shows the screen.
 
 ## Authentication And Biometrics
 
@@ -1642,11 +2210,13 @@ Production decisions:
 | --- | --- |
 | PIN length | Define minimum length and whether numeric-only is acceptable. |
 | PIN lockout policy | Defaults to 3 attempts then escalating lockouts of 30s, 90s, 5m (then 5m repeats). Tune via `AuthenticationConfig.maxFailedPinAttempts` and `pinLockoutDurations`. Decide whether the final tier should escalate further (wipe, support flow, device-credential step-up). See [PIN Throttle And Lockout](#pin-throttle-and-lockout). |
+| Session lock | The wallet locks after 60 seconds in the background or 5 minutes without interaction, on every screen; during an issuance, presentation or signing the background limit is 10 minutes, and while another screen (the RQES SDK's, the issuer's sign-in) covers the wallet the idle timeout pauses and 10 minutes covered requires login when the wallet's screen returns. An issuer's sign-in still open after 10 minutes locks the wallet. A lock dismisses what is presented, ends the covered state of the RQES SDK's or the sign-in screens and returns to login; after login the user starts again from the dashboard. A lock also ends a running presentation: a proximity session stops its Bluetooth transfer and advertising (`WalletKitController.stopPresentation()`), and so does a wallet link that returns the user to the dashboard. The proximity QR screen is the exception to the 10-minute limit: leaving the app there once its code is shown stops the session and closes the screen. Tune the timeouts in `AuthenticationConfig` and the screens in `ConfigUiLogic.protectedFlowRouteKeys`; see CONFIGURATION [Session lock configuration](CONFIGURATION.md#session-lock-configuration). The rules are the Android wallet's, except that on iOS the issuer's sign-in pauses the idle timeout: it shows inside the wallet's own scene. |
 | Biometric opt-in | Decide whether biometrics are optional or required for specific operations. |
+| Biometric unlock switch | Turning biometric unlock on in Settings first asks for the wallet PIN (the PIN-or-biometric screen, as the factory reset does), then for Face ID or Touch ID; turning it off accepts the PIN or a biometric. Someone holding the unlocked phone who has enrolled a new biometric therefore cannot turn it on, as on Android. Keep the PIN step if you change the Settings screen. |
 | Device credential fallback | Decide whether passcode fallback is allowed. |
-| Biometric enrollment change | Test and define whether access is invalidated when biometrics change. |
+| Biometric enrollment change | Biometric unlock is bound to the enrolment present when the user turns it on: the Keychain probe is written with `.biometryCurrentSet` (`KeyChainController.storeBiometricProbe()`), so after a fingerprint or face is added or removed the probe can no longer be read, and login needs the PIN until the user turns biometric unlock off and on again in Settings. Turning it on asks for the wallet PIN, then for Face ID or Touch ID; turning it off accepts the PIN or a biometric, with no further prompt (`SettingsViewModel.onBiometrySwitch()`, `BiometrySelectionViewModel`). An install from before this binding has biometric unlock on without a probe; its first biometric login binds it (`Prefs.Key.biometricUnlockBound`), as Android binds its key at the first biometric success. Android invalidates its key on enrolment the same way (`setInvalidatedByBiometricEnrollment(true)`). |
 | High-risk operation step-up | Require re-authentication before issuance, presentation, RQES signing, reset, or document deletion where policy requires it. |
-| Recovery | Define user-facing recovery and reset policy. |
+| Recovery | Define user-facing recovery and reset policy. The reference app fails closed at start-up when the PIN record cannot be read, or when it is missing while documents exist or the Keychain check for them fails; see [PIN Storage](#pin-storage). |
 
 ## Analytics And Telemetry
 
@@ -1973,7 +2543,9 @@ Project-specific actions:
 * Review SwiftData store location and file protection.
 * Review App Group container contents.
 * Confirm the shipped PIN lockout / rate limiting (`PinThrottleController`) meets policy; tune `maxFailedPinAttempts` / `pinLockoutDurations` as needed.
-* Redact or remove file logging.
+* Confirm that release builds write no log file (`WalletKitConfig.logFileName` is `nil` outside debug builds).
+* Set `ConfigUiLogic.hideContentWhileCaptured` to true, so that recording, mirroring, sharing and the app switcher show
+  a cover.
 * Add tests that inspect app data after flows.
 
 ### MASVS-CRYPTO
@@ -2013,6 +2585,8 @@ Project-specific actions:
 * Decide device credential fallback policy.
 * Consider WalletKit user authentication requirements.
 * Test biometric enrollment changes.
+* Confirm that turning biometric unlock on asks for the PIN.
+* Decide whether setup and login require a device passcode (`requireDeviceSecure`) and test removing it.
 * Test authentication bypass attempts.
 
 ### MASVS-NETWORK
@@ -2051,6 +2625,8 @@ Project-specific actions:
 * Review App Groups and Keychain Sharing.
 * Review Identity Document Provider extension authorization UI.
 * Request camera, Bluetooth, and Face ID permissions only for relevant flows.
+* Set `ConfigUiLogic.hideContentWhileCaptured` to true and test recording, mirroring, sharing and the app switcher;
+  screenshots cannot be blocked.
 
 ### MASVS-CODE
 
@@ -2070,7 +2646,7 @@ Project-specific actions:
 * Add release checks for demo endpoints.
 * Review exception messages shown to users.
 * Implement forced update or minimum supported version through backend policy.
-* Review branch-based SPM dependencies.
+* Review branch-based SPM dependencies (none in the reference app) and commit-pinned ones (BluetoothKit).
 
 ### MASVS-RESILIENCE
 
@@ -2104,6 +2680,13 @@ Controls to evidence:
 Project-specific actions:
 
 * Review presentation request UI for clarity.
+* Review the claims that count as a picture of the holder (`ConfigUiLogic.userImageClaimKeys`: `portrait` and
+  `picture` by default). A request for one of them shows a biometric-data notice. Share asks for confirmation while
+  the picture would be disclosed, and so does Accept in the ID Provider extension, as on Android. Add the claims
+  your credentials use.
+* A privacy-policy link from a registration certificate opens only when it is `https`: on the request and offer
+  screens any other link is not shown, and in history it stays plain text, as on Android, with no exception for
+  `http` from Core or Kit.
 * Review transaction log contents.
 * Review analytics providers and SDK privacy manifests.
 * Complete DPIA before production.
@@ -2161,6 +2744,8 @@ Must provide:
 * Redirect URI registration.
 * TSA endpoint if required.
 * Certificate retrieval trust config.
+* CRL distribution points and OCSP addresses as `https://` URLs in the signing and timestamp certificates, where
+  B-LT or B-LTA signatures carry revocation information (`includeRevocationInfo: true`).
 * Signing policy and audit evidence.
 
 ## Build, Install, And Use In Production Testing
@@ -2219,32 +2804,89 @@ profiles, including the extension.
 Before release candidate approval, test:
 
 * First launch.
+* Start-up with the PIN record unreadable (device locked), and with documents but no PIN record or
+  the document check failing: an error with "Try again", never PIN creation.
 * PIN creation.
 * PIN change.
-* Incorrect PIN attempts and lockout.
-* Biometric enablement.
+* Incorrect PIN attempts and lockout; a change of the device date during a lockout (no effect) and a restart during
+  one (it begins again).
+* A request with transaction data: every entry is shown before Share; one that cannot be shown in full is declined.
+* A response that fails to send, then Back on the request screen: the verifier gets no second answer, and the history
+  keeps the first result.
+* Biometric enablement (asks for the PIN first) and disablement (PIN or biometric); Back from the check changes
+  nothing.
 * Biometric enrollment change.
+* A weak PIN refused at setup and on change; setup on a device without a passcode shows the warning.
+* Screen recording, AirPlay or QuickTime mirroring with `ConfigUiLogic.hideContentWhileCaptured` true: the cover over
+  every screen, sheet and alert, the RQES SDK's included, and no keypad on a PIN screen; the app switcher card shows
+  the wallet's mark and no keypad; a saved password or passkey can still be filled into the issuer's sign-in page
+  (AutoFill's Face ID check makes the app inactive and brings up the cover);
+  the ID Provider extension's screens show the cover too; a screenshot still shows the screen; with it false, no cover,
+  the blur in the app switcher, and the extension's screens in the requesting app's card.
+* Removing the device passcode after setup: the documents are gone; login shows the warning, or with
+  `requireDeviceSecure` refuses the PIN and Face ID or Touch ID until a passcode is set; biometric login needs the
+  switch turned off and on again. Test the ID Provider extension before opening the app.
+* An offer from an issuer that is not configured refused; a partial issuance naming the documents not added.
+* The portrait notice, and Share or Accept asking for confirmation.
+* "Allow document requests from apps and websites (DC API)" off: registrations withdrawn, the extension declines.
+* A DC API request for claims that two documents of the same type hold between them: each document is sent with only
+  the claims the sheet showed for it.
+* A proximity request that several document sets satisfy offers the choice.
 * PID issuance from list.
 * Credential offer issuance by QR.
 * Authorization-code issuance redirect.
 * Deferred issuance.
 * Reissuance.
+* Reissuance of a revoked or suspended document: refused before the issuer is contacted; closing the refusal
+  reloads the details.
 * Revocation/status checks.
 * Same-device OpenID4VP presentation.
 * Cross-device presentation.
 * Relayed OpenID4VP request and response handling.
-* Proximity QR/BLE.
+* Proximity QR/BLE, including leaving the app or locking the phone once the code is shown: the session stops, a
+  reader can no longer connect, and the screen closes. Leaving while the code is still loading: the session stops when
+  the code becomes ready. Control Center over the QR screen keeps the session and the screen (with
+  `hideContentWhileCaptured` true, behind the cover). Leaving the app from the request screen keeps the session
+  (10-minute limit).
+* Proximity: the reader ends the Bluetooth session before the user answers: the request screen goes back and the
+  presentation ends. A lock, or a wallet link that returns to the dashboard, ends the session and stops the
+  advertising.
+* Proximity: Back on the request screen stops the Bluetooth session; the reader sees the session end, and a new
+  presentation needs a new QR code.
+* Proximity reader without, or with a failing, reader certificate: the warning, no badge, Share
+  disabled until acknowledged.
 * Relayed proximity engagement where feasible.
-* Identity Document Provider extension presentment on supported iOS versions.
+* Identity Document Provider extension presentment on supported iOS versions, with the PIN or
+  biometric check before the request is shown and again on Accept; the response carries only the documents and
+  claims the screen showed, and the history entry is completed.
 * Relayed or socially engineered Identity Document Provider extension presentment where feasible.
 * RQES signing.
 * RQES cancellation.
 * Network unavailable.
 * Backend unavailable.
 * Expired credential.
-* Revoked credential.
-* Malformed deep links.
+* Revoked credential; suspended credential, and its return to Valid; a credential suspended before
+  the update (shown as revoked until the next check reads its status, which records it as suspended, or
+  clears it if the list reports it valid); a status list that cannot be fetched (the issuer card opens
+  with the refresh-failure notice).
+* Malformed deep links, and a link of no wallet type (an `https` link, for example): dropped, and it does not
+  replace a link kept for after login.
+* Session lock: 65 seconds in the background requires login, 10 seconds does not; 5 minutes without
+  touching any screen, a sheet included, requires login, while touches keep the session; an issuance
+  through the issuer's sign-in completes within 10 minutes without login, and a sign-in that lasts 10
+  minutes locks; 6 minutes on the RQES screens do not lock, and closing them after 10 minutes locks the
+  wallet, with login in front; work that finishes after a lock (an issuance, a presentation) does not
+  reopen the wallet.
+* A link that arrives after the lock expired opens only after login; a link received before the app was
+  killed does not open at the next launch.
+* A second presentation link while a remote request or a proximity presentation is on screen: the
+  wallet returns to the dashboard and opens the new request.
+* A verifier redirect after a presentation: an `https` redirect opens in the browser; a credential-offer,
+  OpenID4VP or RQES redirect opens nothing and starts no flow.
 * Malicious credential offer.
+* A second credential offer while an offer is on screen: the wallet returns to the dashboard and opens
+  the new offer; the first is not issued.
+* A credential offer whose transaction code has no length: refused.
 * App update from previous production version.
 
 ## Production Test Matrix
@@ -2310,6 +2952,10 @@ ec.dev.issuer.eudiw.dev
 dev.issuer-backend.eudiw.dev
 somesecret
 somesecret2
+eudiw-abca
+wallet-client
+gist.githubusercontent.com
+WALLET_SOLUTION_ID
 localhost
 127.0.0.1
 SelfSignedDelegate
@@ -2319,6 +2965,14 @@ rqes://oauth/callback
 eu.europa.ec.euidi.dev
 eu.europa.ec.euidi
 ```
+
+`eudiw-abca` and `wallet-client` are the demo issuer and RQES client IDs; the Gist URL and
+`WALLET_SOLUTION_ID` are the reference Trust Mark values (see
+[Trust Mark Deployment](#trust-mark-deployment)). `eu.europa.ec.euidi` also matches two internal
+identifiers that do not change with the bundle identifier: the biometric Keychain item
+(`eu.europa.ec.euidi.biometric.access`, `KeyChainController`) and the access-group probe
+(`eu.europa.ec.euidi.access.group.probe`, `Bundle+Extensions.swift`). Rename them or exclude them
+from this check.
 
 Also check:
 

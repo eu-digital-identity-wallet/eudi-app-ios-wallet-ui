@@ -33,6 +33,10 @@ struct BiometryState: ViewState {
   let contentHeaderConfig: ContentHeaderConfig
   let isLockedOut: Bool
   let lockoutMessage: LocalizableStringKey?
+  /// At login, the warning for a device without a passcode, or nil.
+  let deviceLockNotice: LocalizableStringKey?
+  /// At login, whether the PIN and biometrics wait until the device has a passcode (`requireDeviceSecure`).
+  let isDeviceLockRequired: Bool
 }
 
 @Observable
@@ -64,6 +68,9 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
   @ObservationIgnored
   private var lockoutTickTask: Task<Void, Never>?
 
+  @ObservationIgnored
+  private var isFinished = false
+
   init(
     router: Router,
     interactor: BiometryInteractor,
@@ -93,7 +100,9 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
           )
         ),
         isLockedOut: false,
-        lockoutMessage: nil
+        lockoutMessage: nil,
+        deviceLockNotice: nil,
+        isDeviceLockRequired: false
       )
     )
 
@@ -121,7 +130,12 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
       startLockoutTick(initialRemaining: remaining)
     }
 
-    if viewState.config.shouldInitializeBiometricOnCreate, viewState.areBiometricsEnabled, !viewState.autoBiometryInitiated {
+    await refreshDeviceLockState()
+
+    if viewState.config.shouldInitializeBiometricOnCreate,
+       viewState.areBiometricsEnabled,
+       !viewState.autoBiometryInitiated,
+       !viewState.isDeviceLockRequired {
       setState { $0.copy(autoBiometryInitiated: true) }
       DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(AUTO_VERIFY_ON_APPEAR_DELAY)) {
         self.onBiometry()
@@ -129,19 +143,22 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
     }
   }
 
+  /// Back ends the screen; a PIN or biometric success still in progress then does nothing, so that Back after a
+  /// correct PIN changes nothing.
   func onPop() {
-    if let backNavigation = viewState.config.navigationBackType {
-      doNavigation(navigationType: backNavigation)
-    }
+    guard !isFinished, let backNavigation = viewState.config.navigationBackType else { return }
+    isFinished = true
+    doNavigation(navigationType: backNavigation)
   }
 
   func onBiometry() {
+    guard !viewState.isDeviceLockRequired else { return }
     Task {
       switch await interactor.authenticate() {
       case .authenticated:
         await interactor.resetPinThrottle()
         stopLockoutTick()
-        self.authenticated()
+        await self.authenticated()
       case .failure(let error):
         if error != .biometricError {
           self.biometryError = error
@@ -154,11 +171,17 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
     Task { await interactor.openSettings {} }
   }
 
-  func setPhase(with phase: ScenePhase) {
+  /// A navigation held while the scene was not active runs once when it becomes active, then is cleared, so a later
+  /// phase change cannot repeat a success, as the ID Provider extension's two-step login would read it. Login checks
+  /// the passcode again on return, for example from the device settings, as Android does on every resume.
+  func setPhase(with phase: ScenePhase) async {
     setState { $0.copy(scenePhase: phase) }
+    guard phase == .active else { return }
     if let pending = viewState.pendingNavigation {
+      setState { $0.copy(pendingNavigation: nil) }
       doNavigation(navigationType: pending)
     }
+    await refreshDeviceLockState()
   }
 
   private func subscribeToPinInput() {
@@ -184,13 +207,19 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
   }
 
   private func processPin(value: String) {
-    guard !viewState.isLockedOut, value.count == viewState.quickPinSize else { return }
+    guard
+      !viewState.isLockedOut,
+      !viewState.isDeviceLockRequired,
+      value.count == viewState.quickPinSize
+    else {
+      return
+    }
     Task {
       switch await interactor.isPinValid(with: uiPinInputField) {
       case .success:
         await interactor.resetPinThrottle()
         stopLockoutTick()
-        self.authenticated()
+        await self.authenticated()
       case .failure(let error):
         let lockoutState = await interactor.recordPinFailure()
         switch lockoutState {
@@ -204,7 +233,29 @@ final class BiometryViewModel<Router: RouterHost>: ViewModel<Router, BiometrySta
     }
   }
 
-  private func authenticated() {
+  /// At login, as at setup, warns on a device without a passcode and, while the configuration requires one, refuses
+  /// the PIN and biometrics until one is set, as Android does at every login, so that a passcode removed after setup
+  /// is noticed. Confirmations, such as before a presentation, a reset or a change of settings, are not affected.
+  private func refreshDeviceLockState() async {
+    guard viewState.config.isPreAuthorization else { return }
+    let (notice, isRequired): (LocalizableStringKey?, Bool) = switch await interactor.getDeviceLockState() {
+    case .secure: (nil, false)
+    case .missing: (.quickPinDeviceLockMissingWarning, false)
+    case .required: (.quickPinDeviceLockRequiredWarning, true)
+    }
+    setState { $0.copy(deviceLockNotice: notice).copy(isDeviceLockRequired: isRequired) }
+  }
+
+  /// Login (`isPreAuthorization`) unlocks the session before the wallet opens; the confirmation before a
+  /// presentation does not. On a screen with Back, the first success ends it, so Back before it, or a second success,
+  /// changes nothing. Login has no Back and takes every success, so that one whose navigation a lock refused can be
+  /// followed by another.
+  private func authenticated() async {
+    guard !isFinished else { return }
+    isFinished = viewState.isCancellable
+    if viewState.config.isPreAuthorization {
+      await interactor.unlockSession()
+    }
     doNavigation(navigationType: viewState.config.navigationSuccessType)
   }
 

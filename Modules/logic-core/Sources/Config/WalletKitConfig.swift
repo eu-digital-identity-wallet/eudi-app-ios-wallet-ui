@@ -65,6 +65,10 @@ protocol WalletKitConfig: Sendable {
   /**
    * Trust configuration: ETSI LoTE (List of Trusted Entities) trust sources,
    * verification-context mappings and trust policies used for reader / issuer validation.
+   *
+   * `revocationPolicy` is set on both trust sources, so that a library default does not change it:
+   * `.disabled` for the development trust lists, `.ocspOnly` for the static fallback. Choose a
+   * policy for production; see GO_LIVE Trust Store.
    */
   var trustConfiguration: TrustConfiguration { get }
 
@@ -78,10 +82,10 @@ protocol WalletKitConfig: Sendable {
    */
   var keyOptions: KeyOptions? { get }
 
-  /**
-   * The name of the file to be created to store logs
-   */
-  var logFileName: String { get }
+  /// The name of the file wallet-kit stores its logs in, written only by debug builds: wallet-kit logs
+  /// authorization codes, access tokens and issued credentials to it, as the Android wallet's release builds write
+  /// no log file.
+  var logFileName: String? { get }
 
   /**
    * Document categories
@@ -97,6 +101,10 @@ protocol WalletKitConfig: Sendable {
    * The interval (in seconds) at which revocations are checked.
    */
   var revocationIntervalSeconds: TimeInterval { get }
+
+  /// How long the factory reset waits for a background check under way to finish before it gives up without
+  /// deleting anything, as the Android wallet's `workerStopTimeout`.
+  var workerStopTimeoutSeconds: TimeInterval { get }
 
   /**
    * Configuration for document issuance, including default rules and specific overrides.
@@ -191,7 +199,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
               validateRegistrationCertificate: validateIssuerRegistrationCertificate,
               encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
             ),
-            order: 0
+            order: 0,
+            logoOrigins: ["https://eudiw.dev"]
           )
         ]
       case .DEV:
@@ -236,7 +245,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
               validateRegistrationCertificate: validateIssuerRegistrationCertificate,
               encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
             ),
-            order: 0
+            order: 0,
+            logoOrigins: ["https://eudiw.dev"]
           )
         ]
       }
@@ -289,11 +299,14 @@ struct WalletKitConfigImpl: WalletKitConfig {
         EtsiTrustSource(
           loteLocations: loteLocations,
           contextTypeMappings: classifications,
-          isRevocationEnabled: false
+          revocationPolicy: .disabled
         )
       ),
       fallbackTrustSource: .staticList(
-        StaticListTrustSource(rootCertificates: staticRootCertificates)
+        StaticListTrustSource(
+          rootCertificates: staticRootCertificates,
+          revocationPolicy: .ocspOnly
+        )
       ),
       defaultPolicy: .warning,
       docTypePolicies: [
@@ -321,9 +334,17 @@ struct WalletKitConfigImpl: WalletKitConfig {
     ].compactMap { loadCertificate($0) }
   }
 
-  var logFileName: String {
-    return "eudi-ios-wallet-logs"
+  var logFileName: String? {
+    Self.logFileName(for: configLogic.appBuildType)
   }
+
+  /// The log file's name for `buildType`: debug builds only.
+  static func logFileName(for buildType: AppBuildType) -> String? {
+    buildType == .DEBUG ? debugLogFileName : nil
+  }
+
+  /// The log file's name in debug builds; a release build deletes a file of this name that an earlier build left.
+  static let debugLogFileName = "eudi-ios-wallet-logs"
 
   var documentsCategories: DocumentCategories {
     [
@@ -376,6 +397,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var revocationIntervalSeconds: TimeInterval {
     300
+  }
+
+  var workerStopTimeoutSeconds: TimeInterval {
+    30
   }
 
   var documentIssuanceConfig: DocumentIssuanceConfig {

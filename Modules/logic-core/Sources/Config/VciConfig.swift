@@ -19,4 +19,13 @@ import EudiWalletKit
 public struct VciConfig: Sendable {
   public let config: OpenId4VciConfiguration
   public let order: Int
+  /// Origins, besides the issuer's own, from which the wallet loads this issuer's logo, as the Android wallet's
+  /// `VciConfig.logoOrigins`; each is `https`.
+  public let logoOrigins: [String]
+
+  public init(config: OpenId4VciConfiguration, order: Int, logoOrigins: [String] = []) {
+    self.config = config
+    self.order = order
+    self.logoOrigins = logoOrigins
+  }
 }

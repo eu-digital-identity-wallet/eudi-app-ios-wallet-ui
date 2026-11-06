@@ -22,17 +22,19 @@ struct GenericSuccessState: ViewState {
 
 final class GenericSuccessViewModel<Router: RouterHost>: ViewModel<Router, GenericSuccessState> {
 
-  private let deepLinkController: DeepLinkController
+  private let openURL: @MainActor (URL) -> Void
 
+  /// `openURL` opens a redirect once `URL.openInBrowser(using:)` has accepted it as an `https` link; the
+  /// default is the system's opener.
   init(
     config: any UIConfigType,
     router: Router,
-    deepLinkController: DeepLinkController
+    openURL: @escaping @MainActor (URL) -> Void = URL.openWithSystem
   ) {
     guard let config = config as? UIConfig.Success else {
       fatalError("SuccessViewModel:: Invalid configuraton")
     }
-    self.deepLinkController = deepLinkController
+    self.openURL = openURL
     super.init(router: router, initialState: .init(config: config))
   }
 
@@ -41,7 +43,7 @@ final class GenericSuccessViewModel<Router: RouterHost>: ViewModel<Router, Gener
     case .pop(let screen, let inclusive):
       router.popTo(with: screen, inclusive: inclusive)
     case .deepLink(let url, let popToScreen):
-      deepLinkController.cacheDeepLinkURL(url: url)
+      url.openInBrowser(using: openURL)
       router.popTo(with: popToScreen)
     case .push(let screen):
       router.push(with: screen)

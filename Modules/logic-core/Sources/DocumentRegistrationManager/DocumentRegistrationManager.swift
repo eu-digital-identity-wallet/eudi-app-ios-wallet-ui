@@ -47,11 +47,23 @@ final actor DocumentRegistrationManagerImpl: DocumentRegistrationManager {
     IdentityDocumentProviderRegistrationStore()
   }
 
+  /// iOS reports `notDetermined` until the app's first registration, even when "Allow on websites" is on in
+  /// Settings, and that registration is what authorises the app. Waiting for `authorized` before registering meant a
+  /// new install never registered, so websites found "no eligible IDs". Until then the store is touched only to
+  /// register: reading its registrations while `notDetermined` did not return on the simulator.
   func reconcile(desired: [RegistrationDescriptor]) async {
 
     let store = makeStore()
 
-    guard await store.status == .authorized else { return }
+    let status = await store.status
+    guard Self.mayRegister(with: status) else { return }
+    if status == .notDetermined {
+      guard !desired.isEmpty else { return }
+      for descriptor in desired {
+        try? await store.addRegistration(descriptor.mobileDocumentRegistration)
+      }
+      guard await store.status == .authorized else { return }
+    }
     guard let current = try? await store.registrations else { return }
 
     let desiredIdentifiers = Set(desired.map { $0.documentIdentifier })
@@ -69,14 +81,20 @@ final actor DocumentRegistrationManagerImpl: DocumentRegistrationManager {
     )
 
     for descriptor in desired where needsWrite(descriptor, registered: registered[descriptor.documentIdentifier]) {
-      try? await store.addRegistration(
-        MobileDocumentRegistration(
-          mobileDocumentType: descriptor.mobileDocumentType,
-          supportedAuthorityKeyIdentifiers: [],
-          documentIdentifier: descriptor.documentIdentifier,
-          invalidationDate: descriptor.invalidationDate
-        )
-      )
+      try? await store.addRegistration(descriptor.mobileDocumentRegistration)
+    }
+  }
+
+  /// True unless the user turned the app off as a document provider (`notAuthorized`) or the device cannot provide
+  /// documents (`notSupported`).
+  static func mayRegister(with status: IdentityDocumentProviderRegistrationStore.Status) -> Bool {
+    switch status {
+    case .authorized, .notDetermined:
+      true
+    case .notAuthorized, .notSupported:
+      false
+    @unknown default:
+      false
     }
   }
 
@@ -90,7 +108,15 @@ final actor DocumentRegistrationManagerImpl: DocumentRegistrationManager {
   }
 }
 
-enum RegistrationError: Error {
-  case apiNotAvailable
-  case registrationNotFound
+@available(iOS 26.0, *)
+private extension RegistrationDescriptor {
+
+  var mobileDocumentRegistration: MobileDocumentRegistration {
+    MobileDocumentRegistration(
+      mobileDocumentType: mobileDocumentType,
+      supportedAuthorityKeyIdentifiers: [],
+      documentIdentifier: documentIdentifier,
+      invalidationDate: invalidationDate
+    )
+  }
 }

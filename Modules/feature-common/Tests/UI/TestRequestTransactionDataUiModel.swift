@@ -55,6 +55,8 @@ final class TestRequestTransactionDataUiModel: EudiTest {
         Row("\(sectionId)/transaction-0/query-1", .requestTransactionDataRequestedCredentials, "mdl"),
         Row("\(sectionId)/transaction-0/credential", .requestTransactionDataSigningCredentialId, "signing-certificate"),
         Row("\(sectionId)/transaction-0/count", .requestTransactionDataNumberOfSignatures, "2"),
+        Row("\(sectionId)/transaction-0/location-0", .requestTransactionDataLocation, "Brussels"),
+        Row("\(sectionId)/transaction-0/data-hash-algorithm-0", .requestTransactionDataHashAlgorithms, "sha-256"),
         Row("\(sectionId)/transaction-0/document-0/name", .requestTransactionDataDocument, "Contract"),
         Row("\(sectionId)/transaction-0/document-0/location", .requestTransactionDataDocumentLocation, "https://tsp.example/contract.pdf"),
         Row("\(sectionId)/transaction-0/document-0/open", nil, LocalizableStringKey.requestTransactionDataOpenDocument.toString),
@@ -65,6 +67,8 @@ final class TestRequestTransactionDataUiModel: EudiTest {
         Row("\(sectionId)/transaction-0/document-0/hash-algorithm", .requestTransactionDataTypedHashAlgorithm(["SDR"]), "SHA-256"),
         Row("\(sectionId)/transaction-0/document-0/attributes", nil, LocalizableStringKey.requestTransactionDataSignedAttributes.toString),
         Row("\(sectionId)/transaction-0/document-0/attribute-0", .custom("reason"), "Agreement"),
+        Row("\(sectionId)/transaction-0/document-0/circumstantial-data", .requestTransactionDataCircumstantialData, "Branch office"),
+        Row("\(sectionId)/transaction-0/document-0/access", .requestTransactionDataDocumentAccess, LocalizableStringKey.requestTransactionDataDocumentAccessOtp.toString),
         Row("\(sectionId)/transaction-0/document-0/otp", .requestTransactionDataOneTimePassword, "1234")
       ]
     )
@@ -84,12 +88,22 @@ final class TestRequestTransactionDataUiModel: EudiTest {
         Row("\(sectionId)/framework", .requestTransactionDataTrustFramework, "eIDAS"),
         Row("\(sectionId)/transaction-0/type", .requestTransactionDataType, LocalizableStringKey.requestTransactionDataTypeQesRequest.toString),
         Row("\(sectionId)/transaction-0/query-0", .requestTransactionDataRequestedCredentials, "pid"),
+        Row("\(sectionId)/transaction-0/data-hash-algorithm-0", .requestTransactionDataHashAlgorithms, "sha-256"),
         Row("\(sectionId)/transaction-0/document-0/name", .requestTransactionDataDocument, LocalizableStringKey.requestTransactionDataDocumentNumbered(["1"]).toString),
+        Row("\(sectionId)/transaction-0/document-0/content", .requestTransactionDataDocumentContent, LocalizableStringKey.requestTransactionDataDocumentContentInline.toString),
+        Row("\(sectionId)/transaction-0/document-0/document-type", .requestTransactionDataDocumentType, LocalizableStringKey.requestTransactionDataDocumentTypeOriginal.toString),
+        Row("\(sectionId)/transaction-0/document-0/size", .requestTransactionDataDocumentSize, ByteCountFormatter.string(fromByteCount: 3, countStyle: .file)),
         Row("\(sectionId)/transaction-0/document-0/signature-type", .requestTransactionDataSignatureType, "custom_qualifier"),
         Row("\(sectionId)/transaction-0/document-0/format", .requestTransactionDataSignatureFormat, "PAdES"),
         Row("\(sectionId)/transaction-0/document-0/conformance", .requestTransactionDataConformanceLevel, "AdES-B-B"),
+        Row("\(sectionId)/transaction-0/document-0/signed-envelope-property", .requestTransactionDataSignedEnvelopeProperty, "Detached"),
+        Row("\(sectionId)/transaction-0/document-0/reference-uri", .requestTransactionDataReferenceUri, "#content"),
+        Row("\(sectionId)/transaction-0/document-0/circumstantial-data", .requestTransactionDataCircumstantialData, "Branch"),
+        Row("\(sectionId)/transaction-0/document-0/signature-algorithm", .requestTransactionDataSignatureAlgorithm, "ECDSA with SHA-256"),
+        Row("\(sectionId)/transaction-0/document-0/signature-algorithm-parameters", .requestTransactionDataSignatureAlgorithmParameters, "params"),
         Row("\(sectionId)/transaction-0/document-0/attributes", nil, LocalizableStringKey.requestTransactionDataSignedAttributes.toString),
         Row("\(sectionId)/transaction-0/document-0/attribute-0", nil, "commitment"),
+        Row("\(sectionId)/transaction-0/document-0/access", .requestTransactionDataDocumentAccess, LocalizableStringKey.requestTransactionDataDocumentAccessPublic.toString),
         Row("\(sectionId)/transaction-0/document-0/response-uri", .requestTransactionDataResponseUri, "https://tsp.example/response")
       ]
     )
@@ -159,7 +173,9 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     // Then
     XCTAssertFalse(allRows.contains { $0.id.hasSuffix("/type") })
     XCTAssertFalse(allRows.contains { $0.id.hasSuffix("/open") })
+    XCTAssertFalse(allRows.contains { $0.id.hasSuffix("/otp") })
     XCTAssertTrue(allRows.contains { $0.id == "transaction-data/transaction-0/document-0/location" })
+    XCTAssertTrue(allRows.contains { $0.id == "transaction-data/transaction-0/document-0/access" })
   }
 
   func testToRecordedTransactionDataItems_whenThereAreNoTransactions_thenIsEmpty() {
@@ -215,9 +231,13 @@ private extension TestRequestTransactionDataUiModel {
             signedProperties: [.init(name: "reason", value: "Agreement")],
             href: href,
             checksum: .init(value: "Y2hlY2tzdW0", algorithmOid: "2.16.840.1.101.3.4.2.3"),
-            oneTimePassword: "1234"
+            oneTimePassword: "1234",
+            circumstantialData: "Branch office",
+            accessMode: "OTP"
           )
-        ]
+        ],
+        locations: ["Brussels"],
+        transactionDataHashAlgorithms: ["sha-256"]
       )
     )
   }
@@ -236,9 +256,17 @@ private extension TestRequestTransactionDataUiModel {
             signedProperties: [.init(name: "commitment", value: nil)],
             href: nil,
             checksum: nil,
-            oneTimePassword: nil
+            oneTimePassword: nil,
+            signedEnvelopeProperty: "Detached",
+            referenceUri: "#content",
+            circumstantialData: "Branch",
+            signatureAlgorithm: "1.2.840.10045.4.3.2",
+            signatureAlgorithmParameters: "params",
+            accessMode: "public",
+            inlineDocument: .init(documentType: "sod", sizeInBytes: 3)
           )
-        ]
+        ],
+        transactionDataHashAlgorithms: ["sha-256"]
       )
     )
   }

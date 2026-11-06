@@ -47,13 +47,16 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
         relyingParty: .custom(authenticationRequest.relyingParty),
         isTrusted: authenticationRequest.isTrusted
       )
-      self.onReceivedRegistration(authenticationRequest.relyingPartyRegistration)
+      self.onReceivedRegistration(
+        authenticationRequest.relyingPartyRegistration,
+        isRelyingPartyTrusted: authenticationRequest.isTrusted
+      )
     case .notSecuredRequest:
       self.onTrustBlocked()
     case .failure(let error):
       self.onEmptyDocuments(error: error.errorMessage)
       if let registration = await interactor.registrationForFailedRequest() {
-        self.onReceivedRegistration(registration)
+        self.onReceivedRegistration(registration, isRelyingPartyTrusted: registration.isVerified)
       }
     }
   }
@@ -122,17 +125,6 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   override func getRelyingParty() -> LocalizableStringKey {
     viewState.relyingParty
-  }
-
-  func handleDeepLinkNotification(with info: [AnyHashable: Any]) {
-    Task {
-      guard let session = info["session"] as? RemoteSessionCoordinator else {
-        return
-      }
-      resetState()
-      await interactor.updatePresentationCoordinator(with: session)
-      await doWork()
-    }
   }
 
   private func getCoordinator() async {

@@ -27,17 +27,20 @@ final class TestSettingsInteractor: EudiTest {
   var configLogic: MockConfigLogic!
   var biometryInteractor: MockBiometryInteractor!
   var prefsController: MockPrefsController!
+  var walletResetController: MockWalletResetController!
 
   override func setUp() {
     self.walletKitController = MockWalletKitController()
     self.prefsController = MockPrefsController()
     self.configLogic = MockConfigLogic()
     self.biometryInteractor = MockBiometryInteractor()
+    self.walletResetController = MockWalletResetController()
     self.interactor = SettingsInteractorImpl(
       walletController: walletKitController,
       configLogic: configLogic,
       biometryInteractor: biometryInteractor,
-      prefsController: prefsController
+      prefsController: prefsController,
+      walletResetController: walletResetController
     )
   }
 
@@ -120,45 +123,32 @@ final class TestSettingsInteractor: EudiTest {
     XCTAssertTrue(result)
   }
 
-  func testAuthenticateBiometry_WhenAuthenticationSucceeds_ThenReturnsAuthenticated() async {
+  func testSetBiometrySelection_WhenTheCheckPasses_ThenReturnsAuthenticated() async {
     // Given
     stub(biometryInteractor) { mock in
-      when(mock.authenticate()).thenReturn(.authenticated)
+      when(mock.setBiometrySelection(isEnabled: true)).thenReturn(.authenticated)
     }
 
     // When
-    let state = await interactor.authenticateBiometry()
+    let state = await interactor.setBiometrySelection(isEnabled: true)
 
     // Then
     XCTAssertEqual(state, .authenticated)
-    verify(biometryInteractor).authenticate()
+    verify(biometryInteractor).setBiometrySelection(isEnabled: true)
   }
 
-  func testAuthenticateBiometry_WhenAuthenticationFails_ThenReturnsFailure() async {
+  func testSetBiometrySelection_WhenTheCheckFails_ThenReturnsTheFailure() async {
     // Given
     stub(biometryInteractor) { mock in
-      when(mock.authenticate()).thenReturn(.failure(.deniedAccess))
+      when(mock.setBiometrySelection(isEnabled: false)).thenReturn(.failure(.deniedAccess))
     }
 
     // When
-    let state = await interactor.authenticateBiometry()
+    let state = await interactor.setBiometrySelection(isEnabled: false)
 
     // Then
     XCTAssertEqual(state, .failure(.deniedAccess))
-    verify(biometryInteractor).authenticate()
-  }
-
-  func testSetBiometrySelection_WhenCalled_ThenDelegatesToBiometryInteractor() async {
-    // Given
-    stub(biometryInteractor) { mock in
-      when(mock.setBiometrySelection(isEnabled: true)).thenDoNothing()
-    }
-
-    // When
-    await interactor.setBiometrySelection(isEnabled: true)
-
-    // Then
-    verify(biometryInteractor).setBiometrySelection(isEnabled: true)
+    verify(biometryInteractor).setBiometrySelection(isEnabled: false)
   }
 
   func testOpenBiometrySettings_WhenCalled_ThenDelegatesToBiometryInteractor() async {
@@ -214,6 +204,52 @@ final class TestSettingsInteractor: EudiTest {
     verify(prefsController).setValue(any(), forKey: Prefs.Key.batchCounter)
   }
 
+  func testResetWallet_WhenTheResetSucceeds_ThenReportsSuccess() async {
+    stub(walletResetController) { mock in
+      when(mock.resetWallet()).thenDoNothing()
+    }
+
+    let state = await interactor.resetWallet()
+
+    guard case .success = state else { return XCTFail("Expected success, got \(state)") }
+  }
+
+  func testResetWallet_WhenTheResetFails_ThenReportsTheFailure() async {
+    stub(walletResetController) { mock in
+      when(mock.resetWallet()).thenThrow(WalletCoreError.unableToIssueAndStore)
+    }
+
+    let state = await interactor.resetWallet()
+
+    guard case .failure = state else { return XCTFail("Expected a failure, got \(state)") }
+  }
+
+  func testIsOfferingDocumentsToApps_WhenTheSettingIsOn_ThenReportsIt() async {
+    stub(prefsController) { mock in
+      when(mock.getBool(forKey: equal(to: Prefs.Key.offerDocumentsToApps))).thenReturn(true)
+    }
+
+    let isOffering = await interactor.isOfferingDocumentsToApps()
+
+    XCTAssertTrue(isOffering)
+  }
+
+  func testSetOfferingDocumentsToApps_WhenTurnedOff_ThenStoresItAndWithdrawsTheRegistrations() async {
+    stub(prefsController) { mock in
+      when(mock.setValue(any(), forKey: any())).thenDoNothing()
+    }
+    stub(walletKitController) { mock in
+      when(mock.reconcileRegistrations()).thenDoNothing()
+    }
+
+    await interactor.setOfferingDocumentsToApps(isEnabled: false)
+
+    verify(prefsController).setValue(
+      ParameterMatcher<Any?> { ($0 as? Bool) == false },
+      forKey: equal(to: Prefs.Key.offerDocumentsToApps)
+    )
+    verify(walletKitController).reconcileRegistrations()
+  }
 }
 
 extension TestSettingsInteractor {

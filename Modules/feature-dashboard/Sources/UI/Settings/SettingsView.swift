@@ -16,7 +16,6 @@
 import SwiftUI
 import logic_ui
 import logic_resources
-import logic_business
 
 struct SettingsView<Router: RouterHost>: View {
   @State private var viewModel: SettingsViewModel<Router>
@@ -46,16 +45,17 @@ struct SettingsView<Router: RouterHost>: View {
         Button(.okButton) { viewModel.isRestartRequiredAlertShowing = false }
       }
     )
-    .alert(item: $viewModel.biometryError) { error in
-      Alert(
-        title: Text(.genericErrorTitle),
-        message: Text(error.errorDescription.orEmpty),
-        primaryButton: .default(Text(.biometryOpenSettings)) {
-          viewModel.onBiometrySettings()
-        },
-        secondaryButton: .cancel {}
-      )
-    }
+    .alertView(
+      isPresented: $viewModel.isResetConfirmationShowing,
+      title: .resetWalletConfirmTitle,
+      message: .resetWalletConfirmMessage,
+      actions: {
+        Button(.resetWalletConfirmButton, role: .destructive) { viewModel.onResetConfirmed() }
+          .accessibilityIdentifier(SettingsLocators.confirmDialogResetButton.id)
+        Button(.cancelButton, role: .cancel) { viewModel.isResetConfirmationShowing = false }
+          .accessibilityIdentifier(SettingsLocators.confirmDialogCancelButton.id)
+      }
+    )
   }
 }
 

@@ -70,7 +70,8 @@ private enum SharedPrefs {
   private static let didRegisterDefaults: Void = {
     let defaults = [
       Prefs.Key.batchCounter.rawValue: true,
-      Prefs.Key.validateIssuerRegistrationCertificate.rawValue: false
+      Prefs.Key.validateIssuerRegistrationCertificate.rawValue: false,
+      Prefs.Key.offerDocumentsToApps.rawValue: true
     ]
     if let suiteName = Bundle.getAppGroupIdentifier(),
        let sharedDefaults = UserDefaults(suiteName: suiteName) {
@@ -87,19 +88,5 @@ private enum SharedPrefs {
       return .standard
     }
     return sharedDefaults
-  }
-}
-
-public struct Prefs {}
-
-public extension Prefs {
-  enum Key: String {
-    case biometryEnabled
-    case cachedDeepLink
-    case runAtLeastOnce
-    case language
-    case batchCounter
-    case validateIssuerRegistrationCertificate
-    case trustMarkIntroductionCompleted
   }
 }

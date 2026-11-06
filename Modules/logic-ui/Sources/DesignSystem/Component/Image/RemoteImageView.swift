@@ -56,7 +56,11 @@ public struct RemoteImageView: View {
   }
 
   public var body: some View {
-    WebImage(url: url, options: retryFailed ? [.retryFailed] : []) { image in
+    WebImage(
+      url: RemoteImagePolicy.loadableUrl(url),
+      options: retryFailed ? [.retryFailed] : [],
+      context: Self.loadingContext(for: url)
+    ) { image in
       image
         .resizable()
         .scaledToFit()
@@ -97,5 +101,24 @@ public extension RemoteImageView {
         return false
       }
     }
+  }
+}
+
+extension RemoteImageView {
+
+  /// The downloader for remote images, whose operations keep to `RemoteImagePolicy`.
+  private static let imageDownloader: SDWebImageDownloader = {
+    let config = SDWebImageDownloaderConfig()
+    config.operationClass = RemoteImageDownloadOperation.self
+    return SDWebImageDownloader(config: config)
+  }()
+
+  /// Loads through `imageDownloader` and scales a large image down while decoding it.
+  static func loadingContext(for url: URL?) -> [SDWebImageContextOption: Any]? {
+    guard RemoteImagePolicy.loadableUrl(url) != nil else { return nil }
+    return [
+      .imageLoader: imageDownloader,
+      .imageScaleDownLimitBytes: RemoteImagePolicy.maxDecodedByteCount
+    ]
   }
 }

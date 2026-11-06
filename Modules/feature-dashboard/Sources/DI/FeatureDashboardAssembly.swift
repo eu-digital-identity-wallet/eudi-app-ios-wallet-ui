@@ -17,6 +17,7 @@ import Swinject
 import logic_business
 import logic_core
 import feature_common
+import logic_authentication
 
 public final class FeatureDashboardAssembly: Assembly {
 
@@ -25,7 +26,8 @@ public final class FeatureDashboardAssembly: Assembly {
   public func assemble(container: Container) {
     container.register(DashboardInteractor.self) { r in
       DashboardInteractorImpl(
-        walletKitController: r.force(WalletKitController.self)
+        walletKitController: r.force(WalletKitController.self),
+        walletWorkScheduler: r.force(WalletWorkScheduler.self)
       )
     }
     .inObjectScope(ObjectScope.transient)
@@ -39,7 +41,8 @@ public final class FeatureDashboardAssembly: Assembly {
         walletController: r.force(WalletKitController.self),
         configLogic: r.force(ConfigLogic.self),
         biometryInteractor: r.force(BiometryInteractor.self),
-        prefsController: r.force(PrefsController.self)
+        prefsController: r.force(PrefsController.self),
+        walletResetController: r.force(WalletResetController.self)
       )
     }
 
@@ -55,7 +58,8 @@ public final class FeatureDashboardAssembly: Assembly {
         walletKitController: r.force(WalletKitController.self),
         prefsController: r.force(PrefsController.self),
         filterValidator: r.force(FilterValidator.self),
-        configLogic: r.force(ConfigLogic.self)
+        configLogic: r.force(ConfigLogic.self),
+        walletWorkScheduler: r.force(WalletWorkScheduler.self)
       )
     }
 
@@ -70,7 +74,9 @@ public final class FeatureDashboardAssembly: Assembly {
       DocumentDetailsInteractorImpl(
         walletController: r.force(WalletKitController.self),
         prefsController: r.force(PrefsController.self),
-        configLogic: r.force(ConfigLogic.self)
+        configLogic: r.force(ConfigLogic.self),
+        sessionController: r.force(SessionController.self),
+        walletWorkScheduler: r.force(WalletWorkScheduler.self)
       )
     }
     .inObjectScope(ObjectScope.transient)

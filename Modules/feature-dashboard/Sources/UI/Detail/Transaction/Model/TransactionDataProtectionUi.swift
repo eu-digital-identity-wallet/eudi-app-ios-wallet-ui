@@ -39,10 +39,12 @@ public struct TransactionPresentationActionsUi: Equatable, Sendable {
 }
 
 extension TransactionLogDomain.Presentation {
+  /// No deletion request is offered when the registration certificate was issued to another party than the one that
+  /// asked, since its contacts are not that party's, as on Android.
   func contacts(for action: TransactionDataProtectionAction) -> [TransactionContactUi] {
     let sources: [String] = switch action {
     case .requestDataDeletion:
-      claimsPresented.isEmpty ? [] : party.contacts
+      claimsPresented.isEmpty || registrationCheck == .notBoundToRequester ? [] : party.contacts
     case .reportSuspiciousTransaction:
       registration?.dpa?.contacts ?? []
     }
@@ -50,6 +52,15 @@ extension TransactionLogDomain.Presentation {
       guard let url = contact.contactUrl, !unique.contains(where: { $0.url == url }) else { return }
       unique.append(.init(label: contact.trimmingCharacters(in: .whitespacesAndNewlines), url: url))
     }.sorted { $0.url.channelOrder < $1.url.channelOrder }
+  }
+
+  /// The warning for contacts taken from a registration that was not verified when the data was shared, as the
+  /// Android wallet's `registrationWarning`; nil when it was verified or the entry carries none.
+  var registrationWarning: LocalizableStringKey? {
+    guard hasUnverifiedRegistration else { return nil }
+    return registrationCheck == .notBoundToRequester
+      ? .transactionDetailsRegistrationNotBoundWarning
+      : .transactionDetailsRegistrationNotVerifiedWarning
   }
 
   var partyIdentity: String {

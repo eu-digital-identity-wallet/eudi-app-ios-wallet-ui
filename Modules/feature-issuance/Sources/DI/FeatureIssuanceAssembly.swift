@@ -16,6 +16,7 @@
 import Swinject
 import logic_core
 import logic_business
+import logic_authentication
 
 public final class FeatureIssuanceAssembly: Assembly {
 
@@ -24,7 +25,8 @@ public final class FeatureIssuanceAssembly: Assembly {
   public func assemble(container: Container) {
     container.register(AddDocumentInteractor.self) { r in
       AddDocumentInteractorImpl(
-        walletController: r.force(WalletKitController.self)
+        walletController: r.force(WalletKitController.self),
+        sessionController: r.force(SessionController.self)
       )
     }
     .inObjectScope(ObjectScope.transient)
@@ -32,7 +34,8 @@ public final class FeatureIssuanceAssembly: Assembly {
     container.register(DocumentOfferInteractor.self) { r in
       DocumentOfferInteractorImpl(
         walletController: r.force(WalletKitController.self),
-        configLogic: r.force(ConfigLogic.self)
+        configLogic: r.force(ConfigLogic.self),
+        sessionController: r.force(SessionController.self)
       )
     }
     .inObjectScope(ObjectScope.transient)

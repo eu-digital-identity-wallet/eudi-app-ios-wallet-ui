@@ -22,7 +22,7 @@ public enum PinLockoutState: Sendable, Equatable {
 
 protocol PinThrottleProvider: Sendable {
 
-  /// Returns the current lockout state, evaluating wall-clock time against persisted values.
+  /// Returns the current lockout state, evaluating the monotonic clock against persisted values.
   func getState() -> PinLockoutState
 
   /// Records a failed PIN attempt. If the failure count reaches the configured threshold,

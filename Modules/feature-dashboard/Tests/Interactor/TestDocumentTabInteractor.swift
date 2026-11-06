@@ -28,17 +28,29 @@ final class TestDocumentTabInteractor: EudiTest {
   var prefsController: MockPrefsController!
   var filterValidator: MockFilterValidator!
   var configLogic: MockConfigLogic!
+  var walletWorkScheduler: MockWalletWorkScheduler!
   
   override func setUp() {
     self.walletKitController = MockWalletKitController()
+    stub(walletKitController) { mock in
+      when(mock.issuerLogoOrigins()).thenReturn(IssuerLogoOrigins(logoOriginsByIssuer: [:]))
+    }
     self.prefsController = MockPrefsController()
     self.configLogic = MockConfigLogic()
     self.filterValidator = MockFilterValidator()
+    self.walletWorkScheduler = MockWalletWorkScheduler()
+    stub(walletWorkScheduler) { mock in
+      when(mock.scheduleRevocationCheck(afterReIssueOf: any())).thenDoNothing()
+    }
+    stub(walletKitController) { mock in
+      when(mock.fetchAllDocuments()).thenReturn([])
+    }
     self.interactor = DocumentTabInteractorImpl(
       walletKitController: walletKitController,
       prefsController: prefsController,
       filterValidator: filterValidator,
-      configLogic: configLogic
+      configLogic: configLogic,
+      walletWorkScheduler: walletWorkScheduler
     )
     
     stubConfigLogic()
@@ -88,10 +100,9 @@ final class TestDocumentTabInteractor: EudiTest {
   
   func testFetchDocuments_WhenWalletKitControllerReturnsEmptyDocuments_ThenReturnsError() async {
     // Given
-    stubFetchRevokedDocuments(with: [])
+    stubFetchRevokedDocumentStatuses(with: [:])
     stubFetchDocuments(with: [])
     stubFetchIssuedDocuments(with: [])
-    stubFetchDocumentsWithExclusion(with: [])
     stubFetchMainPidDocument(with: nil)
     stubRefreshCounters()
     
@@ -128,9 +139,7 @@ final class TestDocumentTabInteractor: EudiTest {
     let expectedPid = Constants.createEuPidModel(credentialsUsageCounts: try .init(total: 10, remaining: 10))
     let expectedMdl = Constants.createIsoMdlModel()
     
-    stubFetchRevokedDocuments(
-      with: []
-    )
+    stubFetchRevokedDocumentStatuses(with: [:])
     stubFetchDocuments(
       with: [
         expectedPid,
@@ -144,7 +153,6 @@ final class TestDocumentTabInteractor: EudiTest {
       ]
     )
     stubFetchDocumentCategories(with: documentsCategories)
-    stubFetchDocumentsWithExclusion(with: [expectedMdl])
     stubFetchMainPidDocument(with: expectedPid)
     stubIsDocumentLowOnCredentials()
     stubRefreshCounters()
@@ -164,6 +172,55 @@ final class TestDocumentTabInteractor: EudiTest {
     verify(walletKitController).refreshUsageCounters()
   }
   
+  func testFetchDocuments_WhenOneIsRevokedAndOneSuspended_ThenEachShowsItsState() async {
+    let pid = Constants.createEuPidModel()
+    let mdl = Constants.createIsoMdlModel()
+    stubFetchRevokedDocumentStatuses(with: [pid.id: .suspended, mdl.id: .revoked])
+    stubFetchDocuments(with: [pid, mdl])
+    stubFetchIssuedDocuments(with: [pid, mdl])
+    stubFetchDocumentCategories(with: [:])
+    stubFetchMainPidDocument(with: pid)
+    stubIsDocumentLowOnCredentials()
+    stubRefreshCounters()
+    stubIsBatchCounterEnabled()
+
+    let state = await interactor.fetchDocuments(failedDocuments: [], shouldRefreshCounters: false)
+
+    guard case .success(let list) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    let states = Dictionary(uniqueKeysWithValues: list.items.compactMap { item in
+      (item.payload as? DocumentTabUIModel).map { ($0.id, $0.value.state) }
+    })
+    XCTAssertEqual(states, [pid.id: .suspended, mdl.id: .revoked])
+    XCTAssertTrue(list.items.allSatisfy { ($0.attributes as? DocumentFilterableAttributes)?.isRevoked == true })
+  }
+
+  func testFetchDocuments_WhenTheRevocationRecordsCannotBeRead_ThenEveryDocumentShowsAsBlocked() async {
+    let pid = Constants.createEuPidModel()
+    let mdl = Constants.createIsoMdlModel()
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocumentStatuses()).thenThrow(RuntimeError.genericError)
+    }
+    stubFetchDocuments(with: [pid, mdl])
+    stubFetchIssuedDocuments(with: [pid, mdl])
+    stubFetchDocumentCategories(with: [:])
+    stubFetchMainPidDocument(with: pid)
+    stubIsDocumentLowOnCredentials()
+    stubRefreshCounters()
+    stubIsBatchCounterEnabled()
+
+    let state = await interactor.fetchDocuments(failedDocuments: [], shouldRefreshCounters: false)
+
+    guard case .success(let list) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    let states = Dictionary(uniqueKeysWithValues: list.items.compactMap { item in
+      (item.payload as? DocumentTabUIModel).map { ($0.id, $0.value.state) }
+    })
+    XCTAssertEqual(states, [pid.id: .revoked, mdl.id: .revoked])
+  }
+
   func testFetchDocuments_WhenWalletKitControllerReturnsDataWithNilUsageCount_ThenReturnsUiModels() async {
     // Given
     var documentsCategories: DocumentCategories {
@@ -181,9 +238,7 @@ final class TestDocumentTabInteractor: EudiTest {
     let expectedPid = Constants.createEuPidModel()
     let expectedMdl = Constants.createIsoMdlModel()
     
-    stubFetchRevokedDocuments(
-      with: []
-    )
+    stubFetchRevokedDocumentStatuses(with: [:])
     stubFetchDocuments(
       with: [
         expectedPid,
@@ -197,7 +252,6 @@ final class TestDocumentTabInteractor: EudiTest {
       ]
     )
     stubFetchDocumentCategories(with: documentsCategories)
-    stubFetchDocumentsWithExclusion(with: [expectedMdl])
     stubFetchMainPidDocument(with: expectedPid)
     stubIsDocumentLowOnCredentials()
     stubRefreshCounters()
@@ -358,38 +412,28 @@ final class TestDocumentTabInteractor: EudiTest {
       )
     )
     
+    let (validatorStream, validator) = AsyncStream<FilterResultPartialState>.makeStream()
     stub(filterValidator) { stub in
-      when(stub.getFilterResultStream()).thenReturn(AsyncStream { continuation in
-        continuation.yield(FilterResultPartialState.success(filterApplyResult))
-        continuation.yield(FilterResultPartialState.success(filterUpdateResult))
-        continuation.finish()
-      })
+      when(stub.getFilterResultStream()).thenReturn(validatorStream)
     }
-    
+
     // When
-    let resultStream = await interactor.onFilterChangeState()
-    var results = [DocumentFiltersPartialState]()
-    
+    var results = await interactor.onFilterChangeState().makeAsyncIterator()
+    validator.yield(.success(filterApplyResult))
+    let first = await results.next()
+    validator.yield(.success(filterUpdateResult))
+    let second = await results.next()
+
     // Then
-    Task {
-      for await result in resultStream {
-        results.append(result)
-      }
-      
-      XCTAssertEqual(results.count, 2)
-      if case let .filterApplyResult(transactions, sections, _) = results[0] {
-        XCTAssertTrue(transactions.isEmpty)
-        XCTAssertEqual(sections.count, 0)
-      } else {
-        XCTFail("Expected .filterApplyResult, but got \(results[0])")
-      }
-      
-      if case let .filterUpdateResult(sections) = results[1] {
-        XCTAssertEqual(sections.count, 0)
-      } else {
-        XCTFail("Expected .filterUpdateResult, but got \(results[1])")
-      }
+    guard case let .filterApplyResult(transactions, sections, _) = first else {
+      return XCTFail("Expected .filterApplyResult, but got \(String(describing: first))")
     }
+    XCTAssertTrue(transactions.isEmpty)
+    XCTAssertEqual(sections.count, 0)
+    guard case let .filterUpdateResult(updatedSections) = second else {
+      return XCTFail("Expected .filterUpdateResult, but got \(String(describing: second))")
+    }
+    XCTAssertEqual(updatedSections.count, 0)
   }
   
   func testRequestDeferredIssuance_WhenAllIssuanceSucceeds_ThenReturnsIssuedModels() async {
@@ -410,7 +454,7 @@ final class TestDocumentTabInteractor: EudiTest {
         )
       ]
     )
-    stubFetchRevokedDocuments(with: [])
+    stubFetchRevokedDocumentStatuses(with: [:])
     stubFetchDocumentCategories(with: [:])
     stub(walletKitController) { stub in
       when(stub.requestDeferredIssuance(with: any())).thenReturn(issuedDoc)
@@ -430,6 +474,51 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
   
+  func testRequestDeferredIssuance_WhenARevokedDocumentIsGoneAfterIssuance_ThenTheRevocationCheckRuns() async {
+    stubDeferredIssuanceOfOneDocument(revocationStatuses: ["original": .revoked])
+    stub(walletKitController) { stub in
+      when(stub.fetchAllDocuments()).thenReturn([Constants.createEuPidModel()])
+    }
+
+    _ = await interactor.requestDeferredIssuance()
+
+    verify(walletWorkScheduler).scheduleRevocationCheck(afterReIssueOf: equal(to: "original"))
+  }
+
+  func testRequestDeferredIssuance_WhenEveryRevokedDocumentRemains_ThenNoRevocationCheckIsAsked() async {
+    stubDeferredIssuanceOfOneDocument(revocationStatuses: [Constants.euPidModelId: .revoked])
+    stub(walletKitController) { stub in
+      when(stub.fetchAllDocuments()).thenReturn([Constants.createEuPidModel()])
+    }
+
+    _ = await interactor.requestDeferredIssuance()
+
+    verify(walletWorkScheduler, never()).scheduleRevocationCheck(afterReIssueOf: any())
+  }
+
+  private func stubDeferredIssuanceOfOneDocument(revocationStatuses: [String: DocumentRevocationStatus]) {
+    stubFetchDeferredDocuments(
+      with: [
+        .init(
+          docType: "",
+          docDataFormat: .cbor,
+          data: Data(),
+          docKeyInfo: nil,
+          createdAt: nil,
+          metadata: nil,
+          displayName: "",
+          status: .deferred
+        )
+      ]
+    )
+    stubFetchRevokedDocumentStatuses(with: revocationStatuses)
+    stubFetchDocumentCategories(with: [:])
+    stub(walletKitController) { stub in
+      when(stub.requestDeferredIssuance(with: any())).thenReturn(Constants.createEuPidModel())
+    }
+    stubIsBatchCounterEnabled()
+  }
+
   func testRequestDeferredIssuance_WhenIssuanceFails_ThenReturnsFailedIds() async {
     // Given
     let expectedId = "fail-id"
@@ -448,7 +537,7 @@ final class TestDocumentTabInteractor: EudiTest {
         )
       ]
     )
-    stubFetchRevokedDocuments(with: [])
+    stubFetchRevokedDocumentStatuses(with: [:])
     stubFetchDocumentCategories(with: [:])
     stub(walletKitController) { stub in
       when(stub.requestDeferredIssuance(with: any())).thenThrow(WalletCoreError.unableFetchDocument)
@@ -471,7 +560,7 @@ final class TestDocumentTabInteractor: EudiTest {
     // Given
     let issuedDoc = Constants.createEuPidModel()
     stubFetchDeferredDocuments(with: [])
-    stubFetchRevokedDocuments(with: [])
+    stubFetchRevokedDocumentStatuses(with: [:])
     stubFetchDocumentCategories(with: [:])
     stub(walletKitController) { stub in
       when(stub.requestDeferredIssuance(with: any())).thenReturn(issuedDoc)
@@ -667,12 +756,6 @@ private extension TestDocumentTabInteractor {
     }
   }
   
-  func stubFetchDocumentsWithExclusion(with documents: [any DocClaimsDecodable]) {
-    stub(walletKitController) { mock in
-      when(mock.fetchIssuedDocuments(excluded: any())).thenReturn(documents)
-    }
-  }
-  
   func stubFetchMainPidDocument(with document: (any DocClaimsDecodable)?) {
     stub(walletKitController) { mock in
       when(mock.fetchMainPidDocument()).thenReturn(document)
@@ -685,9 +768,9 @@ private extension TestDocumentTabInteractor {
     }
   }
   
-  func stubFetchRevokedDocuments(with revokedDocuments: [String]) {
+  func stubFetchRevokedDocumentStatuses(with statuses: [String: DocumentRevocationStatus]) {
     stub(walletKitController) { mock in
-      when(mock.fetchRevokedDocuments()).thenReturn(revokedDocuments)
+      when(mock.fetchRevokedDocumentStatuses()).thenReturn(statuses)
     }
   }
   

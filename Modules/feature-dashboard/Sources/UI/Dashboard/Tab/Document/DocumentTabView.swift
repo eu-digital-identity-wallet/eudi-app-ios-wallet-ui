@@ -36,7 +36,7 @@ struct DocumentTabView<Router: RouterHost>: View {
       isSuccededDocumentsModalShowing: $viewModel.isSuccededDocumentsModalShowing,
       onAction: { item in
         switch item.value.state {
-        case .issued, .revoked:
+        case .issued, .revoked, .suspended:
           viewModel.onDocumentDetails(documentId: item.value.id)
         case .pending, .failed:
           viewModel.onDeleteDeferredDocument(with: item)

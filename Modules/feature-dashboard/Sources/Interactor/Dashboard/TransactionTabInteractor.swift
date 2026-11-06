@@ -34,6 +34,8 @@ public enum TransactionFiltersPartialState: Sendable {
 }
 
 public protocol TransactionTabInteractor: Sendable {
+  /// Reads the history again only when it changed since the last read, so the tab does not materialise every
+  /// row each time it appears.
   func fetchTransactions() async throws -> TransactionsPartialState
   func initializeFilters(
     filterableList: FilterableList,
@@ -60,6 +62,7 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
   private let filterValidator: FilterValidator
 
   private var filtersStateAsync: AsyncStream<TransactionFiltersPartialState>.Continuation?
+  private var lastRead: (revision: String, state: TransactionsPartialState)?
 
   init(
     walletKitController: WalletKitController,
@@ -75,17 +78,24 @@ final actor TransactionTabInteractorImpl: TransactionTabInteractor {
 
   func fetchTransactions() async throws -> TransactionsPartialState {
 
+    let revision = await walletKitController.fetchTransactionLogRevision()
+    if let lastRead, lastRead.revision == revision {
+      return lastRead.state
+    }
+
     let transactions: FilterableList? = try await fetchFilteredTransactions()
 
     guard let transactions = transactions else {
       return .failure(WalletCoreError.unableToFetchTransactionLog)
     }
 
-    return .success(
+    let state = TransactionsPartialState.success(
       filterableList: transactions,
       minStartDate: getEarliestTransactionDate(from: transactions),
       maxEndDate: getLatestTransactionDate(from: transactions)
     )
+    lastRead = (revision, state)
+    return state
   }
 
   func initializeFilters(

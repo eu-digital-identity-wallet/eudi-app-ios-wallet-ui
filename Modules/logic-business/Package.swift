@@ -31,7 +31,7 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/rhummelmose/BluetoothKit.git",
-      branch: "master"
+      revision: "d6ab93cb3f98d9c4033bd37413d9fe90a4647cb4"
     ),
     .package(
       url: "https://github.com/Swinject/Swinject.git",
@@ -47,7 +47,7 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
-      exact: "0.27.2"
+      exact: "0.28.1"
     ),
     .package(name: "logic-test", path: "./logic-test")
   ],

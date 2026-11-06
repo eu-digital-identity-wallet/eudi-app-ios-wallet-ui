@@ -62,4 +62,14 @@ final class ProviderBiometryRouter: RouterHost {
   func isScreenOnBackStack(with route: AppRoute) -> Bool {
     true
   }
+
+  func isInProtectedFlow() -> Bool {
+    false
+  }
+
+  /// The extension has no session to lock: it asks for the PIN or biometrics for every request.
+  func requireLoginIfLocked() {}
+
+  /// The extension has no start-up to return to.
+  func restartAtStartup() {}
 }

@@ -19,11 +19,25 @@ public protocol NetworkSessionProvider: Sendable {
   var urlSession: URLSession { get }
 }
 
+/// The app's HTTP session, also handed to WalletKit. It keeps no cookies and no disk cache, so a cookie one relying
+/// party sets is never sent to another and nothing links the wallet's sessions across launches, which batched
+/// one-time credentials depend on. WalletKit fetches SD-JWT issuer keys with its own `URLSession.shared`, which the
+/// app cannot change.
 final class NetworkSessionProviderImpl: NetworkSessionProvider {
 
   let urlSession: URLSession
 
   init() {
-    self.urlSession = URLSession.shared
+    self.urlSession = URLSession(configuration: Self.makeConfiguration())
+  }
+
+  /// An ephemeral configuration that neither stores nor sends cookies and keeps no response cache.
+  static func makeConfiguration() -> URLSessionConfiguration {
+    let configuration = URLSessionConfiguration.ephemeral
+    configuration.httpCookieStorage = nil
+    configuration.httpCookieAcceptPolicy = .never
+    configuration.httpShouldSetCookies = false
+    configuration.urlCache = nil
+    return configuration
   }
 }

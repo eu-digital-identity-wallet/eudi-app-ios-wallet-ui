@@ -21,4 +21,6 @@ public extension NSNotification {
 
   static let DocumentTabRefresh = Notification.Name("DocumentTabRefresh")
   static let DocumentDetailsRefresh = Notification.Name("AlteredIdsDetailsExtra")
+  static let ReIssuanceDetailsRefresh = Notification.Name("ReIssuanceDetailsRefresh")
+  static let RevocationDashboard = Notification.Name("RevocationDashboard")
 }

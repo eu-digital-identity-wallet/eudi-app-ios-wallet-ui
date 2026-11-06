@@ -25,7 +25,10 @@ public struct WrapExpandableListView<T: Sendable>: View {
   private let hideSensitiveContent: Bool
   private let hasHeader: Bool
   private let isLoading: Bool
+  private let expandsWhen: Bool
+  private let onExpand: (() -> Void)?
 
+  /// `onExpand` runs each time the user opens the list's header card; see `ExpandableCardView`.
   public init(
     header: ListItemData? = nil,
     items: [ExpandableListItem<T>],
@@ -33,7 +36,9 @@ public struct WrapExpandableListView<T: Sendable>: View {
     hideSensitiveContent: Bool,
     hasHeader: Bool = true,
     isLoading: Bool = false,
-    onItemClick: ((ListItemData) -> Void)? = nil
+    expandsWhen: Bool = false,
+    onItemClick: ((ListItemData) -> Void)? = nil,
+    onExpand: (() -> Void)? = nil
   ) {
     self.header = header
     self.items = items
@@ -41,7 +46,9 @@ public struct WrapExpandableListView<T: Sendable>: View {
     self.hideSensitiveContent = hideSensitiveContent
     self.hasHeader = hasHeader
     self.isLoading = isLoading
+    self.expandsWhen = expandsWhen
     self.onItemClick = onItemClick
+    self.onExpand = onExpand
   }
 
   public var body: some View {
@@ -51,7 +58,9 @@ public struct WrapExpandableListView<T: Sendable>: View {
           ExpandableCardView(
             backgroundColor: backgroundColor,
             header: header,
-            isLoading: isLoading
+            isLoading: isLoading,
+            expandsWhen: expandsWhen,
+            onExpand: onExpand
           ) {
             contentList()
           }

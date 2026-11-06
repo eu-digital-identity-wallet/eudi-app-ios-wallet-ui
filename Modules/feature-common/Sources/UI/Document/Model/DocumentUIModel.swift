@@ -57,18 +57,15 @@ public extension DocumentUIModel {
     public let id: String
     public let name: String
     public let logoUrl: URL?
-    public let isVerified: Bool
 
     public init(
       id: String = UUID().uuidString,
       issuersName: String,
-      logoUrl: URL?,
-      isVerified: Bool
+      logoUrl: URL?
     ) {
       self.id = id
       self.name = issuersName
       self.logoUrl = logoUrl
-      self.isVerified = isVerified
     }
   }
 }
@@ -76,7 +73,6 @@ public extension DocumentUIModel {
 public extension DocumentUIModel.IssuerField {
   static func == (lhs: Self, rhs: Self) -> Bool {
     lhs.name == rhs.name &&
-    lhs.logoUrl == rhs.logoUrl &&
-    lhs.isVerified == rhs.isVerified
+    lhs.logoUrl == rhs.logoUrl
   }
 }

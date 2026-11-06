@@ -45,9 +45,22 @@ struct IssuerDetailsCardView: View {
           image: Theme.shared.image.id
         )
       ),
-      isLoading: self.isLoading
+      isLoading: self.isLoading,
+      expandsWhen: issuerDetails.hasStatusRefreshFailed || issuerDetails.hasReIssuanceFailed
     ) {
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+        if issuerDetails.hasReIssuanceFailed {
+          Text(LocalizableStringKey.documentDetailsIssuerCardReIssuanceFailedText)
+            .typography(Theme.shared.font.bodyMedium)
+            .foregroundStyle(Theme.shared.color.warning)
+        }
+
+        if issuerDetails.hasStatusRefreshFailed {
+          Text(LocalizableStringKey.documentDetailsIssuerCardStatusRefreshFailedText)
+            .typography(Theme.shared.font.bodyMedium)
+            .foregroundStyle(Theme.shared.color.warning)
+        }
+
         if let dateTextKey = issuerDetails.expandedDateText {
           Text(dateTextKey)
             .typography(Theme.shared.font.bodyMedium)

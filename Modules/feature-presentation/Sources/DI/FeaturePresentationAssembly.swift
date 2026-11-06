@@ -15,6 +15,7 @@
  */
 import Swinject
 import logic_core
+import logic_ui
 
 public final class FeaturePresentationAssembly: Assembly {
 
@@ -25,7 +26,7 @@ public final class FeaturePresentationAssembly: Assembly {
       PresentationInteractorImpl(
         with: session,
         and: r.force(WalletKitController.self),
-        also: r.force(SessionCoordinatorHolder.self)
+        configUiLogic: r.force(ConfigUiLogic.self)
       )
     }
     .inObjectScope(ObjectScope.transient)

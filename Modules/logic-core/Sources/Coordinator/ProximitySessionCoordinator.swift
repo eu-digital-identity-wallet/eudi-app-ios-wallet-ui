@@ -17,11 +17,25 @@ import logic_resources
 import UIKit
 import logic_business
 
-public protocol ProximitySessionCoordinator: Sendable {
+/// A presentation service whose Bluetooth transfer the app can stop and watch. Wallet-kit's
+/// `BlePresentationService` is one; the protocol lets tests do both without a Bluetooth session.
+protocol ProximityTransferService: Sendable {
+  func stop()
+  /// True once the reader has ended the Bluetooth session. Wallet-kit announces a disconnect to the session only
+  /// after a response, so the app reads the status itself, on the main actor, where wallet-kit's status handler
+  /// records the disconnect.
+  @MainActor var isReaderDisconnected: Bool { get }
+}
+
+public protocol ProximitySessionCoordinator: AnyObject, Sendable {
 
   var sendableCurrentValueSubject: SendableCurrentValueSubject<PresentationState> { get }
   var relyingPartyRegistration: WrpRegistrationPolicy? { get }
   var relyingPartyWarningViolations: [String] { get }
+  /// True when wallet-kit found the registration certificate issued to another party than the one that asked.
+  var isRelyingPartyNotBoundToRequester: Bool { get }
+  /// The transaction identifier of the history entry wallet-kit writes for this presentation.
+  var transactionIdentifier: String { get }
 
   init(session: PresentationSession)
 
@@ -34,6 +48,9 @@ public protocol ProximitySessionCoordinator: Sendable {
   func setState(presentationState: PresentationState)
   func getStream() -> AsyncStream<PresentationState>
   func stopPresentation()
+  /// Returns true once the reader ends the Bluetooth session, checking every half second, and false when the
+  /// session has no Bluetooth transfer or the waiting task is cancelled.
+  func waitForReaderDisconnect() async -> Bool
 }
 
 final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
@@ -45,6 +62,10 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
 
   var relyingPartyRegistration: WrpRegistrationPolicy? { session.wrpVerifierPolicy }
   var relyingPartyWarningViolations: [String] { (session.wrpVerifierWarnings?[""] ?? []).map(\.message) }
+  var isRelyingPartyNotBoundToRequester: Bool {
+    (session.wrpVerifierWarnings?[""] ?? []).contains { $0.reason == .notBoundToAccessCertificate }
+  }
+  var transactionIdentifier: String { session.presentationService.transactionLog.transactionIdentifier }
 
   private var overaskedClaims: [OveraskedClaim] {
     (session.wrpVerifierWarnings?.values.flatMap { $0 } ?? []).toOveraskedClaims()
@@ -76,8 +97,11 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
       .store(in: &sendableAnyCancellable.cancellables)
   }
 
+  /// Ends only the state stream. Stopping the Bluetooth transfer here would start the transfer library's
+  /// key-deletion task just as the session is released, the crash `SessionCoordinatorHolderImpl` avoids by
+  /// keeping a stopped coordinator until the next one starts.
   deinit {
-    stopPresentation()
+    endStateStream()
   }
 
   public func initialize() async throws {
@@ -121,20 +145,47 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
     self.sendableCurrentValueSubject.getAsyncStream()
   }
 
+  /// Stops the Bluetooth transfer as well as the state stream, so that a session the user, a lock or a new
+  /// link ends stops advertising, as the Android wallet's proximity screen does when it closes. The transfer
+  /// stops on the main actor, where wallet-kit's own status handler changes the same state.
   public func stopPresentation() {
+    if let transfer = session.presentationService as? ProximityTransferService {
+      Task { @MainActor in transfer.stop() }
+    }
+    endStateStream()
+  }
+
+  public func waitForReaderDisconnect() async -> Bool {
+    guard let transfer = session.presentationService as? ProximityTransferService else { return false }
+    while !Task.isCancelled {
+      if await transfer.isReaderDisconnected { return true }
+      try? await Task.sleep(seconds: Constants.disconnectCheckInterval)
+    }
+    return false
+  }
+
+  private func endStateStream() {
     self.sendableCurrentValueSubject.complete()
     self.sendableAnyCancellable.cancel()
   }
 
   private func createRequest() -> PresentationRequest {
-    PresentationRequest(
+    let isTrusted = session.readerAuthenticationStatus == .authenticated
+    return PresentationRequest(
       itemSets: session.disclosedDocumentSets.map(\.docElements),
-      relyingParty: session.readerCertIssuer ?? LocalizableStringKey.unknownVerifier.toString,
+      relyingParty: PresentationRequest.relyingPartyName(certificateName: session.readerCertIssuer, isTrusted: isTrusted),
       dataRequestInfo: session.readerCertValidationMessage ?? LocalizableStringKey.requestDataInfoNotice.toString,
-      isTrusted: session.readerAuthenticationStatus == .authenticated,
+      isTrusted: isTrusted,
       overaskedClaims: overaskedClaims,
       transactionDataSets: [],
       requestNames: session.disclosedDocumentSets.map(\.requestName)
     )
+  }
+}
+
+private extension ProximitySessionCoordinatorImpl {
+  enum Constants {
+    /// How often `waitForReaderDisconnect()` reads the transfer's status, in seconds.
+    static let disconnectCheckInterval: TimeInterval = 0.5
   }
 }

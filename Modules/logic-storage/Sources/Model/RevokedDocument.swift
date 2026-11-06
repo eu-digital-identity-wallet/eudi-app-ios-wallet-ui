@@ -19,30 +19,36 @@ import SwiftData
 final class SDRevokedDocument: IdentifiableObject {
 
   @Attribute(.unique) var identifier: String
+  var status: String?
 
-  init(identifier: String) {
+  init(identifier: String, status: String? = nil) {
     self.identifier = identifier
+    self.status = status
   }
 }
 
 public struct RevokedDocument: Sendable {
 
   public let identifier: String
+  /// The status-list outcome, as the raw value of `logic-core`'s `DocumentRevocationStatus`. A record
+  /// stored before the status was kept has none.
+  public let status: String?
 
-  public init(identifier: String) {
+  public init(identifier: String, status: String? = nil) {
     self.identifier = identifier
+    self.status = status
   }
 }
 
 extension SDRevokedDocument {
   func toRevokedDocument() -> RevokedDocument {
-    RevokedDocument(identifier: identifier)
+    RevokedDocument(identifier: identifier, status: status)
   }
 }
 
 extension RevokedDocument {
   func toSdModel() -> SDRevokedDocument {
-    SDRevokedDocument(identifier: identifier)
+    SDRevokedDocument(identifier: identifier, status: status)
   }
 }
 

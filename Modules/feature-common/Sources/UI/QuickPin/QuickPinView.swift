@@ -19,6 +19,7 @@ import logic_resources
 
 struct QuickPinView<Router: RouterHost>: View {
 
+  @Environment(\.scenePhase) var scenePhase
   @State private var viewModel: QuickPinViewModel<Router>
 
   init(with viewModel: QuickPinViewModel<Router>) {
@@ -54,6 +55,9 @@ struct QuickPinView<Router: RouterHost>: View {
     )
     .task {
       await viewModel.initialize()
+    }
+    .onChange(of: scenePhase) {
+      Task { await viewModel.setPhase(with: scenePhase) }
     }
   }
 }
@@ -108,6 +112,11 @@ private struct QuickPinViewContainer: View {
 
     VStack(spacing: .zero) {
 
+      if let deviceLockNotice = viewState.deviceLockNotice {
+        WarningNoticeView(message: deviceLockNotice)
+        VSpacer.mediumSmall()
+      }
+
       PinTextFieldView(
         pinTitle: viewState.pinTextFieldTitle,
         numericText: $uiPinInputField,
@@ -116,7 +125,7 @@ private struct QuickPinViewContainer: View {
         canFocus: .constant(!viewState.isLockedOut),
         shouldUseFullScreen: false,
         hasError: hasError,
-        isDisabled: viewState.isLockedOut
+        isDisabled: viewState.isLockedOut || viewState.isDeviceLockRequired
       )
 
       VSpacer.mediumSmall()
@@ -158,7 +167,9 @@ private struct QuickPinViewContainer: View {
     step: .firstInput,
     quickPinSize: 6,
     isLockedOut: false,
-    lockoutMessage: nil
+    lockoutMessage: nil,
+    deviceLockNotice: nil,
+    isDeviceLockRequired: false
   )
 
   ContentScreenView {

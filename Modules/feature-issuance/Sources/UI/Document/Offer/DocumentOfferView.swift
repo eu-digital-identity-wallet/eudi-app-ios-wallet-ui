@@ -32,16 +32,7 @@ struct DocumentOfferView<Router: RouterHost>: View {
       canScroll: true,
       errorConfig: viewModel.viewState.error,
       navigationTitle: .issuanceRequestTitle,
-      toolbarContent: viewModel.toolbarContent(),
-      notificationActions: [
-        .init(
-          name: NSNotification.CredentialOffer,
-          callback: {
-            guard let payload = $0 else { return }
-            viewModel.handleNotification(with: payload)
-          }
-        )
-      ]
+      toolbarContent: viewModel.toolbarContent()
     ) {
       DocumentOfferViewContainer(
         viewState: viewModel.viewState,

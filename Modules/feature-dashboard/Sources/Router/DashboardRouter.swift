@@ -71,6 +71,28 @@ public final class DashboardRouter {
           )
         )
       )
+    case .walletReset:
+      WalletResetView(
+        with: .init(
+          router: host,
+          interactor: DIGraph.shared.resolver.force(
+            SettingsInteractor.self
+          ),
+          deepLinkController: DIGraph.shared.resolver.force(
+            DeepLinkController.self
+          )
+        )
+      )
+    case .biometrySelection(let isEnabled):
+      BiometrySelectionView(
+        with: .init(
+          router: host,
+          interactor: DIGraph.shared.resolver.force(
+            SettingsInteractor.self
+          ),
+          isEnabled: isEnabled
+        )
+      )
     case .issuanceOption:
       IssuanceOptionView(
         with: .init(

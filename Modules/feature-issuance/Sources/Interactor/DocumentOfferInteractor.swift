@@ -17,6 +17,7 @@ import logic_resources
 import feature_common
 import logic_business
 import logic_core
+import logic_authentication
 
 public protocol DocumentOfferInteractor: Sendable {
   func processOfferRequest(with uri: String) async -> OfferRequestPartialState
@@ -38,13 +39,16 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
   private let walletController: WalletKitController
   private let configLogic: ConfigLogic
+  private let sessionController: SessionController
 
   init(
     walletController: WalletKitController,
-    configLogic: ConfigLogic
+    configLogic: ConfigLogic,
+    sessionController: SessionController
   ) {
     self.walletController = walletController
     self.configLogic = configLogic
+    self.sessionController = sessionController
   }
 
   func processOfferRequest(with uri: String) async -> OfferRequestPartialState {
@@ -57,8 +61,7 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
       let hasPidStored = await !walletController.fetchIssuedDocuments(with: [.mDocPid, .sdJwtPid]).isEmpty
 
       if let spec = offer.txCodeSpec,
-         let codeLength = spec.length,
-         !(codeMinLength...codeMaxLength).contains(codeLength) || spec.inputMode == .text {
+         spec.inputMode == .text || !(codeMinLength...codeMaxLength).contains(spec.length ?? 0) {
         return .failure(WalletCoreError.transactionCodeFormat(["\(codeMinLength)", "\(codeMaxLength)"]))
       }
 
@@ -84,7 +87,12 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
         return .registrationBlocked(reason)
       }
 
-      return .success(offer.transformToDocumentOfferUi(), issuerRegistration)
+      return .success(
+        offer.transformToDocumentOfferUi(
+          allowedLogoOrigins: await walletController.issuerLogoOrigins().origins(ofOffer: uri)
+        ),
+        issuerRegistration
+      )
     } catch {
       return error.isTrustBlocked ? .issuerNotTrusted : .failure(error)
     }
@@ -99,11 +107,13 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
   ) async -> OfferResultPartialState {
     do {
 
-      let issuance = try await walletController.issueDocumentsByOfferUrl(
-        offerUri: uri,
-        docTypes: docOffers,
-        txCodeValue: txCodeValue
-      )
+      let issuance = try await sessionController.duringExternalFlow {
+        try await walletController.issueDocumentsByOfferUrl(
+          offerUri: uri,
+          docTypes: docOffers,
+          txCodeValue: txCodeValue
+        )
+      }
       let issuedDocuments = issuance.documents
 
       if !issuance.issuerRegistration.vouchesForIssuer {
@@ -149,7 +159,11 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
         return await fetchAndHandleDocuments(
           successNavigation: successNavigation,
           documentIdentifiers: documentIdentifiers,
-          isPartialState: true
+          isPartialState: true,
+          notIssuedDocumentNames: Self.notIssuedDocumentNames(
+            offered: docOffers,
+            issuedDocTypes: issuedDocuments.map(\.docType)
+          )
         )
       }
 
@@ -213,14 +227,28 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
   func fetchStoredDocuments(documentIds: [String]) async -> OfferDocumentsPartialState {
     let documents = await walletController.fetchDocuments(with: documentIds)
+    let issuerLogoOrigins = await walletController.issuerLogoOrigins()
     let documentsDetails = documents.compactMap {
-      $0.transformToDocumentUi(isSensitive: false)
+      $0.transformToDocumentUi(isSensitive: false, issuerLogoOrigins: issuerLogoOrigins)
     }
 
     if documentsDetails.isEmpty {
       return .failure(WalletCoreError.unableFetchDocument)
     }
     return .success(documentsDetails)
+  }
+
+  /// The names of the offered documents that were not issued: each issued document accounts for one offered
+  /// document of its type.
+  static func notIssuedDocumentNames(offered: [OfferedDocModel], issuedDocTypes: [String]) -> [String] {
+    var remaining = issuedDocTypes
+    return offered.compactMap { offer in
+      if let index = remaining.firstIndex(where: { $0 == offer.docTypeOrVct }) {
+        remaining.remove(at: index)
+        return nil
+      }
+      return offer.displayName
+    }
   }
 
   private func discard(_ documents: [WalletStorage.Document]) async {
@@ -232,7 +260,8 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
   private func fetchAndHandleDocuments(
     successNavigation: UIConfig.TwoWayNavigationType,
     documentIdentifiers: [String],
-    isPartialState: Bool = false
+    isPartialState: Bool = false,
+    notIssuedDocumentNames: [String] = []
   ) async -> OfferResultPartialState {
     let state = await self.fetchStoredDocuments(documentIds: documentIdentifiers)
     switch state {
@@ -241,7 +270,8 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
           return .partialSuccess(
             retrieveDocumentSuccessRoute(
               successNavigation: successNavigation,
-              documents: documents
+              documents: documents,
+              notIssuedDocumentNames: notIssuedDocumentNames
             )
           )
         } else {
@@ -291,7 +321,8 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
 
   private func retrieveDocumentSuccessRoute(
     successNavigation: UIConfig.TwoWayNavigationType,
-    documents: [DocumentUIModel]
+    documents: [DocumentUIModel],
+    notIssuedDocumentNames: [String] = []
   ) -> AppRoute {
     var navigationType: UIConfig.DeepLinkNavigationType {
       return switch successNavigation {
@@ -307,7 +338,8 @@ final actor DocumentOfferInteractorImpl: DocumentOfferInteractor {
           relyingParty: documents.first?.issuer?.name,
           issuerLogoUrl: documents.first?.issuer?.logoUrl,
           relyingPartyIsTrusted: false,
-          isIssuingDocument: true
+          isIssuingDocument: true,
+          notIssuedDocumentNames: notIssuedDocumentNames
         ),
         requestItems: documents.map { item in
           ListItemSection(

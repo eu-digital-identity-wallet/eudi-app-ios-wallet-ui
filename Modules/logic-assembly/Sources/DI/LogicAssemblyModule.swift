@@ -23,7 +23,20 @@ public final class LogicAssemblyModule: Assembly {
     container.register(RouterHost.self) { r in
       RouterHostImpl(
         uiConfigLogic: r.force(ConfigUiLogic.self),
-        analyticsController: r.force(AnalyticsController.self)
+        analyticsController: r.force(AnalyticsController.self),
+        sessionController: r.force(SessionController.self)
+      )
+    }
+    .inObjectScope(ObjectScope.container)
+
+    container.register(SessionLockController.self) { r in
+      let coveringScreenModules = r.force(ConfigUiLogic.self).coveringScreenModules
+      return SessionLockControllerImpl(
+        sessionController: r.force(SessionController.self),
+        routerHost: r.force(RouterHost.self),
+        userInteractionController: r.force(UserInteractionController.self),
+        walletKitController: r.force(WalletKitController.self),
+        isCovered: { UIApplication.shared.isWalletCovered(byModules: coveringScreenModules) }
       )
     }
     .inObjectScope(ObjectScope.container)

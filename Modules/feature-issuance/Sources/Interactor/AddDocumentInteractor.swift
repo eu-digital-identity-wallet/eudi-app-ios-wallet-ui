@@ -16,6 +16,7 @@
 import logic_resources
 import feature_common
 import logic_core
+import logic_authentication
 import OrderedCollections
 
 public protocol AddDocumentInteractor: Sendable {
@@ -32,11 +33,14 @@ public protocol AddDocumentInteractor: Sendable {
 final actor AddDocumentInteractorImpl: AddDocumentInteractor {
 
   private let walletController: WalletKitController
+  private let sessionController: SessionController
 
   init(
-    walletController: WalletKitController
+    walletController: WalletKitController,
+    sessionController: SessionController
   ) {
     self.walletController = walletController
+    self.sessionController = sessionController
   }
 
   public func fetchScopedDocuments(
@@ -148,17 +152,21 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
     docTypeIdentifier: DocumentTypeIdentifier
   ) async -> IssueResultPartialState {
 
-    if case .blocked(let reason) = await walletController.getIssuerRegistration(issuerId: issuerId, configIds: configIds) {
-      return .registrationBlocked(reason)
-    }
-
     do {
-
-      let issuance = try await walletController.issueDocuments(
+      if case .blocked(let reason) = try await walletController.getIssuerRegistration(
         issuerId: issuerId,
-        identifiers: configIds,
-        docTypeIdentifier: docTypeIdentifier
-      )
+        configIds: configIds
+      ) {
+        return .registrationBlocked(reason)
+      }
+
+      let issuance = try await sessionController.duringExternalFlow {
+        try await walletController.issueDocuments(
+          issuerId: issuerId,
+          identifiers: configIds,
+          docTypeIdentifier: docTypeIdentifier
+        )
+      }
       let docs = issuance.documents
 
       if !issuance.issuerRegistration.vouchesForIssuer {
@@ -204,7 +212,13 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
       if let error {
         return .failure(error)
       } else if !successIds.isEmpty {
-        return .success(successIds)
+        return .success(
+          successIds,
+          notIssuedDocumentNames: await notIssuedDocumentNames(
+            requested: configIds,
+            returned: docs.map { DocMetadata(from: $0.metadata)?.configurationIdentifier }
+          )
+        )
       } else if let deferredDocument {
         return .deferredSuccess(deferredDocument)
       } else if let session = dynamicIssuanceCoordinator {
@@ -246,8 +260,9 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
 
   func fetchStoredDocuments(documentIds: [String]) async -> IssueDocumentsPartialState {
     let documents = await walletController.fetchDocuments(with: documentIds)
+    let issuerLogoOrigins = await walletController.issuerLogoOrigins()
     let documentsDetails = documents.compactMap {
-      $0.transformToDocumentUi(isSensitive: false)
+      $0.transformToDocumentUi(isSensitive: false, issuerLogoOrigins: issuerLogoOrigins)
     }
 
     if documentsDetails.isEmpty {
@@ -260,6 +275,24 @@ final actor AddDocumentInteractorImpl: AddDocumentInteractor {
     for document in documents {
       try? await walletController.deleteDocument(with: document.id, status: document.status)
     }
+  }
+
+  /// The names of the requested configurations the issuer did not issue, from the issuer's list, as Android names
+  /// them. Nothing is named when a returned document does not say which configuration it is.
+  private func notIssuedDocumentNames(requested: [String], returned: [String?]) async -> [String] {
+    let missing = Self.notIssuedConfigIds(requested: requested, returned: returned)
+    guard !missing.isEmpty else { return [] }
+    let scoped = await walletController.getScopedDocuments().documents
+    return missing.map { configId in
+      scoped.first { $0.configId == configId }?.name ?? configId
+    }
+  }
+
+  /// The requested configuration ids that no returned document carries; empty when a returned document has no id.
+  static func notIssuedConfigIds(requested: [String], returned: [String?]) -> [String] {
+    let returnedIds = returned.compactMap { $0 }
+    guard returnedIds.count == returned.count else { return [] }
+    return requested.filter { !returnedIds.contains($0) }
   }
 
   private func getScopedDocument(configId: String) async throws -> ScopedDocument {
@@ -276,7 +309,8 @@ public enum ScopedDocumentsPartialState: Sendable {
 }
 
 public enum IssueResultPartialState: Sendable {
-  case success([String])
+  /// The documents issued, and the names of those the request asked for that the issuer did not issue.
+  case success([String], notIssuedDocumentNames: [String])
   case deferredSuccess(ScopedDocument)
   case dynamicIssuance(RemoteSessionCoordinator)
   case issuerNotTrusted

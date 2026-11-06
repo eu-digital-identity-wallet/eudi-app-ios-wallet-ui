@@ -22,6 +22,8 @@ public struct DocumentSuccessUIConfig: UIConfigType, Equatable {
   public let issuerLogoUrl: URL?
   public let relyingPartyIsTrusted: Bool
   public let isIssuingDocument: Bool
+  /// The documents an issuance asked for that the issuer did not issue, named under the header, as on Android.
+  public let notIssuedDocumentNames: [String]
 
   public var log: String {
     return "onSuccessNav: \(successNavigation.type)" +
@@ -33,12 +35,14 @@ public struct DocumentSuccessUIConfig: UIConfigType, Equatable {
     relyingParty: String? = nil,
     issuerLogoUrl: URL? = nil,
     relyingPartyIsTrusted: Bool,
-    isIssuingDocument: Bool
+    isIssuingDocument: Bool,
+    notIssuedDocumentNames: [String] = []
   ) {
     self.successNavigation = successNavigation
     self.relyingParty = relyingParty
     self.relyingPartyIsTrusted = relyingPartyIsTrusted
     self.issuerLogoUrl = issuerLogoUrl
     self.isIssuingDocument = isIssuingDocument
+    self.notIssuedDocumentNames = notIssuedDocumentNames
   }
 }

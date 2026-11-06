@@ -16,21 +16,47 @@
 
 public protocol SessionCoordinatorHolder: Sendable {
   func clear() async
+  /// Lets `coordinator` go if it is still the active remote coordinator; a later one stays.
+  func clearRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) async
+  /// If `coordinator` is still the active proximity coordinator, stops its Bluetooth session and keeps it only until
+  /// the next one starts; a later one keeps running.
+  func clearProximityCoordinator(_ coordinator: ProximitySessionCoordinator) async
   func setActiveRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) async
   func setActiveProximityCoordinator(_ coordinator: ProximitySessionCoordinator) async
-  func getActiveRemoteCoordinator() async throws -> RemoteSessionCoordinator
-  func getActiveProximityCoordinator() async throws -> ProximitySessionCoordinator
 }
 
 final actor SessionCoordinatorHolderImpl: SessionCoordinatorHolder {
 
   private var activeRemoteCoordinator: RemoteSessionCoordinator?
   private var activeProximityCoordinator: ProximitySessionCoordinator?
+  /// The last stopped proximity coordinator, kept until the next one starts. The transfer library's
+  /// `MdocGattServer` holds wallet-kit's Bluetooth service, which this coordinator owns, only weakly, still reads
+  /// it after `stop()` (in a task, and when the reader disconnects later) and stops the app with `fatalError`
+  /// once it is gone.
+  private var stoppedProximityCoordinator: ProximitySessionCoordinator?
 
   init() {}
 
+  /// Stops a running proximity session before letting it go, rather than leaving that to the coordinator's
+  /// `deinit`, which runs only once every screen that holds the coordinator is gone.
   public func clear() {
+    if let activeProximityCoordinator {
+      activeProximityCoordinator.stopPresentation()
+      stoppedProximityCoordinator = activeProximityCoordinator
+    }
     activeRemoteCoordinator = nil
+    activeProximityCoordinator = nil
+  }
+
+  public func clearRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) {
+    guard activeRemoteCoordinator === coordinator else { return }
+    activeRemoteCoordinator = nil
+  }
+
+  public func clearProximityCoordinator(_ coordinator: ProximitySessionCoordinator) {
+    guard activeProximityCoordinator === coordinator else { return }
+    coordinator.stopPresentation()
+    stoppedProximityCoordinator = coordinator
     activeProximityCoordinator = nil
   }
 
@@ -39,20 +65,7 @@ final actor SessionCoordinatorHolderImpl: SessionCoordinatorHolder {
   }
 
   public func setActiveProximityCoordinator(_ coordinator: ProximitySessionCoordinator) {
+    stoppedProximityCoordinator = nil
     activeProximityCoordinator = coordinator
-  }
-
-  public func getActiveRemoteCoordinator() throws -> RemoteSessionCoordinator {
-    guard let activeRemoteCoordinator else {
-      fatalError("RemoteSessionCoordinator is not set")
-    }
-    return activeRemoteCoordinator
-  }
-
-  public func getActiveProximityCoordinator() throws -> ProximitySessionCoordinator {
-    guard let activeProximityCoordinator else {
-      fatalError("ProximitySessionCoordinator is not set")
-    }
-    return activeProximityCoordinator
   }
 }

@@ -60,6 +60,27 @@ final class TestBiometryInteractor: EudiTest {
     self.authenticationConfig = nil
     super.tearDown()
   }
+
+  func testUnlockSession_WhenLoginSucceeded_ThenUnlocksThroughThePinInteractor() async {
+    stub(quickPinInteractor) { mock in
+      when(mock.unlockSession()).thenDoNothing()
+    }
+
+    await interactor.unlockSession()
+
+    verify(quickPinInteractor).unlockSession()
+  }
+
+  func testGetDeviceLockState_WhenThePasscodeIsRequiredAndMissing_ThenReturnsTheStateSetupUses() async {
+    stub(quickPinInteractor) { mock in
+      when(mock.getDeviceLockState()).thenReturn(.required)
+    }
+
+    let state = await interactor.getDeviceLockState()
+
+    XCTAssertEqual(state, .required)
+    verify(quickPinInteractor).getDeviceLockState()
+  }
   
   // MARK: - isBiometryEnabled
   
@@ -124,17 +145,70 @@ final class TestBiometryInteractor: EudiTest {
   
   // MARK: - setBiometrySelection
   
-  func testSetBiometrySelection_WhenMethodCalledWithTrue_ThenVerifyPrefsControllerSet() async {
-    // Given
-    stub(prefsController) { mock in
-      when(mock.setValue(any(), forKey: Prefs.Key.biometryEnabled)).thenDoNothing()
+  func testSetBiometrySelection_WhenTurnedOnAndTheCheckPasses_ThenBindsAndStoresTheChoice() async {
+    stubBiometricUnlock(isEnabled: false, isBound: false)
+    stub(systemBiometricController) { mock in
+      when(mock.enableBiometricUnlock()).thenDoNothing()
     }
-    // When
-    await interactor.setBiometrySelection(isEnabled: true)
-    // Then
-    verify(prefsController).setValue(any(), forKey: Prefs.Key.biometryEnabled)
+
+    let state = await interactor.setBiometrySelection(isEnabled: true)
+
+    XCTAssertEqual(state, .authenticated)
+    verify(prefsController).setValue(storedBool(true), forKey: Prefs.Key.biometricUnlockBound)
+    verify(prefsController).setValue(storedBool(true), forKey: Prefs.Key.biometryEnabled)
   }
-  
+
+  func testSetBiometrySelection_WhenTurnedOnAndTheCheckFails_ThenTheChoiceIsNotStored() async {
+    stubBiometricUnlock(isEnabled: false, isBound: false)
+    stub(systemBiometricController) { mock in
+      when(mock.enableBiometricUnlock()).thenThrow(SystemBiometryError.biometricError)
+    }
+
+    let state = await interactor.setBiometrySelection(isEnabled: true)
+
+    XCTAssertEqual(state, .failure(.biometricError))
+    verify(prefsController, never()).setValue(any(), forKey: any())
+  }
+
+  func testSetBiometrySelection_WhenTurnedOff_ThenUnbindsAndStoresTheChoice() async {
+    stubBiometricUnlock(isEnabled: true, isBound: true)
+    stub(systemBiometricController) { mock in
+      when(mock.disableBiometricUnlock()).thenDoNothing()
+    }
+
+    let state = await interactor.setBiometrySelection(isEnabled: false)
+
+    XCTAssertEqual(state, .authenticated)
+    verify(prefsController).setValue(storedBool(false), forKey: Prefs.Key.biometricUnlockBound)
+    verify(prefsController).setValue(storedBool(false), forKey: Prefs.Key.biometryEnabled)
+  }
+
+  func testAuthenticate_WhenOnButNotYetBound_ThenTheFirstBiometricLoginBindsIt() async {
+    stubBiometricUnlock(isEnabled: true, isBound: false)
+    stub(systemBiometricController) { mock in
+      when(mock.enableBiometricUnlock()).thenDoNothing()
+    }
+
+    let state = await interactor.authenticate()
+
+    XCTAssertEqual(state, .authenticated)
+    verify(systemBiometricController).enableBiometricUnlock()
+    verify(systemBiometricController, never()).requestBiometricUnlock()
+    verify(prefsController).setValue(storedBool(true), forKey: Prefs.Key.biometricUnlockBound)
+  }
+
+  func testAuthenticate_WhenBound_ThenTheProbeIsReadAndNotRewritten() async {
+    stubBiometricUnlock(isEnabled: true, isBound: true)
+    stub(systemBiometricController) { mock in
+      when(mock.requestBiometricUnlock()).thenThrow(SystemBiometryError.biometricError)
+    }
+
+    let state = await interactor.authenticate()
+
+    XCTAssertEqual(state, .failure(.biometricError))
+    verify(systemBiometricController, never()).enableBiometricUnlock()
+  }
+
   // MARK: - getBiometricsImage
   
   func testBiometricsImage_WhenControllerReturnsFaceIdType_ThenReturnFaceIdImage() async {
@@ -233,6 +307,7 @@ final class TestBiometryInteractor: EudiTest {
   
   func testAuthenticate_WhenRequestBiometricUnlockSucceeds_ThenEmitsAuthenticated() async {
     // Given
+    stubBiometricUnlock(isEnabled: true, isBound: true)
     stub(systemBiometricController) { mock in
       when(mock.requestBiometricUnlock()).thenDoNothing()
     }
@@ -246,6 +321,7 @@ final class TestBiometryInteractor: EudiTest {
   
   func testAuthenticate_WhenRequestBiometricUnlockFails_ThenEmitsFailureWithError() async {
     // Given
+    stubBiometricUnlock(isEnabled: true, isBound: true)
     stub(systemBiometricController) { mock in
       when(mock.requestBiometricUnlock())
         .thenThrow(SystemBiometryError.deniedAccess)
@@ -265,6 +341,7 @@ final class TestBiometryInteractor: EudiTest {
 
   func testAuthenticate_WhenRequestThrowsGenericError_ThenEmitsBiometricErrorFailure() async {
     // Given: a non-SystemBiometryError reaches the generic catch branch
+    stubBiometricUnlock(isEnabled: true, isBound: true)
     struct UnknownError: Error {}
     stub(systemBiometricController) { mock in
       when(mock.requestBiometricUnlock()).thenThrow(UnknownError())
@@ -360,5 +437,17 @@ final class TestBiometryInteractor: EudiTest {
 
     // Then
     verify(pinThrottleController).recordSuccess()
+  }
+
+  private func stubBiometricUnlock(isEnabled: Bool, isBound: Bool) {
+    stub(prefsController) { mock in
+      when(mock.getBool(forKey: Prefs.Key.biometryEnabled)).thenReturn(isEnabled)
+      when(mock.getBool(forKey: Prefs.Key.biometricUnlockBound)).thenReturn(isBound)
+      when(mock.setValue(any(), forKey: any())).thenDoNothing()
+    }
+  }
+
+  private func storedBool(_ value: Bool) -> ParameterMatcher<Any?> {
+    ParameterMatcher { ($0 as? Bool) == value }
   }
 }

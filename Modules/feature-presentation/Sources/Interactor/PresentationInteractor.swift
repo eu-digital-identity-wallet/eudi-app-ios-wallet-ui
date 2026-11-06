@@ -53,23 +53,28 @@ public protocol PresentationInteractor: Sendable {
   func onRequestReceived() async -> PresentationRequestPartialState
   func onSendResponse() async -> RemoteSentResponsePartialState
   func onDeclineRequest() async
-  func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) async
   func storeDynamicIssuancePendingUrl(with url: URL) async
   func stopPresentation() async
   func registrationForFailedRequest() async -> RelyingPartyRegistration?
 }
 
+/// A combination as the consent screen shows it: the response is built from `elements`, so it holds only the
+/// documents shown in `uiModels`, never one the screen left out.
 private struct RequestCombination {
   let elements: [DocElements]
   let uiModels: [RequestDataUiModel]
   let transactionData: RequestTransactionDataUiModel?
   let requestName: String?
+  /// `PresentationInteractorImpl.canShowTransactionData` for this option's own transaction data.
+  let showsTransactionData: Bool
 }
 
+/// Works on the session its route carries, never on another one started later.
 final actor PresentationInteractorImpl: PresentationInteractor {
 
-  private let sessionCoordinatorHolder: SessionCoordinatorHolder
+  private let presentationCoordinator: RemoteSessionCoordinator
   private let walletKitController: WalletKitController
+  private let configUiLogic: ConfigUiLogic
 
   private var requestedItemSets: [[DocElements]] = []
   private var requestedRequestNames: [String?] = []
@@ -77,43 +82,31 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   init(
     with presentationCoordinator: RemoteSessionCoordinator,
     and walletKitController: WalletKitController,
-    also sessionCoordinatorHolder: SessionCoordinatorHolder
+    configUiLogic: ConfigUiLogic
   ) {
+    self.presentationCoordinator = presentationCoordinator
     self.walletKitController = walletKitController
-    self.sessionCoordinatorHolder = sessionCoordinatorHolder
-    Task { await self.sessionCoordinatorHolder.setActiveRemoteCoordinator(presentationCoordinator) }
+    self.configUiLogic = configUiLogic
   }
 
   public func getSessionStatePublisher() async -> RemotePublisherPartialState {
-    do {
-      return .success(try await self.sessionCoordinatorHolder.getActiveRemoteCoordinator().getStream())
-    } catch {
-      return .failure(error)
-    }
+    .success(presentationCoordinator.getStream())
   }
 
   public func getCoordinator() async -> PresentationCoordinatorPartialState {
-    do {
-      return .success(try await self.sessionCoordinatorHolder.getActiveRemoteCoordinator())
-    } catch {
-      return .failure(error)
-    }
-  }
-
-  public func updatePresentationCoordinator(with coordinator: RemoteSessionCoordinator) async {
-    await self.sessionCoordinatorHolder.setActiveRemoteCoordinator(coordinator)
+    .success(presentationCoordinator)
   }
 
   public func onDeviceEngagement() async -> PresentationRequestPartialState {
-    try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().initialize()
+    await presentationCoordinator.initialize()
     return await onRequestReceived()
   }
 
   public func onRequestReceived() async -> PresentationRequestPartialState {
     do {
-      let coordinator = try await sessionCoordinatorHolder.getActiveRemoteCoordinator()
+      let coordinator = presentationCoordinator
       let response = try await coordinator.requestReceived()
-      let revokedDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
+      let blockedDocuments = try await walletKitController.fetchRevokedDocumentStatuses()
       let registrationPolicy = coordinator.relyingPartyRegistration
       let overaskedClaims = response.overaskedClaims
       let transactionDataSets = response.transactionDataSets
@@ -121,22 +114,30 @@ final actor PresentationInteractorImpl: PresentationInteractor {
       let presentable = response.itemSets
         .enumerated()
         .map { index, documentSet in
-          let documentSet = documentSet.filter { item in !revokedDocuments.contains(where: { $0 == item.docId }) }
+          let documentSet = documentSet.filter { item in blockedDocuments[item.docId] == nil }
           let uiModels = documentSet.toUiModels(
             with: self.walletKitController,
             claimsAreSelectable: false,
+            userImageClaimKeys: self.configUiLogic.userImageClaimKeys,
             overaskedPaths: documentSet.overaskedPaths(from: overaskedClaims)
           )
           let transactionData = transactionDataSets.indices.contains(index) ? transactionDataSets[index] : [:]
           let transactions = uiModels.flatMap { transactionData[$0.section.id] ?? [] }
+          let shownDocumentIds = Set(uiModels.map(\.section.id))
+          let shownDocuments = documentSet.filter { shownDocumentIds.contains($0.docId) }
           return RequestCombination(
-            elements: documentSet,
+            elements: shownDocuments,
             uiModels: uiModels,
             transactionData: transactions.toRequestTransactionDataUiModel(sectionId: "transaction-data:\(index)"),
-            requestName: requestNames.indices.contains(index) ? requestNames[index] : nil
+            requestName: requestNames.indices.contains(index) ? requestNames[index] : nil,
+            showsTransactionData: Self.canShowTransactionData(transactionData, shownDocuments: shownDocuments)
           )
         }
         .filter { !$0.uiModels.isEmpty }
+
+      guard presentable.allSatisfy(\.showsTransactionData) else {
+        return .failure(WalletCoreError.transactionDataNotShown)
+      }
 
       self.requestedItemSets = presentable.map(\.elements)
       self.requestedRequestNames = presentable.map(\.requestName)
@@ -155,12 +156,27 @@ final actor PresentationInteractorImpl: PresentationInteractor {
             trustViolations: coordinator.relyingPartyWarningViolations,
             overaskedClaims: overaskedClaims,
             verifierName: response.relyingParty,
-            verifierIsTrusted: response.isTrusted
+            verifierIsTrusted: response.isTrusted,
+            isNotBoundToRequester: coordinator.isRelyingPartyNotBoundToRequester,
+            transactionIdentifier: coordinator.transactionIdentifier
           )
         )
       )
     } catch {
       return error.isTrustBlocked ? .notSecuredRequest : .failure(error)
+    }
+  }
+
+  /// True when every transaction-data entry can be shown as it will be signed: readable, and bound to a document on
+  /// the consent screen. Otherwise the request is declined rather than shown in part.
+  static func canShowTransactionData(
+    _ transactionData: [String: [PresentationTransactionDataDomain]],
+    shownDocuments: [DocElements]
+  ) -> Bool {
+    transactionData.allSatisfy { documentId, entries in
+      guard !entries.isEmpty else { return true }
+      guard shownDocuments.contains(where: { $0.docId == documentId }) else { return false }
+      return !entries.contains(.unavailable)
     }
   }
 
@@ -181,15 +197,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
-    do {
-
-      try await self.sessionCoordinatorHolder
-        .getActiveRemoteCoordinator()
-        .setState(presentationState: .responseToSend(requestConvertible))
-
-    } catch {
-      return .failure(error)
-    }
+    presentationCoordinator.setState(presentationState: .responseToSend(requestConvertible))
 
     return .success(requestConvertible)
   }
@@ -197,14 +205,13 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   public func onSendResponse() async -> RemoteSentResponsePartialState {
 
     guard
-      let state = try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().getState(),
-      case PresentationState.responseToSend(let responseItem) = state
+      case PresentationState.responseToSend(let responseItem) = await presentationCoordinator.getState()
     else {
       return .failure(PresentationSessionError.invalidState)
     }
 
     do {
-      try await self.sessionCoordinatorHolder.getActiveRemoteCoordinator().sendResponse(response: responseItem)
+      try await presentationCoordinator.sendResponse(response: responseItem)
       return .sent
     } catch {
       return .failure(error)
@@ -212,7 +219,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   }
 
   public func onDeclineRequest() async {
-    try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().declineResponse()
+    try? await presentationCoordinator.declineResponse()
     await stopPresentation()
   }
 
@@ -225,7 +232,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   }
 
   public func stopPresentation() async {
-    await walletKitController.stopPresentation()
-    try? await sessionCoordinatorHolder.getActiveRemoteCoordinator().stopPresentation()
+    await walletKitController.stopRemotePresentation(presentationCoordinator)
+    presentationCoordinator.stopPresentation()
   }
 }

@@ -45,8 +45,17 @@ struct RequestAuthorizationView: View {
       }
       .shimmer(isLoading: viewModel.viewState.isLoading)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .task {
-        await viewModel.loadRequest()
+      .alertView(
+        isPresented: $viewModel.isUserImageConfirmationShowing,
+        title: .requestUserImageConfirmationTitle,
+        message: .requestUserImageConfirmationMessage,
+        actions: {
+          Button(.shareButton) { viewModel.onUserImageShareConfirmed() }
+          Button(.cancelButton, role: .cancel) {}
+        }
+      )
+      .onAppear {
+        viewModel.initialize()
       }
     }
   }
@@ -56,39 +65,57 @@ struct RequestAuthorizationView: View {
     viewState: RequestAuthorizationViewState
   ) -> some View {
     VStack(spacing: SPACING_SMALL) {
-      ScrollView {
-        VStack(spacing: .zero) {
-          ContentHeaderView(
-            config: viewState.contentHeaderConfig
-          )
+      ScrollViewReader { proxy in
+        ScrollView {
+          VStack(spacing: .zero) {
+            ContentHeaderView(
+              config: viewState.contentHeaderConfig
+            )
+            .padding(.horizontal, Theme.shared.dimension.padding)
 
-          VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-            ForEach(viewState.items.indices, id: \.self) { index in
-              let section = viewState.items[index]
-              WrapExpandableListView(
-                header: .init(
-                  mainContent: .text(.custom(section.section.title)),
-                  supportingText: .viewDetails
-                ),
-                items: section.section.listItems,
-                backgroundColor: Theme.shared.color.groupedElevatedBackground,
-                hideSensitiveContent: false,
-                isLoading: viewState.isLoading
-              )
-              .accessibilityElement()
-              .combineChilrenAccessibility(
-                locator: BaseRequestLocators.requestedDocument(index.string)
-              )
+            VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+              if viewState.requestsUserImage {
+                WarningNoticeView(message: .requestUserImageNotice)
+              }
+
+              ForEach(viewState.items.indices, id: \.self) { index in
+                let section = viewState.items[index]
+                WrapExpandableListView(
+                  header: .init(
+                    mainContent: .text(.custom(section.section.title)),
+                    supportingText: .viewDetails
+                  ),
+                  items: section.section.listItems,
+                  backgroundColor: Theme.shared.color.groupedElevatedBackground,
+                  hideSensitiveContent: false,
+                  isLoading: viewState.isLoading,
+                  onExpand: { showOpenedDocument(index, with: proxy) }
+                )
+                .id(index)
+                .accessibilityElement()
+                .combineChilrenAccessibility(
+                  locator: BaseRequestLocators.requestedDocument(index.string)
+                )
+              }
             }
+            .padding(.horizontal, Theme.shared.dimension.padding)
+            .padding(.top, SPACING_MEDIUM)
+            .padding(.bottom, SPACING_SMALL)
           }
-          .padding(.horizontal, Theme.shared.dimension.padding)
-          .padding(.top, SPACING_MEDIUM)
-          .padding(.bottom, SPACING_SMALL)
+          .shimmer(isLoading: viewState.isLoading)
         }
-        .shimmer(isLoading: viewState.isLoading)
       }
 
       actionButtonsFooter()
+    }
+  }
+
+  /// The sheet's buttons, and its warning when one is shown, stay fixed below a short scroll area, so the claims
+  /// of a document opened near the scroll area's bottom edge would be out of sight; the opened document is
+  /// scrolled to the top instead.
+  private func showOpenedDocument(_ index: Int, with proxy: ScrollViewProxy) {
+    withAnimation {
+      proxy.scrollTo(index, anchor: .top)
     }
   }
 
@@ -98,6 +125,7 @@ struct RequestAuthorizationView: View {
       ContentHeaderView(
         config: viewModel.viewState.contentHeaderConfig
       )
+      .padding(.horizontal, Theme.shared.dimension.padding)
       VStack(spacing: .zero) {
         Spacer()
         if let errorMessage = viewModel.viewState.errorMessage {
@@ -118,7 +146,15 @@ struct RequestAuthorizationView: View {
 
   @ViewBuilder
   private func actionButtonsFooter() -> some View {
-    VStack(spacing: .zero) {
+    VStack(spacing: SPACING_MEDIUM) {
+      if let warning = viewModel.viewState.warning, viewModel.viewState.errorMessage == nil {
+        WarningAcknowledgementView(
+          message: warning.message,
+          acknowledgementText: warning.acknowledgement,
+          isAcknowledged: $viewModel.isRiskAcknowledged
+        )
+        .padding(.horizontal, Theme.shared.dimension.padding)
+      }
       actionButtons()
         .padding(.horizontal, Theme.shared.dimension.padding)
         .padding(.bottom, SPACING_MEDIUM)
@@ -144,8 +180,9 @@ struct RequestAuthorizationView: View {
       style: .primary,
       title: .documentProviderExtensionAcceptButton,
       isLoading: viewModel.viewState.isLoading,
+      isEnabled: viewModel.canAccept,
       onAction: {
-        viewModel.showBiometryView = true
+        viewModel.onAcceptClick()
       }()
     )
   }

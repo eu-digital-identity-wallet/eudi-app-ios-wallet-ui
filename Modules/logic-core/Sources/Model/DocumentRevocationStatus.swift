@@ -13,15 +13,15 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import SwiftUI
-import logic_resources
+import Foundation
 
-public extension Image {
-  init(data: Data, placeholder: Image = Theme.shared.image.photo) {
-    guard let uiImage = UIImage(data: data) else {
-      self = placeholder
-      return
-    }
-    self.init(uiImage: uiImage)
-  }
+/// What a status list reported for a document the wallet keeps a revocation record for. Every record
+/// blocks the document. A revoked document stays revoked; a suspended or unrecognised one is restored when
+/// the status list reports it valid again. The statuses are the Android wallet's.
+public enum DocumentRevocationStatus: String, Sendable, Equatable {
+  case revoked
+  case suspended
+  /// A status value the wallet cannot interpret (application-specific or reserved), or a record stored
+  /// before the status was kept. It blocks the document and is shown as revoked.
+  case unrecognised
 }

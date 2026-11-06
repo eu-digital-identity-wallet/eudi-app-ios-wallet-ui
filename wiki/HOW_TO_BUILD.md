@@ -18,17 +18,19 @@ This guide aims to assist developers in building the application.
 
 ### EUDI iOS Wallet reference application
 
-You need [Xcode](https://xcodereleases.com/) and its command-line tools installed. Use a current
-non-beta Xcode that ships the **iOS 26 SDK** or newer — the Identity Document Provider extension
-targets iOS 26.2, and an older Xcode will not compile it.
+You need [Xcode](https://xcodereleases.com/) and its command-line tools installed. Use Xcode 26.0 or
+newer, which ships the iOS 26.0 SDK and Swift 6.2: the Identity Document Provider extension targets
+iOS 26.0, and the local packages declare `swift-tools-version: 6.2`. An older Xcode will not build
+the project.
 
 The project builds against:
 
 | Component | Requirement |
 | --- | --- |
-| Swift | 6.0 |
+| Swift toolchain | 6.2 |
+| Swift language mode | Swift 6 for the main app and the packages; Swift 5 for the extension |
 | Main app (`EudiWallet`) deployment target | iOS 17.0 |
-| Identity Document Provider extension | iOS 26.2 |
+| Identity Document Provider extension | iOS 26.0 |
 
 Clone the [iOS repository](https://github.com/eu-digital-identity-wallet/eudi-app-ios-wallet-ui)
 
@@ -55,11 +57,17 @@ reset via *File ▸ Packages ▸ Reset Package Caches* and retry.
 
 To run the app on the simulator, select your app scheme and press Run.
 
-> **Use an Apple-silicon (arm64) simulator.** PoDoFo ships no x86_64 simulator slice, so a
-> `generic/platform=iOS Simulator` destination or an Intel/Rosetta build fails at link time. Pin
-> `ARCHS=arm64 ONLY_ACTIVE_ARCH=YES` for simulator builds (see the simulator command below).
+> On an Apple-silicon Mac, build for a named simulator and pin `ARCHS=arm64 ONLY_ACTIVE_ARCH=YES`,
+> as the simulator command below does, so that only the arm64 slice is built. The two binary
+> dependencies, PoDoFo and `EudiEtsi1196x2`, ship both arm64 and x86_64 simulator slices.
 
-To run the app on a device, follow similar steps to running it on the simulator. Additionally, you need to supply your own provisioning profile and signing certificate in the Signing & Capabilities tab of your app target.
+To run the app on a device, follow similar steps to running it on the simulator. Both targets, the
+app (`EudiWallet`) and the extension (`EudiReferenceWalletIDProvider`), use manual signing with the
+reference team's signing identities and named provisioning profiles. In the Signing & Capabilities
+tab of each target, supply your own team, signing certificate and provisioning profile, and keep the
+two targets aligned as the
+[Document Provider extension configuration](CONFIGURATION.md#document-provider-extension-configuration)
+describes.
 
 ## Build configurations
 
@@ -76,6 +84,10 @@ example `EUDI Wallet Prod`, `Debug Prod`, and `Release Prod`. Do not ship `Relea
 
 ## Build commands
 
+The `generic/platform=iOS` commands below build for a device, so they sign both targets with the
+project's manual signing settings. They succeed only once those settings name your own team and
+profiles; for a compile-only check, add `CODE_SIGNING_ALLOWED=NO`.
+
 Build the Dev scheme:
 
 ```bash
@@ -87,14 +99,15 @@ xcodebuild \
   clean build
 ```
 
-Build for the simulator (Apple-silicon hosts — note the pinned architecture):
+Build for the simulator (Apple-silicon hosts — note the pinned architecture). Replace the simulator
+name with one that `xcrun simctl list devices available` lists:
 
 ```bash
 xcodebuild \
   -project EudiReferenceWallet.xcodeproj \
   -scheme "EUDI Wallet Dev" \
   -configuration "Debug Dev" \
-  -destination "platform=iOS Simulator,name=iPhone 16 Pro" \
+  -destination "platform=iOS Simulator,name=iPhone 17 Pro" \
   ARCHS=arm64 ONLY_ACTIVE_ARCH=YES \
   clean build
 ```
@@ -124,8 +137,10 @@ xcodebuild \
 
 > **Command-line / CI builds.** The repo also ships a Ruby/Fastlane toolchain (`Gemfile`,
 > `fastlane/Fastfile`) used for CI builds and tests. For those workflows run `bundle install`, then
-> the relevant lane (lanes are selected via environment variables such as `APP_SCHEME`). For local
-> development the Xcode GUI build above is sufficient.
+> run a lane by name, for example `bundle exec fastlane ios tests scheme:"EUDI Wallet Dev"`. The
+> lanes read their settings from environment variables such as `APP_SCHEME`; see
+> [fastlane/USAGE.md](../fastlane/USAGE.md). For local development the Xcode GUI build above is
+> sufficient.
 
 ### Running with remote services
 
@@ -182,6 +197,7 @@ var issuersConfig: [String: VciConfig] {
             allowPlainJwtProof: false,
             requireDpop: true,
             issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
+            validateRegistrationCertificate: validateIssuerRegistrationCertificate,
             encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
           ),
           order: 1
@@ -205,6 +221,7 @@ var issuersConfig: [String: VciConfig] {
             allowPlainJwtProof: false,
             requireDpop: true,
             issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
+            validateRegistrationCertificate: validateIssuerRegistrationCertificate,
             encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
           ),
           order: 1
@@ -217,7 +234,7 @@ var issuersConfig: [String: VciConfig] {
 }
 ```
 
-In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `parUsage`, `allowPlainJwtProof` (kept `false` so only HAIP-compliant attested proofs are sent), `requireDpop`, `keyAttestationsConfig`, `issuerMetadataPolicy` (derived from `trustConfiguration`), and `encryptionSupportConfig` (wallet-kit's default `.supported`: encrypted credential requests and responses whenever the issuer advertises encryption), based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`). The snippet is trimmed to one issuer per variant for brevity; the live `WalletKitConfigImpl` returns **two** issuers per variant — the primary (`order: 1`) plus a backend issuer (`order: 0`): `https://issuer-backend.eudiw.dev` for `.DEMO` and `https://dev.issuer-backend.eudiw.dev` for `.DEV`.
+In this example, the `issuersConfig` property dynamically assigns configurations, such as `credentialIssuerURL`, `clientId`, `authFlowRedirectionURI`, `parUsage`, `allowPlainJwtProof` (kept `false` so only HAIP-compliant attested proofs are sent), `requireDpop`, `keyAttestationsConfig`, `issuerMetadataPolicy` (derived from `trustConfiguration`), `validateRegistrationCertificate` (the "Check Registration Certificates" switch in Settings, off by default), and `encryptionSupportConfig` (wallet-kit's default `.supported`: encrypted credential requests and responses whenever the issuer advertises encryption), based on the current `appBuildVariant`. This ensures that the appropriate settings are applied for each variant (e.g., `.DEMO` or `.DEV`). The snippet is trimmed to one issuer per variant for brevity; the live `WalletKitConfigImpl` returns **two** issuers per variant — the primary (`order: 1`) plus a backend issuer (`order: 0`): `https://issuer-backend.eudiw.dev` for `.DEMO` and `https://dev.issuer-backend.eudiw.dev` for `.DEV`.
 
 ### Running with local services
 
@@ -230,32 +247,42 @@ The first step is to run the backend services locally — the issuer and the web
 
 To enable the app to interact with a locally running service, a minor code change is required.
 
-Before running the app in the simulator, add the following lines of code to the top of the `NetworkSessionProvider.swift` file inside the `logic-api` module (the type you edit is `NetworkSessionProviderImpl`), directly below the import statements.
+> Warning: this change turns off server certificate validation for the host it names. It applies to
+> the session that carries the app's own requests and the OpenID4VCI and OpenID4VP traffic that
+> wallet-kit sends, except wallet-kit's fetch of an SD-JWT issuer's keys when the credential carries no `x5c`
+> chain, which uses `URLSession.shared`. Use it only for local development and never let it reach a release build; see
+> [Network Security](GO_LIVE.md#network-security) and
+> [Local Development With Self-Signed Certificates](GO_LIVE.md#local-development-with-self-signed-certificates)
+> in the go-live guide.
+
+Before running the app in the simulator, add the following lines of code to the top of the `NetworkSessionProvider.swift` file inside the `logic-api` module (the type you edit is `NetworkSessionProviderImpl`), directly below the import statements. Set `developmentHost` to the host name or IP address of your local services.
 
 ```swift
+/// Accepts the self-signed certificate of one local development host. Never ship it.
 final class SelfSignedDelegate: NSObject, URLSessionDelegate {
+
+  /// The only host whose server certificate is accepted without validation.
+  private let developmentHost = "localhost"
+
   func urlSession(
     _ session: URLSession,
     didReceive challenge: URLAuthenticationChallenge,
-    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    completionHandler: @escaping @Sendable (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
   ) {
-    // Check if the challenge is for a self-signed certificate
-    if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
-       let trust = challenge.protectionSpace.serverTrust {
-      // Create a URLCredential with the self-signed certificate
-      let credential = URLCredential(trust: trust)
-      // Call the completion handler with the credential to accept the self-signed certificate
-      completionHandler(.useCredential, credential)
-    } else {
-      // For other authentication methods, call the completion handler with a nil credential to reject the request
-      completionHandler(.cancelAuthenticationChallenge, nil)
+    let space = challenge.protectionSpace
+    guard space.authenticationMethod == NSURLAuthenticationMethodServerTrust,
+          space.host == developmentHost,
+          let trust = space.serverTrust else {
+      completionHandler(.performDefaultHandling, nil)
+      return
     }
+    completionHandler(.useCredential, URLCredential(trust: trust))
   }
 }
 
 let walletSession: URLSession = {
   let delegate = SelfSignedDelegate()
-  let configuration = URLSessionConfiguration.default
+  let configuration = NetworkSessionProviderImpl.makeConfiguration()
   return URLSession(
     configuration: configuration,
     delegate: delegate,
@@ -272,7 +299,9 @@ init() {
 }
 ```
 
-This change will allow the app to interact with web services that rely on self-signed certificates.
+The app then accepts the self-signed certificate of `developmentHost`, and every other host and
+challenge keeps the system's default handling. Revert both changes before you build anything you
+distribute.
 
 ## Document Provider extension configuration
 

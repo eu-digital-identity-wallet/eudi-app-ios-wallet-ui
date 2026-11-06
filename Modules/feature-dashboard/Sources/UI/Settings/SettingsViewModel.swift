@@ -16,7 +16,6 @@
 import SwiftUI
 import logic_ui
 import logic_core
-import logic_authentication
 import feature_common
 
 @Copyable
@@ -37,6 +36,13 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     }
   }
 
+  var isOfferingDocumentsToApps: Bool = true {
+    didSet {
+      guard !isHydratingDocumentOffering, oldValue != isOfferingDocumentsToApps else { return }
+      updateDocumentOffering(isOfferingDocumentsToApps)
+    }
+  }
+
   var isIssuerRegistrationValidationEnabled: Bool = false {
     didSet {
       guard !isHydratingIssuerRegistration, oldValue != isIssuerRegistrationValidationEnabled else { return }
@@ -46,13 +52,17 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
 
   var isRestartRequiredAlertShowing: Bool = false
 
-  var biometryError: SystemBiometryError?
+  var isResetConfirmationShowing: Bool = false
 
   @ObservationIgnored
   private var isHydratingBatchCounter = false
 
   @ObservationIgnored
   private var isHydratingIssuerRegistration = false
+  @ObservationIgnored
+  private var isHydratingDocumentOffering = false
+  @ObservationIgnored
+  private var isBiometrySwitchOpening = false
 
   private let interactor: SettingsInteractor
   private let walletKitController: WalletKitController
@@ -77,6 +87,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
   }
 
   func initialize() async {
+    isBiometrySwitchOpening = false
     await buildUi()
   }
 
@@ -94,24 +105,35 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     )
   }
 
-  func onBiometrySettings() {
-    Task { await interactor.openBiometrySettings {} }
-  }
-
-  private func setBiometryEnabled(_ isEnabled: Bool) {
-    setState { $0.copy(isBiometryEnabled: isEnabled) }
-    Task {
-      switch await interactor.authenticateBiometry() {
-      case .authenticated:
-        await interactor.setBiometrySelection(isEnabled: isEnabled)
-        setState { $0.copy(isBiometryEnabled: isEnabled) }
-      case .failure(let error):
-        setState { $0.copy(isBiometryEnabled: !isEnabled) }
-        if error != .biometricError {
-          self.biometryError = error
-        }
-      }
-    }
+  /// Opens the PIN or biometric check that must pass before biometric unlock is switched, as on Android: the PIN to
+  /// turn it on, so that a biometric enrolled by someone holding the unlocked phone cannot turn it on, and the PIN or
+  /// a biometric to turn it off. The screen after the check makes the change and returns here; Back changes nothing.
+  /// A second tap while the check opens is ignored, since the router would queue a second screen; the switch takes
+  /// taps again when the settings appear again.
+  func onBiometrySwitch() {
+    guard !isBiometrySwitchOpening else { return }
+    isBiometrySwitchOpening = true
+    let caption: LocalizableStringKey = viewState.isBiometryEnabled
+      ? .biometryUnlockOffCaption
+      : .biometryUnlockOnCaption
+    router.push(
+      with: .featureCommonModule(
+        .biometry(
+          config: UIConfig.Biometry(
+            navigationTitle: .loginWithBiometrics,
+            caption: caption,
+            quickPinOnlyCaption: caption,
+            pinTextFieldTitle: caption,
+            navigationSuccessType: .push(
+              .featureDashboardModule(.biometrySelection(isEnabled: !viewState.isBiometryEnabled))
+            ),
+            navigationBackType: .pop,
+            isPreAuthorization: false,
+            shouldInitializeBiometricOnCreate: true
+          )
+        )
+      )
+    )
   }
 
   private func buildUi() async {
@@ -130,6 +152,11 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     isIssuerRegistrationValidationEnabled = await interactor.isIssuerRegistrationValidationEnabled()
     isHydratingIssuerRegistration = false
 
+    let isDocumentOfferingAvailable = await interactor.isDocumentOfferingAvailable()
+    isHydratingDocumentOffering = true
+    isOfferingDocumentsToApps = await interactor.isOfferingDocumentsToApps()
+    isHydratingDocumentOffering = false
+
     var items: [SettingMenuItemUIModel] = []
 
     if isBiometryAvailable {
@@ -145,8 +172,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
             set: { _ in }
           ),
           action: { [weak self] in
-            guard let self else { return }
-            self.setBiometryEnabled(!self.viewState.isBiometryEnabled)
+            self?.onBiometrySwitch()
           }
         )
       )
@@ -188,25 +214,55 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       )
     )
 
-    items.append(
-      .init(
-        title: .retrieveLogs,
-        icon: Theme.shared.image.retrieveLogs,
-        isShareLink: true,
-        action: {}
+    if isDocumentOfferingAvailable {
+      items.append(
+        .init(
+          title: .offerDocumentsToAppsTitle,
+          icon: Theme.shared.image.id.renderingMode(.template),
+          showDivider: true,
+          isToggle: true,
+          toggleBinding: Binding(
+            get: { [weak self] in
+              self?.isOfferingDocumentsToApps ?? true
+            },
+            set: { [weak self] newValue in
+              self?.isOfferingDocumentsToApps = newValue
+            }
+          ),
+          action: {}
+        )
       )
-    )
+    }
+
+    if logsUrl != nil {
+      items.append(
+        .init(
+          title: .retrieveLogs,
+          icon: Theme.shared.image.retrieveLogs,
+          isShareLink: true,
+          action: {}
+        )
+      )
+    }
 
     if let changelogUrl = await interactor.retrieveChangeLogUrl() {
       items.append(
         .init(
           title: .changelog,
           icon: Theme.shared.image.changelog,
-          showDivider: false,
           action: { changelogUrl.open() }
         )
       )
     }
+
+    items.append(
+      .init(
+        title: .resetWallet,
+        icon: Theme.shared.image.trash,
+        showDivider: false,
+        action: { [weak self] in self?.isResetConfirmationShowing = true }
+      )
+    )
 
     setState {
       $0.copy(
@@ -219,9 +275,36 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
     }
   }
 
+  /// After the confirmation, the user verifies their identity; the reset screen then runs the reset.
+  func onResetConfirmed() {
+    isResetConfirmationShowing = false
+    router.push(
+      with: .featureCommonModule(
+        .biometry(
+          config: UIConfig.Biometry(
+            navigationTitle: .resetWallet,
+            caption: .resetWalletBiometryCaption,
+            quickPinOnlyCaption: .resetWalletPinCaption,
+            pinTextFieldTitle: .resetWalletPinCaption,
+            navigationSuccessType: .push(.featureDashboardModule(.walletReset)),
+            navigationBackType: .pop,
+            isPreAuthorization: false,
+            shouldInitializeBiometricOnCreate: true
+          )
+        )
+      )
+    )
+  }
+
   private func updateBatchCounter(_ isEnabled: Bool) {
     Task {
       await interactor.setBatchCounter(isEnabled: isEnabled)
+    }
+  }
+
+  private func updateDocumentOffering(_ isEnabled: Bool) {
+    Task {
+      await interactor.setOfferingDocumentsToApps(isEnabled: isEnabled)
     }
   }
 

@@ -16,6 +16,23 @@
 import UIKit
 
 public extension URL {
+
+  /// True for an `https` link with a host, the only kind of address a relying party or an issuer may send the user
+  /// to, and the only kind the wallet loads an image from. As Android's `isOpenableExternalLink`.
+  var isHttpsWebLink: Bool {
+    scheme?.lowercased() == "https" && !(host ?? "").isEmpty
+  }
+
+  /// This link if it `isHttpsWebLink`, otherwise nil.
+  var httpsWebLink: URL? {
+    isHttpsWebLink ? self : nil
+  }
+
+  /// True when `other` has the same host, compared case-insensitively, and the same port (443 when none is given).
+  func hasSameOrigin(as other: URL) -> Bool {
+    host?.lowercased() == other.host?.lowercased() && (port ?? 443) == (other.port ?? 443)
+  }
+
   @MainActor func open() {
     if UIApplication.shared.canOpenURL(self) {
       UIApplication.shared.open(self)

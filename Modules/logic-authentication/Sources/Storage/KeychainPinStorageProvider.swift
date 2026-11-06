@@ -25,11 +25,18 @@ final class KeychainPinStorageProvider: PinStorageProvider {
     self.keyChainController = keyChainController
   }
 
-  func hasPin() -> Bool {
+  /// Whether a complete PIN record exists. A missing or partial record is `false`.
+  /// - Throws: `KeyChainError.readFailed` when the record cannot be read, so that an unreadable PIN is
+  ///   never taken for a new wallet.
+  func hasPin() throws -> Bool {
+    let salt = try keyChainController.fetchData(key: KeyIdentifier.devicePinSalt)
+    let hash = try keyChainController.fetchData(key: KeyIdentifier.devicePinHash)
+    let iterationsString = try keyChainController.fetchValue(key: KeyIdentifier.devicePinIterations)
+
     guard
-      let salt = keyChainController.getData(key: KeyIdentifier.devicePinSalt),
-      let hash = keyChainController.getData(key: KeyIdentifier.devicePinHash),
-      let iterationsString = keyChainController.getValue(key: KeyIdentifier.devicePinIterations),
+      let salt,
+      let hash,
+      let iterationsString,
       let iterations = Int(iterationsString),
       !salt.isEmpty,
       !hash.isEmpty,
@@ -41,9 +48,18 @@ final class KeychainPinStorageProvider: PinStorageProvider {
     return true
   }
 
-  func setPin(with pin: String) {
+  /// Writes the salt, hash and iteration count together. If a write fails, the previous record is
+  /// put back, or the partial one removed, and the error is thrown. The record left behind is the
+  /// previous one or none, never a mix of the two.
+  /// - Throws: `AuthenticationError.quickPinInvalid` for an empty PIN, which is never stored;
+  ///   `KeyChainError.readFailed` before anything is written, or `KeyChainError.writeFailed`.
+  func setPin(with pin: String) throws {
 
-    guard !pin.isEmpty else { return }
+    guard !pin.isEmpty else { throw AuthenticationError.quickPinInvalid }
+
+    let previousSalt = try keyChainController.fetchData(key: KeyIdentifier.devicePinSalt)
+    let previousHash = try keyChainController.fetchData(key: KeyIdentifier.devicePinHash)
+    let previousIterations = try keyChainController.fetchValue(key: KeyIdentifier.devicePinIterations)
 
     let salt = randomSalt(length: Constants.saltSize)
 
@@ -54,12 +70,17 @@ final class KeychainPinStorageProvider: PinStorageProvider {
       outputLength: Constants.derivedKeyLength
     )
 
-    keyChainController.storeValue(key: KeyIdentifier.devicePinSalt, value: salt)
-    keyChainController.storeValue(key: KeyIdentifier.devicePinHash, value: hash)
-    keyChainController.storeValue(
-      key: KeyIdentifier.devicePinIterations,
-      value: String(Constants.defaultIterations)
-    )
+    do {
+      try keyChainController.saveValue(key: KeyIdentifier.devicePinSalt, value: salt)
+      try keyChainController.saveValue(key: KeyIdentifier.devicePinHash, value: hash)
+      try keyChainController.saveValue(
+        key: KeyIdentifier.devicePinIterations,
+        value: String(Constants.defaultIterations)
+      )
+    } catch {
+      restoreRecord(salt: previousSalt, hash: previousHash, iterations: previousIterations)
+      throw error
+    }
   }
 
   func isPinValid(with pin: String) -> Bool {
@@ -106,6 +127,38 @@ extension KeychainPinStorageProvider {
 }
 
 private extension KeychainPinStorageProvider {
+
+  /// Puts the previous record back. If that fails too, removes all three items, so that the start-up
+  /// gate sees no PIN rather than a record that no PIN matches.
+  func restoreRecord(salt: Data?, hash: Data?, iterations: String?) {
+    do {
+      try restore(key: KeyIdentifier.devicePinSalt, value: salt)
+      try restore(key: KeyIdentifier.devicePinHash, value: hash)
+      try restore(key: KeyIdentifier.devicePinIterations, value: iterations)
+    } catch {
+      keyChainController.removeObject(key: KeyIdentifier.devicePinSalt)
+      keyChainController.removeObject(key: KeyIdentifier.devicePinHash)
+      keyChainController.removeObject(key: KeyIdentifier.devicePinIterations)
+    }
+  }
+
+  /// Writes `value` back, or removes the item when there was none.
+  func restore(key: KeyIdentifier, value: Data?) throws {
+    if let value {
+      try keyChainController.saveValue(key: key, value: value)
+    } else {
+      keyChainController.removeObject(key: key)
+    }
+  }
+
+  /// Writes `value` back, or removes the item when there was none.
+  func restore(key: KeyIdentifier, value: String?) throws {
+    if let value {
+      try keyChainController.saveValue(key: key, value: value)
+    } else {
+      keyChainController.removeObject(key: key)
+    }
+  }
 
   func randomSalt(length: Int) -> Data {
     var bytes = [UInt8](repeating: 0, count: length)

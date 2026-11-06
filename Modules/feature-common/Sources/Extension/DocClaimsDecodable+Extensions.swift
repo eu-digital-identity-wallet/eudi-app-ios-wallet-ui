@@ -18,8 +18,10 @@ import logic_core
 import logic_ui
 
 public extension DocClaimsDecodable {
+  /// - Parameter issuerLogoOrigins: Where the issuer's logo may load from (`WalletKitController.issuerLogoOrigins()`).
   func transformToDocumentUi(
-    isSensitive: Bool = true
+    isSensitive: Bool = true,
+    issuerLogoOrigins: IssuerLogoOrigins
   ) -> DocumentUIModel {
 
     var issuer: DocumentUIModel.IssuerField? {
@@ -29,8 +31,9 @@ public extension DocClaimsDecodable {
 
       return .init(
         issuersName: self.issuerName,
-        logoUrl: self.issuerLogo,
-        isVerified: true
+        logoUrl: self.issuerLogo?.allowedIssuerLogo(
+          allowedOrigins: issuerLogoOrigins.origins(ofIssuer: self.credentialIssuerIdentifier)
+        )
       )
     }
 
@@ -123,7 +126,7 @@ public extension DocClaimsDecodable {
           }
         }
 
-      } else if let uiImage = claim.dataValue.image {
+      } else if let uiImage = claim.dataValue.boundedImage {
 
         let collapsed: ListItemData
 

@@ -28,6 +28,9 @@ public struct QesApprovalTransactionDomain: Sendable, Equatable {
   public let numSignatures: Int
   public let hashAlgorithmOid: String
   public let documentDigests: [QesDocumentDigestDomain]
+  public let locations: [String]
+  /// `transaction_data_hashes_alg`.
+  public let transactionDataHashAlgorithms: [String]
 
   public init(
     credentialIds: [String],
@@ -35,7 +38,9 @@ public struct QesApprovalTransactionDomain: Sendable, Equatable {
     signatureQualifier: String?,
     numSignatures: Int,
     hashAlgorithmOid: String,
-    documentDigests: [QesDocumentDigestDomain]
+    documentDigests: [QesDocumentDigestDomain],
+    locations: [String] = [],
+    transactionDataHashAlgorithms: [String] = []
   ) {
     self.credentialIds = credentialIds
     self.credentialId = credentialId
@@ -43,19 +48,25 @@ public struct QesApprovalTransactionDomain: Sendable, Equatable {
     self.numSignatures = numSignatures
     self.hashAlgorithmOid = hashAlgorithmOid
     self.documentDigests = documentDigests
+    self.locations = locations
+    self.transactionDataHashAlgorithms = transactionDataHashAlgorithms
   }
 }
 
 public struct QesTransactionDomain: Sendable, Equatable {
   public let credentialIds: [String]
   public let signatureRequests: [QesSignatureRequestDomain]
+  /// `transaction_data_hashes_alg`.
+  public let transactionDataHashAlgorithms: [String]
 
   public init(
     credentialIds: [String],
-    signatureRequests: [QesSignatureRequestDomain]
+    signatureRequests: [QesSignatureRequestDomain],
+    transactionDataHashAlgorithms: [String] = []
   ) {
     self.credentialIds = credentialIds
     self.signatureRequests = signatureRequests
+    self.transactionDataHashAlgorithms = transactionDataHashAlgorithms
   }
 }
 
@@ -67,6 +78,9 @@ public struct QesDocumentDigestDomain: Sendable, Equatable {
   public let href: String?
   public let checksum: DocumentChecksumDomain?
   public let oneTimePassword: String?
+  public let circumstantialData: String?
+  /// How the document is fetched (`access.type`).
+  public let accessMode: String?
 
   public init(
     label: String?,
@@ -75,7 +89,9 @@ public struct QesDocumentDigestDomain: Sendable, Equatable {
     signedProperties: [SigningAttributeDomain]?,
     href: String?,
     checksum: DocumentChecksumDomain?,
-    oneTimePassword: String?
+    oneTimePassword: String?,
+    circumstantialData: String? = nil,
+    accessMode: String? = nil
   ) {
     self.label = label
     self.hash = hash
@@ -84,6 +100,8 @@ public struct QesDocumentDigestDomain: Sendable, Equatable {
     self.href = href
     self.checksum = checksum
     self.oneTimePassword = oneTimePassword
+    self.circumstantialData = circumstantialData
+    self.accessMode = accessMode
   }
 }
 
@@ -97,6 +115,16 @@ public struct QesSignatureRequestDomain: Sendable, Equatable {
   public let href: String?
   public let checksum: DocumentChecksumDomain?
   public let oneTimePassword: String?
+  public let signedEnvelopeProperty: String?
+  public let referenceUri: String?
+  public let circumstantialData: String?
+  /// The signature algorithm's OID (`signAlgo`).
+  public let signatureAlgorithm: String?
+  public let signatureAlgorithmParameters: String?
+  /// How the document is fetched (`access.type`).
+  public let accessMode: String?
+  /// A document the request carries itself; its content is not kept.
+  public let inlineDocument: QesInlineDocumentDomain?
 
   public init(
     label: String?,
@@ -107,7 +135,14 @@ public struct QesSignatureRequestDomain: Sendable, Equatable {
     signedProperties: [SigningAttributeDomain]?,
     href: String?,
     checksum: DocumentChecksumDomain?,
-    oneTimePassword: String?
+    oneTimePassword: String?,
+    signedEnvelopeProperty: String? = nil,
+    referenceUri: String? = nil,
+    circumstantialData: String? = nil,
+    signatureAlgorithm: String? = nil,
+    signatureAlgorithmParameters: String? = nil,
+    accessMode: String? = nil,
+    inlineDocument: QesInlineDocumentDomain? = nil
   ) {
     self.label = label
     self.signatureQualifier = signatureQualifier
@@ -118,6 +153,25 @@ public struct QesSignatureRequestDomain: Sendable, Equatable {
     self.href = href
     self.checksum = checksum
     self.oneTimePassword = oneTimePassword
+    self.signedEnvelopeProperty = signedEnvelopeProperty
+    self.referenceUri = referenceUri
+    self.circumstantialData = circumstantialData
+    self.signatureAlgorithm = signatureAlgorithm
+    self.signatureAlgorithmParameters = signatureAlgorithmParameters
+    self.accessMode = accessMode
+    self.inlineDocument = inlineDocument
+  }
+}
+
+/// A document carried in the request itself: its type and its size once decoded, not its content.
+public struct QesInlineDocumentDomain: Sendable, Equatable {
+  public let documentType: String?
+  /// Nil when the content is not Base64.
+  public let sizeInBytes: Int?
+
+  public init(documentType: String?, sizeInBytes: Int?) {
+    self.documentType = documentType
+    self.sizeInBytes = sizeInBytes
   }
 }
 

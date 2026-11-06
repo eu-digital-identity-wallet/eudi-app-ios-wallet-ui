@@ -13,7 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-public struct KeyChainConfig {
+public struct KeyChainConfig: Sendable {
   public let documentStorageServiceName: String
   public let keychainAccessGroup: String
 }

@@ -4,7 +4,8 @@ We welcome contributions to this project. To ensure that the process is smooth f
 involved, please follow the guidelines below.
 
 If you encounter a bug in the project, check if the bug has already been reported. If the
-bug has not been reported, you can open an issue to report the bug.
+bug has not been reported, you can open an issue to report the bug. Do not report a security
+vulnerability in a public issue; report it privately as described in [SECURITY.md](SECURITY.md).
 
 Before making any changes, it's a good practice to create an issue to describe the changes
 you plan to make and the reasoning behind them.
@@ -15,15 +16,15 @@ for more information.
 
 ## GitHub Flow
 
-We use the [GitHub Flow](https://guides.github.com/introduction/flow/) workflow for making
-contributions to this project. This means that:
+We use the [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow) workflow
+for making contributions to this project. This means that:
 
 1. Fork the repository and create a new branch from `main` for your changes.
 
    ```bash
    git checkout main
    git pull
-   git checkout -b my-branch
+   git checkout -b fix/short-description
    ```
 
 2. Make changes to the code, documentation, or any other relevant files.
@@ -32,7 +33,7 @@ contributions to this project. This means that:
    ```bash
    git add .
    git commit -m "Add a new feature"
-   git push origin my-branch
+   git push origin fix/short-description
    ```
 
 4. Create a pull request from your branch to the `main` branch of this repository.
@@ -42,8 +43,8 @@ contributions to this project. This means that:
 * Branch from the main branch and, if needed, rebase to the current main branch before submitting
   your pull request. If it doesn't merge cleanly with main you may be asked to rebase your changes.
 
-* Commits should be as small as possible while ensuring that each commit is correct independently (
-  i.e., each commit should compile and pass tests).
+* Commits should be as small as possible while ensuring that each commit is correct independently
+  (i.e., each commit should compile and pass tests).
 
 * Test your changes as thoroughly as possible before you commit them. Preferably, automate your test
   by unit/integration tests. If tested manually, provide information about the test scope in the PR
@@ -97,12 +98,7 @@ chore/update-dependencies
 * We use GitHub issues to track bugs and enhancement requests.
 
 * Please provide as much context as possible when you open an issue. The information you provide
-  must be comprehensive enough to reproduce that issue for the assignee. Therefore, contributors may
-  use but aren't restricted to the issue template provided by the project maintainers.
-
-* When creating an issue, try using one of our issue templates which already contain some guidelines
-  on which content is expected to process the issue most efficiently. If no template applies, you
-  can of course also create an issue from scratch.
+  must be comprehensive enough to reproduce that issue for the assignee.
 
 * Please apply one or more applicable [labels](/../../labels) to your issue so that all community
   members are able to cluster the issues better.

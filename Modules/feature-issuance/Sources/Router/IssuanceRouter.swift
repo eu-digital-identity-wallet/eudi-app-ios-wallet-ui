@@ -43,9 +43,6 @@ public final class IssuanceRouter {
         with: .init(
           router: host,
           config: config,
-          deepLinkController: DIGraph.shared.resolver.force(
-            DeepLinkController.self
-          ),
           requestItems: uiModels.compactMap { $0 as? GenericListItemSection }
         )
       )

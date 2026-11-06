@@ -16,9 +16,14 @@
 
 import Foundation
 
-public protocol RevocationWorkManager: Sendable {
+protocol RevocationWorkManager: Sendable {
   func start() async
+  /// Stops the checks and returns once a check under way has finished.
   func stop() async
+  /// Runs the revocation check now, or right after one under way, if the original of a completed re-issue
+  /// gained a revocation record while it was re-issued, so the new copy's status is read without waiting for
+  /// the interval, as the Android wallet does. Does nothing while the checks are stopped.
+  func checkAfterReIssue(of originalId: String) async
 }
 
 final actor RevocationWorkManagerImpl: RevocationWorkManager {
@@ -29,10 +34,18 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
   private let initialDelay: TimeInterval = 30
   private var revocationTask: Task<Void, Never>?
   private var isRunning = false
+  private var didRunInitialCheck = false
+  private let checkRunner: SerialCheckRunner
 
-  init(configLogic: WalletKitConfig, walletKitController: WalletKitController) {
+  /// - Parameter checkRunner: Runs the checks one at a time; `stop()` waits on it.
+  init(
+    configLogic: WalletKitConfig,
+    walletKitController: WalletKitController,
+    checkRunner: SerialCheckRunner = SerialCheckRunner()
+  ) {
     self.configLogic = configLogic
     self.walletKitController = walletKitController
+    self.checkRunner = checkRunner
   }
 
   func start() async {
@@ -45,11 +58,14 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
 
       guard let self else { return }
 
-      try? await Task.sleep(seconds: initialDelay)
-
-      while await self.isRunning {
-        try? await self.checkRevocation()
-        try? await Task.sleep(seconds: self.configLogic.revocationIntervalSeconds)
+      do {
+        try await Task.sleep(seconds: self.firstCheckDelay())
+        while await self.isRunning, !Task.isCancelled {
+          await self.runCheck()
+          try await Task.sleep(seconds: self.configLogic.revocationIntervalSeconds)
+        }
+      } catch {
+        return
       }
     }
   }
@@ -58,53 +74,120 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
     isRunning = false
     revocationTask?.cancel()
     revocationTask = nil
+    await checkRunner.waitUntilIdle()
   }
 
-  private func checkRevocation() async throws {
+  func checkAfterReIssue(of originalId: String) async {
+    guard
+      isRunning,
+      let statuses = try? await walletKitController.fetchRevokedDocumentStatuses(),
+      statuses[originalId] != nil
+    else { return }
+    await runCheck()
+  }
+
+  /// Runs one check through `checkRunner`, so two never overlap. A check that starts after `stop()` does nothing,
+  /// so `stop()` returning means no check runs.
+  private func runCheck() async {
+    await checkRunner.run { [weak self] in
+      guard let self, await self.isRunning else { return }
+      try? await self.checkRevocation()
+    }
+  }
+
+  /// The first check of the process comes `initialDelay` after the workers start, which is after login.
+  /// Once it has run, a later start, after the workers were stopped, waits the full interval.
+  func firstCheckDelay() -> TimeInterval {
+    didRunInitialCheck ? configLogic.revocationIntervalSeconds : initialDelay
+  }
+
+  /// One sweep over the issued documents that carry a status list, with the Android wallet's rules
+  /// (`RevocationRecordUpdate`): a revocation is permanent; a suspended or unrecognised record is cleared
+  /// when the list reports the document valid again; a status value the wallet cannot interpret blocks
+  /// the document. A document whose status cannot be fetched keeps its record, gets a refresh-failure
+  /// record that the next successful check removes, and the sweep goes on. The dashboard notice lists
+  /// only documents newly blocked. A failed read of the stored records ends the sweep before anything is
+  /// changed. A sweep that `stop()` cancels ends at the document whose status was being fetched, records no
+  /// failure for it, and still stores and announces what it read before, as the Android wallet keeps each record
+  /// as it goes.
+  func checkRevocation() async throws {
+
+    didRunInitialCheck = true
 
     let issuedDocuments = await walletKitController.fetchIssuedDocuments()
-    let revokedStoredDocuments = (try? await walletKitController.fetchRevokedDocuments()) ?? []
+    let storedStatuses = try await walletKitController.fetchRevokedDocumentStatuses()
+    let previousFailures = try await walletKitController.fetchStatusRefreshFailures()
 
+    var newStatuses: [String: DocumentRevocationStatus] = [:]
     var revokedDocuments: [String: String] = [:]
-    var fromRevokedToValid: [String] = []
+    var suspendedDocuments: [String: String] = [:]
+    var cleared: [String] = []
+    var failed: [String] = []
+    var refreshedAfterFailure: [String] = []
 
     for document in issuedDocuments {
 
       guard let statusList = document.statusList else { continue }
 
-      let status = try await walletKitController.getDocumentStatus(for: statusList)
-      let isInRevokedStorage = revokedStoredDocuments.first(where: { $0 == document.id }) != nil
-
-      switch status {
-      case .invalid, .suspended:
-        if !isInRevokedStorage {
-          revokedDocuments[document.displayName.orEmpty] = document.id
-        }
-      case .valid:
-        if isInRevokedStorage {
-          fromRevokedToValid.append(document.id)
-        }
-      default:
+      let status: CredentialStatus
+      do {
+        status = try await walletKitController.getDocumentStatus(for: statusList)
+      } catch {
+        guard !Task.isCancelled else { break }
+        failed.append(document.id)
         continue
+      }
+
+      if previousFailures.contains(document.id) {
+        refreshedAfterFailure.append(document.id)
+      }
+
+      let storedStatus = storedStatuses[document.id]
+
+      switch RevocationRecordUpdate.after(stored: storedStatus, observed: status) {
+      case .keep:
+        continue
+      case .clear:
+        cleared.append(document.id)
+      case .record(let newStatus):
+        newStatuses[document.id] = newStatus
+        guard storedStatus == nil else { continue }
+        if newStatus == .suspended {
+          suspendedDocuments[document.id] = document.displayName.orEmpty
+        } else {
+          revokedDocuments[document.id] = document.displayName.orEmpty
+        }
       }
     }
 
-    if !fromRevokedToValid.isEmpty {
-      try await removeRevokedDocuments(with: fromRevokedToValid)
+    if !newStatuses.isEmpty {
+      try await storeRevokedDocuments(with: newStatuses)
+      if !revokedDocuments.isEmpty || !suspendedDocuments.isEmpty {
+        await notifyListeners(revoked: revokedDocuments, suspended: suspendedDocuments)
+      }
     }
 
-    if !revokedDocuments.isEmpty {
-      try await storeRevokedDocuments(with: Array(revokedDocuments.values))
-      await notifyListeners(with: revokedDocuments)
+    if !cleared.isEmpty {
+      try await removeRevokedDocuments(with: cleared)
     }
 
-    if !fromRevokedToValid.isEmpty || !revokedDocuments.isEmpty {
+    let newFailures = failed.filter { !previousFailures.contains($0) }
+    if !newFailures.isEmpty {
+      try await walletKitController.storeStatusRefreshFailures(ids: newFailures)
+    }
+    if !refreshedAfterFailure.isEmpty {
+      try await walletKitController.removeStatusRefreshFailures(ids: refreshedAfterFailure)
+    }
+
+    let changed = Array(newStatuses.keys) + cleared + newFailures + refreshedAfterFailure
+    if !changed.isEmpty {
+      await notifyDocumentDetails(with: changed)
       await notifyDocumentTabListener()
     }
   }
 
-  private func storeRevokedDocuments(with ids: [String]) async throws {
-    try await walletKitController.storeRevokedDocuments(with: ids)
+  private func storeRevokedDocuments(with statuses: [String: DocumentRevocationStatus]) async throws {
+    try await walletKitController.storeRevokedDocuments(with: statuses)
   }
 
   private func removeRevokedDocuments(with ids: [String]) async throws {
@@ -113,17 +196,23 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
     }
   }
 
+  /// Tells the dashboard which documents were newly revoked and which newly suspended, and refreshes
+  /// their details.
   @MainActor
-  private func notifyListeners(with revoked: [String: String]) async {
+  private func notifyListeners(revoked: [String: String], suspended: [String: String]) async {
     NotificationCenter.default.post(
       name: NSNotification.RevocationDashboard,
       object: nil,
-      userInfo: revoked
+      userInfo: RevocationDashboardPayload(revoked: revoked, suspended: suspended).userInfo
     )
+  }
+
+  @MainActor
+  private func notifyDocumentDetails(with ids: [String]) async {
     NotificationCenter.default.post(
       name: NSNotification.DocumentDetailsRefresh,
       object: nil,
-      userInfo: ["ids": Array(revoked.values)]
+      userInfo: ["ids": ids]
     )
   }
 
@@ -135,8 +224,4 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
       userInfo: [:]
     )
   }
-}
-
-public extension NSNotification {
-  static let RevocationDashboard = Notification.Name("RevocationDashboard")
 }

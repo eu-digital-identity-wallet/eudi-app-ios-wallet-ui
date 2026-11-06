@@ -22,9 +22,20 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case search
   case genericErrorTitle
   case genericErrorDesc
+  case keyChainReadError
+  case keyChainWriteError
   case biometryOpenSettings
   case biometryConfirmRequest
+  case biometryUnlockReason
+  case biometryDeniedAccessError
+  case biometryNoFaceIdEnrolledError
+  case biometryNoFingerprintEnrolledError
+  case biometryNotRecognizedError
+  case biometryNotSupportedError
+  case biometryUnlockOffCaption
+  case biometryUnlockOnCaption
   case invalidQuickPin
+  case pinNotFoundError
   case tryAgain
   case shareButton
   case cancelButton
@@ -58,6 +69,25 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestTransactionDataSignedAttributes
   case requestTransactionDataOneTimePassword
   case requestTransactionDataResponseUri
+  case requestTransactionDataLocation
+  case requestTransactionDataHashAlgorithms
+  case requestTransactionDataCircumstantialData
+  case requestTransactionDataSignedEnvelopeProperty
+  case requestTransactionDataReferenceUri
+  case requestTransactionDataSignatureAlgorithm
+  case requestTransactionDataSignatureAlgorithmParameters
+  case requestTransactionDataDocumentAccess
+  case requestTransactionDataDocumentAccessPublic
+  case requestTransactionDataDocumentAccessOtp
+  case requestTransactionDataDocumentAccessBasic
+  case requestTransactionDataDocumentAccessDigest
+  case requestTransactionDataDocumentAccessOauth
+  case requestTransactionDataDocumentContent
+  case requestTransactionDataDocumentContentInline
+  case requestTransactionDataDocumentType
+  case requestTransactionDataDocumentTypeOriginal
+  case requestTransactionDataDocumentTypeFormatted
+  case requestTransactionDataDocumentSize
   case requestTransactionDataUnavailable
   case requestTransactionDataSignatureQes
   case requestTransactionDataSignatureQeseal
@@ -230,6 +260,16 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case categorySocialSecurity
   case categoryTravel
   case changelog
+  case resetWallet
+  case resetWalletConfirmTitle
+  case resetWalletConfirmMessage
+  case resetWalletConfirmButton
+  case resetWalletBiometryCaption
+  case resetWalletPinCaption
+  case resetWalletProgressTitle
+  case resetWalletProgressMessage
+  case screenCaptureCoverTitle
+  case screenCaptureCoverMessage
   case orderBy
   case filterByCategory
   case searchDocuments
@@ -267,6 +307,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case revoked
   case revokedModalTitle
   case revokedModalDescription
+  case suspended
   case issuanceBlockedTitle
   case issuanceBlockedMessage
   case presentationBlockedTitle
@@ -293,8 +334,13 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case documentDetailsExpiredOn([String])
   case documentDetailsIssuedOn([String])
   case documentDetailsRevokedDocument
+  case documentDetailsSuspendedDocument
   case documentDetailsIssuerCardIssuedMessageText
   case documentDetailsIssuerCardRevokedMessageText
+  case documentDetailsIssuerCardSuspendedMessageText
+  case documentDetailsIssuerCardStatusRefreshFailedText
+  case documentDetailsIssuerCardReIssuanceFailedText
+  case documentDetailsReIssueBlockedText
   case documentDetailsIssuerCardExpiredMessageText
   case documentDetailsIssuerCardIssuedActionButtonText
   case batchIssuanceCounter
@@ -310,6 +356,21 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case intendedUse
   case understandRisksAgree
   case relyingPartyNotVerifiedWarning
+  case requestUserImageNotice
+  case offerDocumentsToAppsTitle
+  case quickPinWeakError
+  case issuanceOfferIssuerNotConfiguredError
+  case issuanceSuccessNotIssuedWarning([String])
+  case transactionDetailsRegistrationNotVerifiedWarning
+  case requestTransactionDataChosenByRelyingPartyWarning
+  case requestTransactionDataNotShownError
+  case transactionDetailsRegistrationNotBoundWarning
+  case quickPinDeviceLockMissingWarning
+  case quickPinDeviceLockRequiredWarning
+  case documentOfferingDisabledMessage
+  case requestUserImageConfirmationTitle
+  case requestUserImageConfirmationMessage
+  case accessCertificateNotTrustedWarning
   case relyingPartyOveraskedWarning
   case notRegisteredData
   case issuanceRegistrationBlockedTitle

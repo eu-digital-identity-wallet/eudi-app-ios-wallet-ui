@@ -55,6 +55,13 @@ private func content<RequestItem: Sendable>(
         accessibilityDescription: DocumentSuccessLocators.documentSuccessDescription
       )
 
+      if !viewState.config.notIssuedDocumentNames.isEmpty {
+        VSpacer.medium()
+        WarningNoticeView(
+          message: .issuanceSuccessNotIssuedWarning([viewState.config.notIssuedDocumentNames.joined(separator: ", ")])
+        )
+      }
+
       VSpacer.mediumLarge()
 
       documents(
