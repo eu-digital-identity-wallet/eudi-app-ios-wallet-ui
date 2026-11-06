@@ -1232,18 +1232,20 @@ anything is fetched). An offer that carries itself in the link must name a confi
 `credential_issuer`, written exactly as its `credentialIssuerURL`; an offer passed by address must be fetched over
 `https` from a configured issuer's origin. Any other offer is refused with "This offer comes from an issuer that
 this wallet is not set up to use", as on Android, because wallet-kit would otherwise give an unknown issuer the
-first configured issuer's client settings. To accept an issuer's offers, add a `VciConfig` entry for it to
-`issuersConfig` in the build variants that need it. The wallet fetches an offer passed by address itself, through
-the app's session, and the issuer that offer names as its `credential_issuer` must be configured too, compared
-exactly (`WalletKitControllerImpl.checkedOfferLink(for:)`, for the resolution and the issuance alike). An offer that
-cannot be fetched or read fails with WalletKit's "Credential offer from server cannot be trusted." WalletKit then
-gets the offer by value, so it does not fetch it again and contacts no issuer the wallet is not set up to use, and
-the issuance uses the offer that was checked. The Android wallet compares the same issuer once Wallet Core has
-resolved the offer, by which time Wallet Core has fetched that issuer's metadata. The fetched offer may name a
-configured issuer other than the one whose origin served it, and redirects are followed; the Android wallet does the
-same. The OpenID4VCI library does not compare the metadata's `credential_issuer` with the issuer it was fetched
-from; with `requireSignedMetadata` on, the signed metadata's `sub` must name that issuer, and a trusted access
-certificate must sign it.
+first configured issuer's client settings. The link is read with the OpenID4VCI library's own parser
+(`CredentialOfferRequest(urlString:)`), as on Android, so the wallet checks the offer the library will use: a link
+whose offer parameter is not written in lower case, is given more than once, or is empty is refused. To accept an
+issuer's offers, add a `VciConfig` entry for it to `issuersConfig` in the build variants that need it. The wallet
+fetches an offer passed by address itself, through the app's session, and the issuer that offer names as its
+`credential_issuer` must be configured too, compared exactly (`WalletKitControllerImpl.checkedOfferLink(for:)`, for
+the resolution and the issuance alike). An offer that cannot be fetched or read fails with WalletKit's "Credential
+offer from server cannot be trusted." WalletKit then gets the offer by value, so it does not fetch it again and
+contacts no issuer the wallet is not set up to use, and the issuance uses the offer that was checked. The Android
+wallet compares the same issuer once Wallet Core has resolved the offer, by which time Wallet Core has fetched that
+issuer's metadata. The fetched offer may name a configured issuer other than the one whose origin served it, and
+redirects are followed; the Android wallet does the same. The OpenID4VCI library does not compare the metadata's
+`credential_issuer` with the issuer it was fetched from; with `requireSignedMetadata` on, the signed metadata's
+`sub` must name that issuer, and a trusted access certificate must sign it.
 
 When an issuer issues only some of the documents of an offer, the success screen names the ones not added
 (`DocumentSuccessUIConfig.notIssuedDocumentNames`), as on Android; the cause wallet-kit reports is not shown.
@@ -1686,6 +1688,9 @@ How the reference app handles a wallet link (`DeepLinkController.handleDeepLinkA
   with the transaction-code error (`DocumentOfferInteractor.processOfferRequest`).
 * Each presentation screen works on the session its route carries (`PresentationInteractorImpl`,
   `ProximityInteractorImpl`); a session started later cannot take its place.
+* Back on a request screen ends that presentation only: a remote request sends the decline, and a proximity
+  request stops its Bluetooth session, so the reader can no longer read from the wallet
+  (`BaseRequestViewModel.declineRequest()`).
 * The verifier's `redirect_uri` after a presentation is never treated as a wallet link: the success screen
   opens it in the browser only if it is an `https` link with a host (`URL.openInBrowser(using:)`,
   `URL.isHttpsWebLink`), and returns to the dashboard either way. A credential-offer, OpenID4VP, RQES or
@@ -2835,11 +2840,13 @@ Before release candidate approval, test:
 * Proximity QR/BLE, including leaving the app or locking the phone once the code is shown: the session stops, a
   reader can no longer connect, and the screen closes. Leaving while the code is still loading: the session stops when
   the code becomes ready. Control Center over the QR screen keeps the session and the screen (with
-  `hideContentWhileCaptured` true, behind the cover). Leaving from the request screen keeps the session (10-minute
-  limit).
+  `hideContentWhileCaptured` true, behind the cover). Leaving the app from the request screen keeps the session
+  (10-minute limit).
 * Proximity: the reader ends the Bluetooth session before the user answers: the request screen goes back and the
   presentation ends. A lock, or a wallet link that returns to the dashboard, ends the session and stops the
   advertising.
+* Proximity: Back on the request screen stops the Bluetooth session; the reader sees the session end, and a new
+  presentation needs a new QR code.
 * Proximity reader without, or with a failing, reader certificate: the warning, no badge, Share
   disabled until acknowledged.
 * Relayed proximity engagement where feasible.
