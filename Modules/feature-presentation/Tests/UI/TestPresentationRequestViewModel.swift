@@ -83,11 +83,13 @@ final class TestPresentationRequestViewModel: EudiTest {
   func testOnShareClick_WhenTheWarningIsNotAcknowledged_ThenDoesNotShare() async {
     let viewModel = makeViewModel(isTrusted: false, combinations: [RequestCombinationUiModel(documents: [plainRequest()])])
     await viewModel.doWork()
+    let shared = expectSharing()
+    shared.isInverted = true
 
     viewModel.onShareClick()
 
     XCTAssertFalse(viewModel.canShare)
-    verify(interactor, never()).onResponsePrepare(combinationIndex: any())
+    await fulfillment(of: [shared], timeout: 0.5)
   }
 
   @MainActor
@@ -107,6 +109,8 @@ final class TestPresentationRequestViewModel: EudiTest {
     let viewModel = makeViewModel(isTrusted: false, combinations: [RequestCombinationUiModel(documents: [portraitRequest()])])
     await viewModel.doWork()
     viewModel.isRiskAcknowledged = true
+    let shared = expectSharing()
+    shared.isInverted = true
     viewModel.onShareClick()
     XCTAssertTrue(viewModel.isUserImageConfirmationShowing)
     viewModel.isRiskAcknowledged = false
@@ -114,7 +118,7 @@ final class TestPresentationRequestViewModel: EudiTest {
     viewModel.onUserImageShareConfirmed()
 
     XCTAssertFalse(viewModel.isUserImageConfirmationShowing)
-    verify(interactor, never()).onResponsePrepare(combinationIndex: any())
+    await fulfillment(of: [shared], timeout: 0.5)
   }
 }
 
