@@ -173,27 +173,33 @@ final class TestPresentationInteractor: EudiTest {
     verify(walletKitController).storeDynamicIssuancePendingUrl(with: any())
   }
 
-  func testStopPresentation_WhenInteractorMethodCalled_ThenCallsWalletKitControllerStopPresentation() async {
-    // Given
+  func testStopPresentation_WhenInteractorMethodCalled_ThenStopsOnlyItsOwnSession() async {
+    let ownSession = presentationCoordinator!
     stub(walletKitController) { mock in
-      when(mock.stopPresentation()).thenDoNothing()
+      when(mock.stopRemotePresentation(any())).thenDoNothing()
     }
-    // When
+
     await interactor.stopPresentation()
-    // Then
-    verify(walletKitController).stopPresentation()
+
+    verify(walletKitController).stopRemotePresentation(ParameterMatcher { $0 === ownSession })
+    verify(walletKitController, never()).stopPresentation()
+    verify(presentationCoordinator).stopPresentation()
   }
 
-  func testStopPresentation_WhenInteractorCalled_ThenCallsWalletKitControllerStopPresentation() async {
-    // Given
-    stub(walletKitController) { mock in
-      when(mock.stopPresentation()).thenDoNothing()
+  func testOnDeclineRequest_WhenTheDeclineIsSent_ThenStopsOnlyItsOwnSession() async {
+    let ownSession = presentationCoordinator!
+    stub(presentationCoordinator) { mock in
+      when(mock.declineResponse()).thenDoNothing()
     }
-    // When
-    await interactor.stopPresentation()
+    stub(walletKitController) { mock in
+      when(mock.stopRemotePresentation(any())).thenDoNothing()
+    }
 
-    // Then
-    verify(walletKitController).stopPresentation()
+    await interactor.onDeclineRequest()
+
+    verify(presentationCoordinator).declineResponse()
+    verify(walletKitController).stopRemotePresentation(ParameterMatcher { $0 === ownSession })
+    verify(walletKitController, never()).stopPresentation()
   }
 
   func testOnDeviceEngagement_WhenRequestReceivedAndClaimsParsed_ThenReturnsSuccessWithModel() async {
@@ -420,6 +426,29 @@ final class TestPresentationInteractor: EudiTest {
       }
       XCTAssertEqual(error.localizedDescription, WalletCoreError.transactionDataNotShown.localizedDescription)
     }
+  }
+
+  func testOnRequestReceived_WhenTransactionDataIsReadableAndBoundToAShownDocument_ThenTheOptionShowsIt() async throws {
+    let transaction: PresentationTransactionDataDomain = .qes(.init(credentialIds: ["pid"], signatureRequests: []))
+    await stubReceivedRequest(
+      Self.presentationRequest(transactionDataSets: [[Constants.isoMdlModelId: [transaction]]], requestNames: ["option-1"])
+    )
+
+    let state = await interactor.onRequestReceived()
+
+    guard case .success(let model) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    let transactionData = try XCTUnwrap(model.requestDataCombinations.first?.transactionData)
+    XCTAssertEqual(transactionData.details.id, "transaction-data:0")
+    XCTAssertEqual(
+      transactionData.details.listItems.map(\.id),
+      [
+        "transaction-data:0/framework",
+        "transaction-data:0/transaction-0/type",
+        "transaction-data:0/transaction-0/query-0"
+      ]
+    )
   }
 
   func testOnRequestReceived_WhenAnOptionThatIsNotOfferedCarriesTransactionData_ThenTheOfferedOptionsAreCheckedOnTheirOwn() async {

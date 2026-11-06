@@ -62,6 +62,16 @@ final class TestProximityRequestViewModel: EudiTest {
   }
 
   @MainActor
+  func testDeclineRequest_WhenTheUserGoesBack_ThenThePresentationEnds() async {
+    let stopped = expectation(description: "presentation stopped")
+    let viewModel = makeViewModel(isTrusted: true, onStop: { stopped.fulfill() })
+
+    await viewModel.declineRequest()
+
+    await fulfillment(of: [stopped], timeout: 5)
+  }
+
+  @MainActor
   func testOnShare_WhenTheReaderLeavesAfterTheShare_ThenTheScreenDoesNotGoBack() async {
     let router = MockRouterHost()
     let wentBack = expectation(description: "went back")

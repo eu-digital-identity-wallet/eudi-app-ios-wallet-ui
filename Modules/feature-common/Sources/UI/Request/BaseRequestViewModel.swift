@@ -92,8 +92,19 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     router.push(with: route)
   }
 
+  /// Whether Share may send the response now: the request has loaded, the selection can be shared, and a
+  /// registration warning, if there is one, was acknowledged. The view enables Share with it, and
+  /// `onShareClick()` and `onUserImageShareConfirmed()` check it again before sharing.
+  var canShare: Bool {
+    viewState.initialized
+    && !viewState.isLoading
+    && viewState.allowShare
+    && (viewState.registrationWarning == nil || isRiskAcknowledged)
+  }
+
   /// Shares, or first asks for confirmation when Share would disclose a picture of the holder, as on Android.
   func onShareClick() {
+    guard canShare else { return }
     guard viewState.items.sharesUserImage() else {
       onShare()
       return
@@ -104,6 +115,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   /// Shares once the user has confirmed sending the picture of the holder.
   func onUserImageShareConfirmed() {
     isUserImageConfirmationShowing = false
+    guard canShare else { return }
     onShare()
   }
 
@@ -174,7 +186,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         selectedCombinationIndex: 0,
         relyingParty: relyingParty,
         isTrusted: isTrusted,
-        allowShare: canShare(with: selectedItems),
+        allowShare: hasSharableSelection(selectedItems),
         initialized: true
       )
       .copy(error: nil)
@@ -189,7 +201,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         showMissingCredentials: false,
         items: selectedItems,
         selectedCombinationIndex: index,
-        allowShare: canShare(with: selectedItems)
+        allowShare: hasSharableSelection(selectedItems)
       )
     }
   }
@@ -234,6 +246,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   }
 
   open func stopPresentation() async {}
+  /// Called when the user leaves the request with Back: a remote request sends the decline, and a proximity
+  /// request stops its Bluetooth session. Does nothing by default.
   open func declineRequest() async {}
   public func onTrustBlocked() {
     setState {
@@ -287,13 +301,13 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
           showMissingCredentials: false,
           items: isSelectedCombination ? updatedItems : $0.items,
           combinations: combinations,
-          allowShare: isSelectedCombination ? canShare(with: updatedItems) : $0.allowShare
+          allowShare: isSelectedCombination ? hasSharableSelection(updatedItems) : $0.allowShare
         )
       }
     }
   }
 
-  private func canShare(with items: [RequestDataUiModel]) -> Bool {
+  private func hasSharableSelection(_ items: [RequestDataUiModel]) -> Bool {
     items.canShare()
   }
 

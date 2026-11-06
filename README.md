@@ -49,8 +49,8 @@ The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.co
  
 - ISO18013-5 (proximity presentation)
  
-- ISO/IEC 18013-7 Annex C over the Digital Credentials API (presentation to websites), through the
-  Identity Document Provider extension, on iOS 26.2 and later
+- ISO/IEC 18013-7 Annex C over the Digital Credentials API (presentation to apps and websites), through the
+  Identity Document Provider extension, on iOS 26.0 and later
  
 - OpenID4VCI v1 (issuing)
  
@@ -119,8 +119,9 @@ replace before launch.
 ### Minimum device requirements
 
 - Any device that supports iOS 17.0
-- Presentation to websites through the Digital Credentials API needs iOS 26.2 or later. To stop the wallet offering
-  its documents to apps and websites, turn off "Offer documents to apps and websites" in Settings.
+- Presentation to apps and websites through the Digital Credentials API needs iOS 26.0 or later. To stop apps and
+  websites from requesting the wallet's documents, turn off "Allow document requests from apps and websites
+  (DC API)" in Settings.
 
 ### Prerequisites
 
@@ -158,15 +159,16 @@ You will also need to download the EUDI Verifier app. More information can be fo
 
 1. Go to the "Dashboard" screen, navigate to the "Documents" tab, and tap the "+" icon (top-right of the screen). Select "Scan QR".
 2. Scan the QR code from the issuer's website [EUDI Issuer](https://issuer.eudiw.dev/credential_offer). Use the
-   issuer of your build variant (Demo: issuer.eudiw.dev, Dev: ec.dev.issuer.eudiw.dev); an offer from any other
-   issuer is refused.
+   issuer of your build variant (Demo: issuer.eudiw.dev or issuer-backend.eudiw.dev; Dev: ec.dev.issuer.eudiw.dev or
+   dev.issuer-backend.eudiw.dev); an offer from any other issuer is refused.
 3. Review the documents included in the credential offer and tap "Issue".
 4. In the web view that appears, select "Country Selection", then "FormEU", and tap "Submit".
 5. Fill in the form. Any data will suffice, but selecting a birth date over 18 is recommended, as it is required for certain app functionalities (e.g., RQES).
 6. After submission, a success screen will appear. If the issuer issued only some of the offered documents, it
    names the ones that were not added to your wallet. Tap "Done".
 7. You will be redirected back to the "Documents" tab within the "Dashboard" screen. The flow is now complete.
-   An offer from an issuer the wallet is not set up to use is refused before anything is fetched.
+   An offer from an issuer the wallet is not set up to use is refused before the wallet contacts that issuer; an
+   offer passed by address is fetched only from a configured issuer's site.
 
 With "Check Registration Certificates" enabled in Settings, both issuance flows require the provider
 to be registered for what it offers. If its registration certificate is missing, cannot be

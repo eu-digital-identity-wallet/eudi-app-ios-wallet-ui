@@ -209,11 +209,14 @@ The primary trust source is an ETSI LoTE (List of Trusted Entities) source that 
         EtsiTrustSource(
           loteLocations: loteLocations,
           contextTypeMappings: classifications,
-          isRevocationEnabled: false
+          revocationPolicy: .disabled
         )
       ),
       fallbackTrustSource: .staticList(
-        StaticListTrustSource(rootCertificates: staticRootCertificates)
+        StaticListTrustSource(
+          rootCertificates: staticRootCertificates,
+          revocationPolicy: .ocspOnly
+        )
       ),
       defaultPolicy: .warning,
       docTypePolicies: [
@@ -252,10 +255,12 @@ its issuer is legitimate. Map every doc type the wallet issues before enforcing.
 
 The app enforces signer trust for the PID only and warns for every other
 attestation: those doc types have no verification context, so enforcing them would refuse every
-EAA. `isRevocationEnabled: false` turns off PKIX revocation checks for the dev trust lists, as
-`relaxPkixRevocation()` does on Android; set it to `true` for production. With `true`, iOS checks every
-certificate below a list entry by OCSP in its own trust evaluation and needs a positive answer, so each must name
-an OCSP responder; see GO_LIVE [Trust Store](GO_LIVE.md#trust-store).
+EAA. `revocationPolicy: .disabled` turns off PKIX revocation checks for the dev trust lists, as
+`relaxPkixRevocation()` does on Android; choose another policy for production. The static fallback sets
+`.ocspOnly` explicitly, so that the fallback keeps the OCSP-only check it had before MdocSecurity 0.28.4, whose
+default is `.crlPriority`.
+Every policy other than `.disabled` needs a positive answer for every certificate below a list entry; see GO_LIVE
+[Trust Store](GO_LIVE.md#trust-store).
 
 **Two trust layers.** An access certificate (WRPAC) answers *who is this party*, a registration
 certificate (WRPRC) answers *what is it registered to do* — the registered identity, declared
@@ -500,16 +505,16 @@ production values for every config surface listed below.
 | Build variant/type | `Wallet/Config/*.xcconfig`, `ConfigLogic.swift` | `BUILD_VARIANT = PROD`, `BUILD_TYPE = RELEASE` for production archives. |
 | Issuers | `WalletKitConfig.swift` | Production OpenID4VCI issuer URLs, client IDs, redirect URIs, PAR/DPoP policy, proof-type policy (`allowPlainJwtProof`), signed-metadata policy (`issuerMetadataPolicy`), registration check (`validateRegistrationCertificate`), credential encryption policy (`encryptionSupportConfig`), PoP key options (`popKeyOptions`), logo origins (`logoOrigins`) and display order. |
 | Wallet provider attestation | `WalletProviderAttestationConfig.swift` | Production Wallet Provider host used for wallet/key attestation. |
-| Reader trust anchors | `WalletKitConfig.swift`, certificate resources | Production IACA/reader/verifier trust anchors only. |
+| Reader trust anchors | `WalletKitConfig.swift`, certificate resources | Production IACA/reader/verifier trust anchors only, and a `revocationPolicy` other than `.disabled` on both trust sources; see GO_LIVE [Trust Store](GO_LIVE.md#trust-store). |
 | OpenID4VP | `WalletKitConfig.swift` | Approved client ID schemes, preregistered verifier entries where needed, the accepted transaction data types (`supportedTransactionDataTypes`), and the registration check (`validateRegistrationCertificate`). |
-| WalletKit storage/auth | `WalletKitConfig.swift`, `ConfigLogic.swift` | Production Keychain service/access group and `userAuthenticationRequired` decision. For LoA High PID and other high-assurance EAA/QEAA credentials, require strong local authentication and Keychain/Secure Enclave-backed protection unless an approved remote high-assurance key protection design replaces local key use. |
+| WalletKit storage/auth | `WalletKitConfig.swift`, `ConfigLogic.swift`, `EudiWallet.entitlements` | Production Keychain service (derived from the main app's bundle identifier) and access group (the first `keychain-access-groups` entry in `EudiWallet.entitlements`, read at launch by `Bundle.getKeychainAccessGroup()` into `ConfigLogic.keyChainConfig`), and the `userAuthenticationRequired` decision (`WalletKitConfig.swift`). For LoA High PID and other high-assurance EAA/QEAA credentials, require strong local authentication and Keychain/Secure Enclave-backed protection unless an approved remote high-assurance key protection design replaces local key use. |
 | WalletKit attestation key options | `WalletKitConfig.swift` (`keyOptions`) | Curve, secure area, access protection, access control, and key purposes used when creating attestation/proof keys during issuance, reissuance, deferred issuance, and resume. For LoA High PID and other high-assurance EAA/QEAA credentials, require Secure Enclave (with `.P256`) plus appropriate `accessProtection`/`accessControl`, or an approved remote high-assurance key protection design. |
 | Session lock | `AuthenticationConfig.swift` in `logic-authentication`, `ConfigUiLogic.swift` in `logic-ui` | Confirm `backgroundLockTimeout`, `idleLockTimeout` and `protectedFlowLockTimeout`, and keep `protectedFlowRouteKeys`, `loginRouteKeys` and `coveringScreenModules` in step with your screens; see [Session lock configuration](#session-lock-configuration). |
 | Pictures of the holder | `ConfigUiLogic.swift` in `logic-ui` | `userImageClaimKeys` lists the claims, by the last element of their path, that hold a picture of the holder (`portrait`, `picture`). A request for one shows a biometric-data notice, and Share (Accept in the ID Provider extension) asks for confirmation while it would be disclosed. Add the claims your credentials use. |
 | Screen capture | `ConfigUiLogic.swift` in `logic-ui` | `hideContentWhileCaptured` is false in the reference configuration, so that screens can be recorded in development and testing. Set it to true for production: while the screen is recorded, mirrored or shared, the wallet shows a cover over every screen, sheet and alert, the ID Provider extension's screens included, and cannot be used on the device; while the app is inactive or in the background (the app switcher, Face ID and other system prompts) the cover shows only the wallet's mark (`ScreenCaptureController`). The keyboard is put away while the cover shows. Screenshots cannot be blocked on iOS. See GO_LIVE [Screenshots, Screen Recording, And Sensitive UI](GO_LIVE.md#screenshots-screen-recording-and-sensitive-ui). |
 | PIN rules | `AuthenticationConfig.swift` in `logic-authentication` | Confirm `commonPins` and whether setup and login need a device passcode (`requireDeviceSecure`, off by default). |
 | PIN throttle policy | `AuthenticationConfig.swift` in `logic-authentication` | Confirm `maxFailedPinAttempts` and `pinLockoutDurations` meet policy. Decide what happens once the final lockout tier is reached (e.g. wipe, support flow, device-credential step-up). |
-| Document / WalletKit key storage | `EudiWalletConfiguration`, `ConfigLogic.keyChainConfig`, WalletKit-supported storage APIs | Default app configuration uses WalletKit storage with the configured Keychain service and access group. If production requires alternative local secure storage, a remote-backed key service, or an external protection SDK, use WalletKit-supported extension points and document the exact SDK/API. Start-up reads wallet-storage's `KeyChainStorageService` items to decide whether PIN creation is safe (`WalletKitController.hasStoredDocuments()`); another `DataStorageService` needs its own implementation of that check, see GO_LIVE [PIN Storage](GO_LIVE.md#pin-storage). |
+| Document / WalletKit key storage | `EudiWalletConfiguration`, `ConfigLogic.keyChainConfig`, WalletKit-supported storage APIs | Default app configuration uses WalletKit storage with the derived Keychain service and access group. If production requires alternative local secure storage, a remote-backed key service, or an external protection SDK, use WalletKit-supported extension points and document the exact SDK/API. Start-up reads wallet-storage's `KeyChainStorageService` items to decide whether PIN creation is safe (`WalletKitController.hasStoredDocuments()`); another `DataStorageService` needs its own implementation of that check, see GO_LIVE [PIN Storage](GO_LIVE.md#pin-storage). |
 | Wallet attestation key storage | `WalletKitAttestationProviderImpl`, `WalletProviderAttestationConfig.swift`, Wallet Provider policy | Use when wallet attestation keys must be generated, stored, attested, or unlocked by a custom provider, platform-backed key policy, or remote high-assurance key service. |
 | Issuance proof / DPoP key handling | `WalletKitConfig.swift` issuer configuration and WalletKit OpenID4VCI integration | Prefer DPoP where supported. Use WalletKit-supported custom key handling when proof-of-possession keys require specific authentication, Secure Enclave/Keychain policy, remote high-assurance protection, or issuer-specific key policy. |
 | Remote presentation ephemeral key handling | `WalletKitConfig.swift`, `WalletKitController.startSameDevicePresentation(deepLink:)` and `startCrossDevicePresentation(urlString:)`, WalletKit OpenID4VP integration | Ephemeral protocol key material must be generated per transaction, not reused across verifiers, and not persisted beyond the protocol flow. If WalletKit exposes a dedicated ephemeral key-storage option, configure it in the production integration and document the exact SDK API. |
@@ -672,7 +677,8 @@ If you want to add or adjust the displayed scoped documents, you must modify the
 Issuer logos load only over `https`, from the issuer's own origin or one of that issuer's `VciConfig.logoOrigins`
 (the backend issuers list `https://eudiw.dev`, as on Android), so one issuer's metadata cannot point at another
 issuer's origins (`IssuerLogoOrigins`, checked with `URL.isAllowedIssuerLogo(allowedOrigins:)`). An offer's logo
-follows the configured issuer the offer link names.
+follows the configured issuer the offer link names; for an offer passed by address, the issuer whose origin served
+it, even when the fetched offer names another configured issuer.
 Every remote image, relying-party and Trust Mark logos included, loads only over `https` (`RemoteImagePolicy`). A
 redirect is followed only within the image's origin and over `https`, a download stops once it exceeds
 `RemoteImagePolicy.maxImageByteCount` (2 MiB) whether or not the response declares its size
@@ -683,13 +689,16 @@ Android has the same residual.
 Images inside credentials, such as the portrait, are decoded within Android's limits (`ImageDecodeLimits`): an
 image above 40 megapixels is not decoded, and a side above 2048 px is scaled down while decoding.
 
-Credential offers are accepted only from the issuers in `issuersConfig` (`OfferIssuer`, checked before anything is
-fetched). An offer that carries itself in the link must name a configured issuer as its `credential_issuer`, written
-exactly as its `credentialIssuerURL`; an offer passed by address must be fetched over `https` from a configured
-issuer's origin. Any other offer is refused with "This offer comes from an issuer that this wallet is not set up to
-use", as on Android, because wallet-kit would otherwise give an unknown issuer the first configured issuer's client
-settings. To accept an issuer's offers, add a `VciConfig` entry for it to `issuersConfig` in the build variants that
-need it.
+Credential offers are accepted only from the issuers in `issuersConfig` (`OfferIssuer`; the link is checked before
+anything is fetched). An offer that carries itself in the link must name a configured issuer as its
+`credential_issuer`, written exactly as its `credentialIssuerURL`; an offer passed by address must be fetched over
+`https` from a configured issuer's origin. Any other offer is refused with "This offer comes from an issuer that
+this wallet is not set up to use", as on Android, because wallet-kit would otherwise give an unknown issuer the
+first configured issuer's client settings. The wallet fetches an offer passed by address itself, and that offer must
+name a configured issuer as its `credential_issuer` in turn, compared exactly; WalletKit then gets it by value and
+does not fetch it again. An offer that cannot be fetched or read fails with WalletKit's "Credential offer from
+server cannot be trusted." To accept an issuer's offers, add a `VciConfig` entry for it to `issuersConfig` in the
+build variants that need it.
 
 ## How to work with self-signed certificates
 
@@ -1063,7 +1072,7 @@ The keychain access group for the extension is defined in `EudiReferenceWalletID
 
 `SHARED_APP_GROUP_IDENTIFIER` must match the main app's effective keychain group for the same build configuration (Dev or Demo), otherwise the extension cannot access the same keychain-backed wallet context.
 
-The extension also asks for the wallet PIN or biometrics before it shows a request. It reads the PIN record and the PIN lockout state from the same shared keychain group, and the biometry and "Offer documents to apps and websites" settings from the App Group (`com.apple.security.application-groups`, `group.$(SHARED_APP_GROUP_IDENTIFIER)`), so both entitlements must match the main app's.
+The extension also asks for the wallet PIN or biometrics before it shows a request. It reads the PIN record and the PIN lockout state from the same shared keychain group, and the biometry and "Allow document requests from apps and websites (DC API)" settings from the App Group (`com.apple.security.application-groups`, `group.$(SHARED_APP_GROUP_IDENTIFIER)`), so both entitlements must match the main app's.
 
 ### Step-by-step setup
 
@@ -1099,6 +1108,11 @@ In `EudiWallet.entitlements`, the main app uses:
 
 For Dev/Demo setups in this project, `PRODUCT_BUNDLE_IDENTIFIER` of the main app maps to the same logical identifiers (`eu.europa.ec.euidi.dev` / `eu.europa.ec.euidi`), so the group stays aligned with the extension.
 
+At run time the extension drops the last component of its own bundle identifier to find the main app's
+(`Bundle.getMainAppBundleID()`), and derives the App Group (`group.<main bundle ID>`) and the storage service name
+from it. So keep the extension's identifier one component below the main app's, and `SHARED_APP_GROUP_IDENTIFIER`
+equal to the main app's `PRODUCT_BUNDLE_IDENTIFIER`.
+
 4. **Verify extension DI initialization**
 
 The extension entry point is `EudiReferenceWalletIDProvider/DocumentProviderExtension.swift`.
@@ -1112,7 +1126,7 @@ At startup it initializes `DocumentProviderDIContainer`, which assembles `LogicI
 
 In `Modules/logic-core/Sources/Controller/WalletKitController.swift`, documents are registered to `IdentityDocumentProviderRegistrationStore` (iOS 26+) through `DocumentRegistrationManager`.
 
-Only CBOR documents without a revocation record are registered (`document.docDataFormat == .cbor`), which controls what the extension can serve for Identity Document requests. While "Offer documents to apps and websites" is off in Settings (`Prefs.Key.offerDocumentsToApps`, on by default), nothing is registered.
+Only CBOR documents without a revocation record are registered (`document.docDataFormat == .cbor`), which controls what the extension can serve for Identity Document requests. While "Allow document requests from apps and websites (DC API)" is off in Settings (`Prefs.Key.offerDocumentsToApps`, on by default), nothing is registered.
 
 The wallet registers while iOS reports its authorisation as `authorized` or `notDetermined`: iOS stays at `notDetermined` until the app's first registration, which is what authorises it. A user who turns the wallet off as a document provider (`notAuthorized`) gets no registrations.
 
@@ -1124,7 +1138,7 @@ Registrations are reconciled against wallet storage after every operation that a
 - Extension target has `EudiReferenceWalletIDProvider.entitlements` assigned.
 - `SHARED_APP_GROUP_IDENTIFIER` is present for all extension configurations.
 - Main app and extension resolve to the same runtime keychain access group.
-- On iOS 26.2 and later, registered CBOR documents appear in the extension request flow.
+- On iOS 26.0 and later, registered CBOR documents appear in the extension request flow.
 - The extension asks for the PIN or biometrics before it shows a request, and again on Accept.
 - The requester is shown without the verified badge and with the warning that its identity could not be
   verified; Accept waits for its acknowledgement. `DcApiHandler` returns no reader trust verdict (see GO_LIVE).

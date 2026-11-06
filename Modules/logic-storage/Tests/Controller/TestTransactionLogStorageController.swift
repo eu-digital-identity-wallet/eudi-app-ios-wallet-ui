@@ -135,7 +135,6 @@ private extension TestTransactionLogStorageController {
 }
 
 private struct StubStorageConfig: StorageConfig {
-  let schemaVersion: UInt64 = 1
   let databaseName = "test"
   let databaseFolder = "Test"
   let databaseExtension = "store"

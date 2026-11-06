@@ -70,6 +70,7 @@ struct RequestAuthorizationView: View {
           ContentHeaderView(
             config: viewState.contentHeaderConfig
           )
+          .padding(.horizontal, Theme.shared.dimension.padding)
 
           VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
             if viewState.requestsUserImage {
@@ -111,6 +112,7 @@ struct RequestAuthorizationView: View {
       ContentHeaderView(
         config: viewModel.viewState.contentHeaderConfig
       )
+      .padding(.horizontal, Theme.shared.dimension.padding)
       VStack(spacing: .zero) {
         Spacer()
         if let errorMessage = viewModel.viewState.errorMessage {

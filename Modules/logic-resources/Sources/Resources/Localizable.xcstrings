@@ -188,6 +188,61 @@
         }
       }
     },
+    "biometry_denied_access_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have denied access. Please go to the settings, locate this application and turn the Face ID on"
+          }
+        }
+      }
+    },
+    "biometry_no_face_id_enrolled_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have not enabled Face ID yet"
+          }
+        }
+      }
+    },
+    "biometry_no_fingerprint_enrolled_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have not enabled fingerprint yet"
+          }
+        }
+      }
+    },
+    "biometry_not_recognized_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your biometric method has not been recognized"
+          }
+        }
+      }
+    },
+    "biometry_not_supported_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This device does not support biometry"
+          }
+        }
+      }
+    },
     "biometry_open_settings" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -832,7 +887,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This wallet does not offer documents to apps and websites. You can turn this on in the wallet's Settings."
+            "value" : "This wallet does not accept document requests from apps and websites. You can turn this on in the wallet's Settings."
           }
         }
       }
@@ -1751,7 +1806,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Offer documents to apps and websites"
+            "value" : "Allow document requests from apps and websites (DC API)"
           }
         }
       }
@@ -2720,6 +2775,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Signing credential ID"
+          }
+        }
+      }
+    },
+    "request_transaction_data_trust_framework" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trust framework"
+          }
+        }
+      }
+    },
+    "request_transaction_data_trust_framework_value" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "eIDAS"
           }
         }
       }

@@ -4340,6 +4340,7 @@ import logic_resources
 
 import Cuckoo
 import Foundation
+import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -8413,6 +8414,26 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
         )
     }
 
+    public func stopRemotePresentation(_ p0: RemoteSessionCoordinator) async {
+        return await cuckoo_manager.call(
+            "stopRemotePresentation(_ p0: RemoteSessionCoordinator) async",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.stopRemotePresentation(p0)
+        )
+    }
+
+    public func stopProximityPresentation(_ p0: ProximitySessionCoordinator) async {
+        return await cuckoo_manager.call(
+            "stopProximityPresentation(_ p0: ProximitySessionCoordinator) async",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.stopProximityPresentation(p0)
+        )
+    }
+
     public func fetchAllDocuments() async -> [any DocClaimsDecodable] {
         return await cuckoo_manager.call(
             "fetchAllDocuments() async -> [any DocClaimsDecodable]",
@@ -8450,16 +8471,6 @@ public class MockWalletKitController: WalletKitController, Cuckoo.ProtocolMock, 
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.fetchIssuedDocuments(with: p0)
-        )
-    }
-
-    public func fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable] {
-        return await cuckoo_manager.call(
-            "fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
-            parameters: (p0),
-            escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.fetchIssuedDocuments(excluded: p0)
         )
     }
 
@@ -9050,6 +9061,22 @@ return await cuckoo_manager.call(
             ))
         }
         
+        func stopRemotePresentation<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(RemoteSessionCoordinator)> where M1.MatchedType == RemoteSessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(RemoteSessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "stopRemotePresentation(_ p0: RemoteSessionCoordinator) async",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func stopProximityPresentation<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(ProximitySessionCoordinator)> where M1.MatchedType == ProximitySessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(ProximitySessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
+                method: "stopProximityPresentation(_ p0: ProximitySessionCoordinator) async",
+                parameterMatchers: matchers
+            ))
+        }
+        
         func fetchAllDocuments() -> Cuckoo.ProtocolStubFunction<(), [any DocClaimsDecodable]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
@@ -9078,14 +9105,6 @@ return await cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<([DocumentTypeIdentifier])>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
                 method: "fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func fetchIssuedDocuments<M1: Cuckoo.Matchable>(excluded p0: M1) -> Cuckoo.ProtocolStubFunction<([DocumentTypeIdentifier]), [any DocClaimsDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
-            let matchers: [Cuckoo.ParameterMatcher<([DocumentTypeIdentifier])>] = [wrap(matchable: p0) { $0 }]
-            return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
                 parameterMatchers: matchers
             ))
         }
@@ -9564,6 +9583,30 @@ return await cuckoo_manager.call(
         
         
         @discardableResult
+        func stopRemotePresentation<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(RemoteSessionCoordinator), Void> where M1.MatchedType == RemoteSessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(RemoteSessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "stopRemotePresentation(_ p0: RemoteSessionCoordinator) async",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func stopProximityPresentation<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(ProximitySessionCoordinator), Void> where M1.MatchedType == ProximitySessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(ProximitySessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "stopProximityPresentation(_ p0: ProximitySessionCoordinator) async",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func fetchAllDocuments() -> Cuckoo.__DoNotUse<(), [any DocClaimsDecodable]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -9604,18 +9647,6 @@ return await cuckoo_manager.call(
             let matchers: [Cuckoo.ParameterMatcher<([DocumentTypeIdentifier])>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
                 "fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func fetchIssuedDocuments<M1: Cuckoo.Matchable>(excluded p0: M1) -> Cuckoo.__DoNotUse<([DocumentTypeIdentifier]), [any DocClaimsDecodable]> where M1.MatchedType == [DocumentTypeIdentifier] {
-            let matchers: [Cuckoo.ParameterMatcher<([DocumentTypeIdentifier])>] = [wrap(matchable: p0) { $0 }]
-            return cuckoo_manager.verify(
-                "fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -10262,6 +10293,14 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
+    public func stopRemotePresentation(_ p0: RemoteSessionCoordinator) async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func stopProximityPresentation(_ p0: ProximitySessionCoordinator) async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
     public func fetchAllDocuments() async -> [any DocClaimsDecodable] {
         return DefaultValueRegistry.defaultValue(for: ([any DocClaimsDecodable]).self)
     }
@@ -10275,10 +10314,6 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
     }
     
     public func fetchIssuedDocuments(with p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable] {
-        return DefaultValueRegistry.defaultValue(for: ([any DocClaimsDecodable]).self)
-    }
-    
-    public func fetchIssuedDocuments(excluded p0: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable] {
         return DefaultValueRegistry.defaultValue(for: ([any DocClaimsDecodable]).self)
     }
     
@@ -11228,6 +11263,7 @@ public class ProximitySessionCoordinatorStub:ProximitySessionCoordinator, @unche
 import Cuckoo
 import logic_resources
 import UIKit
+import os
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -11720,6 +11756,26 @@ public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.Prot
         )
     }
 
+    public func clearRemoteCoordinator(_ p0: RemoteSessionCoordinator) async {
+        return await cuckoo_manager.call(
+            "clearRemoteCoordinator(_ p0: RemoteSessionCoordinator) async",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.clearRemoteCoordinator(p0)
+        )
+    }
+
+    public func clearProximityCoordinator(_ p0: ProximitySessionCoordinator) async {
+        return await cuckoo_manager.call(
+            "clearProximityCoordinator(_ p0: ProximitySessionCoordinator) async",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.clearProximityCoordinator(p0)
+        )
+    }
+
     public func setActiveRemoteCoordinator(_ p0: RemoteSessionCoordinator) async {
         return await cuckoo_manager.call(
             "setActiveRemoteCoordinator(_ p0: RemoteSessionCoordinator) async",
@@ -11740,28 +11796,6 @@ public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.Prot
         )
     }
 
-    public func getActiveRemoteCoordinator() async throws -> RemoteSessionCoordinator {
-        return try await cuckoo_manager.callThrows(
-            "getActiveRemoteCoordinator() async throws -> RemoteSessionCoordinator",
-            parameters: (),
-            escapingParameters: (),
-            errorType: Swift.Error.self,
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.getActiveRemoteCoordinator()
-        )
-    }
-
-    public func getActiveProximityCoordinator() async throws -> ProximitySessionCoordinator {
-        return try await cuckoo_manager.callThrows(
-            "getActiveProximityCoordinator() async throws -> ProximitySessionCoordinator",
-            parameters: (),
-            escapingParameters: (),
-            errorType: Swift.Error.self,
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.getActiveProximityCoordinator()
-        )
-    }
-
     public struct __StubbingProxy_SessionCoordinatorHolder: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
@@ -11773,6 +11807,22 @@ public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.Prot
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockSessionCoordinatorHolder.self,
                 method: "clear() async",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func clearRemoteCoordinator<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(RemoteSessionCoordinator)> where M1.MatchedType == RemoteSessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(RemoteSessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockSessionCoordinatorHolder.self,
+                method: "clearRemoteCoordinator(_ p0: RemoteSessionCoordinator) async",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func clearProximityCoordinator<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(ProximitySessionCoordinator)> where M1.MatchedType == ProximitySessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(ProximitySessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockSessionCoordinatorHolder.self,
+                method: "clearProximityCoordinator(_ p0: ProximitySessionCoordinator) async",
                 parameterMatchers: matchers
             ))
         }
@@ -11789,22 +11839,6 @@ public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.Prot
             let matchers: [Cuckoo.ParameterMatcher<(ProximitySessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockSessionCoordinatorHolder.self,
                 method: "setActiveProximityCoordinator(_ p0: ProximitySessionCoordinator) async",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getActiveRemoteCoordinator() -> Cuckoo.ProtocolStubThrowingFunction<(), RemoteSessionCoordinator,Swift.Error> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockSessionCoordinatorHolder.self,
-                method: "getActiveRemoteCoordinator() async throws -> RemoteSessionCoordinator",
-                parameterMatchers: matchers
-            ))
-        }
-        
-        func getActiveProximityCoordinator() -> Cuckoo.ProtocolStubThrowingFunction<(), ProximitySessionCoordinator,Swift.Error> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockSessionCoordinatorHolder.self,
-                method: "getActiveProximityCoordinator() async throws -> ProximitySessionCoordinator",
                 parameterMatchers: matchers
             ))
         }
@@ -11835,6 +11869,30 @@ public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.Prot
         
         
         @discardableResult
+        func clearRemoteCoordinator<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(RemoteSessionCoordinator), Void> where M1.MatchedType == RemoteSessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(RemoteSessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "clearRemoteCoordinator(_ p0: RemoteSessionCoordinator) async",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func clearProximityCoordinator<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(ProximitySessionCoordinator), Void> where M1.MatchedType == ProximitySessionCoordinator {
+            let matchers: [Cuckoo.ParameterMatcher<(ProximitySessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "clearProximityCoordinator(_ p0: ProximitySessionCoordinator) async",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func setActiveRemoteCoordinator<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(RemoteSessionCoordinator), Void> where M1.MatchedType == RemoteSessionCoordinator {
             let matchers: [Cuckoo.ParameterMatcher<(RemoteSessionCoordinator)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
@@ -11856,30 +11914,6 @@ public class MockSessionCoordinatorHolder: SessionCoordinatorHolder, Cuckoo.Prot
                 sourceLocation: sourceLocation
             )
         }
-        
-        
-        @discardableResult
-        func getActiveRemoteCoordinator() -> Cuckoo.__DoNotUse<(), RemoteSessionCoordinator> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getActiveRemoteCoordinator() async throws -> RemoteSessionCoordinator",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
-        
-        
-        @discardableResult
-        func getActiveProximityCoordinator() -> Cuckoo.__DoNotUse<(), ProximitySessionCoordinator> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getActiveProximityCoordinator() async throws -> ProximitySessionCoordinator",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
-        }
     }
 }
 
@@ -11891,20 +11925,20 @@ public class SessionCoordinatorHolderStub:SessionCoordinatorHolder, @unchecked S
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
+    public func clearRemoteCoordinator(_ p0: RemoteSessionCoordinator) async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func clearProximityCoordinator(_ p0: ProximitySessionCoordinator) async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
     public func setActiveRemoteCoordinator(_ p0: RemoteSessionCoordinator) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
     public func setActiveProximityCoordinator(_ p0: ProximitySessionCoordinator) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
-    }
-    
-    public func getActiveRemoteCoordinator() async throws -> RemoteSessionCoordinator {
-        return DefaultValueRegistry.defaultValue(for: (RemoteSessionCoordinator).self)
-    }
-    
-    public func getActiveProximityCoordinator() async throws -> ProximitySessionCoordinator {
-        return DefaultValueRegistry.defaultValue(for: (ProximitySessionCoordinator).self)
     }
 }
 
@@ -12624,6 +12658,7 @@ import Foundation
 
 import Cuckoo
 import Foundation
+import OpenID4VCI
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
@@ -15798,22 +15833,6 @@ import logic_resources
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/Extension/ExpandableListItem+Extensions.swift'
 
 import Cuckoo
-@testable import logic_core
-@testable import logic_business
-@testable import logic_analytics
-@testable import logic_ui
-@testable import logic_api
-@testable import logic_authentication
-@testable import feature_common
-@testable import feature_startup
-
-
-
-// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/Extension/Image+Extensions.swift'
-
-import Cuckoo
-import SwiftUI
-import logic_resources
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

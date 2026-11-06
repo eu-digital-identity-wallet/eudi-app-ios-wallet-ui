@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import logic_resources
 
 public enum SystemBiometryError: Error, LocalizedError, Identifiable, Sendable {
   case deniedAccess
@@ -26,20 +27,17 @@ public enum SystemBiometryError: Error, LocalizedError, Identifiable, Sendable {
   public var id: String { localizedDescription }
 
   public var errorDescription: String? {
-    switch self {
+    return switch self {
     case .deniedAccess:
-      return NSLocalizedString(
-        "You have denied access. Please go to the settings, locate this application and turn the Face ID on",
-        comment: ""
-      )
+      LocalizableStringKey.biometryDeniedAccessError.toString
     case .noFaceIdEnrolled:
-      return NSLocalizedString("You have not enabled Face ID yet", comment: "")
+      LocalizableStringKey.biometryNoFaceIdEnrolledError.toString
     case .noFingerprintEnrolled:
-      return NSLocalizedString("You have not enabled fingerprint yet", comment: "")
+      LocalizableStringKey.biometryNoFingerprintEnrolledError.toString
     case .biometricError:
-      return NSLocalizedString("Your biometric method has not been recognized", comment: "")
+      LocalizableStringKey.biometryNotRecognizedError.toString
     case .biometryNotSupported:
-      return NSLocalizedString("This device does not support biometry", comment: "")
+      LocalizableStringKey.biometryNotSupportedError.toString
     }
   }
 }

@@ -138,7 +138,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
 
   /// Sends the response, unless a warning is still waiting for the user's acknowledgement.
   func acceptVerification() async {
-    guard canAccept else { return }
+    guard canAccept, let context, let selection else { return }
     setState {
       $0.copy(
         isLoading: true
@@ -146,15 +146,12 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     }
 
     do {
-      guard let context, let selection else {
-        return
-      }
-
       try await interactor.acceptVerification(context: context, selection: selection)
     } catch {
       setState {
         $0.copy(
-          errorMessage: error.localizedDescription
+          errorMessage: error.localizedDescription,
+          isLoading: false
         )
       }
     }

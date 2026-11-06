@@ -136,6 +136,10 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     await interactor.stopPresentation()
   }
 
+  override func declineRequest() async {
+    await stopPresentation()
+  }
+
   override func getRelyingParty() -> LocalizableStringKey {
     viewState.relyingParty
   }

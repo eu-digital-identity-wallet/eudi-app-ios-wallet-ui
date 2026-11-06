@@ -33,7 +33,5 @@
 	<string>$(CORE_USER_AUTH)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>Team ID</key>
-	<string>$(DEVELOPMENT_TEAM)</string>
 </dict>
 </plist>

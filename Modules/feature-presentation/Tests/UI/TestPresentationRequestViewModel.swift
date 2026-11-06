@@ -56,7 +56,7 @@ final class TestPresentationRequestViewModel: EudiTest {
 
   @MainActor
   func testOnShareClick_WhenNoPortraitWouldBeShared_ThenSharesWithoutAConfirmation() async {
-    let viewModel = makeViewModel(isTrusted: true)
+    let viewModel = makeViewModel(isTrusted: true, combinations: [RequestCombinationUiModel(documents: [plainRequest()])])
     await viewModel.doWork()
     let shared = expectSharing()
 
@@ -77,6 +77,48 @@ final class TestPresentationRequestViewModel: EudiTest {
 
     XCTAssertFalse(viewModel.isUserImageConfirmationShowing)
     await fulfillment(of: [shared], timeout: 3)
+  }
+
+  @MainActor
+  func testOnShareClick_WhenTheWarningIsNotAcknowledged_ThenDoesNotShare() async {
+    let viewModel = makeViewModel(isTrusted: false, combinations: [RequestCombinationUiModel(documents: [plainRequest()])])
+    await viewModel.doWork()
+    let shared = expectSharing()
+    shared.isInverted = true
+
+    viewModel.onShareClick()
+
+    XCTAssertFalse(viewModel.canShare)
+    await fulfillment(of: [shared], timeout: 0.5)
+  }
+
+  @MainActor
+  func testOnShareClick_WhenTheWarningIsAcknowledged_ThenShares() async {
+    let viewModel = makeViewModel(isTrusted: false, combinations: [RequestCombinationUiModel(documents: [plainRequest()])])
+    await viewModel.doWork()
+    viewModel.isRiskAcknowledged = true
+    let shared = expectSharing()
+
+    viewModel.onShareClick()
+
+    await fulfillment(of: [shared], timeout: 3)
+  }
+
+  @MainActor
+  func testOnUserImageShareConfirmed_WhenSharingIsNoLongerAllowed_ThenDoesNotShare() async {
+    let viewModel = makeViewModel(isTrusted: false, combinations: [RequestCombinationUiModel(documents: [portraitRequest()])])
+    await viewModel.doWork()
+    viewModel.isRiskAcknowledged = true
+    let shared = expectSharing()
+    shared.isInverted = true
+    viewModel.onShareClick()
+    XCTAssertTrue(viewModel.isUserImageConfirmationShowing)
+    viewModel.isRiskAcknowledged = false
+
+    viewModel.onUserImageShareConfirmed()
+
+    XCTAssertFalse(viewModel.isUserImageConfirmationShowing)
+    await fulfillment(of: [shared], timeout: 0.5)
   }
 }
 
@@ -136,6 +178,25 @@ private extension TestPresentationRequestViewModel {
       section: .init(id: "doc-id", title: "Document", listItems: [portrait]),
       userImageItemIds: ["portrait-id"]
     )
+  }
+
+  func plainRequest() -> RequestDataUiModel {
+    let familyName: ExpandableListItem<DocumentElementClaim> = .single(
+      .init(
+        collapsed: .init(groupId: "family-name-id", mainContent: .text(.custom("value")), overlineText: .custom("Family name")),
+        domainModel: .primitive(
+          id: "family-name-id",
+          title: "Family name",
+          documentId: "doc-id",
+          nameSpace: "nameSpace",
+          path: ["nameSpace", "family_name"],
+          type: .mdoc,
+          value: .string("value"),
+          status: .available(isRequired: false)
+        )
+      )
+    )
+    return .init(section: .init(id: "doc-id", title: "Document", listItems: [familyName]))
   }
 
   /// Fulfilled when the view model prepares the response, the first step of sharing.

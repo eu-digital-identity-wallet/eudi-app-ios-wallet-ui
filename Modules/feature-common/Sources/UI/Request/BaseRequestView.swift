@@ -36,6 +36,7 @@ public struct BaseRequestView<Router: RouterHost>: View {
       BaseRequestViewContainer(
         viewState: viewModel.viewState,
         isRiskAcknowledged: $viewModel.isRiskAcknowledged,
+        canShare: viewModel.canShare,
         onShare: viewModel.onShareClick,
         onSelectionChanged: { id in
           Task {
@@ -93,6 +94,7 @@ private struct BaseRequestViewContainer: View {
 
   let viewState: RequestViewState
   @Binding var isRiskAcknowledged: Bool
+  let canShare: Bool
   let onShare: () -> Void
   let onSelectionChanged: (String) -> Void
   var onCombinationSelected: (Int) -> Void = { _ in }
@@ -101,10 +103,6 @@ private struct BaseRequestViewContainer: View {
   private var registrationWarning: RegistrationWarning? {
     guard viewState.initialized, !viewState.isLoading else { return nil }
     return viewState.registrationWarning
-  }
-
-  private var canShare: Bool {
-    viewState.allowShare && (registrationWarning == nil || isRiskAcknowledged)
   }
 
   var body: some View {
@@ -359,6 +357,7 @@ private struct BaseRequestViewContainer: View {
     BaseRequestViewContainer(
       viewState: viewState,
       isRiskAcknowledged: .constant(false),
+      canShare: true,
       onShare: {},
       onSelectionChanged: { _ in }
     )

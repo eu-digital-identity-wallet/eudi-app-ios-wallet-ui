@@ -66,6 +66,11 @@ private struct TransactionDataRowsBuilder<T: Sendable> {
   }
 
   mutating func addTransactions(_ transactions: [PresentationTransactionDataDomain]) {
+    addField(
+      itemId: "\(sectionId)/framework",
+      label: .requestTransactionDataTrustFramework,
+      value: LocalizableStringKey.requestTransactionDataTrustFrameworkValue.toString
+    )
     for (index, transaction) in transactions.enumerated() {
       let transactionId = "\(sectionId)/transaction-\(index)"
       if transactions.count > 1 {

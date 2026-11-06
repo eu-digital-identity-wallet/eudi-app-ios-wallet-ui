@@ -17,6 +17,9 @@ import logic_business
 import SwiftUI
 import logic_storage
 import logic_api
+import enum OpenID4VCI.CredentialOfferRequest
+import struct OpenID4VCI.CredentialOfferRequestObject
+import struct OpenID4VCI.Fetcher
 
 private enum KeyIdentifier: String, KeyChainWrapper {
   public var value: String {
@@ -33,12 +36,17 @@ public protocol WalletKitController: Sendable {
   func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator
   func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator
   func stopPresentation() async
+  /// Clears `coordinator` as the active remote session if it still is; a session that started after it stays. The
+  /// caller stops the coordinator itself.
+  func stopRemotePresentation(_ coordinator: RemoteSessionCoordinator) async
+  /// Stops the Bluetooth session of `coordinator` only while it is the active one, so a presentation that ends
+  /// never stops one that started after it.
+  func stopProximityPresentation(_ coordinator: ProximitySessionCoordinator) async
 
   func fetchAllDocuments() async -> [any DocClaimsDecodable]
   func fetchDeferredDocuments() async -> [WalletStorage.Document]
   func fetchIssuedDocuments() async -> [any DocClaimsDecodable]
   func fetchIssuedDocuments(with types: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]
-  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) async -> [any DocClaimsDecodable]
   func fetchMainPidDocument() async -> (any DocClaimsDecodable)?
   func fetchDocument(with id: String) async -> (any DocClaimsDecodable)?
   func fetchDocuments(with ids: [String]) async -> [any DocClaimsDecodable]
@@ -178,6 +186,11 @@ final actor WalletKitControllerImpl: WalletKitController {
   /// The OpenID4VP configuration built at launch, so every remote presentation applies the registration-check setting
   /// read then, as the app's own decisions do (`isRegistrationChecked`), until the app restarts.
   private let openID4VpConfig: OpenId4VpConfiguration
+  /// The app's HTTP session, the one WalletKit also uses, through which the app fetches an offer passed by reference.
+  private let urlSession: URLSession
+  /// The link WalletKit got for each offer resolved, by the link the wallet received, so the issuance that follows
+  /// uses the offer that was checked, also when another offer was opened in between.
+  private var resolvedOfferLinks: [String: String] = [:]
 
   init(
     walletKitConfig: WalletKitConfig,
@@ -214,6 +227,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     self.isRegistrationChecked = walletKitConfig.validateIssuerRegistrationCertificate
     let openID4VpConfig = walletKitConfig.vpConfig
     self.openID4VpConfig = openID4VpConfig
+    self.urlSession = networkSessionProvider.urlSession
 
     guard let walletKit = try? EudiWallet(
       eudiWalletConfig: EudiWalletConfiguration(
@@ -237,21 +251,70 @@ final actor WalletKitControllerImpl: WalletKitController {
     wallet = walletKit
   }
 
+  /// Resolves the offer behind `offerUri` only if the offer itself names a configured issuer as its
+  /// `credential_issuer` (`checkedOfferLink(for:)`), and keeps the link WalletKit got for the issuance that follows.
   func resolveOfferUrlDocTypes(offerUri: String) async throws -> OfferedIssuanceModel {
-    try requireConfiguredIssuer(of: offerUri)
+    let offerLink = try await checkedOfferLink(for: offerUri)
+    resolvedOfferLinks[offerUri] = offerLink
     return try await wallet.resolveOfferUrlDocTypes(
-      offerUri: offerUri,
+      offerUri: offerLink,
       authFlowRedirectionURI: nil
     )
   }
 
-  /// Refuses an offer whose issuer is not configured before anything is fetched (`OfferIssuer`): wallet-kit would
-  /// otherwise give it the first configured issuer's client settings.
+  /// The link WalletKit gets for the offer behind `offerUri`, refused (`WalletCoreError.issuerNotConfigured`) unless
+  /// the offer names one of the configured issuers as its own `credential_issuer`, compared exactly, which is the
+  /// issuer WalletKit then contacts. An offer passed by value is checked as it is. One passed by reference is fetched
+  /// here, through the app's session, from an address on a configured issuer's origin (`OfferIssuer`; redirects are
+  /// followed), and checked before WalletKit sees it; WalletKit then gets it by value, so it does not fetch the offer
+  /// again. An offer that cannot be fetched or read fails as WalletKit fails it (`offerFetchError(for:)`).
+  private func checkedOfferLink(for offerUri: String) async throws -> String {
+    try requireConfiguredIssuer(of: offerUri)
+    guard case .fetchByReference(let reference) = try CredentialOfferRequest(urlString: offerUri) else {
+      return offerUri
+    }
+    let offer: String
+    do {
+      offer = try await Fetcher<CredentialOfferRequestObject>(session: urlSession).fetchString(url: reference).get()
+    } catch {
+      throw Self.offerFetchError(for: error)
+    }
+    guard let offerLink = OfferIssuer.byValueLink(offerUri: offerUri, offer: offer) else {
+      throw Self.offerFetchError()
+    }
+    switch OfferIssuer.of(offerUri: offerLink, configuredIssuers: configuredIssuers) {
+    case .configured:
+      return offerLink
+    case .notConfigured:
+      throw WalletCoreError.issuerNotConfigured
+    case .unreadable:
+      throw Self.offerFetchError()
+    }
+  }
+
+  /// The error WalletKit gives when it cannot fetch or read an offer passed by reference
+  /// (`EudiWallet.resolveCredentialOffer`, which names the issuer "server" for such a link), so the offer screen shows
+  /// the same message now that the app fetches the offer itself.
+  private static func offerFetchError(for error: Error? = nil) -> WalletError {
+    WalletError(
+      description: "Credential offer from server cannot be trusted.",
+      code: .offerResolutionFailed,
+      innerError: error
+    )
+  }
+
+  /// Refuses an offer link that does not come from a configured issuer (`OfferIssuer`), before anything is fetched:
+  /// wallet-kit would otherwise give an unknown issuer the first configured issuer's client settings.
   private func requireConfiguredIssuer(of offerUri: String) throws {
     try OfferIssuer.requireConfigured(
       offerUri: offerUri,
-      configuredIssuers: walletKitConfig.issuersConfig.values.compactMap(\.config.credentialIssuerURL)
+      configuredIssuers: configuredIssuers
     )
+  }
+
+  /// The `credential_issuer` of every configured issuer.
+  private var configuredIssuers: [String] {
+    walletKitConfig.issuersConfig.values.compactMap(\.config.credentialIssuerURL)
   }
 
   private func resolveCredentialOptions(
@@ -268,12 +331,19 @@ final actor WalletKitControllerImpl: WalletKitController {
     return try? await wallet.getDocumentCredentialOptions(documentId: id)
   }
 
+  /// Issues from the offer resolved for the same link with the link WalletKit got then, so an issuer cannot change an
+  /// offer passed by reference between the check and the issuance; any other link is checked first.
   func issueDocumentsByOfferUrl(
     offerUri: String,
     docTypes: [OfferedDocModel],
     txCodeValue: String?
   ) async throws -> IssuanceResult {
-    try requireConfiguredIssuer(of: offerUri)
+    let offerLink: String
+    if let resolvedOfferLink = resolvedOfferLinks[offerUri] {
+      offerLink = resolvedOfferLink
+    } else {
+      offerLink = try await checkedOfferLink(for: offerUri)
+    }
     let docTypes = docTypes.map { docType in
       let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(for: docType.documentTypeIdentifier)
       return docType.copy(
@@ -283,7 +353,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     }
 
     let response = try await wallet.issueDocumentsByOfferUrl(
-      offerUri: offerUri,
+      offerUri: offerLink,
       docTypes: docTypes,
       txCodeValue: txCodeValue
     )
@@ -316,7 +386,12 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func deleteDocument(with id: String, status: DocumentStatus) async throws {
     try await wallet.deleteDocument(id: id, status: status)
-    try await deleteRecords(of: id)
+    do {
+      try await deleteRecords(of: id)
+    } catch {
+      await reconcileRegistrations()
+      throw error
+    }
     await reconcileRegistrations()
   }
 
@@ -362,6 +437,14 @@ final actor WalletKitControllerImpl: WalletKitController {
     await self.sessionCoordinatorHolder.clear()
   }
 
+  func stopRemotePresentation(_ coordinator: RemoteSessionCoordinator) async {
+    await self.sessionCoordinatorHolder.clearRemoteCoordinator(coordinator)
+  }
+
+  func stopProximityPresentation(_ coordinator: ProximitySessionCoordinator) async {
+    await self.sessionCoordinatorHolder.clearProximityCoordinator(coordinator)
+  }
+
   func fetchAllDocuments() async -> [any DocClaimsDecodable] {
     return fetchIssuedDocuments() + fetchDeferredDocuments().transformToDeferredDecodables()
   }
@@ -384,11 +467,6 @@ final actor WalletKitControllerImpl: WalletKitController {
       .sorted { $0.createdAt > $1.createdAt }.last
   }
 
-  func fetchIssuedDocuments(excluded: [DocumentTypeIdentifier]) -> [any DocClaimsDecodable] {
-    let excludedRawValues = excluded.map { $0.rawValue }
-    return fetchIssuedDocuments().filter { !excludedRawValues.contains($0.docType) }
-  }
-
   func fetchDocument(with id: String) -> (any DocClaimsDecodable)? {
     wallet.storage.getDocumentModel(id: id)
   }
@@ -408,9 +486,13 @@ final actor WalletKitControllerImpl: WalletKitController {
 
     let response = try await wallet.issueDocuments(
       issuerName: issuerId,
-      docTypeIdentifiers: identifiers.map { .identifier($0) },
-      credentialOptions: credentialOptions,
-      keyOptions: walletKitConfig.keyOptions
+      configuration: identifiers.map {
+        DocumentIssuanceConfiguration(
+          docTypeIdentifier: .identifier($0),
+          credentialOptions: credentialOptions,
+          keyOptions: walletKitConfig.keyOptions
+        )
+      }
     )
     await reconcileRegistrations()
     return IssuanceResult(

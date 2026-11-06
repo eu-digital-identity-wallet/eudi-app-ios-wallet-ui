@@ -26,8 +26,7 @@ extension DocumentUIModel {
       issuer: .init(
         id: UUID().uuidString,
         issuersName: "Digital Credential Service",
-        logoUrl: URL(string: "https://www.example.com")!,
-        isVerified: true
+        logoUrl: URL(string: "https://www.example.com")!
       ),
       createdAt: Date(),
       hasExpired: false,

@@ -27,6 +27,11 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case biometryOpenSettings
   case biometryConfirmRequest
   case biometryUnlockReason
+  case biometryDeniedAccessError
+  case biometryNoFaceIdEnrolledError
+  case biometryNoFingerprintEnrolledError
+  case biometryNotRecognizedError
+  case biometryNotSupportedError
   case biometryUnlockOffCaption
   case biometryUnlockOnCaption
   case invalidQuickPin
@@ -44,6 +49,8 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestTransactionDataType
   case requestTransactionDataTypeQes
   case requestTransactionDataTypeQesRequest
+  case requestTransactionDataTrustFramework
+  case requestTransactionDataTrustFrameworkValue
   case requestTransactionDataRequestedCredentials
   case requestTransactionDataSigningCredentialId
   case requestTransactionDataDocument

@@ -127,6 +127,7 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
         await revocationWorkManager.checkAfterReIssue(of: document.id)
 
       } catch {
+        guard !Task.isCancelled else { return }
         failed.append(document.id)
       }
 

@@ -201,7 +201,7 @@ Keep these files under strict review:
 | File | Why it matters |
 | --- | --- |
 | `Wallet/Config/*.xcconfig` | Defines build type, build variant, changelog URL, and other compile-time values consumed by the plist and config logic. |
-| `Wallet/Wallet.plist` | Defines build metadata, URL schemes, Team ID, encryption export flag, and app-level plist values. |
+| `Wallet/Wallet.plist` | Defines build metadata, URL schemes, encryption export flag, and app-level plist values. |
 | `EudiReferenceWallet.xcodeproj/project.pbxproj` | Defines schemes, build configurations, bundle identifiers, signing style, provisioning profiles, app display name, usage descriptions, and extension settings. |
 | `EudiWallet.entitlements` | Defines main app Keychain Sharing, App Groups, and Identity Document Provider mobile document types. |
 | `EudiReferenceWalletIDProvider/EudiReferenceWalletIDProvider.entitlements` | Defines extension App Groups and Keychain Sharing through `SHARED_APP_GROUP_IDENTIFIER`. |
@@ -381,10 +381,10 @@ Production identity values must be final before external testing.
 | Extension bundle identifier | Extension target `PRODUCT_BUNDLE_IDENTIFIER` | Use a child identifier of the main app, for example `eu.example.wallet.EudiReferenceWalletIDProvider`. |
 | App display name | `INFOPLIST_KEY_CFBundleDisplayName` | Use the official wallet name approved for the Member State or wallet provider. |
 | App icon | Asset catalogs and target settings | Replace reference assets with production brand assets. |
-| Apple team | `DEVELOPMENT_TEAM`, App Store Connect | Use the production Apple Developer Program team. The `Team ID` keys in `Wallet.plist` and `WalletIdProvider.plist` take `$(DEVELOPMENT_TEAM)`; no code reads them. |
+| Apple team | `DEVELOPMENT_TEAM`, App Store Connect | Use the production Apple Developer Program team. |
 | Version | `MARKETING_VERSION`, Fastlane lane mutation | Use the approved public versioning scheme. |
 | Build number | `CURRENT_PROJECT_VERSION`, `CFBundleVersion`, Fastlane lane mutation | Must monotonically increase for App Store Connect. |
-| Minimum iOS | Swift packages and project deployment target | Current packages target iOS 17. Confirm this with the device support policy. |
+| Minimum iOS | Swift packages and project deployment target | The packages and the app target iOS 17; the ID Provider extension targets iOS 26.0. Confirm this with the device support policy. |
 | Category | `INFOPLIST_KEY_LSApplicationCategoryType` | Review App Store category and public-sector distribution needs. |
 
 Recommended:
@@ -778,7 +778,7 @@ Production meaning:
 | --- | --- | --- |
 | `.x509SanDns` | Verifier client identity is bound to a DNS name in an X.509 certificate. | Use when verifier certificates and trust anchors are managed and audited. |
 | `.x509Hash` | Verifier identity is bound to a certificate hash. | Use when the verifier ecosystem requires hash-based certificate binding. |
-| `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add the production client ID, legal name and request-signing keys, and the request signing algorithm when it is not RS256. |
+| `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add the production client ID, legal name and request-signing keys, and the request signing algorithm: ES256 for a Request Object fetched by `request_uri` (see the rules below). |
 | `supportedTransactionDataTypes` | OpenID4VP `transaction_data` types the wallet accepts. The OpenID4VP library rejects any request whose transaction data type is not listed; an empty list rejects every request that carries transaction data. The app accepts the CSC `https://cloudsignatureconsortium.org/2025/qes-approval` (`.qesApprovalRequest`) and `https://cloudsignatureconsortium.org/2025/qes` (`.qesRequest`) types. The same list is used to read the transaction data recorded in presentation logs. | Keep both QES types when supporting signing flows. Add another type only once the wallet can display it, since WalletKit exposes it as raw JSON, which the wallet cannot show, so the app declines the request (`WalletCoreError.transactionDataNotShown`). |
 | `validateRegistrationCertificate` | Whether the verifier's WRP registration certificate is validated during OpenID4VP. Set from `validateIssuerRegistrationCertificate`. | See [Registration Certificates: The Second Trust Layer](#registration-certificates-the-second-trust-layer). |
 
@@ -815,15 +815,25 @@ you define.
 Rules:
 
 * `webKeys` must hold the verifier's production request-signing public keys.
-* `jarSigningAlg` must match the algorithm the verifier signs its requests with. It defaults to RS256.
+* `jarSigningAlg` must match the algorithm the verifier signs its requests with. WalletKit 0.58.8 accepts only ES256
+  for a Request Object fetched by `request_uri`, so set `JWSAlgorithm(.ES256)`; the RS256 default works only for a
+  request passed by value.
 * `verifierLegalName` must be the official entity name shown to users.
 * `clientId` must match verifier registration and protocol profile.
 * Do not include development verifier URLs in production.
 * If a verifier is not trusted, the user interface must clearly show that status before disclosure.
+* WalletKit accepts a Request Object fetched with `request_uri_method=post` whether or not the verifier encrypts it,
+  and accepts ES256 signatures. The signature and the verifier's certificate are checked either way.
+  `OpenId4VpConfiguration.requiresJarEncryption` and `jarSigningAlgorithms` exist since WalletKit 0.57.3, but
+  WalletKit 0.58.8 does not apply them, so neither changes this, except that an empty `jarSigningAlgorithms` list
+  fails every request.
+* For an mdoc presentation, the session transcript binds the key that encrypts the response, whether or not the
+  verifier marks it with `use` (WalletKit 0.58.8 and later). OpenID4VP 1.0 does not require `use` on that key.
 
 When a presentation request includes transaction data for signing, each applicable option on the
 request screen shows a "Data to be signed" section below its requested data. Its "Signature details" row is
-open when the screen appears and lists each transaction, numbered when there is more than one, as on Android:
+open when the screen appears and lists the trust framework (eIDAS) once, then each transaction, numbered when there
+is more than one, as on Android:
 
 * A QES approval shows the transaction type, signature type, requested credential query ids,
   signing credential ID, number of signatures, locations, transaction-data hash algorithms and, for each document,
@@ -837,20 +847,23 @@ open when the screen appears and lists each transaction, numbered when there is 
   rendered.
 * Every field WalletKit binds into the response is shown. History shows the same fields without one-time
   passwords.
+* "Trust framework: eIDAS" is shown once, in both live requests and transaction history. It is a static product
+  label: it does not come from the transaction data and does not establish that the issuer, relying party, document
+  or signature has been verified.
 * The signed attributes carry the line "Chosen by the relying party; not checked by the wallet" in the warning
   colour.
 * A request whose transaction data cannot be shown in full is declined with an explanation, never shown in part
   (`PresentationInteractorImpl.canShowTransactionData`): an entry WalletKit cannot read, or an entry bound to a
   document the consent screen does not show. Each option is checked against its own transaction data; an option
-  that is not offered, because its documents are blocked, is not checked. WalletKit 0.57.2 binds transaction data
+  that is not offered, because its documents are blocked, is not checked. WalletKit 0.58.8 binds transaction data
   to SD-JWT and mdoc documents alike.
 * When WalletKit itself cannot take a remote request (transaction data it cannot process, no document that satisfies
   the query, a reader certificate whose authentication was required and not established), it sends the error to the
   verifier's response endpoint, and the wallet then shows its error screen, or for the certificate the trust alert
   (WalletKit 0.57.1 and later; the app has no setting for these). A request whose reader certificate is not trusted is
-  reported too, because WalletKit's `OpenId4VpConfiguration.errorDispatchPolicy` defaults to `.allClients`;
-  `.onlyAuthenticatedClients`, set in `WalletKitConfigImpl.vpConfig`, withholds that report from a verifier that did
-  not authenticate.
+  reported too, because WalletKit's `OpenId4VpConfiguration.errorDispatchPolicy` defaults to `.allClients`. The
+  reference app keeps the default; set `errorDispatchPolicy: .onlyAuthenticatedClients` in
+  `WalletKitConfigImpl.vpConfig` to withhold that report from a verifier that did not authenticate.
 * Back on the request screen declines a remote request (`RemoteSessionCoordinator.declineResponse`), unless the wallet
   has already tried to send its response: after a failed send, whether WalletKit reported the failure, the verifier
   rejected the response or the network failed, Back closes the request without a second answer, so the history keeps
@@ -999,10 +1012,11 @@ Current registration behavior:
   updated whenever a revocation check stores or clears a record; when the records cannot be read nothing is
   registered, as on Android. The extension also declines a request that would include such a document
   (`RequestAuthorizationInteractor.loadRequestData`). See [Revocation And Status Checking](#revocation-and-status-checking).
-* Settings has a switch, "Offer documents to apps and websites", which is on by default and shown only on iOS 26
-  and later. While it is off, nothing is registered and every registration is withdrawn when the user turns it off
-  (`Prefs.Key.offerDocumentsToApps`, on by default in `PrefsControllerImpl`). The extension declines a request that still arrives, after
-  the login and before any requested data is shown, and again on Accept, as Android does.
+* Settings has a switch, "Allow document requests from apps and websites (DC API)", which is on by default and shown
+  only on iOS 26 and later. While it is off, nothing is registered and every registration is withdrawn when the user
+  turns it off (`Prefs.Key.offerDocumentsToApps`, on by default in `PrefsControllerImpl`). The extension declines a
+  request that still arrives, after the login and before any requested data is shown, and again on Accept, as Android
+  does.
 
 Current request handling:
 
@@ -1012,8 +1026,11 @@ Current request handling:
 * Accept asks for the PIN or biometrics again before the response is sent.
 * The request is validated once, when it is loaded, so each request writes one history entry. Accept sends only the
   documents and claims the sheet showed (`DocumentProviderSelection`), after reading their revocation records
-  again, and then completes that entry. A request declined while it loads, after its validation, or one the user
-  rejects with the Reject button, is recorded as not completed, with the reason; once Accept or a decline has
+  again, and then completes that entry. Each document's claims are worked out from that document alone, and a
+  document with none of them is left out, so documents of the same type with different claims are each sent with
+  their own (`av-lib-ios-w3c-dc-api` 0.28.2 and `eudi-lib-ios-iso18013-data-transfer` 0.28.5). Before those versions,
+  one of two such documents could be sent in full. A request declined while it loads, after its validation, or one
+  the user rejects with the Reject button, is recorded as not completed, with the reason; once Accept or a decline has
   recorded the outcome, Reject only closes the sheet. A sheet dismissed another way leaves the entry not completed,
   without a reason.
 * The requester is shown without the verified badge and behind the warning "The identity of this
@@ -1077,22 +1094,27 @@ var staticRootCertificates: [Data] {
   access-certificate list. `.enforce` fails the status check when the signer is not trusted; the app
   then records a refresh failure and the document keeps its last known state. `.warning`, the
   reference value, accepts the list whatever its signer.
-* `isRevocationEnabled` on `EtsiTrustSource` decides whether PKIX chain validation checks certificate
-  revocation. The reference app passes `false` for every build variant. With `true`, iOS checks revocation by OCSP
+* `revocationPolicy` (`PkixRevocationPolicy`) on `EtsiTrustSource` and on `StaticListTrustSource` decides whether
+  and how PKIX chain validation checks certificate revocation: `.disabled`, `.ocspOnly`, `.ocspPriority` (OCSP, then
+  CRL), `.crlOnly` or `.crlPriority` (CRL, then OCSP). Every policy other than `.disabled` needs a positive answer:
+  there is no soft-fail, so a chain whose revocation status cannot be obtained is not trusted. iOS checks revocation
   in its own trust evaluation (the ETSI library sets a `SecPolicyCreateRevocation` policy), outside the app's
-  network session and App Transport Security, and needs a positive answer. Every certificate below a list entry
-  must therefore name an OCSP responder that answers for it; one that gives only CRL distribution points fails
-  validation. Unlike on Android, where the wallet refuses cleartext revocation downloads, an `http://` OCSP
-  address is not refused. The fallback `StaticListTrustSource` keeps the library default,
-  `isRevocationEnabled: true`, so a chain it validates needs the same OCSP answer.
+  network session and App Transport Security. Unlike on Android, where the wallet refuses cleartext revocation
+  downloads, an `http://` OCSP or CRL address is not refused. The reference app sets `.disabled` on the
+  `EtsiTrustSource` for every build variant, and `.ocspOnly` on the fallback `StaticListTrustSource`, so a chain
+  the fallback validates needs a positive OCSP answer. That is what the fallback did before MdocSecurity 0.28.4;
+  the library default is now `.crlPriority`, so the policy is set explicitly. The CRL policies have not been
+  tested on a device.
 
 Production guidance:
 
 * Replace the demo LoTE endpoints in `trustConfiguration` with your production trusted-list locations.
-* Set `isRevocationEnabled` to `true` in the production `EtsiTrustSource`. `false` suits only the
-  development trust lists. Before release, confirm that every certificate below a list entry, in every chain the
-  wallet validates, names an OCSP responder that answers for it, and test issuance, presentation and the
-  registration checks with revocation on.
+* Set a `revocationPolicy` other than `.disabled` on the production `EtsiTrustSource`. `.disabled` suits only the
+  development trust lists. Choose the method your PKI serves: with `.ocspOnly` or `.ocspPriority`, every
+  certificate below a list entry, in every chain the wallet validates, must name an OCSP responder that answers for
+  it; with `.crlOnly` or `.crlPriority`, a CRL distribution point that can be fetched. Set the fallback's policy
+  explicitly as well, since a library update can change the default. Test issuance, presentation and the
+  registration checks with revocation on before release.
 * Keep the PID at `.enforce`. Classify every other doc type your trust framework covers and enforce
   it too, or record why it stays at `.warning`.
 * Confirm that every SD-JWT PID issuer sends an `x5c` chain, since only then is the signer checked
@@ -1147,7 +1169,10 @@ The app treats the two directions differently, and the asymmetry is intentional:
   documents itself when it refuses.
 * **Presentation warns rather than blocks.** A request whose registration could not be validated
   still reaches the consent screen, shown without the verified badge and behind a warning the user
-  must acknowledge before sharing. A request whose registration *is* verified but that reaches
+  must acknowledge before sharing. So does an OpenID4VP request that carries no registration
+  certificate (WalletKit 0.57.3 and later); its history entry records the registration as not
+  verified. A proximity request without one gets no registration warning, as WalletKit checks only a
+  certificate that is there. A request whose registration *is* verified but that reaches
   beyond the registered scope keeps the badge, marks each requested claim outside that scope as
   "Not registered data", and gates sharing behind the same acknowledgement. The acknowledgement is
   not remembered between requests. Access-certificate failures continue to block outright where the
@@ -1206,17 +1231,30 @@ carries no reader authentication to combine it with.
 
 ## Issuer Configuration: `issuersConfig`
 
-Credential offers are accepted only from the issuers in `issuersConfig` (`OfferIssuer`, checked before anything is
-fetched). An offer that carries itself in the link must name a configured issuer as its `credential_issuer`, written
-exactly as its `credentialIssuerURL`; an offer passed by address must be fetched over `https` from a configured
-issuer's origin. Any other offer is refused with "This offer comes from an issuer that this wallet is not set up to
-use", as on Android, because wallet-kit would otherwise give an unknown issuer the first configured issuer's client
-settings. To accept an issuer's offers, add a `VciConfig` entry for it to `issuersConfig` in the build variants that
-need it. For an offer passed by address, the issuer the fetched offer names is not compared with that address, and
-redirects are followed; the Android wallet has the same limitation (owner, 16 October 2026).
+Credential offers are accepted only from the issuers in `issuersConfig` (`OfferIssuer`; the link is checked before
+anything is fetched). An offer that carries itself in the link must name a configured issuer as its
+`credential_issuer`, written exactly as its `credentialIssuerURL`; an offer passed by address must be fetched over
+`https` from a configured issuer's origin. Any other offer is refused with "This offer comes from an issuer that
+this wallet is not set up to use", as on Android, because wallet-kit would otherwise give an unknown issuer the
+first configured issuer's client settings. The link is read with the OpenID4VCI library's own parser
+(`CredentialOfferRequest(urlString:)`), as on Android, so the wallet checks the offer the library will use: a link
+whose offer parameter is not written in lower case, is given more than once, or is empty is refused. To accept an
+issuer's offers, add a `VciConfig` entry for it to `issuersConfig` in the build variants that need it. The wallet
+fetches an offer passed by address itself, through the app's session, and the issuer that offer names as its
+`credential_issuer` must be configured too, compared exactly (`WalletKitControllerImpl.checkedOfferLink(for:)`, for
+the resolution and the issuance alike). An offer that cannot be fetched or read fails with WalletKit's "Credential
+offer from server cannot be trusted." WalletKit then gets the offer by value, so it does not fetch it again and
+contacts no issuer the wallet is not set up to use, and the issuance uses the offer that was checked. The Android
+wallet compares the same issuer once Wallet Core has resolved the offer, by which time Wallet Core has fetched that
+issuer's metadata. The fetched offer may name a configured issuer other than the one whose origin served it, and
+redirects are followed; the Android wallet does the same. The OpenID4VCI library does not compare the metadata's
+`credential_issuer` with the issuer it was fetched from; with `requireSignedMetadata` on, the signed metadata's
+`sub` must name that issuer, and a trusted access certificate must sign it.
 
 When an issuer issues only some of the documents of an offer, the success screen names the ones not added
-(`DocumentSuccessUIConfig.notIssuedDocumentNames`), as on Android; the cause wallet-kit reports is not shown. The
+(`DocumentSuccessUIConfig.notIssuedDocumentNames`), as on Android; the cause wallet-kit reports is not shown.
+WalletKit 0.58.0 and later returns the documents it stored together with the ones that failed; before, the first
+failure failed the whole issuance, and the wallet showed an error although documents had been stored. The
 "Add document" flow does the same for its combined PID entry, which asks for every PID format at once: a format the
 issuer did not issue is named, found by the configuration identifier each issued document records
 (`AddDocumentInteractorImpl.notIssuedConfigIds`).
@@ -1365,6 +1403,9 @@ Current code configures `documentIssuanceConfig` with:
 * PID document-specific options (`documentSpecificCredentialOptions`): `credentialPolicy: .oneTimeUse`.
 * Current Demo PID batch size: `10`.
 * Current Dev PID batch size: `60`.
+* The combined PID entry of "Add document" issues every PID format with one set of options
+  (`WalletKitController.issueDocuments`), so keep the options of `mDocPid` and `sdJwtPid` the same. WalletKit's
+  `DocumentIssuanceConfiguration` (0.58.7 and later) takes options per document, if they have to differ.
 * Background reissuance rule (`reIssuanceBackgroundRule`):
   * `backgroundIntervalSeconds: 300`
 
@@ -1423,6 +1464,9 @@ creation, and the documents are loaded at the same point. Start-up loads none, a
 opened before login is kept without starting its session (see
 [Deep Links And Redirect URIs](#deep-links-and-redirect-uris)). The first revocation check
 runs 30 seconds after the workers start, and later checks follow every `revocationIntervalSeconds`.
+WalletKit (0.58.4 and later) keeps each status list it has verified, per address and while the app runs, until the
+list's `ttl` or `exp` ends. A check within that time reads the kept list, so a change of status shows once the list
+is fetched again, not at the next check. A list that cannot be fetched or verified is not kept.
 Only the factory reset calls `WalletWorkScheduler.stop()`; otherwise the workers run until the process ends. A
 failed reset starts them again at once, and after a reset they start with the dashboard, after the next login. The
 scheduler (`schedule()`, `stop()`) is the only way to reach them, as the work managers are internal to `logic-core`.
@@ -1648,6 +1692,9 @@ How the reference app handles a wallet link (`DeepLinkController.handleDeepLinkA
   with the transaction-code error (`DocumentOfferInteractor.processOfferRequest`).
 * Each presentation screen works on the session its route carries (`PresentationInteractorImpl`,
   `ProximityInteractorImpl`); a session started later cannot take its place.
+* Back on a request screen ends that presentation only: a remote request sends the decline, and a proximity
+  request stops its Bluetooth session, so the reader can no longer read from the wallet
+  (`BaseRequestViewModel.declineRequest()`).
 * The verifier's `redirect_uri` after a presentation is never treated as a wallet link: the success screen
   opens it in the browser only if it is an `https` link with a host (`URL.openInBrowser(using:)`,
   `URL.isHttpsWebLink`), and returns to the dashboard either way. A credential-offer, OpenID4VP, RQES or
@@ -1709,7 +1756,7 @@ Modules/logic-api/Sources/Provider/NetworkSessionProvider.swift
 A cookie one relying party sets is therefore never sent to another through that session. Three paths sit outside it,
 and the app cannot change them:
 
-* WalletKit 0.57.2 fetches an SD-JWT issuer's keys, when the credential carries no `x5c` chain, with
+* WalletKit 0.58.8 fetches an SD-JWT issuer's keys, when the credential carries no `x5c` chain, with
   `URLSession.shared`.
 * WalletKit's sign-in sheet for issuers (`ASWebAuthenticationSession` in `OpenId4VciService`) is not ephemeral, so
   it shares Safari's cookies: an issuer can recognise the browser across issuances, and the wallet's reset does not
@@ -1932,7 +1979,7 @@ filters, search and date range work over all entries.
 `eudi-lib-ios-iso18013-data-model`), and the app stores it as JSON in the store's `TransactionLog` table. The log
 records the relying party, the attestation types and the identifiers of the attributes requested and presented, never
 their values; this is the rule the ARF and the Implementing Acts set for it (HLR.64, HLR.65 and IA.34, as the security
-review maps them). With WalletKit 0.57.2:
+review maps them). With WalletKit 0.58.8:
 
 * a presentation entry records the requested and presented claims as attestation type (mdoc `docType` or SD-JWT VC
   `vct`) and claim paths, without values, and the relying party's details WalletKit has for it: name, identifier,
@@ -2779,7 +2826,9 @@ Before release candidate approval, test:
   switch turned off and on again. Test the ID Provider extension before opening the app.
 * An offer from an issuer that is not configured refused; a partial issuance naming the documents not added.
 * The portrait notice, and Share or Accept asking for confirmation.
-* "Offer documents to apps and websites" off: registrations withdrawn, the extension declines.
+* "Allow document requests from apps and websites (DC API)" off: registrations withdrawn, the extension declines.
+* A DC API request for claims that two documents of the same type hold between them: each document is sent with only
+  the claims the sheet showed for it.
 * A proximity request that several document sets satisfy offers the choice.
 * PID issuance from list.
 * Credential offer issuance by QR.
@@ -2795,11 +2844,13 @@ Before release candidate approval, test:
 * Proximity QR/BLE, including leaving the app or locking the phone once the code is shown: the session stops, a
   reader can no longer connect, and the screen closes. Leaving while the code is still loading: the session stops when
   the code becomes ready. Control Center over the QR screen keeps the session and the screen (with
-  `hideContentWhileCaptured` true, behind the cover). Leaving from the request screen keeps the session (10-minute
-  limit).
+  `hideContentWhileCaptured` true, behind the cover). Leaving the app from the request screen keeps the session
+  (10-minute limit).
 * Proximity: the reader ends the Bluetooth session before the user answers: the request screen goes back and the
   presentation ends. A lock, or a wallet link that returns to the dashboard, ends the session and stops the
   advertising.
+* Proximity: Back on the request screen stops the Bluetooth session; the reader sees the session end, and a new
+  presentation needs a new QR code.
 * Proximity reader without, or with a failing, reader certificate: the warning, no badge, Share
   disabled until acknowledged.
 * Relayed proximity engagement where feasible.

@@ -33,8 +33,7 @@ public extension DocClaimsDecodable {
         issuersName: self.issuerName,
         logoUrl: self.issuerLogo?.allowedIssuerLogo(
           allowedOrigins: issuerLogoOrigins.origins(ofIssuer: self.credentialIssuerIdentifier)
-        ),
-        isVerified: true
+        )
       )
     }
 

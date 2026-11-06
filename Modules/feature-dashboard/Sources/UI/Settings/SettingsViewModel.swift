@@ -218,7 +218,7 @@ final class SettingsViewModel<Router: RouterHost>: ViewModel<Router, SettingsVie
       items.append(
         .init(
           title: .offerDocumentsToAppsTitle,
-          icon: Theme.shared.image.share,
+          icon: Theme.shared.image.id.renderingMode(.template),
           showDivider: true,
           isToggle: true,
           toggleBinding: Binding(

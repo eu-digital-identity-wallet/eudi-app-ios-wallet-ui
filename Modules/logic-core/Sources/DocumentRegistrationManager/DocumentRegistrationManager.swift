@@ -120,8 +120,3 @@ private extension RegistrationDescriptor {
     )
   }
 }
-
-enum RegistrationError: Error {
-  case apiNotAvailable
-  case registrationNotFound
-}

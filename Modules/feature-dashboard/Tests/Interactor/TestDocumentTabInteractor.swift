@@ -103,7 +103,6 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchRevokedDocumentStatuses(with: [:])
     stubFetchDocuments(with: [])
     stubFetchIssuedDocuments(with: [])
-    stubFetchDocumentsWithExclusion(with: [])
     stubFetchMainPidDocument(with: nil)
     stubRefreshCounters()
     
@@ -154,7 +153,6 @@ final class TestDocumentTabInteractor: EudiTest {
       ]
     )
     stubFetchDocumentCategories(with: documentsCategories)
-    stubFetchDocumentsWithExclusion(with: [expectedMdl])
     stubFetchMainPidDocument(with: expectedPid)
     stubIsDocumentLowOnCredentials()
     stubRefreshCounters()
@@ -181,7 +179,6 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocuments(with: [pid, mdl])
     stubFetchIssuedDocuments(with: [pid, mdl])
     stubFetchDocumentCategories(with: [:])
-    stubFetchDocumentsWithExclusion(with: [mdl])
     stubFetchMainPidDocument(with: pid)
     stubIsDocumentLowOnCredentials()
     stubRefreshCounters()
@@ -208,7 +205,6 @@ final class TestDocumentTabInteractor: EudiTest {
     stubFetchDocuments(with: [pid, mdl])
     stubFetchIssuedDocuments(with: [pid, mdl])
     stubFetchDocumentCategories(with: [:])
-    stubFetchDocumentsWithExclusion(with: [mdl])
     stubFetchMainPidDocument(with: pid)
     stubIsDocumentLowOnCredentials()
     stubRefreshCounters()
@@ -256,7 +252,6 @@ final class TestDocumentTabInteractor: EudiTest {
       ]
     )
     stubFetchDocumentCategories(with: documentsCategories)
-    stubFetchDocumentsWithExclusion(with: [expectedMdl])
     stubFetchMainPidDocument(with: expectedPid)
     stubIsDocumentLowOnCredentials()
     stubRefreshCounters()
@@ -758,12 +753,6 @@ private extension TestDocumentTabInteractor {
   func stubFetchDeferredDocuments(with documents: [WalletStorage.Document]) {
     stub(walletKitController) { mock in
       when(mock.fetchDeferredDocuments()).thenReturn(documents)
-    }
-  }
-  
-  func stubFetchDocumentsWithExclusion(with documents: [any DocClaimsDecodable]) {
-    stub(walletKitController) { mock in
-      when(mock.fetchIssuedDocuments(excluded: any())).thenReturn(documents)
     }
   }
   

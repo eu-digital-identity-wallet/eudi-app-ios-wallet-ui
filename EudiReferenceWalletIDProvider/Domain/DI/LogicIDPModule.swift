@@ -56,21 +56,8 @@ extension LogicIDPModule {
 
 final class DocumentProviderDIContainer {
   static let shared = DocumentProviderDIContainer()
-  let container: Container
 
   private init() {
-    container = Container()
-    setupDependencies()
-  }
-
-  private func setupDependencies() {
     DIGraph.assembleDependenciesGraph(withExtras: [LogicIDPModule()])
-  }
-
-  func resolve<T>(_ type: T.Type) -> T {
-    guard let resolved = container.resolve(type) else {
-      fatalError("Failed to resolve \(type)")
-    }
-    return resolved
   }
 }

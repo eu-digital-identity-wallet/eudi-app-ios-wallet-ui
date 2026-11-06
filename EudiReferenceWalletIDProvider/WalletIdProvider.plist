@@ -9,7 +9,5 @@
 		<key>EXExtensionPointIdentifier</key>
 		<string>com.apple.identity-document-services.document-provider-ui</string>
 	</dict>
-	<key>Team ID</key>
-	<string>$(DEVELOPMENT_TEAM)</string>
 </dict>
 </plist>

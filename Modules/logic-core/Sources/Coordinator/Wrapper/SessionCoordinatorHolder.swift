@@ -16,10 +16,13 @@
 
 public protocol SessionCoordinatorHolder: Sendable {
   func clear() async
+  /// Lets `coordinator` go if it is still the active remote coordinator; a later one stays.
+  func clearRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) async
+  /// If `coordinator` is still the active proximity coordinator, stops its Bluetooth session and keeps it only until
+  /// the next one starts; a later one keeps running.
+  func clearProximityCoordinator(_ coordinator: ProximitySessionCoordinator) async
   func setActiveRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) async
   func setActiveProximityCoordinator(_ coordinator: ProximitySessionCoordinator) async
-  func getActiveRemoteCoordinator() async throws -> RemoteSessionCoordinator
-  func getActiveProximityCoordinator() async throws -> ProximitySessionCoordinator
 }
 
 final actor SessionCoordinatorHolderImpl: SessionCoordinatorHolder {
@@ -45,6 +48,18 @@ final actor SessionCoordinatorHolderImpl: SessionCoordinatorHolder {
     activeProximityCoordinator = nil
   }
 
+  public func clearRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) {
+    guard activeRemoteCoordinator === coordinator else { return }
+    activeRemoteCoordinator = nil
+  }
+
+  public func clearProximityCoordinator(_ coordinator: ProximitySessionCoordinator) {
+    guard activeProximityCoordinator === coordinator else { return }
+    coordinator.stopPresentation()
+    stoppedProximityCoordinator = coordinator
+    activeProximityCoordinator = nil
+  }
+
   public func setActiveRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) {
     activeRemoteCoordinator = coordinator
   }
@@ -52,19 +67,5 @@ final actor SessionCoordinatorHolderImpl: SessionCoordinatorHolder {
   public func setActiveProximityCoordinator(_ coordinator: ProximitySessionCoordinator) {
     stoppedProximityCoordinator = nil
     activeProximityCoordinator = coordinator
-  }
-
-  public func getActiveRemoteCoordinator() throws -> RemoteSessionCoordinator {
-    guard let activeRemoteCoordinator else {
-      throw PresentationSessionError.noActiveSession
-    }
-    return activeRemoteCoordinator
-  }
-
-  public func getActiveProximityCoordinator() throws -> ProximitySessionCoordinator {
-    guard let activeProximityCoordinator else {
-      throw PresentationSessionError.noActiveSession
-    }
-    return activeProximityCoordinator
   }
 }

@@ -17,7 +17,6 @@ import Foundation
 import SwiftData
 
 protocol StorageConfig: Sendable {
-  var schemaVersion: UInt64 { get }
   var databaseName: String { get }
   var databaseFolder: String { get }
   var databaseExtension: String { get }
@@ -27,8 +26,6 @@ protocol StorageConfig: Sendable {
 }
 
 final class StorageConfigImpl: StorageConfig {
-
-  var schemaVersion: UInt64 { 1 }
 
   var databaseName: String { "eudi_wallet" }
 

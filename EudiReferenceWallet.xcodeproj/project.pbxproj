@@ -500,7 +500,7 @@
 				INFOPLIST_FILE = EudiReferenceWalletIDProvider/WalletIdProvider.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = EudiReferenceWalletIDProvider;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -596,7 +596,7 @@
 				INFOPLIST_FILE = EudiReferenceWalletIDProvider/WalletIdProvider.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = EudiReferenceWalletIDProvider;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -686,7 +686,7 @@
 				INFOPLIST_FILE = EudiReferenceWalletIDProvider/WalletIdProvider.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = EudiReferenceWalletIDProvider;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -775,7 +775,7 @@
 				INFOPLIST_FILE = EudiReferenceWalletIDProvider/WalletIdProvider.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = EudiReferenceWalletIDProvider;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -891,6 +891,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -999,6 +1000,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -1171,6 +1173,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -1223,6 +1226,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Wallet/Wallet.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "EUDI Wallet";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Share mdoc using BLE peripheral mode";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Scan QR codes in web pages";
@@ -1299,7 +1303,7 @@
 			repositoryURL = "https://github.com/eu-digital-identity-wallet/av-lib-ios-w3c-dc-api.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.26.2;
+				version = 0.28.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

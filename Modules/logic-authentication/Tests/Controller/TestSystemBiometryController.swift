@@ -19,6 +19,7 @@ import os
 @testable import logic_test
 @testable import logic_authentication
 @testable import logic_business
+import logic_resources
 @preconcurrency import LocalAuthentication
 
 final class TestSystemBiometryController: EudiTest {
@@ -163,13 +164,7 @@ final class TestSystemBiometryController: EudiTest {
       XCTFail("Expected requestBiometricUnlock to throw")
     } catch let error as SystemBiometryError {
       XCTAssertEqual(error, .deniedAccess)
-      XCTAssertEqual(
-        error.errorDescription,
-        NSLocalizedString(
-          "You have denied access. Please go to the settings, locate this application and turn the Face ID on",
-          comment: ""
-        )
-      )
+      XCTAssertEqual(error.errorDescription, LocalizableStringKey.biometryDeniedAccessError.toString)
     } catch {
       XCTFail("Unexpected error: \(error)")
     }
@@ -191,10 +186,7 @@ final class TestSystemBiometryController: EudiTest {
       XCTFail("Expected requestBiometricUnlock to throw")
     } catch let error as SystemBiometryError {
       XCTAssertEqual(error, .noFaceIdEnrolled)
-      XCTAssertEqual(
-        error.errorDescription,
-        NSLocalizedString("You have not enabled Face ID yet", comment: "")
-      )
+      XCTAssertEqual(error.errorDescription, LocalizableStringKey.biometryNoFaceIdEnrolledError.toString)
     } catch {
       XCTFail("Unexpected error: \(error)")
     }
@@ -216,10 +208,7 @@ final class TestSystemBiometryController: EudiTest {
       XCTFail("Expected requestBiometricUnlock to throw")
     } catch let error as SystemBiometryError {
       XCTAssertEqual(error, .noFingerprintEnrolled)
-      XCTAssertEqual(
-        error.errorDescription,
-        NSLocalizedString("You have not enabled fingerprint yet", comment: "")
-      )
+      XCTAssertEqual(error.errorDescription, LocalizableStringKey.biometryNoFingerprintEnrolledError.toString)
     } catch {
       XCTFail("Unexpected error: \(error)")
     }
@@ -237,10 +226,7 @@ final class TestSystemBiometryController: EudiTest {
       XCTFail("Expected requestBiometricUnlock to throw")
     } catch let error as SystemBiometryError {
       XCTAssertEqual(error, .biometryNotSupported)
-      XCTAssertEqual(
-        error.errorDescription,
-        NSLocalizedString("This device does not support biometry", comment: "")
-      )
+      XCTAssertEqual(error.errorDescription, LocalizableStringKey.biometryNotSupportedError.toString)
     } catch {
       XCTFail("Unexpected error: \(error)")
     }
@@ -283,10 +269,7 @@ final class TestSystemBiometryController: EudiTest {
       XCTFail("Expected requestBiometricUnlock to throw")
     } catch let error as SystemBiometryError {
       XCTAssertEqual(error, .biometricError)
-      XCTAssertEqual(
-        error.errorDescription,
-        NSLocalizedString("Your biometric method has not been recognized", comment: "")
-      )
+      XCTAssertEqual(error.errorDescription, LocalizableStringKey.biometryNotRecognizedError.toString)
     } catch {
       XCTFail("Unexpected error: \(error)")
     }

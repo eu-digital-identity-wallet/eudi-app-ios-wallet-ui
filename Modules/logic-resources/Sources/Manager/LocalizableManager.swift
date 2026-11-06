@@ -50,6 +50,16 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "key_chain_write_error")
     case .biometryOpenSettings:
       bundle.localizedString(forKey: "biometry_open_settings")
+    case .biometryDeniedAccessError:
+      bundle.localizedString(forKey: "biometry_denied_access_error")
+    case .biometryNoFaceIdEnrolledError:
+      bundle.localizedString(forKey: "biometry_no_face_id_enrolled_error")
+    case .biometryNoFingerprintEnrolledError:
+      bundle.localizedString(forKey: "biometry_no_fingerprint_enrolled_error")
+    case .biometryNotRecognizedError:
+      bundle.localizedString(forKey: "biometry_not_recognized_error")
+    case .biometryNotSupportedError:
+      bundle.localizedString(forKey: "biometry_not_supported_error")
     case .invalidQuickPin:
       bundle.localizedString(forKey: "invalid_quick_pin")
     case .pinNotFoundError:
@@ -80,6 +90,10 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "request_transaction_data_type_qes")
     case .requestTransactionDataTypeQesRequest:
       bundle.localizedString(forKey: "request_transaction_data_type_qes_request")
+    case .requestTransactionDataTrustFramework:
+      bundle.localizedString(forKey: "request_transaction_data_trust_framework")
+    case .requestTransactionDataTrustFrameworkValue:
+      bundle.localizedString(forKey: "request_transaction_data_trust_framework_value")
     case .requestTransactionDataRequestedCredentials:
       bundle.localizedString(forKey: "request_transaction_data_requested_credentials")
     case .requestTransactionDataSigningCredentialId:

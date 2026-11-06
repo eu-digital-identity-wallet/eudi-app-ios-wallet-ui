@@ -194,7 +194,7 @@ final actor ProximityInteractorImpl: ProximityInteractor {
   }
 
   public func stopPresentation() async {
-    await walletKitController.stopPresentation()
+    await walletKitController.stopProximityPresentation(proximitySessionCoordinator)
     proximitySessionCoordinator.stopPresentation()
   }
 

@@ -231,15 +231,17 @@ final class TestProximityInteractor: EudiTest {
     verify(presentationSessionCoordinator).startQrEngagement()
   }
   
-  func testStopPresentation_WhenWalletKitControllerStopPresenation_ThenVerifyWalletKitControllerStopPresentation() async {
-    // Given
+  func testStopPresentation_WhenInteractorMethodCalled_ThenStopsOnlyItsOwnSession() async {
+    let ownSession = presentationSessionCoordinator!
     stub(walletKitController) { mock in
-      when(mock.stopPresentation()).thenDoNothing()
+      when(mock.stopProximityPresentation(any())).thenDoNothing()
     }
-    // When
+
     await interactor.stopPresentation()
-    // Then
-    verify(walletKitController).stopPresentation()
+
+    verify(walletKitController).stopProximityPresentation(ParameterMatcher { $0 === ownSession })
+    verify(walletKitController, never()).stopPresentation()
+    verify(presentationSessionCoordinator).stopPresentation()
   }
   
   func testOnRequestReceived_WhenCoordinatorRequestReceivedReturnsSuccess_ThenVerifySuccessState() async {
