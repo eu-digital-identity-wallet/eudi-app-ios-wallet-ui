@@ -1469,11 +1469,11 @@ list's `ttl` or `exp` ends. A check within that time reads the kept list, so a c
 is fetched again, not at the next check. A list that cannot be fetched or verified is not kept.
 Only the factory reset calls `WalletWorkScheduler.stop()`; otherwise the workers run until the process ends. A
 failed reset starts them again at once, and after a reset they start with the dashboard, after the next login. The
-scheduler (`schedule()`, `stop()`) is the only way to reach them, as the work managers are internal to `logic-core`.
-If an integrator calls `stop()` and then `schedule()` after the first revocation check, the next revocation check
-waits the full interval; the
-re-issuance worker always waits 30 seconds after a start, then `backgroundIntervalSeconds`. The workers
-are tasks in the app's process; iOS background execution is not used.
+scheduler (`schedule()`, `scheduleRevocationCheck(afterReIssueOf:)`, `stop()`) is the only way to reach them, as the
+work managers are internal to `logic-core`. If an integrator calls `stop()` and then `schedule()` after the first
+revocation check, the next revocation check waits the full interval; the re-issuance worker always waits 30 seconds
+after a start, then `backgroundIntervalSeconds`. The workers are tasks in the app's process; iOS background
+execution is not used.
 
 How the check treats what a status list reports (`RevocationWorkManager.checkRevocation()`):
 
@@ -2046,10 +2046,11 @@ Production rules:
 Settings offer "Reset wallet", as on Android. A confirmation lists what will be deleted, the PIN or biometrics
 confirm it, and a screen runs the reset (`WalletResetControllerImpl`, `logic-authentication`). In this order:
 
-1. The background checks stop (`WalletWorkScheduler.stop()`). The reset waits for a check under way for at most
-   `WalletKitConfig.workerStopTimeoutSeconds` (30 s) and fails without deleting anything if one is still running
-   then, so a re-issuance cannot store a document halfway through. A check cannot start once the stop has
-   begun, and the checks cannot be scheduled again while the reset runs.
+1. The background checks stop (`WalletWorkScheduler.stop()`). A start of the checks already under way finishes
+   first and the checks are then stopped, as on Android. The reset waits for that start and for a check under way
+   for at most `WalletKitConfig.workerStopTimeoutSeconds` (30 s) in all, and fails without deleting anything if a
+   check is still running then, so a re-issuance cannot store a document halfway through. Once the stop has begun
+   no extra revocation check runs, and the checks cannot be scheduled again while the reset runs.
 2. WalletKit deletes every document, issued, deferred and pending, in up to two passes, and logs each deletion
    before it returns; the Digital Credential API registrations are updated with it, also when a deletion
    fails. The reset fails if the keychain still holds a document afterwards.

@@ -19,16 +19,17 @@ import Foundation
 /// The wallet's background work: the periodic revocation and re-issuance checks. As the Android wallet's
 /// `WalletWorkScheduler`, it is the only way in from outside `logic-core`; the workers themselves stay internal.
 public protocol WalletWorkScheduler: Sendable {
-  /// Starts the periodic checks. Work already running is kept. The dashboard calls it once the user has logged in;
-  /// nothing starts while a factory reset runs.
+  /// Starts the periodic checks, or starts them again after `stop()`. Work already running is kept. The dashboard
+  /// calls it once the user has logged in, and a factory reset that fails calls it again; a call made while a factory
+  /// reset runs starts nothing.
   func schedule() async
   /// Runs the revocation check soon, after one under way, when the original of a completed re-issue gained a
   /// revocation record while it was re-issued, so the new copy's status is read without waiting for the interval.
   /// It returns at once; nothing runs while the checks are stopped.
   func scheduleRevocationCheck(afterReIssueOf originalId: String) async
-  /// Stops the periodic checks and waits for a check under way to finish, for at most
-  /// `WalletKitConfig.workerStopTimeoutSeconds`. Returns false when one was still running then, as the Android
-  /// wallet's `stop()`; the checks stay stopped either way.
+  /// Blocks new checks until `schedule()` starts them again, then, after any start under way, stops the periodic
+  /// checks and waits for a check under way to finish, all within `WalletKitConfig.workerStopTimeoutSeconds`. Returns
+  /// false when one was still running then, as the Android wallet's `stop()`; the checks stay stopped either way.
   func stop() async -> Bool
 }
 
@@ -39,6 +40,12 @@ final actor WalletWorkSchedulerImpl: WalletWorkScheduler {
   private let reIssuanceWorkManager: ReIssuanceWorkManager
   private let stopTimeout: TimeInterval
   private let resetStatusProvider: WalletResetStatusProvider
+  /// Set by `stop()` before it stops anything and cleared by `schedule()`, as the Android wallet's `isStopped`.
+  private var isStopped = false
+  /// The starts of the latest `schedule()`, after those of the one before. `stop()` waits for them before it stops
+  /// the checks, so a start under way when the reset begins cannot land after the stop, as the Android wallet's
+  /// `schedule()` runs under the lock `stop()` takes.
+  private var starting: Task<Void, Never>?
 
   init(
     revocationWorkManager: RevocationWorkManager,
@@ -54,11 +61,19 @@ final actor WalletWorkSchedulerImpl: WalletWorkScheduler {
 
   func schedule() async {
     guard !resetStatusProvider.isResetting else { return }
-    await revocationWorkManager.start()
-    await reIssuanceWorkManager.start()
+    isStopped = false
+    let previous = starting
+    let current = Task { [revocationWorkManager, reIssuanceWorkManager] in
+      await previous?.value
+      await revocationWorkManager.start()
+      await reIssuanceWorkManager.start()
+    }
+    starting = current
+    await current.value
   }
 
   func scheduleRevocationCheck(afterReIssueOf originalId: String) {
+    guard !isStopped else { return }
     Task { [revocationWorkManager] in
       await revocationWorkManager.checkAfterReIssue(of: originalId)
     }
@@ -67,8 +82,10 @@ final actor WalletWorkSchedulerImpl: WalletWorkScheduler {
   /// The stop and the timeout race; a stop still waiting when the time is up keeps running in the background, so
   /// the checks end stopped either way.
   func stop() async -> Bool {
+    isStopped = true
     let (outcomes, continuation) = AsyncStream.makeStream(of: Bool.self)
-    Task { [revocationWorkManager, reIssuanceWorkManager] in
+    Task { [revocationWorkManager, reIssuanceWorkManager, starting] in
+      await starting?.value
       async let revocationStopped: Void = revocationWorkManager.stop()
       async let reIssuanceStopped: Void = reIssuanceWorkManager.stop()
       _ = await (revocationStopped, reIssuanceStopped)

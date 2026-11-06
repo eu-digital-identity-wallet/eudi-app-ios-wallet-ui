@@ -118,6 +118,99 @@ final class TestWalletWorkScheduler: EudiTest {
     let checkedIds = await revocationWorkManager.checkedIds
     XCTAssertEqual(checkedIds, ["original"])
   }
+
+  func testStop_WhenAScheduleIsStartingTheChecks_ThenTheReIssuanceStopsAfterItStarts() async {
+    let gate = AsyncGate()
+    let entered = expectation(description: "the revocation start began")
+    let reIssuance = RecordingReIssuanceWorkManager()
+    let startingScheduler = WalletWorkSchedulerImpl(
+      revocationWorkManager: StubRevocationWorkManager(gates: [gate], entered: entered),
+      reIssuanceWorkManager: reIssuance,
+      stopTimeout: 5,
+      resetStatusProvider: WalletResetStatusProviderImpl()
+    )
+
+    let scheduling = Task { await startingScheduler.schedule() }
+    await fulfillment(of: [entered], timeout: 2)
+    let stopping = Task { await startingScheduler.stop() }
+    try? await Task.sleep(seconds: 0.2)
+    await gate.open()
+    await scheduling.value
+    let stopped = await stopping.value
+
+    XCTAssertTrue(stopped)
+    let events = await reIssuance.events
+    XCTAssertEqual(events, ["start", "stop"])
+  }
+
+  func testStop_WhenTwoSchedulesAreStartingTheChecks_ThenTheReIssuanceStopsAfterBoth() async {
+    let first = AsyncGate()
+    let second = AsyncGate()
+    let entered = expectation(description: "the first revocation start began")
+    let reIssuance = RecordingReIssuanceWorkManager()
+    let startingScheduler = WalletWorkSchedulerImpl(
+      revocationWorkManager: StubRevocationWorkManager(gates: [first, second], entered: entered),
+      reIssuanceWorkManager: reIssuance,
+      stopTimeout: 5,
+      resetStatusProvider: WalletResetStatusProviderImpl()
+    )
+
+    let firstScheduling = Task { await startingScheduler.schedule() }
+    await fulfillment(of: [entered], timeout: 2)
+    let secondScheduling = Task { await startingScheduler.schedule() }
+    try? await Task.sleep(seconds: 0.2)
+    let stopping = Task { await startingScheduler.stop() }
+    try? await Task.sleep(seconds: 0.2)
+    await second.open()
+    try? await Task.sleep(seconds: 0.2)
+    await first.open()
+    await firstScheduling.value
+    await secondScheduling.value
+    let stopped = await stopping.value
+
+    XCTAssertTrue(stopped)
+    let events = await reIssuance.events
+    XCTAssertEqual(events, ["start", "start", "stop"])
+  }
+
+  func testScheduleRevocationCheck_WhenTheChecksAreStopped_ThenNoCheckRuns() async {
+    let gate = AsyncGate()
+    await gate.open()
+    let checked = expectation(description: "revocation check ran")
+    checked.isInverted = true
+    let recorder = RecordingRevocationWorkManager(gate: gate, finished: checked)
+    let stoppedScheduler = WalletWorkSchedulerImpl(
+      revocationWorkManager: recorder,
+      reIssuanceWorkManager: reIssuanceWorkManager,
+      stopTimeout: 5,
+      resetStatusProvider: WalletResetStatusProviderImpl()
+    )
+    _ = await stoppedScheduler.stop()
+
+    await stoppedScheduler.scheduleRevocationCheck(afterReIssueOf: "original")
+
+    await fulfillment(of: [checked], timeout: 0.5)
+    let checkedIds = await recorder.checkedIds
+    XCTAssertEqual(checkedIds, [])
+  }
+
+  func testScheduleRevocationCheck_WhenScheduledAgainAfterAStop_ThenTheCheckRuns() async {
+    let gate = AsyncGate()
+    await gate.open()
+    let checked = expectation(description: "revocation check ran")
+    let gatedScheduler = WalletWorkSchedulerImpl(
+      revocationWorkManager: RecordingRevocationWorkManager(gate: gate, finished: checked),
+      reIssuanceWorkManager: reIssuanceWorkManager,
+      stopTimeout: 5,
+      resetStatusProvider: WalletResetStatusProviderImpl()
+    )
+    _ = await gatedScheduler.stop()
+    await gatedScheduler.schedule()
+
+    await gatedScheduler.scheduleRevocationCheck(afterReIssueOf: "original")
+
+    await fulfillment(of: [checked], timeout: 2)
+  }
 }
 
 private actor RecordingRevocationWorkManager: RevocationWorkManager {
@@ -152,5 +245,45 @@ private actor StubReIssuanceWorkManager: ReIssuanceWorkManager {
 
   func stop() async {
     await gate.wait()
+  }
+}
+
+/// Holds the n-th `start()` until its gate in `gates` opens, and fulfils `entered` when the first begins.
+private actor StubRevocationWorkManager: RevocationWorkManager {
+  private let gates: [AsyncGate]
+  private let entered: XCTestExpectation
+  private var starts = 0
+
+  init(gates: [AsyncGate], entered: XCTestExpectation) {
+    self.gates = gates
+    self.entered = entered
+  }
+
+  func start() async {
+    let index = starts
+    starts += 1
+    if index == 0 {
+      entered.fulfill()
+    }
+    if index < gates.count {
+      await gates[index].wait()
+    }
+  }
+
+  func stop() async {}
+
+  func checkAfterReIssue(of originalId: String) async {}
+}
+
+/// Records the order of its starts and stops.
+private actor RecordingReIssuanceWorkManager: ReIssuanceWorkManager {
+  private(set) var events: [String] = []
+
+  func start() async {
+    events.append("start")
+  }
+
+  func stop() async {
+    events.append("stop")
   }
 }
