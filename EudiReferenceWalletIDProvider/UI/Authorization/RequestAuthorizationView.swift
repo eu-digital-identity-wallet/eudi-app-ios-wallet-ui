@@ -65,44 +65,57 @@ struct RequestAuthorizationView: View {
     viewState: RequestAuthorizationViewState
   ) -> some View {
     VStack(spacing: SPACING_SMALL) {
-      ScrollView {
-        VStack(spacing: .zero) {
-          ContentHeaderView(
-            config: viewState.contentHeaderConfig
-          )
-          .padding(.horizontal, Theme.shared.dimension.padding)
+      ScrollViewReader { proxy in
+        ScrollView {
+          VStack(spacing: .zero) {
+            ContentHeaderView(
+              config: viewState.contentHeaderConfig
+            )
+            .padding(.horizontal, Theme.shared.dimension.padding)
 
-          VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-            if viewState.requestsUserImage {
-              WarningNoticeView(message: .requestUserImageNotice)
-            }
+            VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+              if viewState.requestsUserImage {
+                WarningNoticeView(message: .requestUserImageNotice)
+              }
 
-            ForEach(viewState.items.indices, id: \.self) { index in
-              let section = viewState.items[index]
-              WrapExpandableListView(
-                header: .init(
-                  mainContent: .text(.custom(section.section.title)),
-                  supportingText: .viewDetails
-                ),
-                items: section.section.listItems,
-                backgroundColor: Theme.shared.color.groupedElevatedBackground,
-                hideSensitiveContent: false,
-                isLoading: viewState.isLoading
-              )
-              .accessibilityElement()
-              .combineChilrenAccessibility(
-                locator: BaseRequestLocators.requestedDocument(index.string)
-              )
+              ForEach(viewState.items.indices, id: \.self) { index in
+                let section = viewState.items[index]
+                WrapExpandableListView(
+                  header: .init(
+                    mainContent: .text(.custom(section.section.title)),
+                    supportingText: .viewDetails
+                  ),
+                  items: section.section.listItems,
+                  backgroundColor: Theme.shared.color.groupedElevatedBackground,
+                  hideSensitiveContent: false,
+                  isLoading: viewState.isLoading,
+                  onExpand: { showOpenedDocument(index, with: proxy) }
+                )
+                .id(index)
+                .accessibilityElement()
+                .combineChilrenAccessibility(
+                  locator: BaseRequestLocators.requestedDocument(index.string)
+                )
+              }
             }
+            .padding(.horizontal, Theme.shared.dimension.padding)
+            .padding(.top, SPACING_MEDIUM)
+            .padding(.bottom, SPACING_SMALL)
           }
-          .padding(.horizontal, Theme.shared.dimension.padding)
-          .padding(.top, SPACING_MEDIUM)
-          .padding(.bottom, SPACING_SMALL)
+          .shimmer(isLoading: viewState.isLoading)
         }
-        .shimmer(isLoading: viewState.isLoading)
       }
 
       actionButtonsFooter()
+    }
+  }
+
+  /// The sheet's buttons, and its warning when one is shown, stay fixed below a short scroll area, so the claims
+  /// of a document opened near the scroll area's bottom edge would be out of sight; the opened document is
+  /// scrolled to the top instead.
+  private func showOpenedDocument(_ index: Int, with proxy: ScrollViewProxy) {
+    withAnimation {
+      proxy.scrollTo(index, anchor: .top)
     }
   }
 

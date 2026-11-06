@@ -22,16 +22,20 @@ public struct ExpandableCardView<Content: View>: View {
   private let mainTextVerticalPadding: CGFloat?
   private let isLoading: Bool
   private let expandsWhen: Bool
+  private let onExpand: (() -> Void)?
   private let content: () -> Content
 
   /// The card opens when it appears with `expandsWhen` true, and again whenever `expandsWhen` becomes true;
-  /// the user can still close it.
+  /// the user can still close it. `onExpand` runs each time the user opens the card, once the opening animation
+  /// has finished and the content is laid out, so a screen can bring the opened content into view; it does not
+  /// run when `expandsWhen` opens the card.
   public init(
     backgroundColor: Color = Theme.shared.color.groupedBackground,
     header: ListItemData,
     mainTextVerticalPadding: CGFloat? = nil,
     isLoading: Bool = false,
     expandsWhen: Bool = false,
+    onExpand: (() -> Void)? = nil,
     @ViewBuilder content: @escaping () -> Content
   ) {
     self.header = header
@@ -39,6 +43,7 @@ public struct ExpandableCardView<Content: View>: View {
     self.mainTextVerticalPadding = mainTextVerticalPadding
     self.isLoading = isLoading
     self.expandsWhen = expandsWhen
+    self.onExpand = onExpand
     self.content = content
     self._isExpanded = State(initialValue: expandsWhen)
   }
@@ -65,8 +70,13 @@ public struct ExpandableCardView<Content: View>: View {
             mainTextVerticalPadding: mainTextVerticalPadding
           ) {
             if !isLoading {
+              let isOpening = !isExpanded
               withAnimation {
                 isExpanded.toggle()
+              } completion: {
+                if isOpening, isExpanded {
+                  onExpand?()
+                }
               }
             }
           }
