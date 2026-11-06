@@ -887,7 +887,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This wallet does not accept requests from websites. You can turn this on in the wallet's Settings."
+            "value" : "This wallet does not accept document requests from apps and websites. You can turn this on in the wallet's Settings."
           }
         }
       }
