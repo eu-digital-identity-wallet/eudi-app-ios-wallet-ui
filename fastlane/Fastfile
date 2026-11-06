@@ -53,6 +53,10 @@ platform :ios do
   lane :deploy do
     ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "600"
 
+    unless sh("git", "status", "--porcelain", "--untracked-files=no", log: false).strip.empty?
+      UI.user_error!("Commit or stash the changes to tracked files first: deploy builds and tags HEAD, and restores the .pbxproj and .plist files from Git when it ends.")
+    end
+
     git_pull
 
     connect_api = app_store_connect_api_key(

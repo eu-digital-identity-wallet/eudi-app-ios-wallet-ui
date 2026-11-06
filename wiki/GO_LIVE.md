@@ -474,7 +474,7 @@ Current key lanes:
 | --- | --- |
 | `ios tests` | Runs tests with `scan`. |
 | `ios code_coverage` | Runs tests with coverage and generates `xcov` output. |
-| `ios deploy` | Pulls Git, creates an App Store Connect API key, computes build number, updates version/build values, archives, uploads to TestFlight/App Store Connect, restores the project version values from Git, tags, and optionally creates a GitHub release. |
+| `ios deploy` | Stops unless every tracked file is committed, pulls Git, creates an App Store Connect API key, computes build number, updates version/build values, archives, uploads to TestFlight/App Store Connect, restores the project version values from Git, tags, and optionally creates a GitHub release. |
 | `ios upload_appstore` | Uploads an IPA with `pilot`. |
 | `ios update_build_number` | Updates build number in plist and Xcode project. |
 | `ios update_version` | Updates marketing version in Xcode project. |
