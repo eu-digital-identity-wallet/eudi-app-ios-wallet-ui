@@ -84,7 +84,8 @@ final actor WalletResetControllerImpl: WalletResetController {
   }
 
   /// The app's caches, WalletKit's log file and the image cache among them, its temporary files, the cookies and
-  /// the URL cache. Best effort, as on Android: a file that cannot be removed does not stop the reset.
+  /// the URL cache. Best effort: a file that cannot be removed does not stop the reset (the Android wallet's reset
+  /// fails instead).
   static func removeCachedData() {
     FileManager.default.removeContents(of: FileManager.default.cachesAndTemporaryDirectories)
     HTTPCookieStorage.shared.removeCookies(since: .distantPast)
