@@ -219,6 +219,29 @@ final class TestRevocationWorkManager: EudiTest {
     await fulfillment(of: [detailsRefreshed], timeout: 0.5)
   }
 
+  func testCheckRevocation_WhenTheSweepIsCancelledAfterARevocationWasRead_ThenTheRevocationIsStoredAndAnnounced() async {
+    stub(walletKitController) { mock in
+      when(mock.fetchIssuedDocuments()).thenReturn(["a", "b"].map { StubDocument.make(id: $0) })
+      when(mock.fetchRevokedDocumentStatuses()).thenReturn([:])
+      when(mock.fetchStatusRefreshFailures()).thenReturn([])
+      when(mock.getDocumentStatus(for: any())).then { statusList in
+        guard statusList.uri.hasSuffix("/a") else {
+          withUnsafeCurrentTask { $0?.cancel() }
+          throw CancellationError()
+        }
+        return .invalid
+      }
+    }
+    let announced = expectation(forNotification: NSNotification.RevocationDashboard, object: nil)
+    let manager = workManager!
+
+    _ = await Task { try await manager.checkRevocation() }.result
+
+    verify(walletKitController).storeRevokedDocuments(with: equal(to: ["a": .revoked]))
+    verify(walletKitController, never()).storeStatusRefreshFailures(ids: any())
+    await fulfillment(of: [announced], timeout: 1)
+  }
+
   func testCheckRevocation_WhenAFailedDocumentIsRefreshed_ThenItsFailureIsRemovedAndTheDetailsRefresh() async throws {
     stubSweep(stored: [:], statuses: ["a": .valid], previousFailures: ["a"])
     let detailsRefreshed = expectation(forNotification: NSNotification.DocumentDetailsRefresh, object: nil) { notification in

@@ -107,7 +107,9 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
   /// the document. A document whose status cannot be fetched keeps its record, gets a refresh-failure
   /// record that the next successful check removes, and the sweep goes on. The dashboard notice lists
   /// only documents newly blocked. A failed read of the stored records ends the sweep before anything is
-  /// changed.
+  /// changed. A sweep that `stop()` cancels ends at the document whose status was being fetched, records no
+  /// failure for it, and still stores and announces what it read before, as the Android wallet keeps each record
+  /// as it goes.
   func checkRevocation() async throws {
 
     didRunInitialCheck = true
@@ -131,7 +133,7 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
       do {
         status = try await walletKitController.getDocumentStatus(for: statusList)
       } catch {
-        guard !Task.isCancelled else { return }
+        guard !Task.isCancelled else { break }
         failed.append(document.id)
         continue
       }
