@@ -16,12 +16,17 @@
 import ExtensionKit
 import IdentityDocumentServicesUI
 import SwiftUI
+import logic_assembly
 
 @main
 struct DocumentProviderExtension: IdentityDocumentProvider {
 
+  private let screenCaptureController: ScreenCaptureController
+
   init() {
     _ = DocumentProviderDIContainer.shared
+    self.screenCaptureController = DIGraph.shared.resolver.force(ScreenCaptureController.self)
+    clearCachesAfterWalletReset()
   }
 
   var body: some IdentityDocumentRequestScene {
@@ -31,8 +36,20 @@ struct DocumentProviderExtension: IdentityDocumentProvider {
           context: context
         )
       )
+      .onAppear {
+        screenCaptureController.start()
+      }
     }
   }
 
   func performRegistrationUpdates() async {  }
+
+  /// After a factory reset in the app, clears this extension's own caches and temporary files, its WalletKit log
+  /// among them, which the app cannot reach. The reset advances `Prefs.Key.walletResetGeneration`; the extension
+  /// keeps the last value it saw in its own defaults.
+  private func clearCachesAfterWalletReset() {
+    let prefsController = DIGraph.shared.resolver.force(PrefsController.self)
+    guard prefsController.recordWalletResetSeen(in: .standard) else { return }
+    FileManager.default.removeContents(of: FileManager.default.cachesAndTemporaryDirectories)
+  }
 }

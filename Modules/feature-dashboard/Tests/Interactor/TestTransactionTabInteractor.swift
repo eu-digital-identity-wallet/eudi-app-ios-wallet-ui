@@ -35,6 +35,7 @@ final class TestTransactionTabInteractor: EudiTest {
       walletKitController: walletKitController,
       filterValidator: filterValidator
     )
+    stubTransactionLogRevision("revision-0")
   }
   
   override func tearDown() {
@@ -93,6 +94,37 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
   
+  func testFetchTransactions_WhenTheHistoryDidNotChange_ThenDoesNotReadItAgain() async throws {
+    stubFetchTransactions(with: [Constants.eudiRemoteVerifierMock])
+
+    _ = try await interactor.fetchTransactions()
+    let state = try await interactor.fetchTransactions()
+
+    guard case .success = state else { return XCTFail("Wrong state \(state)") }
+    verify(walletKitController, times(1)).fetchTransactionLogs()
+  }
+
+  func testFetchTransactions_WhenTheLastReadFailed_ThenReadsAgain() async throws {
+    stubFetchTransactionsWithError()
+    _ = try? await interactor.fetchTransactions()
+    stubFetchTransactions(with: [Constants.eudiRemoteVerifierMock])
+
+    let state = try await interactor.fetchTransactions()
+
+    guard case .success = state else { return XCTFail("Wrong state \(state)") }
+    verify(walletKitController, times(2)).fetchTransactionLogs()
+  }
+
+  func testFetchTransactions_WhenTheHistoryChanged_ThenReadsItAgain() async throws {
+    stubFetchTransactions(with: [Constants.eudiRemoteVerifierMock])
+
+    _ = try await interactor.fetchTransactions()
+    stubTransactionLogRevision("revision-1")
+    _ = try await interactor.fetchTransactions()
+
+    verify(walletKitController, times(2)).fetchTransactionLogs()
+  }
+
   func testInitializeFilters_WhenInitializedWithFilterableList_ThenInitializesFilterValidator() async throws {
     // Given
     let filterableList = Self.mockFilterableList
@@ -426,6 +458,12 @@ private extension TestTransactionTabInteractor {
     ]
   )
   
+  func stubTransactionLogRevision(_ revision: String) {
+    stub(walletKitController) { mock in
+      when(mock.fetchTransactionLogRevision()).thenReturn(revision)
+    }
+  }
+
   func stubFetchTransactionsWithError() {
     stub(walletKitController) { mock in
       when(mock.fetchTransactionLogs())

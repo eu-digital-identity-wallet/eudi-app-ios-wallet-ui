@@ -32,13 +32,21 @@ public final class LogicStorageAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.container)
 
+    container.register(StorageEraseController.self) { r in
+      StorageEraseControllerImpl(swiftDataService: r.force(SwiftDataService.self))
+    }
+    .inObjectScope(ObjectScope.container)
+
     container.register((any BookmarkStorageController).self) { r in
       BookmarkStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
     }
     .inObjectScope(ObjectScope.transient)
 
     container.register((any TransactionLogStorageController).self) { r in
-      TransactionLogStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
+      TransactionLogStorageControllerImpl(
+        swiftDataService: r.force(SwiftDataService.self),
+        prefsController: r.force(PrefsController.self)
+      )
     }
     .inObjectScope(ObjectScope.transient)
 
@@ -49,6 +57,11 @@ public final class LogicStorageAssembly: Assembly {
 
     container.register((any FailedReIssuedDocStorageController).self) { r in
       FailedReIssuedDocStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
+    }
+    .inObjectScope(ObjectScope.transient)
+
+    container.register((any StatusRefreshFailureStorageController).self) { r in
+      StatusRefreshFailureStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
     }
     .inObjectScope(ObjectScope.transient)
   }

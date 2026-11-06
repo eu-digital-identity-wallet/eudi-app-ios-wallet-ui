@@ -22,17 +22,20 @@ final class SDTransactionLog: IdentifiableObject {
   var value: String
   var parentPresentationId: String?
   var actionChannel: String?
+  var registrationCheck: String?
 
   init(
     identifier: String,
     value: String,
     parentPresentationId: String? = nil,
-    actionChannel: String? = nil
+    actionChannel: String? = nil,
+    registrationCheck: String? = nil
   ) {
     self.identifier = identifier
     self.value = value
     self.parentPresentationId = parentPresentationId
     self.actionChannel = actionChannel
+    self.registrationCheck = registrationCheck
   }
 }
 
@@ -42,17 +45,21 @@ public struct TransactionLog: Sendable {
   public let value: String
   public let parentPresentationId: String?
   public let actionChannel: String?
+  /// The relying party's registration outcome when data was shared, for presentations (`RecordedRegistrationCheck`).
+  public let registrationCheck: String?
 
   public init(
     identifier: String,
     value: String,
     parentPresentationId: String? = nil,
-    actionChannel: String? = nil
+    actionChannel: String? = nil,
+    registrationCheck: String? = nil
   ) {
     self.identifier = identifier
     self.value = value
     self.parentPresentationId = parentPresentationId
     self.actionChannel = actionChannel
+    self.registrationCheck = registrationCheck
   }
 }
 
@@ -62,7 +69,8 @@ extension SDTransactionLog {
       identifier: identifier,
       value: value,
       parentPresentationId: parentPresentationId,
-      actionChannel: actionChannel
+      actionChannel: actionChannel,
+      registrationCheck: registrationCheck
     )
   }
 }
@@ -73,7 +81,8 @@ extension TransactionLog {
       identifier: identifier,
       value: value,
       parentPresentationId: parentPresentationId,
-      actionChannel: actionChannel
+      actionChannel: actionChannel,
+      registrationCheck: registrationCheck
     )
   }
 }

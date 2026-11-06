@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_ui
+import logic_authentication
 import Observation
 
 private typealias QueueItem = () -> Void
@@ -30,6 +31,8 @@ final class RouterHostImpl: RouterHost {
   @ObservationIgnored
   private let analyticsController: AnalyticsController
   @ObservationIgnored
+  private let sessionController: SessionController
+  @ObservationIgnored
   private let lockInterval: Int = 500
   @ObservationIgnored
   private var queueNavigation: [QueueItem] = []
@@ -38,13 +41,18 @@ final class RouterHostImpl: RouterHost {
 
   init(
     uiConfigLogic: ConfigUiLogic,
-    analyticsController: AnalyticsController
+    analyticsController: AnalyticsController,
+    sessionController: SessionController
   ) {
     self.uiConfigLogic = uiConfigLogic
     self.analyticsController = analyticsController
+    self.sessionController = sessionController
   }
 
+  /// While the session is locked only a login screen opens, so work that finishes after a lock, such as an
+  /// issuance or a link's task, cannot reopen the wallet.
   public func push(with route: AppRoute) {
+    guard sessionController.isUnlocked || uiConfigLogic.isLoginRoute(route) else { return }
     guard canNavigate(block: self.push(with: route)) else { return }
     lockNavigation()
     pathElements.append(route)
@@ -87,6 +95,7 @@ final class RouterHostImpl: RouterHost {
 
   public func pop() {
     guard
+      !pathElements.isEmpty,
       canNavigate(block: self.pop())
     else {
       return
@@ -111,12 +120,45 @@ final class RouterHostImpl: RouterHost {
     ?? .init(Theme.shared.color.background)
   }
 
+  /// Logged in means an unlocked session as well: after a lock the dashboard may still be on the path
+  /// until `requireLoginIfLocked` clears it.
   public func userIsLoggedInWithDocuments() -> Bool {
-    return isForegroundOrBackStack(with: uiConfigLogic.dashboardRoute)
+    return sessionController.isUnlocked && isForegroundOrBackStack(with: uiConfigLogic.dashboardRoute)
   }
 
   public func userIsLoggedInWithNoDocuments() -> Bool {
-    return isForegroundOrBackStack(with: uiConfigLogic.issuanceRoute)
+    return sessionController.isUnlocked && isForegroundOrBackStack(with: uiConfigLogic.issuanceRoute)
+  }
+
+  public func isInProtectedFlow() -> Bool {
+    uiConfigLogic.isProtectedFlow(getCurrentScreen())
+      && pathElements.contains(where: { !uiConfigLogic.isLoginRoute($0) })
+  }
+
+  /// Sends a locked wallet back to the start-up screen, whose gate shows login, when any screen on the path
+  /// is not a login screen, as the Android wallet does. Whatever is presented over the wallet (the RQES
+  /// screens, a sheet) is dismissed, and the path and any queued navigation are cleared at once, so after
+  /// login the user starts again from the dashboard.
+  public func requireLoginIfLocked() {
+    guard
+      !sessionController.isUnlocked,
+      pathElements.contains(where: { !uiConfigLogic.isLoginRoute($0) })
+    else {
+      return
+    }
+    restartAtStartup()
+  }
+
+  /// The path is cleared without animation, so the last screen does not slide away over start-up in view, unblurred.
+  public func restartAtStartup() {
+    UIApplication.shared.currentUIWindow?.rootViewController?.dismiss(animated: false)
+    var transaction = Transaction()
+    transaction.disablesAnimations = true
+    withTransaction(transaction) {
+      queueNavigation.removeAll()
+      pathElements.removeAll()
+    }
+    onNavigationFollowUp(with: rootRoute)
   }
 
   public func isScreenForeground(with route: AppRoute) -> Bool {

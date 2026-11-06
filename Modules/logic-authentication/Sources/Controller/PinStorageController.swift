@@ -15,8 +15,8 @@
  */
 
 public protocol PinStorageController: Sendable {
-  func hasPin() -> Bool
-  func setPin(with pin: String)
+  func hasPin() throws -> Bool
+  func setPin(with pin: String) throws
   func isPinValid(with pin: String) -> Bool
 }
 
@@ -28,12 +28,12 @@ final class PinStorageControllerImpl: PinStorageController {
     self.provider = provider
   }
 
-  public func hasPin() -> Bool {
-    provider.hasPin()
+  public func hasPin() throws -> Bool {
+    try provider.hasPin()
   }
 
-  public func setPin(with pin: String) {
-    provider.setPin(with: pin)
+  public func setPin(with pin: String) throws {
+    try provider.setPin(with: pin)
   }
 
   public func isPinValid(with pin: String) -> Bool {

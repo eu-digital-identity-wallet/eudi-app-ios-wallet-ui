@@ -25,23 +25,60 @@ final class TestDashboardInteractor: EudiTest {
   
   var interactor: DashboardInteractor!
   var walletKitController: MockWalletKitController!
+  var walletWorkScheduler: MockWalletWorkScheduler!
   
   override func setUp() {
     self.walletKitController = MockWalletKitController()
+    self.walletWorkScheduler = MockWalletWorkScheduler()
     self.interactor = DashboardInteractorImpl(
-      walletKitController: walletKitController
+      walletKitController: walletKitController,
+      walletWorkScheduler: walletWorkScheduler
     )
   }
   
   override func tearDown() {
     self.interactor = nil
+    self.walletKitController = nil
+    self.walletWorkScheduler = nil
   }
   
-  func testGetWalletKitController_WhenInteractorReturnsWalletKitController_ThenVerifyControllerIsInjected() async {
-    // Given / When
-    let result = await interactor.getWalletKitController()
-    
-    // Then
-    XCTAssertTrue(result is MockWalletKitController, "The result should be of type MockWalletKitController")
+  func testLoadDocuments_WhenCalled_ThenTheWalletLoadsItsDocuments() async {
+    stub(walletKitController) { mock in
+      when(mock.loadDocuments()).thenDoNothing()
+    }
+
+    await interactor.loadDocuments()
+
+    verify(walletKitController).loadDocuments()
+  }
+
+  func testLoadDocuments_WhenLoadingFails_ThenSwallowsTheError() async {
+    stub(walletKitController) { mock in
+      when(mock.loadDocuments()).thenThrow(WalletCoreError.unableFetchDocument)
+    }
+
+    await interactor.loadDocuments()
+
+    verify(walletKitController).loadDocuments()
+  }
+
+  func testReconcileRegistrations_WhenCalled_ThenTheControllerReconcilesThem() async {
+    stub(walletKitController) { mock in
+      when(mock.reconcileRegistrations()).thenDoNothing()
+    }
+
+    await interactor.reconcileRegistrations()
+
+    verify(walletKitController).reconcileRegistrations()
+  }
+
+  func testStartWorkers_WhenCalled_ThenSchedulesTheBackgroundChecks() async {
+    stub(walletWorkScheduler) { mock in
+      when(mock.schedule()).thenDoNothing()
+    }
+
+    await interactor.startWorkers()
+
+    verify(walletWorkScheduler).schedule()
   }
 }

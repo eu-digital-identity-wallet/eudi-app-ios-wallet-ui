@@ -15,6 +15,7 @@
  */
 import Foundation
 import logic_ui
+import Observation
 
 @Copyable
 struct StartupState: ViewState {
@@ -22,7 +23,10 @@ struct StartupState: ViewState {
   let setupError: Error?
 }
 
+@Observable
 final class StartupViewModel<Router: RouterHost>: ViewModel<Router, StartupState> {
+
+  var isSetupErrorAlertShowing: Bool = false
 
   private let interactor: StartupInteractor
 
@@ -42,7 +46,20 @@ final class StartupViewModel<Router: RouterHost>: ViewModel<Router, StartupState
   }
 
   func initialize() async {
-    let route = await interactor.initialize(with: viewState.splashDuration)
-    router.push(with: route)
+    switch await interactor.initialize(with: viewState.splashDuration) {
+    case .success(let route):
+      router.push(with: route)
+    case .failure(let error):
+      setState { $0.copy(setupError: error) }
+      isSetupErrorAlertShowing = true
+    }
+  }
+
+  /// Runs the start-up again after the user dismissed the error.
+  func onRetry() {
+    setState { $0.copy(setupError: nil) }
+    Task {
+      await initialize()
+    }
   }
 }

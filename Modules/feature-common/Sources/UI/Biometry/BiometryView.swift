@@ -54,8 +54,8 @@ struct BiometryView<Router: RouterHost>: View {
           secondaryButton: .cancel {}
         )
       }
-      .onChange(of: scenePhase) {
-        self.viewModel.setPhase(with: scenePhase)
+      .onChange(of: scenePhase) { _, phase in
+        Task { await self.viewModel.setPhase(with: phase) }
       }
     }
     .if(isEmbeddedPresentation) {
@@ -149,15 +149,22 @@ private struct BiometryViewContainer: View {
 
     VStack(spacing: .zero) {
 
+      if let deviceLockNotice = viewState.deviceLockNotice {
+        WarningNoticeView(message: deviceLockNotice)
+        VSpacer.mediumSmall()
+      }
+
       PinTextFieldView(
         pinTitle: biometryPinTitle(),
         numericText: $uiPinInputField,
         maxDigits: viewState.quickPinSize,
         isSecureEntry: true,
-        canFocus: .constant(!viewState.areBiometricsEnabled && !viewState.isLockedOut),
+        canFocus: .constant(
+          !viewState.areBiometricsEnabled && !viewState.isLockedOut && !viewState.isDeviceLockRequired
+        ),
         shouldUseFullScreen: false,
         hasError: hasError,
-        isDisabled: viewState.isLockedOut
+        isDisabled: viewState.isLockedOut || viewState.isDeviceLockRequired
       )
 
       VSpacer.mediumSmall()
@@ -209,7 +216,9 @@ private struct BiometryViewContainer: View {
       )
     ),
     isLockedOut: false,
-    lockoutMessage: nil
+    lockoutMessage: nil,
+    deviceLockNotice: nil,
+    isDeviceLockRequired: false
   )
 
   ContentScreenView {

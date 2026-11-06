@@ -265,8 +265,8 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
       )
 
       switch state {
-      case .success(let docIds):
-        await fetchStoredDocuments(docIds: docIds)
+      case .success(let docIds, let notIssuedDocumentNames):
+        await fetchStoredDocuments(docIds: docIds, notIssuedDocumentNames: notIssuedDocumentNames)
       case .dynamicIssuance(let session):
         setState {
           $0.copy(
@@ -397,7 +397,7 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
     )
   }
 
-  private func fetchStoredDocuments(docIds: [String]) async {
+  private func fetchStoredDocuments(docIds: [String], notIssuedDocumentNames: [String] = []) async {
 
     let state = await interactor.fetchStoredDocuments(documentIds: docIds)
 
@@ -418,7 +418,8 @@ final class AddDocumentViewModel<Router: RouterHost>: ViewModel<Router, AddDocum
               relyingParty: documents.first?.issuer?.name,
               issuerLogoUrl: documents.first?.issuer?.logoUrl,
               relyingPartyIsTrusted: false,
-              isIssuingDocument: true
+              isIssuingDocument: true,
+              notIssuedDocumentNames: notIssuedDocumentNames
             ),
             requestItems: documents.map { item in
               ListItemSection(

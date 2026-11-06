@@ -172,7 +172,7 @@ platform :ios do
     push_git_tags(tag: tag)
   end
 
-  desc "Reset version and build number to default"
+  desc "Upload IPA to TestFlight"
   lane :upload_appstore do |values|
     connectApi = values[:connectApi]
     binaryName = values[:binaryName]

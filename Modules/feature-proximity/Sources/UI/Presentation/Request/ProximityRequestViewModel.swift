@@ -20,6 +20,9 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
 
   private let interactor: ProximityInteractor
   private var publisherTask: Task<Void, Error>?
+  private var disconnectTask: Task<Void, Never>?
+  private var isWatchingReader = false
+  private var hasReaderLeft = false
   private var coordinator: ProximitySessionCoordinator?
 
   init(
@@ -29,6 +32,11 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
   ) {
     self.interactor = interactor
     super.init(router: router, originator: originator)
+  }
+
+  deinit {
+    disconnectTask?.cancel()
+    publisherTask?.cancel()
   }
 
   override func doWork() async {
@@ -41,25 +49,29 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     let state = await interactor.onRequestReceived()
 
     switch state {
-    case .success(let items, let relyingParty, _, let isTrusted, let registration):
-      self.onReceivedItems(
-        with: items,
+    case .success(let combinations, let relyingParty, _, let isTrusted, let registration):
+      self.onReceivedCombinations(
+        with: combinations,
         title: .requestDataTitle([relyingParty]),
         relyingParty: .custom(relyingParty),
         isTrusted: isTrusted
       )
-      self.onReceivedRegistration(registration)
+      self.onReceivedRegistration(registration, isRelyingPartyTrusted: isTrusted)
+      self.isWatchingReader = true
+      self.watchReaderDisconnect()
     case .notSecuredRequest:
       self.onTrustBlocked()
     case .failure(let error):
       self.onEmptyDocuments(error: error.errorMessage)
       if let registration = await interactor.registrationForFailedRequest() {
-        self.onReceivedRegistration(registration)
+        self.onReceivedRegistration(registration, isRelyingPartyTrusted: registration.isVerified)
       }
     }
   }
 
   override func onShare() {
+    guard !hasReaderLeft else { return }
+    disconnectTask?.cancel()
     Task {
 
       let items = self.viewState.items
@@ -74,9 +86,15 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
           self.router.pop()
         }
       case .failure(let error):
-        self.onError(with: error)
+        self.showError(error)
       }
     }
+  }
+
+  /// Resumes the reader watch when the request shows again, for example after the user backed out of biometry.
+  override func onReappear() async {
+    guard isWatchingReader, !hasReaderLeft, viewState.error == nil else { return }
+    watchReaderDisconnect()
   }
 
   override func getSuccessRoute() -> AppRoute? {
@@ -110,6 +128,7 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
 
   override func getPopRoute() -> AppRoute? {
     publisherTask?.cancel()
+    disconnectTask?.cancel()
     return getOriginator()
   }
 
@@ -117,8 +136,31 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
     await interactor.stopPresentation()
   }
 
+  override func declineRequest() async {
+    await stopPresentation()
+  }
+
   override func getRelyingParty() -> LocalizableStringKey {
     viewState.relyingParty
+  }
+
+  /// Ends the presentation and goes back, as the back arrow does, once the reader ends the Bluetooth session
+  /// before the user answers, as the Android wallet's request screen does. A share or leaving the screen
+  /// cancels the watch first, so the reader's disconnect after a response does not send the user back.
+  private func watchReaderDisconnect() {
+    disconnectTask?.cancel()
+    disconnectTask = Task { [weak self, interactor] in
+      guard await interactor.waitForReaderDisconnect(), !Task.isCancelled, let self else { return }
+      self.hasReaderLeft = true
+      await self.stopPresentation()
+      self.onPop()
+    }
+  }
+
+  /// Shows an error and stops the reader watch: the request is over, so a later disconnect must not act.
+  private func showError(_ error: Error) {
+    disconnectTask?.cancel()
+    onError(with: error)
   }
 
   private func startPublisherTask() {
@@ -136,13 +178,13 @@ final class ProximityRequestViewModel<Router: RouterHost>: BaseRequestViewModel<
       for try await state in publisher {
         switch state {
         case .error(let error):
-          self.onError(with: error)
+          self.showError(error)
         default:
           ()
         }
       }
     case .failure(let error):
-      self.onError(with: error)
+      self.showError(error)
     }
   }
 

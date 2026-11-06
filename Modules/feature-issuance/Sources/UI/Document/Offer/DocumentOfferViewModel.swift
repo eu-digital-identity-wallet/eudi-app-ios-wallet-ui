@@ -237,32 +237,6 @@ final class DocumentOfferViewModel<Router: RouterHost>: ViewModel<Router, Docume
     }
   }
 
-  func handleNotification(with info: [AnyHashable: Any]) {
-    guard let uri = info["uri"] as? String else {
-      return
-    }
-    setState {
-      $0
-        .copy(
-          isLoading: true,
-          documentOfferUiModel: DocumentOfferUIModel.mock(),
-          config: .init(
-            arguments: ["uri": uri],
-            navigationSuccessType: viewState.config.navigationSuccessType,
-            navigationCancelType: viewState.config.navigationCancelType
-          ),
-          offerUri: uri,
-          allowIssue: false,
-          initialized: false
-        )
-        .copy(error: nil)
-        .copy(issuerRegistration: nil)
-    }
-    Task {
-      await self.initialize()
-    }
-  }
-
   private func handleResumeIssuance() async {
     setState { $0.copy(isLoading: true) }
 

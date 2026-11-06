@@ -61,6 +61,10 @@ private struct TransactionActionViewContainer: View {
       ScrollView {
         VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
 
+          if let registrationWarning = state.ui.registrationWarning {
+            WarningNoticeView(message: registrationWarning)
+          }
+
           switch state.ui.content {
           case .confirmation(let ui):
             confirmation(ui)

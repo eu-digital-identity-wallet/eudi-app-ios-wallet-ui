@@ -27,7 +27,9 @@ struct Application: App {
 
   private let routerHost: RouterHost
   private let deepLinkController: DeepLinkController
-  private let walletKitController: WalletKitController
+  private let sessionLockController: SessionLockController
+  private let resetStatusProvider: WalletResetStatusProvider
+  private let screenCaptureController: ScreenCaptureController
 
   init() {
 
@@ -36,7 +38,9 @@ struct Application: App {
 
     self.routerHost = DIGraph.shared.resolver.force(RouterHost.self)
     self.deepLinkController = DIGraph.shared.resolver.force(DeepLinkController.self)
-    self.walletKitController = DIGraph.shared.resolver.force(WalletKitController.self)
+    self.sessionLockController = DIGraph.shared.resolver.force(SessionLockController.self)
+    self.resetStatusProvider = DIGraph.shared.resolver.force(WalletResetStatusProvider.self)
+    self.screenCaptureController = DIGraph.shared.resolver.force(ScreenCaptureController.self)
     self.toolbarConfig = routerHost.getToolbarConfig()
   }
 
@@ -62,26 +66,32 @@ struct Application: App {
             .ignoresSafeArea(.all)
         }
       }
+      .onAppear {
+        sessionLockController.start()
+        screenCaptureController.start()
+      }
       .onOpenURL { url in
+        guard
+          !resetStatusProvider.isResetting,
+          !routerHost.isScreenOnBackStack(with: .featureDashboardModule(.walletReset))
+        else { return }
+        sessionLockController.willHandleLink()
         if let deepLink = deepLinkController.hasDeepLink(url: url) {
-          Task {
-            deepLinkController.handleDeepLinkAction(
-              routerHost: routerHost,
-              deepLinkExecutable: deepLink,
-              remoteSessionCoordinator: deepLink.requiresCoordinator
-              ? await walletKitController.startSameDevicePresentation(deepLink: deepLink.link)
-              : nil
-            )
-          }
+          deepLinkController.handleDeepLinkAction(
+            routerHost: routerHost,
+            deepLinkExecutable: deepLink
+          )
         }
       }
       .onChange(of: scenePhase) {
         switch scenePhase {
         case .background:
+          sessionLockController.sceneDidEnterBackground()
           self.blurType = .background
         case .inactive:
           self.blurType = .inactive
         case .active:
+          sessionLockController.sceneDidBecomeActive()
           self.blurType = .none
         default: break
         }

@@ -29,6 +29,10 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
 
   private let interactor: ProximityInteractor
   private var publisherTask: Task<Void, Error>?
+  private var isSessionStarted = false
+  private var isSessionHandedOver = false
+  private var isSessionStopped = false
+  private var scenePhase: ScenePhase = .active
 
   init(router: Router, interactor: ProximityInteractor, originator: AppRoute) {
     self.interactor = interactor
@@ -49,6 +53,15 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
     case .failure(let error):
       self.onError(with: error)
     }
+  }
+
+  /// Stops the session when the app goes to the background while this screen waits for a reader, as the Android wallet
+  /// does when its activity stops on the QR screen, so that the wallet does not go on advertising over Bluetooth until
+  /// iOS suspends it, nor resume the session on return. `.inactive`, such as Control Center or a system sheet over the
+  /// app, changes nothing.
+  func setPhase(with phase: ScenePhase) {
+    scenePhase = phase
+    stopSessionIfInBackground()
   }
 
   func toolbarContent() -> ToolBarContent {
@@ -80,7 +93,7 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
       for try await state in publisher {
         switch state {
         case .prepareQr:
-          await self.onQRGeneration()
+          await self.onEngagementReady()
         case .requestReceived:
           await self.onConnectionSuccess()
         case .error(let error):
@@ -95,9 +108,48 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
   }
 
   private func pop() {
-    publisherTask?.cancel()
-    Task { await interactor.stopPresentation() }
+    stopSession()
     router.pop()
+  }
+
+  /// Starts the stop while iOS lets the app go on in the background, so that the user leaving the app does not cut it
+  /// short.
+  private func stopSession() {
+    isSessionStopped = true
+    publisherTask?.cancel()
+    Task {
+      await UIApplication.shared.keepRunningInBackground(named: "ProximityConnectionStop") {
+        await self.interactor.stopPresentation()
+      }
+    }
+  }
+
+  /// Stops a session this screen started and still owns, once the app is in the background, also when the QR code
+  /// became ready after the user had left. A session handed over to the request screen is that screen's to stop, and
+  /// one already stopped or not yet advertising has nothing to stop. The screen then closes only while it is still in
+  /// front, so that a screen that has taken its place is not closed instead.
+  private func stopSessionIfInBackground() {
+    guard
+      scenePhase == .background,
+      isSessionStarted,
+      !isSessionHandedOver,
+      !isSessionStopped
+    else {
+      return
+    }
+    stopSession()
+    if case .featureProximityModule(.proximityConnection) = router.getCurrentScreen() {
+      router.pop()
+    }
+  }
+
+  /// The QR code is ready once WalletKit advertises over Bluetooth, so the session counts as started from here; the
+  /// engagement itself returns only when a reader's request arrives or the session fails.
+  private func onEngagementReady() async {
+    isSessionStarted = true
+    stopSessionIfInBackground()
+    guard !isSessionStopped else { return }
+    await onQRGeneration()
   }
 
   private func onQRGeneration() async {
@@ -109,10 +161,14 @@ final class ProximityConnectionViewModel<Router: RouterHost>: ViewModel<Router, 
     }
   }
 
+  /// Hands the session to the request screen, unless it has stopped, before or while the coordinator is fetched, for
+  /// example by Back.
   private func onConnectionSuccess() async {
+    isSessionHandedOver = true
     publisherTask?.cancel()
     switch await interactor.getCoordinator() {
     case .success(let proximitySessionCoordinator):
+      guard !isSessionStopped else { return }
       router.push(
         with: .featureProximityModule(
           .proximityRequest(

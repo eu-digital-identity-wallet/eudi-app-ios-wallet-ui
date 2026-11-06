@@ -30,6 +30,8 @@ final class TestPresentationTransactionDataDomain: EudiTest {
       "signatureQualifier": "eu_eidas_qes",
       "numSignatures": 2,
       "hashAlgorithmOID": "2.16.840.1.101.3.4.2.1",
+      "locations": ["Brussels"],
+      "transaction_data_hashes_alg": ["sha-256"],
       "documentDigests": [
         {
           "label": "Contract",
@@ -38,7 +40,8 @@ final class TestPresentationTransactionDataDomain: EudiTest {
           "href": "https://tsp.example/contract.pdf",
           "checksum": { "value": "Y2hlY2tzdW0", "algorithmOID": "2.16.840.1.101.3.4.2.3" },
           "access": { "type": "OTP", "oneTimePassword": "1234" },
-          "signed_props": [{ "attribute_name": "reason", "attribute_value": "Agreement" }]
+          "signed_props": [{ "attribute_name": "reason", "attribute_value": "Agreement" }],
+          "circumstantialData": "Branch office"
         }
       ]
     }
@@ -48,6 +51,7 @@ final class TestPresentationTransactionDataDomain: EudiTest {
     {
       "type": "https://cloudsignatureconsortium.org/2025/qes",
       "credential_ids": ["pid"],
+      "transaction_data_hashes_alg": ["sha-256"],
       "signatureRequests": [
         {
           "signatureQualifier": "eu_eidas_aes",
@@ -60,6 +64,16 @@ final class TestPresentationTransactionDataDomain: EudiTest {
           "conformance_level": "AdES-B-B",
           "signed_props": [{ "attribute_name": "commitment" }],
           "responseURI": "https://tsp.example/response"
+        },
+        {
+          "signatureQualifier": "eu_eidas_qes",
+          "signAlgo": "1.2.840.113549.1.1.11",
+          "signAlgoParams": "params",
+          "document": "QUJD",
+          "documentType": "sod",
+          "signed_envelope_property": "Detached",
+          "referenceUri": "#content",
+          "circumstantialData": "Branch"
         }
       ]
     }
@@ -85,9 +99,13 @@ final class TestPresentationTransactionDataDomain: EudiTest {
             signedProperties: [.init(name: "reason", value: "Agreement")],
             href: "https://tsp.example/contract.pdf",
             checksum: .init(value: "Y2hlY2tzdW0", algorithmOid: "2.16.840.1.101.3.4.2.3"),
-            oneTimePassword: "1234"
+            oneTimePassword: "1234",
+            circumstantialData: "Branch office",
+            accessMode: "OTP"
           )
-        ]
+        ],
+        locations: ["Brussels"],
+        transactionDataHashAlgorithms: ["sha-256"]
       )
     )
   }
@@ -106,9 +124,29 @@ final class TestPresentationTransactionDataDomain: EudiTest {
             signedProperties: [.init(name: "commitment", value: nil)],
             href: "https://tsp.example/invoice.pdf",
             checksum: .init(value: "Y2hlY2tzdW0", algorithmOid: "2.16.840.1.101.3.4.2.1"),
-            oneTimePassword: "5678"
+            oneTimePassword: "5678",
+            signatureAlgorithm: "1.2.840.10045.4.3.2",
+            accessMode: "OTP"
+          ),
+          .init(
+            label: nil,
+            signatureQualifier: "eu_eidas_qes",
+            responseUri: nil,
+            signatureFormat: nil,
+            conformanceLevel: nil,
+            signedProperties: nil,
+            href: nil,
+            checksum: nil,
+            oneTimePassword: nil,
+            signedEnvelopeProperty: "Detached",
+            referenceUri: "#content",
+            circumstantialData: "Branch",
+            signatureAlgorithm: "1.2.840.113549.1.1.11",
+            signatureAlgorithmParameters: "params",
+            inlineDocument: .init(documentType: "sod", sizeInBytes: 3)
           )
-        ]
+        ],
+        transactionDataHashAlgorithms: ["sha-256"]
       )
     )
   }

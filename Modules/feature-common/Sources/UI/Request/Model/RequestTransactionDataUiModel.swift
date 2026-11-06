@@ -105,6 +105,12 @@ private struct TransactionDataRowsBuilder<T: Sendable> {
     addCredentialReferences(itemId: itemId, credentialIds: approval.credentialIds)
     addField(itemId: "\(itemId)/credential", label: .requestTransactionDataSigningCredentialId, value: approval.credentialId)
     addField(itemId: "\(itemId)/count", label: .requestTransactionDataNumberOfSignatures, value: String(approval.numSignatures))
+    addFields(itemId: "\(itemId)/location", label: .requestTransactionDataLocation, values: approval.locations)
+    addFields(
+      itemId: "\(itemId)/data-hash-algorithm",
+      label: .requestTransactionDataHashAlgorithms,
+      values: approval.transactionDataHashAlgorithms
+    )
 
     for (documentIndex, document) in approval.documentDigests.enumerated() {
       let documentId = "\(itemId)/document-\(documentIndex)"
@@ -119,18 +125,29 @@ private struct TransactionDataRowsBuilder<T: Sendable> {
         value: approval.hashAlgorithmOid.hashAlgorithmDisplayValue
       )
       addSignedAttributes(itemId: documentId, attributes: document.signedProperties)
-      addField(itemId: "\(documentId)/otp", label: .requestTransactionDataOneTimePassword, value: document.oneTimePassword)
+      addField(
+        itemId: "\(documentId)/circumstantial-data",
+        label: .requestTransactionDataCircumstantialData,
+        value: document.circumstantialData
+      )
+      addDocumentAccess(itemId: documentId, accessMode: document.accessMode, oneTimePassword: document.oneTimePassword)
     }
   }
 
   private mutating func addRequest(_ request: QesTransactionDomain, itemId: String) {
     addType(itemId: itemId, value: .requestTransactionDataTypeQesRequest)
     addCredentialReferences(itemId: itemId, credentialIds: request.credentialIds)
+    addFields(
+      itemId: "\(itemId)/data-hash-algorithm",
+      label: .requestTransactionDataHashAlgorithms,
+      values: request.transactionDataHashAlgorithms
+    )
 
     for (documentIndex, signatureRequest) in request.signatureRequests.enumerated() {
       let documentId = "\(itemId)/document-\(documentIndex)"
       addDocumentName(itemId: documentId, label: signatureRequest.label, index: documentIndex)
       addDocumentReference(itemId: documentId, href: signatureRequest.href, checksum: signatureRequest.checksum)
+      addInlineDocument(itemId: documentId, document: signatureRequest.inlineDocument)
       addField(
         itemId: "\(documentId)/signature-type",
         label: .requestTransactionDataSignatureType,
@@ -142,8 +159,33 @@ private struct TransactionDataRowsBuilder<T: Sendable> {
         value: signatureRequest.signatureFormat.map { $0.signatureFormatDisplayValue }
       )
       addField(itemId: "\(documentId)/conformance", label: .requestTransactionDataConformanceLevel, value: signatureRequest.conformanceLevel)
+      addField(
+        itemId: "\(documentId)/signed-envelope-property",
+        label: .requestTransactionDataSignedEnvelopeProperty,
+        value: signatureRequest.signedEnvelopeProperty
+      )
+      addField(itemId: "\(documentId)/reference-uri", label: .requestTransactionDataReferenceUri, value: signatureRequest.referenceUri)
+      addField(
+        itemId: "\(documentId)/circumstantial-data",
+        label: .requestTransactionDataCircumstantialData,
+        value: signatureRequest.circumstantialData
+      )
+      addField(
+        itemId: "\(documentId)/signature-algorithm",
+        label: .requestTransactionDataSignatureAlgorithm,
+        value: signatureRequest.signatureAlgorithm?.signatureAlgorithmDisplayValue
+      )
+      addField(
+        itemId: "\(documentId)/signature-algorithm-parameters",
+        label: .requestTransactionDataSignatureAlgorithmParameters,
+        value: signatureRequest.signatureAlgorithmParameters
+      )
       addSignedAttributes(itemId: documentId, attributes: signatureRequest.signedProperties)
-      addField(itemId: "\(documentId)/otp", label: .requestTransactionDataOneTimePassword, value: signatureRequest.oneTimePassword)
+      addDocumentAccess(
+        itemId: documentId,
+        accessMode: signatureRequest.accessMode,
+        oneTimePassword: signatureRequest.oneTimePassword
+      )
       addField(itemId: "\(documentId)/response-uri", label: .requestTransactionDataResponseUri, value: signatureRequest.responseUri)
     }
   }
@@ -194,12 +236,52 @@ private struct TransactionDataRowsBuilder<T: Sendable> {
     )
   }
 
+  /// One row for each value, all under `label`, with the index in each row's identifier.
+  private mutating func addFields(itemId: String, label: LocalizableStringKey, values: [String]) {
+    for (index, value) in values.enumerated() {
+      addField(itemId: "\(itemId)-\(index)", label: label, value: value)
+    }
+  }
+
+  /// How the document is fetched and, on the request only, its one-time password: history does not show the
+  /// password again, as on Android.
+  private mutating func addDocumentAccess(itemId: String, accessMode: String?, oneTimePassword: String?) {
+    addField(
+      itemId: "\(itemId)/access",
+      label: .requestTransactionDataDocumentAccess,
+      value: accessMode?.documentAccessDisplayValue
+    )
+    guard !isRecorded else { return }
+    addField(itemId: "\(itemId)/otp", label: .requestTransactionDataOneTimePassword, value: oneTimePassword)
+  }
+
+  /// A document the request carries itself: that it is included, its type and its size, never its content.
+  private mutating func addInlineDocument(itemId: String, document: QesInlineDocumentDomain?) {
+    guard let document else { return }
+    addField(
+      itemId: "\(itemId)/content",
+      label: .requestTransactionDataDocumentContent,
+      value: LocalizableStringKey.requestTransactionDataDocumentContentInline.toString
+    )
+    addField(
+      itemId: "\(itemId)/document-type",
+      label: .requestTransactionDataDocumentType,
+      value: document.documentType?.documentTypeDisplayValue
+    )
+    addField(
+      itemId: "\(itemId)/size",
+      label: .requestTransactionDataDocumentSize,
+      value: document.sizeInBytes.map { ByteCountFormatter.string(fromByteCount: Int64($0), countStyle: .file) }
+    )
+  }
+
   private mutating func addSignedAttributes(itemId: String, attributes: [SigningAttributeDomain]?) {
     guard let attributes, !attributes.isEmpty else { return }
     addField(
       itemId: "\(itemId)/attributes",
       label: nil,
-      value: LocalizableStringKey.requestTransactionDataSignedAttributes.toString
+      value: LocalizableStringKey.requestTransactionDataSignedAttributes.toString,
+      supportingText: .requestTransactionDataChosenByRelyingPartyWarning
     )
     for (index, attribute) in attributes.enumerated() {
       addField(
@@ -210,7 +292,14 @@ private struct TransactionDataRowsBuilder<T: Sendable> {
     }
   }
 
-  private mutating func addField(itemId: String, label: LocalizableStringKey?, value: String?) {
+  /// `supportingText` shows in the warning colour, as the marker on the signed attributes, which the relying party
+  /// chooses freely, does on Android.
+  private mutating func addField(
+    itemId: String,
+    label: LocalizableStringKey?,
+    value: String?,
+    supportingText: LocalizableStringKey? = nil
+  ) {
     guard let value else { return }
     rows.append(
       .single(
@@ -218,7 +307,9 @@ private struct TransactionDataRowsBuilder<T: Sendable> {
           collapsed: .init(
             id: itemId,
             mainContent: .text(.custom(value)),
-            overlineText: label
+            overlineText: label,
+            supportingText: supportingText,
+            supportingTextColor: Theme.shared.color.warning
           ),
           domainModel: nil
         )
@@ -256,6 +347,40 @@ private extension String {
     case "dtbsr": "DTBSR"
     case "sdr": "SDR"
     case "sodr": "SODR"
+    default: self
+    }
+  }
+
+  var signatureAlgorithmDisplayValue: String {
+    switch self {
+    case "1.2.840.113549.1.1.1": "RSA"
+    case "1.2.840.113549.1.1.10": "RSASSA-PSS"
+    case "1.2.840.113549.1.1.11": "RSA with SHA-256"
+    case "1.2.840.113549.1.1.12": "RSA with SHA-384"
+    case "1.2.840.113549.1.1.13": "RSA with SHA-512"
+    case "1.2.840.10045.2.1": "ECDSA"
+    case "1.2.840.10045.4.3.2": "ECDSA with SHA-256"
+    case "1.2.840.10045.4.3.3": "ECDSA with SHA-384"
+    case "1.2.840.10045.4.3.4": "ECDSA with SHA-512"
+    default: self
+    }
+  }
+
+  var documentAccessDisplayValue: String {
+    switch self {
+    case "public": LocalizableStringKey.requestTransactionDataDocumentAccessPublic.toString
+    case "OTP": LocalizableStringKey.requestTransactionDataDocumentAccessOtp.toString
+    case "Basic_Auth": LocalizableStringKey.requestTransactionDataDocumentAccessBasic.toString
+    case "Digest_Auth": LocalizableStringKey.requestTransactionDataDocumentAccessDigest.toString
+    case "OAuth_20": LocalizableStringKey.requestTransactionDataDocumentAccessOauth.toString
+    default: self
+    }
+  }
+
+  var documentTypeDisplayValue: String {
+    switch self {
+    case "sod": LocalizableStringKey.requestTransactionDataDocumentTypeOriginal.toString
+    case "sfd": LocalizableStringKey.requestTransactionDataDocumentTypeFormatted.toString
     default: self
     }
   }

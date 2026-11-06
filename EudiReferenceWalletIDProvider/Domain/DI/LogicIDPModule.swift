@@ -35,7 +35,11 @@ final class LogicIDPModule: Assembly {
     .inObjectScope(ObjectScope.container)
 
     container.register(RequestAuthorizationInteractor.self) { r in
-      RequestAuthorizationInteractorImpl(dcApiHandler: r.force(DcApiHandler.self))
+      RequestAuthorizationInteractorImpl(
+        dcApiHandler: r.force(DcApiHandler.self),
+        configUiLogic: r.force(ConfigUiLogic.self),
+        prefsController: r.force(PrefsController.self)
+      )
     }
   }
 }
@@ -52,21 +56,8 @@ extension LogicIDPModule {
 
 final class DocumentProviderDIContainer {
   static let shared = DocumentProviderDIContainer()
-  let container: Container
 
   private init() {
-    container = Container()
-    setupDependencies()
-  }
-
-  private func setupDependencies() {
     DIGraph.assembleDependenciesGraph(withExtras: [LogicIDPModule()])
-  }
-
-  func resolve<T>(_ type: T.Type) -> T {
-    guard let resolved = container.resolve(type) else {
-      fatalError("Failed to resolve \(type)")
-    }
-    return resolved
   }
 }

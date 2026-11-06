@@ -36,7 +36,8 @@ public struct BaseRequestView<Router: RouterHost>: View {
       BaseRequestViewContainer(
         viewState: viewModel.viewState,
         isRiskAcknowledged: $viewModel.isRiskAcknowledged,
-        onShare: viewModel.onShare,
+        canShare: viewModel.canShare,
+        onShare: viewModel.onShareClick,
         onSelectionChanged: { id in
           Task {
             await viewModel.onSelectionChanged(id: id)
@@ -55,6 +56,8 @@ public struct BaseRequestView<Router: RouterHost>: View {
     .task {
       if !viewModel.viewState.initialized {
         await viewModel.doWork()
+      } else {
+        await viewModel.onReappear()
       }
     }
     .alertView(
@@ -63,6 +66,15 @@ public struct BaseRequestView<Router: RouterHost>: View {
       message: .incompleteRequestDataSelection,
       actions: {
         Button(.okButton) {}
+      }
+    )
+    .alertView(
+      isPresented: $viewModel.isUserImageConfirmationShowing,
+      title: .requestUserImageConfirmationTitle,
+      message: .requestUserImageConfirmationMessage,
+      actions: {
+        Button(.shareButton) { viewModel.onUserImageShareConfirmed() }
+        Button(.cancelButton, role: .cancel) {}
       }
     )
     .alertView(
@@ -82,6 +94,7 @@ private struct BaseRequestViewContainer: View {
 
   let viewState: RequestViewState
   @Binding var isRiskAcknowledged: Bool
+  let canShare: Bool
   let onShare: () -> Void
   let onSelectionChanged: (String) -> Void
   var onCombinationSelected: (Int) -> Void = { _ in }
@@ -90,10 +103,6 @@ private struct BaseRequestViewContainer: View {
   private var registrationWarning: RegistrationWarning? {
     guard viewState.initialized, !viewState.isLoading else { return nil }
     return viewState.registrationWarning
-  }
-
-  private var canShare: Bool {
-    viewState.allowShare && (registrationWarning == nil || isRiskAcknowledged)
   }
 
   var body: some View {
@@ -125,6 +134,10 @@ private struct BaseRequestViewContainer: View {
         if let registration = viewState.relyingPartyRegistration {
           RelyingPartyRegistrationView(data: registration)
             .shimmer(isLoading: viewState.isLoading)
+        }
+
+        if viewState.items.requestsUserImage() {
+          WarningNoticeView(message: .requestUserImageNotice)
         }
 
         titledSection(.requestRequestedDataTitle) {
@@ -263,6 +276,7 @@ private struct BaseRequestViewContainer: View {
         backgroundColor: Theme.shared.color.groupedElevatedBackground,
         hideSensitiveContent: false,
         isLoading: viewState.isLoading,
+        expandsWhen: true,
         onItemClick: { item in
           if let url = transactionData.documentUrlsByItemId[item.id] {
             openURL(url)
@@ -343,6 +357,7 @@ private struct BaseRequestViewContainer: View {
     BaseRequestViewContainer(
       viewState: viewState,
       isRiskAcknowledged: .constant(false),
+      canShare: true,
       onShare: {},
       onSelectionChanged: { _ in }
     )

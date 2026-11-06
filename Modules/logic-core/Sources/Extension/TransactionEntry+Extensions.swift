@@ -24,6 +24,7 @@ extension TransactionEntry {
     id: String,
     parentPresentationId: String?,
     actionChannel: TransactionActionChannel? = nil,
+    registrationCheck: RecordedRegistrationCheck? = nil,
     transactionDataTypes: [SupportedTransactionDataType] = []
   ) -> TransactionLogDomain? {
     switch self {
@@ -45,7 +46,8 @@ extension TransactionEntry {
           claimsPresented: entry.listOfClaimsPresented.toDomain(),
           transactionData: entry.transactionalData?.toPresentationTransactionDataDomains(
             supportedTypes: transactionDataTypes
-          ) ?? []
+          ) ?? [],
+          registrationCheck: registrationCheck
         )
       )
     case .credentialIssuance(let entry):
@@ -136,14 +138,16 @@ extension TransactionEntry {
 
   func toTransactionLogStorage(
     parentPresentationId: String?,
-    actionChannel: TransactionActionChannel? = nil
+    actionChannel: TransactionActionChannel? = nil,
+    registrationCheck: RecordedRegistrationCheck? = nil
   ) throws -> logic_storage.TransactionLog {
     let data = try JSONEncoder().encode(self)
     return .init(
       identifier: transactionIdentifier,
       value: try data.toJSONString(),
       parentPresentationId: parentPresentationId,
-      actionChannel: actionChannel?.rawValue
+      actionChannel: actionChannel?.rawValue,
+      registrationCheck: registrationCheck?.rawValue
     )
   }
 
@@ -172,6 +176,7 @@ extension logic_storage.TransactionLog {
       id: identifier,
       parentPresentationId: parentPresentationId,
       actionChannel: actionChannel.flatMap { TransactionActionChannel(rawValue: $0) },
+      registrationCheck: registrationCheck.flatMap { RecordedRegistrationCheck(rawValue: $0) },
       transactionDataTypes: transactionDataTypes
     )
   }

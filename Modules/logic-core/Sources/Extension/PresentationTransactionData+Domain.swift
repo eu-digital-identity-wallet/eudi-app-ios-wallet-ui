@@ -55,7 +55,9 @@ private extension QesApprovalRequest {
       signatureQualifier: signatureQualifier,
       numSignatures: numSignatures,
       hashAlgorithmOid: hashAlgorithmOID,
-      documentDigests: documentDigests.map { $0.toQesDocumentDigestDomain() }
+      documentDigests: documentDigests.map { $0.toQesDocumentDigestDomain() },
+      locations: locations ?? [],
+      transactionDataHashAlgorithms: hashAlgorithms ?? []
     )
   }
 }
@@ -64,7 +66,8 @@ private extension QesRequest {
   func toQesTransactionDomain() -> QesTransactionDomain {
     QesTransactionDomain(
       credentialIds: credentialIds,
-      signatureRequests: signatureRequests.map { $0.toQesSignatureRequestDomain() }
+      signatureRequests: signatureRequests.map { $0.toQesSignatureRequestDomain() },
+      transactionDataHashAlgorithms: hashAlgorithms ?? []
     )
   }
 }
@@ -78,7 +81,9 @@ private extension QesDocumentDigest {
       signedProperties: signedProperties?.map { $0.toSigningAttributeDomain() },
       href: href,
       checksum: checksum?.toDocumentChecksumDomain(),
-      oneTimePassword: access?.oneTimePassword
+      oneTimePassword: access?.oneTimePassword,
+      circumstantialData: circumstantialData,
+      accessMode: access?.type
     )
   }
 }
@@ -94,7 +99,16 @@ private extension QesSignatureRequest {
       signedProperties: signedProperties?.map { $0.toSigningAttributeDomain() },
       href: href,
       checksum: checksum?.toDocumentChecksumDomain(),
-      oneTimePassword: access?.oneTimePassword
+      oneTimePassword: access?.oneTimePassword,
+      signedEnvelopeProperty: signedEnvelopeProperty,
+      referenceUri: referenceURI,
+      circumstantialData: circumstantialData,
+      signatureAlgorithm: signAlgo,
+      signatureAlgorithmParameters: signAlgoParams,
+      accessMode: access?.type,
+      inlineDocument: document.map {
+        QesInlineDocumentDomain(documentType: documentType, sizeInBytes: $0.decodedBase64ByteCount)
+      }
     )
   }
 }

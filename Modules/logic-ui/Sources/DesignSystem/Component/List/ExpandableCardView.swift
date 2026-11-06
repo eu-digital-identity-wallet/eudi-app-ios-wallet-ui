@@ -21,23 +21,29 @@ public struct ExpandableCardView<Content: View>: View {
   private let backgroundColor: Color
   private let mainTextVerticalPadding: CGFloat?
   private let isLoading: Bool
+  private let expandsWhen: Bool
   private let content: () -> Content
 
+  /// The card opens when it appears with `expandsWhen` true, and again whenever `expandsWhen` becomes true;
+  /// the user can still close it.
   public init(
     backgroundColor: Color = Theme.shared.color.groupedBackground,
     header: ListItemData,
     mainTextVerticalPadding: CGFloat? = nil,
     isLoading: Bool = false,
+    expandsWhen: Bool = false,
     @ViewBuilder content: @escaping () -> Content
   ) {
     self.header = header
     self.backgroundColor = backgroundColor
     self.mainTextVerticalPadding = mainTextVerticalPadding
     self.isLoading = isLoading
+    self.expandsWhen = expandsWhen
     self.content = content
+    self._isExpanded = State(initialValue: expandsWhen)
   }
 
-  @State private var isExpanded: Bool = false
+  @State private var isExpanded: Bool
 
   public var body: some View {
     VStack(spacing: .zero) {
@@ -71,6 +77,11 @@ public struct ExpandableCardView<Content: View>: View {
         }
       }
       .shimmer(isLoading: isLoading)
+    }
+    .onChange(of: expandsWhen) { _, shouldExpand in
+      if shouldExpand {
+        isExpanded = true
+      }
     }
   }
 }

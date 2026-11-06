@@ -15,83 +15,108 @@
  */
 
 import Foundation
+import os
 import logic_business
 import logic_core
 import EudiRQESUi
 
-public struct DeepLink {}
-
 public protocol DeepLinkController: Sendable {
   func hasDeepLink(url: URL) -> DeepLink.Executable?
+  /// Opens the link, or keeps it for later. A presentation link starts its session only when its request
+  /// screen opens. While the wallet is logged in, a presentation, signing or credential-offer link that
+  /// arrives away from the dashboard ends the flow on screen: the wallet returns to the dashboard, which
+  /// opens the link. A wallet without documents returns to the add-document screen for an offer.
   @MainActor func handleDeepLinkAction(
     routerHost: RouterHost,
-    deepLinkExecutable: DeepLink.Executable,
-    remoteSessionCoordinator: RemoteSessionCoordinator?
+    deepLinkExecutable: DeepLink.Executable
   )
+  /// The link kept for after login, or for the screen it waits for. It lives for this process only.
   func getPendingDeepLinkAction() -> DeepLink.Executable?
   func cacheDeepLinkURL(url: URL)
   func removeCachedDeepLinkURL()
+  /// Called by the dashboard once its first load of the documents in this process has finished. Until then a link
+  /// for the dashboard is kept, so a request does not open against documents not yet loaded.
+  func setDocumentsLoaded()
 }
 
 final class DeepLinkControllerImpl: DeepLinkController {
 
-  private let prefsController: PrefsController
   private let urlSchemaController: UrlSchemaController
+  private let walletKitController: WalletKitController
+  private let pendingLink = OSAllocatedUnfairLock<URL?>(initialState: nil)
+  private let areDocumentsLoaded = OSAllocatedUnfairLock(initialState: false)
+  private let rqesCallbacks: [URLComponents]
 
+  /// Removes a link an earlier build kept in `UserDefaults`, so that it does not outlive its process.
+  /// `rqesCallbackUris` are the signing services' redirect URIs (`ConfigLogic.rqesConfig`).
   init(
     prefsController: PrefsController,
-    urlSchemaController: UrlSchemaController
+    urlSchemaController: UrlSchemaController,
+    walletKitController: WalletKitController,
+    rqesCallbackUris: [String]
   ) {
-    self.prefsController = prefsController
     self.urlSchemaController = urlSchemaController
+    self.walletKitController = walletKitController
+    self.rqesCallbacks = rqesCallbackUris.compactMap(URLComponents.init(string:))
+    prefsController.remove(forKey: .cachedDeepLink)
   }
 
   public func getPendingDeepLinkAction() -> DeepLink.Executable? {
-    if let cachedLink = prefsController.getString(forKey: .cachedDeepLink),
-       let url = cachedLink.toCompatibleUrl() {
-      return hasDeepLink(url: url)
-    }
-    return nil
+    pendingLink.withLock { $0 }.flatMap(hasDeepLink(url:))
   }
 
+  /// An `rqes` link counts only when its host and path are a configured signing service's callback, as the
+  /// Android wallet matches the RQES host: any app can open the scheme, so anything else on it is dropped.
   public func hasDeepLink(url: URL) -> DeepLink.Executable? {
     if let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
        let scheme = components.scheme,
-       let action = DeepLink.Action.parseType(with: scheme, and: urlSchemaController) {
+       let action = DeepLink.Action.parseType(with: scheme, and: urlSchemaController),
+       action != .rqes || isRqesCallback(components) {
       return DeepLink.Executable(link: components, plainUrl: url, action: action)
     }
     return nil
   }
 
+  /// True when the link's scheme, host and path are those of a configured signing service's callback.
+  private func isRqesCallback(_ components: URLComponents) -> Bool {
+    rqesCallbacks.contains { callback in
+      callback.scheme?.lowercased() == components.scheme?.lowercased()
+      && callback.host?.lowercased() == components.host?.lowercased()
+      && callback.path == components.path
+    }
+  }
+
   public func handleDeepLinkAction(
     routerHost: RouterHost,
-    deepLinkExecutable: DeepLink.Executable,
-    remoteSessionCoordinator: RemoteSessionCoordinator?
+    deepLinkExecutable: DeepLink.Executable
   ) {
 
     var isVciExecutable: Bool {
       deepLinkExecutable.action == .credential_offer && routerHost.userIsLoggedInWithNoDocuments()
     }
 
-    var isRqesPendingAction: Bool {
-      deepLinkExecutable.action == .rqes
-      && !routerHost.isScreenForeground(with: .featureDashboardModule(.dashboard))
+    var screenToReturnTo: AppRoute? {
+      let dashboard = AppRoute.featureDashboardModule(.dashboard)
+      let addDocument = AppRoute.featureIssuanceModule(.issuanceAddDocument(config: NoConfig()))
+      if routerHost.userIsLoggedInWithDocuments() {
+        return !routerHost.isScreenForeground(with: dashboard) ? dashboard : nil
+      }
+      return isVciExecutable && !routerHost.isScreenForeground(with: addDocument) ? addDocument : nil
     }
 
-    var shouldPopToDashboardFirst: Bool {
-      routerHost.userIsLoggedInWithDocuments()
-      && isRqesPendingAction
-    }
+    let returnScreen = screenToReturnTo
 
     guard
-      !shouldPopToDashboardFirst && (routerHost.userIsLoggedInWithDocuments() || isVciExecutable)
+      returnScreen == nil && (routerHost.userIsLoggedInWithDocuments() || isVciExecutable),
+      areDocumentsLoaded.withLock({ $0 }) || isVciExecutable
     else {
       if let url = deepLinkExecutable.link.url {
         cacheDeepLinkURL(url: url)
       }
-      if shouldPopToDashboardFirst {
+      if let returnScreen {
+        Task { [walletKitController] in await walletKitController.stopPresentation() }
         routerHost.popTo(
-          with: .featureDashboardModule(.dashboard),
+          with: returnScreen,
           inclusive: false
         )
       }
@@ -102,17 +127,10 @@ final class DeepLinkControllerImpl: DeepLinkController {
 
     switch deepLinkExecutable.action {
     case .openid4vp, .haip_vp:
-      guard let remoteSessionCoordinator else {
-        fatalError("DeepLink Action OpenId4VP Requires Remote Session Coordinator")
-      }
-      if !routerHost.isScreenForeground(
-        with: .featurePresentationModule(
-          .presentationRequest(
-            presentationCoordinator: remoteSessionCoordinator,
-            originator: .featureDashboardModule(.dashboard)
-          )
+      Task { @MainActor in
+        let remoteSessionCoordinator = await walletKitController.startSameDevicePresentation(
+          deepLink: deepLinkExecutable.link
         )
-      ) {
         routerHost.push(
           with: .featurePresentationModule(
             .presentationRequest(
@@ -121,15 +139,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
             )
           )
         )
-      } else {
-        NotificationCenter.default.post(
-          name: NSNotification.PresentationVC,
-          object: nil,
-          userInfo: ["session": remoteSessionCoordinator]
-        )
       }
-    case .external:
-      deepLinkExecutable.plainUrl.open()
     case .credential_offer, .haip_vci:
       let config = UIConfig.Generic(
         arguments: ["uri": deepLinkExecutable.plainUrl.absoluteString],
@@ -138,15 +148,7 @@ final class DeepLinkControllerImpl: DeepLinkController {
         : .push(.featureDashboardModule(.dashboard)),
         navigationCancelType: .pop
       )
-      if !routerHost.isScreenForeground(with: .featureIssuanceModule(.credentialOfferRequest(config: config))) {
-        routerHost.push(with: .featureIssuanceModule(.credentialOfferRequest(config: config)))
-      } else {
-        NotificationCenter.default.post(
-          name: NSNotification.CredentialOffer,
-          object: nil,
-          userInfo: ["uri": deepLinkExecutable.plainUrl.absoluteString]
-        )
-      }
+      routerHost.push(with: .featureIssuanceModule(.credentialOfferRequest(config: config)))
     case .rqes:
 
       guard let code = deepLinkExecutable.link.queryItems?.first(where: { $0.name == "code" })?.value else {
@@ -172,68 +174,14 @@ final class DeepLinkControllerImpl: DeepLinkController {
   }
 
   public func cacheDeepLinkURL(url: URL) {
-    prefsController.setValue(url.absoluteString, forKey: .cachedDeepLink)
+    pendingLink.withLock { $0 = url }
   }
 
   public func removeCachedDeepLinkURL() {
-    prefsController.remove(forKey: .cachedDeepLink)
+    pendingLink.withLock { $0 = nil }
   }
-}
 
-public extension DeepLink {
-  struct Executable: Equatable, Sendable {
-
-    public let link: URLComponents
-    public let plainUrl: URL
-    public let action: DeepLink.Action
-
-    public var requiresCoordinator: Bool {
-      action == .openid4vp
-    }
+  public func setDocumentsLoaded() {
+    areDocumentsLoaded.withLock { $0 = true }
   }
-}
-
-public extension DeepLink {
-  enum Action: String, Equatable, Sendable {
-
-    case openid4vp
-    case credential_offer
-    case haip_vci
-    case haip_vp
-    case rqes
-    case external
-
-    private var name: String {
-      return rawValue.replacingOccurrences(of: "_", with: "-")
-    }
-
-    private func getSchemas(
-      with urlSchemaController: UrlSchemaController
-    ) -> [String] {
-      return urlSchemaController.retrieveSchemas(with: name)
-    }
-
-    static func parseType(
-      with scheme: String,
-      and urlSchemaController: UrlSchemaController
-    ) -> Action? {
-      switch scheme {
-      case _ where openid4vp.getSchemas(with: urlSchemaController).contains(scheme),
-        _ where haip_vp.getSchemas(with: urlSchemaController).contains(scheme):
-        return .openid4vp
-      case _ where credential_offer.getSchemas(with: urlSchemaController).contains(scheme),
-        _ where haip_vci.getSchemas(with: urlSchemaController).contains(scheme):
-        return .credential_offer
-      case _ where rqes.getSchemas(with: urlSchemaController).contains(scheme):
-        return .rqes
-      default:
-        return .external
-      }
-    }
-  }
-}
-
-public extension NSNotification {
-  static let PresentationVC = Notification.Name.init("PresentationVC")
-  static let CredentialOffer = Notification.Name.init("CredentialOffer")
 }

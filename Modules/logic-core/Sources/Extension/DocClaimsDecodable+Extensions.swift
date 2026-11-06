@@ -73,7 +73,7 @@ public extension DocClaimsDecodable {
   func getPortrait() -> Image? {
     var image: Image?
 
-    let uiImage = self.docClaims.first(where: { $0.name == DocumentJsonKeys.PORTRAIT })?.dataValue.image
+    let uiImage = self.docClaims.first(where: { $0.name == DocumentJsonKeys.PORTRAIT })?.dataValue.boundedImage
 
     if let uiImage {
       image = Image(uiImage: uiImage)

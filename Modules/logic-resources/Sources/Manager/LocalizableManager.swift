@@ -44,10 +44,26 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "generic_error_title")
     case .genericErrorDesc:
       bundle.localizedString(forKey: "generic_error_description")
+    case .keyChainReadError:
+      bundle.localizedString(forKey: "key_chain_read_error")
+    case .keyChainWriteError:
+      bundle.localizedString(forKey: "key_chain_write_error")
     case .biometryOpenSettings:
       bundle.localizedString(forKey: "biometry_open_settings")
+    case .biometryDeniedAccessError:
+      bundle.localizedString(forKey: "biometry_denied_access_error")
+    case .biometryNoFaceIdEnrolledError:
+      bundle.localizedString(forKey: "biometry_no_face_id_enrolled_error")
+    case .biometryNoFingerprintEnrolledError:
+      bundle.localizedString(forKey: "biometry_no_fingerprint_enrolled_error")
+    case .biometryNotRecognizedError:
+      bundle.localizedString(forKey: "biometry_not_recognized_error")
+    case .biometryNotSupportedError:
+      bundle.localizedString(forKey: "biometry_not_supported_error")
     case .invalidQuickPin:
       bundle.localizedString(forKey: "invalid_quick_pin")
+    case .pinNotFoundError:
+      bundle.localizedString(forKey: "pin_not_found_error")
     case .tryAgain:
       bundle.localizedString(forKey: "try_again")
     case .shareButton:
@@ -114,6 +130,44 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "request_transaction_data_one_time_password")
     case .requestTransactionDataResponseUri:
       bundle.localizedString(forKey: "request_transaction_data_response_uri")
+    case .requestTransactionDataLocation:
+      bundle.localizedString(forKey: "request_transaction_data_location")
+    case .requestTransactionDataHashAlgorithms:
+      bundle.localizedString(forKey: "request_transaction_data_hash_algorithms")
+    case .requestTransactionDataCircumstantialData:
+      bundle.localizedString(forKey: "request_transaction_data_circumstantial_data")
+    case .requestTransactionDataSignedEnvelopeProperty:
+      bundle.localizedString(forKey: "request_transaction_data_signed_envelope_property")
+    case .requestTransactionDataReferenceUri:
+      bundle.localizedString(forKey: "request_transaction_data_reference_uri")
+    case .requestTransactionDataSignatureAlgorithm:
+      bundle.localizedString(forKey: "request_transaction_data_signature_algorithm")
+    case .requestTransactionDataSignatureAlgorithmParameters:
+      bundle.localizedString(forKey: "request_transaction_data_signature_algorithm_parameters")
+    case .requestTransactionDataDocumentAccess:
+      bundle.localizedString(forKey: "request_transaction_data_document_access")
+    case .requestTransactionDataDocumentAccessPublic:
+      bundle.localizedString(forKey: "request_transaction_data_document_access_public")
+    case .requestTransactionDataDocumentAccessOtp:
+      bundle.localizedString(forKey: "request_transaction_data_document_access_otp")
+    case .requestTransactionDataDocumentAccessBasic:
+      bundle.localizedString(forKey: "request_transaction_data_document_access_basic")
+    case .requestTransactionDataDocumentAccessDigest:
+      bundle.localizedString(forKey: "request_transaction_data_document_access_digest")
+    case .requestTransactionDataDocumentAccessOauth:
+      bundle.localizedString(forKey: "request_transaction_data_document_access_oauth")
+    case .requestTransactionDataDocumentContent:
+      bundle.localizedString(forKey: "request_transaction_data_document_content")
+    case .requestTransactionDataDocumentContentInline:
+      bundle.localizedString(forKey: "request_transaction_data_document_content_inline")
+    case .requestTransactionDataDocumentType:
+      bundle.localizedString(forKey: "request_transaction_data_document_type")
+    case .requestTransactionDataDocumentTypeOriginal:
+      bundle.localizedString(forKey: "request_transaction_data_document_type_original")
+    case .requestTransactionDataDocumentTypeFormatted:
+      bundle.localizedString(forKey: "request_transaction_data_document_type_formatted")
+    case .requestTransactionDataDocumentSize:
+      bundle.localizedString(forKey: "request_transaction_data_document_size")
     case .requestTransactionDataUnavailable:
       bundle.localizedString(forKey: "request_transaction_data_unavailable")
     case .requestTransactionDataSignatureQes:
@@ -376,6 +430,12 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "quick_pin_confirm_pin")
     case .biometryConfirmRequest:
       bundle.localizedString(forKey: "biometry_confirm_request")
+    case .biometryUnlockReason:
+      bundle.localizedString(forKey: "biometry_unlock_reason")
+    case .biometryUnlockOffCaption:
+      bundle.localizedString(forKey: "biometry_unlock_off_caption")
+    case .biometryUnlockOnCaption:
+      bundle.localizedString(forKey: "biometry_unlock_on_caption")
     case .viewDetails:
       bundle.localizedString(forKey: "view_details")
     case .requestsTheFollowing:
@@ -437,7 +497,7 @@ final class LocalizableManager: LocalizableManagerType {
     case .issuanceRequestTitle:
       bundle.localizedString(forKey: "issuance_request_title")
     case .myEuWallet:
-      bundle.localizedString(forKey: "My EU Wallet")
+      bundle.localizedString(forKey: "my_eu_wallet")
     case .categoryGovernment:
       bundle.localizedString(forKey: "category_government")
     case .categoryHealth:
@@ -456,6 +516,26 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "category_travel")
     case .changelog:
       bundle.localizedString(forKey: "changelog")
+    case .resetWallet:
+      bundle.localizedString(forKey: "reset_wallet")
+    case .resetWalletConfirmTitle:
+      bundle.localizedString(forKey: "reset_wallet_confirm_title")
+    case .resetWalletConfirmMessage:
+      bundle.localizedString(forKey: "reset_wallet_confirm_message")
+    case .resetWalletConfirmButton:
+      bundle.localizedString(forKey: "reset_wallet_confirm_button")
+    case .resetWalletBiometryCaption:
+      bundle.localizedString(forKey: "reset_wallet_biometry_caption")
+    case .resetWalletPinCaption:
+      bundle.localizedString(forKey: "reset_wallet_pin_caption")
+    case .resetWalletProgressTitle:
+      bundle.localizedString(forKey: "reset_wallet_progress_title")
+    case .resetWalletProgressMessage:
+      bundle.localizedString(forKey: "reset_wallet_progress_message")
+    case .screenCaptureCoverTitle:
+      bundle.localizedString(forKey: "screen_capture_cover_title")
+    case .screenCaptureCoverMessage:
+      bundle.localizedString(forKey: "screen_capture_cover_message")
     case .orderBy:
       bundle.localizedString(forKey: "order_by")
     case .filterByCategory:
@@ -530,6 +610,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "revoked_modal_title")
     case .revokedModalDescription:
       bundle.localizedString(forKey: "revoked_modal_description")
+    case .suspended:
+      bundle.localizedString(forKey: "suspended")
     case .issuanceBlockedTitle:
       bundle.localizedString(forKey: "issuance_blocked_bottom_sheet_title")
     case .issuanceBlockedMessage:
@@ -586,10 +668,20 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "document_details_issued_on", arguments: args)
     case .documentDetailsRevokedDocument:
       bundle.localizedString(forKey: "document_details_revoked_document")
+    case .documentDetailsSuspendedDocument:
+      bundle.localizedString(forKey: "document_details_suspended_document")
     case .documentDetailsIssuerCardIssuedMessageText:
       bundle.localizedString(forKey: "document_details_issuer_card_issued_message_text")
     case .documentDetailsIssuerCardRevokedMessageText:
       bundle.localizedString(forKey: "document_details_issuer_card_revoked_message_text")
+    case .documentDetailsIssuerCardSuspendedMessageText:
+      bundle.localizedString(forKey: "document_details_issuer_card_suspended_message_text")
+    case .documentDetailsIssuerCardStatusRefreshFailedText:
+      bundle.localizedString(forKey: "document_details_issuer_card_status_refresh_failed_text")
+    case .documentDetailsIssuerCardReIssuanceFailedText:
+      bundle.localizedString(forKey: "document_details_issuer_card_re_issuance_failed_text")
+    case .documentDetailsReIssueBlockedText:
+      bundle.localizedString(forKey: "document_details_re_issue_blocked_text")
     case .documentDetailsIssuerCardExpiredMessageText:
       bundle.localizedString(forKey: "document_details_issuer_card_expired_message_text")
     case .documentDetailsIssuerCardIssuedActionButtonText:
@@ -620,6 +712,36 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "understand_risks_agree")
     case .relyingPartyNotVerifiedWarning:
       bundle.localizedString(forKey: "relying_party_not_verified_warning")
+    case .requestUserImageNotice:
+      bundle.localizedString(forKey: "request_user_image_notice")
+    case .offerDocumentsToAppsTitle:
+      bundle.localizedString(forKey: "offer_documents_to_apps_title")
+    case .quickPinWeakError:
+      bundle.localizedString(forKey: "quick_pin_weak_error")
+    case .issuanceOfferIssuerNotConfiguredError:
+      bundle.localizedString(forKey: "issuance_offer_issuer_not_configured_error")
+    case .requestTransactionDataChosenByRelyingPartyWarning:
+      bundle.localizedString(forKey: "request_transaction_data_chosen_by_relying_party_warning")
+    case .requestTransactionDataNotShownError:
+      bundle.localizedString(forKey: "request_transaction_data_not_shown_error")
+    case .transactionDetailsRegistrationNotVerifiedWarning:
+      bundle.localizedString(forKey: "transaction_details_registration_not_verified_warning")
+    case .transactionDetailsRegistrationNotBoundWarning:
+      bundle.localizedString(forKey: "transaction_details_registration_not_bound_warning")
+    case .issuanceSuccessNotIssuedWarning(let args):
+      bundle.localizedStringWithArguments(forKey: "issuance_success_not_issued_warning", arguments: args)
+    case .quickPinDeviceLockMissingWarning:
+      bundle.localizedString(forKey: "quick_pin_device_lock_missing_warning")
+    case .quickPinDeviceLockRequiredWarning:
+      bundle.localizedString(forKey: "quick_pin_device_lock_required_warning")
+    case .documentOfferingDisabledMessage:
+      bundle.localizedString(forKey: "document_offering_disabled_message")
+    case .requestUserImageConfirmationTitle:
+      bundle.localizedString(forKey: "request_user_image_confirmation_title")
+    case .requestUserImageConfirmationMessage:
+      bundle.localizedString(forKey: "request_user_image_confirmation_message")
+    case .accessCertificateNotTrustedWarning:
+      bundle.localizedString(forKey: "access_certificate_not_trusted_warning")
     case .relyingPartyOveraskedWarning:
       bundle.localizedString(forKey: "relying_party_overasked_warning")
     case .notRegisteredData:
@@ -837,14 +959,5 @@ final class LocalizableManager: LocalizableManagerType {
     case .trustMarkBrowserError:
       bundle.localizedString(forKey: "trust_mark_browser_error")
     }
-  }
-}
-
-fileprivate extension Bundle {
-  func localizedString(forKey key: String) -> String {
-    self.localizedString(forKey: key, value: nil, table: nil)
-  }
-  func localizedStringWithArguments(forKey key: String, arguments: [CVarArg]) -> String {
-    String(format: self.localizedString(forKey: key), locale: nil, arguments: arguments)
   }
 }

@@ -26,6 +26,16 @@ public protocol RouterHost {
   @MainActor func userIsLoggedInWithNoDocuments() -> Bool
   @MainActor func isScreenForeground(with route: AppRoute) -> Bool
   @MainActor func isScreenOnBackStack(with route: AppRoute) -> Bool
+  /// True while the screen in front belongs to an issuance, presentation or signing in progress
+  /// (`ConfigUiLogic.protectedFlowRouteKeys`). The PIN or biometric screen is on that list as a flow's confirmation; it
+  /// counts only when the path also holds a screen past login, so not while it is the login itself.
+  @MainActor func isInProtectedFlow() -> Bool
+  /// Sends a locked wallet to login, clearing the navigation, when a screen other than a login screen is
+  /// on it (`ConfigUiLogic.loginRouteKeys`); does nothing while it is unlocked.
+  @MainActor func requireLoginIfLocked()
+  /// Clears the navigation and starts again at start-up, which decides between login and onboarding afresh; the
+  /// factory reset ends with it.
+  @MainActor func restartAtStartup()
 }
 
 public final class PreviewRouter: RouterHost {
@@ -61,4 +71,12 @@ public final class PreviewRouter: RouterHost {
   public func isScreenOnBackStack(with route: AppRoute) -> Bool {
     true
   }
+
+  public func isInProtectedFlow() -> Bool {
+    false
+  }
+
+  public func requireLoginIfLocked() {}
+
+  public func restartAtStartup() {}
 }

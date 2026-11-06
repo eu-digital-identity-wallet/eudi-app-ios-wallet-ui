@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_core
+import logic_authentication
 import feature_common
 
 public protocol DocumentDetailsInteractor: Sendable {
@@ -29,26 +30,41 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
   private let walletController: WalletKitController
   private let prefsController: PrefsController
   private let configLogic: ConfigLogic
+  private let sessionController: SessionController
+  private let walletWorkScheduler: WalletWorkScheduler
 
   init(
     walletController: WalletKitController,
     prefsController: PrefsController,
-    configLogic: ConfigLogic
+    configLogic: ConfigLogic,
+    sessionController: SessionController,
+    walletWorkScheduler: WalletWorkScheduler
   ) {
     self.walletController = walletController
     self.prefsController = prefsController
     self.configLogic = configLogic
+    self.sessionController = sessionController
+    self.walletWorkScheduler = walletWorkScheduler
   }
 
   func fetchStoredDocument(documentId: String) async -> DocumentDetailsPartialState {
     let document = await walletController.fetchDocument(with: documentId)
-    guard let documentDetails = document?.transformToDocumentUi() else {
+    let issuerLogoOrigins = await walletController.issuerLogoOrigins()
+    guard let documentDetails = document?.transformToDocumentUi(issuerLogoOrigins: issuerLogoOrigins) else {
       return .failure(WalletCoreError.unableFetchDocument)
     }
     let isBookmarked = await walletController.isDocumentBookmarked(with: documentId)
-    let isRevoked = await walletController.isDocumentRevoked(with: documentId)
+    let revocationStatus = await walletController.getDocumentRevocationStatus(with: documentId)
+    let isRevoked = revocationStatus != nil
+    let hasStatusRefreshFailed = await walletController.hasStatusRefreshFailure(with: documentId)
+    let hasReIssuanceFailed = await walletController.hasReIssuanceFailure(with: documentId)
 
-    let issuerDetailsCard = document?.transformToIssuerDetailsCardDataUi(isRevoked: isRevoked)
+    let issuerDetailsCard = document?.transformToIssuerDetailsCardDataUi(
+      revocationStatus: revocationStatus,
+      hasStatusRefreshFailed: hasStatusRefreshFailed,
+      hasReIssuanceFailed: hasReIssuanceFailed,
+      issuerLogoOrigins: issuerLogoOrigins
+    )
 
     if isBatchCounterEnabled() {
       let info = documentCredentialsInfoUi(usageCounts: document?.credentialsUsageCounts)
@@ -58,14 +74,27 @@ final actor DocumentDetailsInteractorImpl: DocumentDetailsInteractor {
     return .success(documentDetails, issuerDetailsCard, nil, isBookmarked, isRevoked)
   }
 
+  /// Re-issuance can go through the issuer's sign-in from this screen, which is not a protected-flow
+  /// screen, so the session lock treats it as an external flow, as on Android. A revoked, suspended or
+  /// unrecognised document is refused before anything starts at the issuer, because the new copy would
+  /// carry no revocation record and the block would be lost; so is any document whose records cannot be
+  /// read. The screen disables re-issue for a blocked document; this also covers one blocked while the
+  /// screen is open.
   func reIssueDocument(identifier: String) async -> DocumentDetailsReIssuancePartialState {
     do {
-      _ = try await walletController.reIssueDocument(
-        identifier: identifier,
-        isBackgroundOperation: false
-      )
+      try await walletController.refuseReIssueIfBlocked(identifier)
+      _ = try await sessionController.duringExternalFlow {
+        try await walletController.reIssueDocument(
+          identifier: identifier,
+          isBackgroundOperation: false
+        )
+      }
+      await walletWorkScheduler.scheduleRevocationCheck(afterReIssueOf: identifier)
       return .success
     } catch {
+      if (error as? WalletCoreError) == .documentBlocked {
+        return .documentBlocked
+      }
       return error.isTrustBlocked ? .issuerNotTrusted : .failure(error)
     }
   }
@@ -153,5 +182,7 @@ public enum DocumentDetailsDeletionPartialState: Sendable {
 public enum DocumentDetailsReIssuancePartialState: Sendable {
   case success
   case issuerNotTrusted
+  /// The issuer has revoked or suspended the document, so it was not re-issued.
+  case documentBlocked
   case failure(Error)
 }

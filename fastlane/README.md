@@ -61,7 +61,7 @@ Upload tag to remote repo
 [bundle exec] fastlane ios upload_appstore
 ```
 
-Reset version and build number to default
+Upload IPA to TestFlight
 
 ### ios reset_project
 

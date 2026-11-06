@@ -15,6 +15,7 @@
  */
 import Foundation
 import logic_ui
+import logic_core
 import feature_common
 import Observation
 
@@ -26,7 +27,13 @@ struct DashboardState<Router: RouterHost>: ViewState {
   let toolBarContent: ToolBarContent
   let navigationTitle: LocalizableStringKey
   let revokedDocuments: [String: String]
+  let suspendedDocuments: [String: String]
   let isPaused: Bool
+
+  /// Every document the last check blocked, for the notice; a revocation wins over a suspension.
+  var blockedDocuments: [String: String] {
+    revokedDocuments.merging(suspendedDocuments) { revoked, _ in revoked }
+  }
 }
 
 enum SelectedTab {
@@ -42,6 +49,12 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   private let interactor: DashboardInteractor
   @ObservationIgnored
   private let deepLinkController: DeepLinkController
+  @ObservationIgnored
+  private let homeTabInteractor: HomeTabInteractor
+  @ObservationIgnored
+  private let documentTabInteractor: DocumentTabInteractor
+  @ObservationIgnored
+  private let transactionTabInteractor: TransactionTabInteractor
 
   var selectedTab: SelectedTab = .home
   var isRevokedModalShowing: Bool = false {
@@ -63,6 +76,9 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
   ) {
     self.interactor = dashboardInteractor
     self.deepLinkController = deepLinkController
+    self.homeTabInteractor = homeTabInteractor
+    self.documentTabInteractor = documentTabInteractor
+    self.transactionTabInteractor = transactionTabInteractor
 
     super.init(
       router: router,
@@ -76,29 +92,28 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
         ),
         navigationTitle: .custom(""),
         revokedDocuments: [:],
+        suspendedDocuments: [:],
         isPaused: false
       )
-    )
-
-    createTabs(
-      homeTabInteractor: homeTabInteractor,
-      documentTabInteractor: documentTabInteractor,
-      transactionTabInteractor: transactionTabInteractor
     )
 
     listenForRevokedModalChanges()
   }
 
+  /// Shows the documents a revocation check newly revoked or suspended (`RevocationDashboardPayload`).
   func handleRevocationNotification(for payload: [AnyHashable: Any]?) {
     guard
-      let payload,
-      let revokedDocuments = payload as? [String: String],
+      let documents = RevocationDashboardPayload(userInfo: payload),
       !isRevokedModalShowing,
       !viewState.isPaused
     else {
       return
     }
-    setState { $0.copy(revokedDocuments: revokedDocuments) }
+    setState {
+      $0
+        .copy(revokedDocuments: documents.revoked)
+        .copy(suspendedDocuments: documents.suspended)
+    }
     isRevokedModalShowing = true
   }
 
@@ -126,8 +141,22 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     self.setState { $0.copy(isPaused: true) }
   }
 
+  /// The first appearance loads the documents, then builds the tabs and starts the workers, so the tabs
+  /// read loaded documents and a kept link finds them. The Digital Credential API registration pass runs in a task
+  /// of its own, so a slow or hung registration store holds up neither the tabs nor a kept link.
   func onCreate() async {
     onResume()
+    if viewState.homeTab == nil {
+      await interactor.loadDocuments()
+      deepLinkController.setDocumentsLoaded()
+      createTabs(
+        homeTabInteractor: homeTabInteractor,
+        documentTabInteractor: documentTabInteractor,
+        transactionTabInteractor: transactionTabInteractor
+      )
+      Task { [interactor] in await interactor.reconcileRegistrations() }
+      await interactor.startWorkers()
+    }
     await handleDeepLink()
   }
 
@@ -139,10 +168,7 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
     if let deepLink = deepLinkController.getPendingDeepLinkAction() {
       deepLinkController.handleDeepLinkAction(
         routerHost: router,
-        deepLinkExecutable: deepLink,
-        remoteSessionCoordinator: deepLink.requiresCoordinator
-        ? await interactor.getWalletKitController().startSameDevicePresentation(deepLink: deepLink.link)
-        : nil
+        deepLinkExecutable: deepLink
       )
     }
   }
@@ -154,7 +180,11 @@ final class DashboardViewModel<Router: RouterHost>: ViewModel<Router, DashboardS
       .sink { [weak self] value in
         guard let self = self else { return }
         if !value {
-          self.setState { $0.copy(revokedDocuments: [:]) }
+          self.setState {
+            $0
+              .copy(revokedDocuments: [:])
+              .copy(suspendedDocuments: [:])
+          }
         }
       }.store(in: &cancellables)
   }

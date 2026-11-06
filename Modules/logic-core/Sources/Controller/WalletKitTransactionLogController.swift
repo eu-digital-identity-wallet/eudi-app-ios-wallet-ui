@@ -19,17 +19,30 @@ import Foundation
 final actor WalletKitTransactionLogControllerImpl: TransactionLogger {
 
   private let transactionLogStorageController: any TransactionLogStorageController
+  private let registrationCheckProvider: RegistrationCheckProvider
 
-  init(transactionLogStorageController: any TransactionLogStorageController) {
+  init(
+    transactionLogStorageController: any TransactionLogStorageController,
+    registrationCheckProvider: RegistrationCheckProvider
+  ) {
     self.transactionLogStorageController = transactionLogStorageController
+    self.registrationCheckProvider = registrationCheckProvider
   }
 
+  /// A presentation's entry keeps the registration outcome recorded for it while it was shown
+  /// (`RegistrationCheckProvider`, by transaction identifier), or the one it already has.
   func log(transaction: TransactionEntry) async throws {
     let stored = try? await transactionLogStorageController.retrieve(transaction.transactionIdentifier)
+    var registrationCheck = stored?.registrationCheck.flatMap { RecordedRegistrationCheck(rawValue: $0) }
+    if case .presentation = transaction,
+       let recorded = await registrationCheckProvider.removeCheck(for: transaction.transactionIdentifier) {
+      registrationCheck = recorded
+    }
     try await transactionLogStorageController.store(
       transaction.toTransactionLogStorage(
         parentPresentationId: stored?.parentPresentationId,
-        actionChannel: stored?.actionChannel.flatMap { TransactionActionChannel(rawValue: $0) }
+        actionChannel: stored?.actionChannel.flatMap { TransactionActionChannel(rawValue: $0) },
+        registrationCheck: registrationCheck
       )
     )
   }

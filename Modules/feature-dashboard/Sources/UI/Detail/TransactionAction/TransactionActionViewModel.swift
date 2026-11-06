@@ -43,14 +43,19 @@ final class TransactionActionViewModel<Router: RouterHost>: ViewModel<Router, Tr
 
   @ObservationIgnored
   private let interactor: TransactionDetailsInteractor
+  @ObservationIgnored
+  private let openURL: @MainActor (URL) async -> Bool
 
+  /// - Parameter openURL: Hands a contact to the system, `UIApplication.open` by default; tests record it.
   init(
     router: Router,
     interactor: TransactionDetailsInteractor,
     transactionId: String,
-    action: TransactionDataProtectionAction
+    action: TransactionDataProtectionAction,
+    openURL: @escaping @MainActor (URL) async -> Bool = { await UIApplication.shared.open($0) }
   ) {
     self.interactor = interactor
+    self.openURL = openURL
     super.init(
       router: router,
       initialState: .init(
@@ -92,7 +97,7 @@ final class TransactionActionViewModel<Router: RouterHost>: ViewModel<Router, Tr
         contactUrl: contact.url
       ) {
       case .success(let url):
-        await openActionChannel(url)
+        await openActionChannel(url, contactUrl: contact.url)
       case .unavailable:
         setState {
           $0.copy(
@@ -151,8 +156,10 @@ final class TransactionActionViewModel<Router: RouterHost>: ViewModel<Router, Tr
     }
   }
 
-  private func openActionChannel(_ url: URL) async {
-    let opened = await UIApplication.shared.open(url)
+  /// Hands the request to the system and records it only once the hand-off succeeded, so a failed attempt and its
+  /// retry leave exactly one record.
+  func openActionChannel(_ url: URL, contactUrl: URL) async {
+    let opened = await openURL(url)
     guard opened else {
       setState {
         $0.copy(isLoading: false, externalAction: .idle)
@@ -160,14 +167,43 @@ final class TransactionActionViewModel<Router: RouterHost>: ViewModel<Router, Tr
             error: .init(
               description: .transactionDetailsActionOpenFailed,
               cancelAction: self.dismissError(),
-              action: { Task { await self.openActionChannel(url) } }
+              action: { Task { await self.openActionChannel(url, contactUrl: contactUrl) } }
             )
           )
       }
       return
     }
-    setState {
-      $0.copy(isLoading: false, externalAction: .opened).copy(error: nil)
+    await recordActionChannel(contactUrl: contactUrl)
+  }
+
+  /// Records a request already handed off. A failed record offers to record it again, never to hand it off again,
+  /// as on Android.
+  private func recordActionChannel(contactUrl: URL) async {
+    switch await interactor.recordDataProtectionAction(
+      transactionId: viewState.transactionId,
+      action: viewState.action,
+      contactUrl: contactUrl
+    ) {
+    case .success:
+      setState {
+        $0.copy(isLoading: false, externalAction: .opened).copy(error: nil)
+      }
+    case .unavailable:
+      setState {
+        $0.copy(isLoading: false, externalAction: .idle)
+          .copy(error: .init(description: .transactionDetailsActionUnavailable, cancelAction: self.dismissError()))
+      }
+    case .failure:
+      setState {
+        $0.copy(isLoading: false, externalAction: .idle)
+          .copy(
+            error: .init(
+              description: .transactionDetailsActionError,
+              cancelAction: self.dismissError(),
+              action: { Task { await self.recordActionChannel(contactUrl: contactUrl) } }
+            )
+          )
+      }
     }
   }
 

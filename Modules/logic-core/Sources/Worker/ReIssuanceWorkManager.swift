@@ -16,8 +16,9 @@
 
 import Foundation
 
-public protocol ReIssuanceWorkManager: Sendable {
+protocol ReIssuanceWorkManager: Sendable {
   func start() async
+  /// Stops the checks and returns once a re-issuance under way has finished, so nothing is stored afterwards.
   func stop() async
 }
 
@@ -32,14 +33,24 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
   private let documentIssuanceConfig: DocumentIssuanceConfig
   private let walletKitController: WalletKitController
+  private let revocationWorkManager: RevocationWorkManager
 
   private let initialDelay: TimeInterval = 30
   private var reIssuanceTask: Task<Void, Never>?
   private var isRunning = false
+  private let checkRunner: SerialCheckRunner
 
-  init(configLogic: WalletKitConfig, walletKitController: WalletKitController) {
+  /// - Parameter checkRunner: Runs the rounds one at a time; `stop()` waits on it.
+  init(
+    configLogic: WalletKitConfig,
+    walletKitController: WalletKitController,
+    revocationWorkManager: RevocationWorkManager,
+    checkRunner: SerialCheckRunner = SerialCheckRunner()
+  ) {
+    self.revocationWorkManager = revocationWorkManager
     self.documentIssuanceConfig = configLogic.documentIssuanceConfig
     self.walletKitController = walletKitController
+    self.checkRunner = checkRunner
   }
 
   func start() async {
@@ -52,11 +63,14 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
       guard let self else { return }
 
-      try? await Task.sleep(seconds: initialDelay)
-
-      while await self.isRunning {
-        try? await self.checkReIssuance()
-        try? await Task.sleep(seconds: self.documentIssuanceConfig.reIssuanceBackgroundRule.backgroundIntervalSeconds)
+      do {
+        try await Task.sleep(seconds: initialDelay)
+        while await self.isRunning, !Task.isCancelled {
+          await self.runCheck()
+          try await Task.sleep(seconds: self.documentIssuanceConfig.reIssuanceBackgroundRule.backgroundIntervalSeconds)
+        }
+      } catch {
+        return
       }
     }
   }
@@ -65,16 +79,36 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
     isRunning = false
     reIssuanceTask?.cancel()
     reIssuanceTask = nil
+    await checkRunner.waitUntilIdle()
   }
 
-  private func checkReIssuance() async throws {
+  /// Runs one round through `checkRunner`, so `stop()` can wait for it. A round that starts after `stop()` does
+  /// nothing.
+  private func runCheck() async {
+    await checkRunner.run { [weak self] in
+      guard let self, await self.isRunning else { return }
+      try? await self.checkReIssuance()
+    }
+  }
 
+  /// A revoked, suspended or unrecognised document is not re-issued, as on Android: the copy would get a
+  /// new identifier and no record, which would undo the block. A failed read of the records skips the
+  /// round. A round with nothing due clears the failure records too, as on Android, so that a document's
+  /// details do not keep an old "could not renew" notice.
+  func checkReIssuance() async throws {
+
+    let blockedDocuments = try await walletKitController.fetchRevokedDocumentStatuses()
     var issuedDocuments: [any DocClaimsDecodable] = []
-    for document in await walletKitController.fetchIssuedDocuments() where await shouldReIssue(document) {
-      issuedDocuments.append(document)
+    for document in await walletKitController.fetchIssuedDocuments() where blockedDocuments[document.id] == nil {
+      if await shouldReIssue(document) {
+        issuedDocuments.append(document)
+      }
     }
 
-    guard !issuedDocuments.isEmpty else { return }
+    guard !issuedDocuments.isEmpty else {
+      try await removeAllFailedFromStorage()
+      return
+    }
 
     var succeed: [String] = []
     var failed: [String] = []
@@ -90,8 +124,10 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
 
         removedIds.append(document.id)
         succeed.append(newDocument.id)
+        await revocationWorkManager.checkAfterReIssue(of: document.id)
 
       } catch {
+        guard !Task.isCancelled else { return }
         failed.append(document.id)
       }
 
@@ -171,8 +207,4 @@ final actor ReIssuanceWorkManagerImpl: ReIssuanceWorkManager {
       userInfo: [:]
     )
   }
-}
-
-public extension NSNotification {
-  static let ReIssuanceDetailsRefresh = Notification.Name("ReIssuanceDetailsRefresh")
 }

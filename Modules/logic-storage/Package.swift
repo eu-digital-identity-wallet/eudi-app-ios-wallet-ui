@@ -20,7 +20,8 @@ let package = Package(
     .package(
       name: "logic-resources",
       path: "./logic-resources"
-    )
+    ),
+    .package(name: "logic-test", path: "./logic-test")
   ],
   targets: [
     .target(
@@ -30,6 +31,15 @@ let package = Package(
         "logic-resources"
       ],
       path: "./Sources"
+    ),
+    .testTarget(
+      name: "logic-storage-tests",
+      dependencies: [
+        "logic-storage",
+        "logic-business",
+        "logic-test"
+      ],
+      path: "./Tests"
     )
   ]
 )

@@ -21,16 +21,15 @@ versions, patch process, and user update policy.
 ## Production security guidance
 
 The reference application is not production ready as delivered. Before production use, review the
-configuration guide, the production go-live guide in [wiki/GO_LIVE.md](wiki/GO_LIVE.md), and perform
-a security assessment aligned with OWASP MASVS.
+configuration guide in [wiki/CONFIGURATION.md](wiki/CONFIGURATION.md), the production go-live guide
+in [wiki/GO_LIVE.md](wiki/GO_LIVE.md), and perform a security assessment aligned with OWASP MASVS.
 
 ## If you have identified a vulnerability, please do the following
 
 - E-mail your findings to <EC-VULNERABILITY-DISCLOSURE@ec.europa.eu>, specifying whether or not you agree to your name or pseudonym being made publicly available as the discoverer of the problem.
 - Encrypt your findings using our [PGP key](https://ec.europa.eu/assets/digit/pgpkey/ec-vulnerability-disclosure-pgp.txt) to prevent this critical information from falling into the wrong hands.
-- Provide us with sufficient information to reproduce the problem so that we can resolve it as quickly as possible. Usually, the IP address or the URL of the affected system and a description of the vulnerability will be sufficient, but complex vulnerabilities may require further explanation in terms of technical information or potential proof-of-concept code.
+- Provide us with sufficient information to reproduce the problem so that we can resolve it as quickly as possible. Usually, the affected version or commit (or the URL of an affected hosted service) and a description of the vulnerability will be sufficient, but complex vulnerabilities may require further explanation in terms of technical information or potential proof-of-concept code.
 - Provide your report in English, preferably, or in any other official language of the European Union.
-- Inform us if you agree to make your name/pseudonym publicly available as the discoverer of the vulnerability.
 
 ## Please do not do the following
 
@@ -57,4 +56,4 @@ a security assessment aligned with OWASP MASVS.
   issue affects reference/demo code or a production deployment.
 - Where possible, we will inform you when the vulnerability has been remedied.
 - We will process the personal data that you provide (such as your e-mail address and name) in accordance with the applicable data protection legislation and will not pass on your personal details to third parties without your permission.
-- In the public information concerning the problem reported, we will publish your name as the discoverer of the problem if you have agreed to this in your initial e-mail
+- In the public information concerning the problem reported, we will publish your name or pseudonym as the discoverer of the problem if you have agreed to this in your initial e-mail.

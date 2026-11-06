@@ -28,13 +28,15 @@ public struct DocumentSuccessState<T: Sendable>: ViewState {
 
 open class DocumentSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: ViewModel<Router, DocumentSuccessState<RequestItem>> {
 
-  private let deepLinkController: DeepLinkController
+  private let openURL: @MainActor (URL) -> Void
 
+  /// `openURL` opens the verifier's redirect once `URL.openInBrowser(using:)` has accepted it as an
+  /// `https` link; the default is the system's opener.
   public init(
     router: Router,
     config: any UIConfigType,
-    deepLinkController: DeepLinkController,
-    requestItems: [any Routable]
+    requestItems: [any Routable],
+    openURL: @escaping @MainActor (URL) -> Void = URL.openWithSystem
   ) {
 
     guard let config = config as? DocumentSuccessUIConfig else {
@@ -45,7 +47,7 @@ open class DocumentSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: 
       fatalError("BaseSuccessViewModel:: ListItemSection")
     }
 
-    self.deepLinkController = deepLinkController
+    self.openURL = openURL
 
     super.init(
       router: router,
@@ -75,12 +77,14 @@ open class DocumentSuccessViewModel<Router: RouterHost, RequestItem: Sendable>: 
 
   open func doWork() async {}
 
+  /// A verifier's redirect (`.deepLink`) opens only as an `https` link in the browser, never through the
+  /// wallet's link handling, and the user returns to `popToScreen` either way.
   open func onDone() {
     switch viewState.config.successNavigation {
     case .pop(let screen, let inclusive):
       router.popTo(with: screen, inclusive: inclusive)
     case .deepLink(let url, let popToScreen):
-      deepLinkController.cacheDeepLinkURL(url: url)
+      url.openInBrowser(using: openURL)
       router.popTo(with: popToScreen)
     case .push(let screen):
       router.push(with: screen)

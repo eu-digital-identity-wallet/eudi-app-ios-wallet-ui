@@ -26,10 +26,14 @@ final class TestAddDocumentInteractor: EudiTest {
   
   var interactor: AddDocumentInteractor!
   var walletKitController: MockWalletKitController!
+  var sessionController: MockSessionController!
   
   override func setUp() {
     super.setUp()
     self.walletKitController = MockWalletKitController()
+    stub(walletKitController) { mock in
+      when(mock.issuerLogoOrigins()).thenReturn(IssuerLogoOrigins(logoOriginsByIssuer: [:]))
+    }
 
     stub(walletKitController) { mock in
       when(mock.getIssuerRegistration(issuerId: any(), configIds: any())).thenReturn(
@@ -46,17 +50,24 @@ final class TestAddDocumentInteractor: EudiTest {
       )
     }
 
+    self.sessionController = MockSessionController()
+    stub(sessionController) { mock in
+      when(mock.beginExternalFlow()).thenReturn(0)
+      when(mock.endExternalFlow(startedIn: any())).thenDoNothing()
+    }
     self.interactor = AddDocumentInteractorImpl(
-      walletController: walletKitController
+      walletController: walletKitController,
+      sessionController: sessionController
     )
   }
   
   override func tearDown() {
+    self.sessionController = nil
     self.interactor = nil
     self.walletKitController = nil
   }
   
-  func testFetchScopedDocuments_whenScopedDocuments_thenReturnsSuccess() async throws {
+  func testFetchScopedDocuments_WhenScopedDocuments_ThenReturnsSuccess() async throws {
     // Given
     stubGetScopedDocumentsSuccess(with: [
       Constants.scopedDocument
@@ -77,7 +88,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testFetchScopedDocuments_whenScopedDocumentsCompare_thenReturnsSuccess() async throws {
+  func testFetchScopedDocuments_WhenScopedDocumentsCompare_ThenReturnsSuccess() async throws {
     // Given
     stubGetScopedDocumentsSuccess(with: [
       Constants.scopedDocument,
@@ -97,7 +108,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testFetchScopedDocuments_whenGetScopedDocuments_thenReturnsSuccess() async {
+  func testFetchScopedDocuments_WhenGetScopedDocuments_ThenReturnsSuccess() async {
     // Given
     stubGetScopedDocumentsSuccess(with: [
       Constants.scopedDocumentNotPid
@@ -115,7 +126,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testFetchScopedDocuments_whenGetScopedDocuments_thenReturnsFailure() async {
+  func testFetchScopedDocuments_WhenGetScopedDocuments_ThenReturnsFailure() async {
     // Given
     stubGetScopedDocumentsFailure()
     
@@ -131,7 +142,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testFetchScopedDocuments_whenOneIssuerFailsAndAnotherSucceeds_thenReturnsSuccessSilently() async throws {
+  func testFetchScopedDocuments_WhenOneIssuerFailsAndAnotherSucceeds_ThenReturnsSuccessSilently() async throws {
     // Given
     stubGetScopedDocuments(
       documents: [Constants.scopedDocument],
@@ -151,7 +162,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
 
-  func testFetchScopedDocuments_whenAllIssuersFailAndOneIsUntrusted_thenReturnsIssuerNotTrusted() async {
+  func testFetchScopedDocuments_WhenAllIssuersFailAndOneIsUntrusted_ThenReturnsIssuerNotTrusted() async {
     // Given a mix of a generic and a trust failure, the trust failure wins.
     stubGetScopedDocuments(
       documents: [],
@@ -174,7 +185,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
 
-  func testIssueDocument_whenIssuerRegistrationDoesNotVouch_thenBlocksAndDiscardsTheDocuments() async {
+  func testIssueDocument_WhenIssuerRegistrationDoesNotVouch_ThenBlocksAndDiscardsTheDocuments() async {
     // Given
     let issuerId = "issuer.dev"
     let configIds = ["doc"]
@@ -208,7 +219,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
 
-  func testIssueDocument_whenDefferedPendingDocument_thenReturnSuccess() async {
+  func testIssueDocument_WhenDefferedPendingDocument_ThenReturnSuccess() async {
     // Given
     let configIds = ["deferred-doc"]
     let issuerId = "issuer.dev"
@@ -238,7 +249,82 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testIssueDocument_whenIssuedDocument_thenReturnSuccess() async {
+  func testIssueDocument_WhenOneOfTheRequestedFormatsIsNotIssued_ThenNamesIt() async {
+    let metadata = DocMetadata(
+      credentialIssuerIdentifier: "https://issuer.dev",
+      configurationIdentifier: "pid_mdoc",
+      docType: "eu.europa.ec.eudi.pid.1",
+      display: nil,
+      issuerDisplay: nil,
+      claims: nil,
+      authorizedRequestData: nil,
+      keyOptions: nil,
+      credentialOptions: nil
+    )
+    let document = WalletStorage.Document(
+      id: "pid-id",
+      docType: "eu.europa.ec.eudi.pid.1",
+      docDataFormat: .cbor,
+      data: Data(),
+      docKeyInfo: nil,
+      createdAt: nil,
+      metadata: metadata.toData(),
+      displayName: "PID",
+      status: .issued
+    )
+    stub(walletKitController) { stub in
+      when(stub.issueDocuments(issuerId: any(), identifiers: any(), docTypeIdentifier: any()))
+        .thenReturn(IssuanceResult(documents: [document], issuerRegistration: nil))
+      when(stub.getScopedDocuments()).thenReturn(
+        ScopedDocumentsResult(
+          documents: [
+            ScopedDocument(
+              name: "PID (SD-JWT VC)",
+              issuer: "issuer.dev",
+              order: 0,
+              configId: "pid_sdjwt",
+              isPid: true,
+              docTypeIdentifier: .sdJwtPid
+            )
+          ],
+          errors: [],
+          totalIssuers: 1
+        )
+      )
+    }
+
+    let result = await interactor.issueDocument(
+      issuerId: "issuer.dev",
+      configIds: ["pid_mdoc", "pid_sdjwt"],
+      docTypeIdentifier: .mDocPid
+    )
+
+    guard case .success(let ids, let notIssuedDocumentNames) = result else {
+      return XCTFail("Expected a success, got \(result)")
+    }
+    XCTAssertEqual(ids, ["pid-id"])
+    XCTAssertEqual(notIssuedDocumentNames, ["PID (SD-JWT VC)"])
+  }
+
+  func testNotIssuedConfigIds_WhenEveryReturnedDocumentNamesItsConfiguration_ThenListsTheMissingOnes() {
+    XCTAssertEqual(
+      AddDocumentInteractorImpl.notIssuedConfigIds(requested: ["mdoc", "sdjwt"], returned: ["mdoc"]),
+      ["sdjwt"]
+    )
+    XCTAssertEqual(
+      AddDocumentInteractorImpl.notIssuedConfigIds(requested: ["mdoc", "sdjwt"], returned: ["sdjwt", "mdoc"]),
+      []
+    )
+  }
+
+  func testNotIssuedConfigIds_WhenAReturnedDocumentDoesNotNameItsConfiguration_ThenNamesNothing() {
+    XCTAssertEqual(
+      AddDocumentInteractorImpl.notIssuedConfigIds(requested: ["mdoc", "sdjwt"], returned: [nil]),
+      []
+    )
+  }
+
+  func testIssueDocument_WhenIssuedDocument_ThenReturnSuccess() async {
     // Given
     let issuerId = "issuer.dev"
     let configIds = ["deferred-doc"]
@@ -261,9 +347,12 @@ final class TestAddDocumentInteractor: EudiTest {
     default:
       XCTFail("Expected .deferredSuccess but got \(result)")
     }
+
+    verify(sessionController).beginExternalFlow()
+    verify(sessionController).endExternalFlow(startedIn: any())
   }
   
-  func testIssueDocument_whenDefferedPendingDocument_thenReturnsFailure() async {
+  func testIssueDocument_WhenDefferedPendingDocument_ThenReturnsFailure() async {
     // Given
     let configIds = ["fail-doc"]
     let issuerId = "issuer.dev"
@@ -291,7 +380,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testIssueDocument_whenWalletThrowsTrustError_thenReturnsIssuerNotTrusted() async {
+  func testIssueDocument_WhenWalletThrowsTrustError_ThenReturnsIssuerNotTrusted() async {
     // Given
     let configIds = ["untrusted-doc"]
     let issuerId = "issuer.dev"
@@ -321,9 +410,12 @@ final class TestAddDocumentInteractor: EudiTest {
     default:
       XCTFail("Expected .issuerNotTrusted but got \(result)")
     }
+
+    verify(sessionController).beginExternalFlow()
+    verify(sessionController).endExternalFlow(startedIn: any())
   }
 
-  func testResumeDynamicIssuance_whenWalletThrowsTrustError_thenReturnsIssuerNotTrusted() async {
+  func testResumeDynamicIssuance_WhenWalletThrowsTrustError_ThenReturnsIssuerNotTrusted() async {
     // Given
     let pendingData = DynamicIssuancePendingData(
       pendingDoc: Constants.issuedPendingDocument,
@@ -351,7 +443,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
 
-  func testResumeDynamicIssuance_whenDefferedPending_thenReturnDefferedSuccess() async {
+  func testResumeDynamicIssuance_WhenDefferedPending_ThenReturnDefferedSuccess() async {
     // Given
     let pendingDoc = Constants.defferedPendingDocument
     
@@ -374,7 +466,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testResumeDynamicIssuance_whenIssuePending_thenReturnSuccess() async {
+  func testResumeDynamicIssuance_WhenIssuePending_ThenReturnSuccess() async {
     // Given
     let pendingDoc = Constants.issuedPendingDocument
     
@@ -398,7 +490,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testResumeDynamicIssuance_whenIssuePending_thenIssuanceFails() async {
+  func testResumeDynamicIssuance_WhenIssuePending_ThenIssuanceFails() async {
     // Given
     let pendingDoc = Constants.issuedPendingDocument
     
@@ -421,7 +513,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testResumeDynamicIssuance_whenPending_thenReturnSuccess() async {
+  func testResumeDynamicIssuance_WhenPending_ThenReturnSuccess() async {
     // Given
     let pendingDoc = Constants.pendingDocument
     
@@ -444,7 +536,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testResumeDynamicIssuance_whenReturnsNoPending_thenNoPendingDataExists() async {
+  func testResumeDynamicIssuance_WhenReturnsNoPending_ThenNoPendingDataExists() async {
     // Given
     stub(walletKitController) { stub in
       when(stub.getDynamicIssuancePendingData()
@@ -463,7 +555,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testFetchStoredDocuments_whenDocumentsExist_thenReturnsSuccess() async {
+  func testFetchStoredDocuments_WhenDocumentsExist_ThenReturnsSuccess() async {
     // Given
     let documentIds = [
       "doc-id-1",
@@ -472,8 +564,8 @@ final class TestAddDocumentInteractor: EudiTest {
     let pidDocument = Constants.createEuPidModel()
     let mdlDocument = Constants.createIsoMdlModel()
     
-    let transformedPidDocument = pidDocument.transformToDocumentUi(isSensitive: false)
-    let transformedMdlDocument = mdlDocument.transformToDocumentUi(isSensitive: false)
+    let transformedPidDocument = pidDocument.transformToDocumentUi(isSensitive: false, issuerLogoOrigins: .init(logoOriginsByIssuer: [:]))
+    let transformedMdlDocument = mdlDocument.transformToDocumentUi(isSensitive: false, issuerLogoOrigins: .init(logoOriginsByIssuer: [:]))
     
     stub(walletKitController) { stub in
       when(stub.fetchDocuments(with: equal(to: documentIds)))
@@ -494,7 +586,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testFetchStoredDocuments_whenDocumentsDoNotExist_thenReturnsFailure() async {
+  func testFetchStoredDocuments_WhenDocumentsDoNotExist_ThenReturnsFailure() async {
     // Given
     let documentIds = ["non-existent-doc"]
     
@@ -515,7 +607,7 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
-  func testFetchStoredDocuments_whenNoDocumentsReturned_thenReturnsFailure() async {
+  func testFetchStoredDocuments_WhenNoDocumentsReturned_ThenReturnsFailure() async {
     // Given
     let documentIds: [String] = []
     
@@ -722,6 +814,27 @@ final class TestAddDocumentInteractor: EudiTest {
     default:
       XCTFail("Expected .registrationBlocked, got \(result)")
     }
+  }
+
+  func testIssueDocument_WhenTheRegistrationLookupFails_ThenIssuanceNeverStartsAndFails() async {
+    stub(walletKitController) { stub in
+      when(stub.getIssuerRegistration(issuerId: any(), configIds: any())).thenThrow(WalletCoreError.unableFetchDocument)
+    }
+
+    let result = await interactor.issueDocument(
+      issuerId: "issuer.dev",
+      configIds: ["doc"],
+      docTypeIdentifier: DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
+    )
+
+    guard case .failure = result else {
+      return XCTFail("Expected .failure, got \(result)")
+    }
+    verify(walletKitController, never()).issueDocuments(
+      issuerId: any(),
+      identifiers: any(),
+      docTypeIdentifier: any()
+    )
   }
 }
 

@@ -49,18 +49,6 @@ final class TestBaseRequestViewModel: EudiTest {
     XCTAssertFalse(viewModel.viewState.allowShare)
   }
 
-  @MainActor
-  func testResetState_whenTheRequestWasBlocked_thenTheContentIsNoLongerTrustBlocked() {
-    // Given
-    let viewModel = makeViewModel()
-    viewModel.onTrustBlocked()
-
-    // When
-    viewModel.resetState()
-
-    // Then
-    XCTAssertFalse(viewModel.viewState.isTrustBlocked)
-  }
 }
 
 private extension TestBaseRequestViewModel {

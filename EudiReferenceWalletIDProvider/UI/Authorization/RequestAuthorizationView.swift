@@ -45,8 +45,17 @@ struct RequestAuthorizationView: View {
       }
       .shimmer(isLoading: viewModel.viewState.isLoading)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .task {
-        await viewModel.loadRequest()
+      .alertView(
+        isPresented: $viewModel.isUserImageConfirmationShowing,
+        title: .requestUserImageConfirmationTitle,
+        message: .requestUserImageConfirmationMessage,
+        actions: {
+          Button(.shareButton) { viewModel.onUserImageShareConfirmed() }
+          Button(.cancelButton, role: .cancel) {}
+        }
+      )
+      .onAppear {
+        viewModel.initialize()
       }
     }
   }
@@ -61,8 +70,13 @@ struct RequestAuthorizationView: View {
           ContentHeaderView(
             config: viewState.contentHeaderConfig
           )
+          .padding(.horizontal, Theme.shared.dimension.padding)
 
           VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+            if viewState.requestsUserImage {
+              WarningNoticeView(message: .requestUserImageNotice)
+            }
+
             ForEach(viewState.items.indices, id: \.self) { index in
               let section = viewState.items[index]
               WrapExpandableListView(
@@ -98,6 +112,7 @@ struct RequestAuthorizationView: View {
       ContentHeaderView(
         config: viewModel.viewState.contentHeaderConfig
       )
+      .padding(.horizontal, Theme.shared.dimension.padding)
       VStack(spacing: .zero) {
         Spacer()
         if let errorMessage = viewModel.viewState.errorMessage {
@@ -118,7 +133,15 @@ struct RequestAuthorizationView: View {
 
   @ViewBuilder
   private func actionButtonsFooter() -> some View {
-    VStack(spacing: .zero) {
+    VStack(spacing: SPACING_MEDIUM) {
+      if let warning = viewModel.viewState.warning, viewModel.viewState.errorMessage == nil {
+        WarningAcknowledgementView(
+          message: warning.message,
+          acknowledgementText: warning.acknowledgement,
+          isAcknowledged: $viewModel.isRiskAcknowledged
+        )
+        .padding(.horizontal, Theme.shared.dimension.padding)
+      }
       actionButtons()
         .padding(.horizontal, Theme.shared.dimension.padding)
         .padding(.bottom, SPACING_MEDIUM)
@@ -144,8 +167,9 @@ struct RequestAuthorizationView: View {
       style: .primary,
       title: .documentProviderExtensionAcceptButton,
       isLoading: viewModel.viewState.isLoading,
+      isEnabled: viewModel.canAccept,
       onAction: {
-        viewModel.showBiometryView = true
+        viewModel.onAcceptClick()
       }()
     )
   }

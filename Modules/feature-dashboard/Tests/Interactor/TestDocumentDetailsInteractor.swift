@@ -27,21 +27,41 @@ final class TestDocumentDetailsInteractor: EudiTest {
   var walletKitController: MockWalletKitController!
   var prefsController: MockPrefsController!
   var configLogic: MockConfigLogic!
+  var sessionController: MockSessionController!
+  var walletWorkScheduler: MockWalletWorkScheduler!
 
   override func setUp() {
     self.walletKitController = MockWalletKitController()
+    stub(walletKitController) { mock in
+      when(mock.issuerLogoOrigins()).thenReturn(IssuerLogoOrigins(logoOriginsByIssuer: [:]))
+    }
     self.prefsController = MockPrefsController()
     self.configLogic = MockConfigLogic()
+    self.sessionController = MockSessionController()
+    self.walletWorkScheduler = MockWalletWorkScheduler()
+    stub(walletWorkScheduler) { mock in
+      when(mock.scheduleRevocationCheck(afterReIssueOf: any())).thenDoNothing()
+    }
+    stub(sessionController) { mock in
+      when(mock.beginExternalFlow()).thenReturn(0)
+      when(mock.endExternalFlow(startedIn: any())).thenDoNothing()
+    }
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocumentStatuses()).thenReturn([:])
+    }
     self.interactor = DocumentDetailsInteractorImpl(
       walletController: walletKitController,
       prefsController: prefsController,
-      configLogic: configLogic
+      configLogic: configLogic,
+      sessionController: sessionController,
+      walletWorkScheduler: walletWorkScheduler
     )
     
     stubConfigLogic()
   }
   
   override func tearDown() {
+    self.sessionController = nil
     self.interactor = nil
     self.walletKitController = nil
     self.prefsController = nil
@@ -55,7 +75,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
-    stubIsRevoked(for: documentId, isRevoked: false)
+    stubRevocationStatus(for: documentId, status: nil)
     stubIsDocumentLowOnCredentials()
     stubIsBatchCounterEnabled()
 
@@ -69,8 +89,70 @@ final class TestDocumentDetailsInteractor: EudiTest {
       XCTAssertEqual(documentCredentialsInfoUi?.availableCredentials, 10)
       XCTAssertEqual(documentCredentialsInfoUi?.totalCredentials, 10)
       XCTAssertNotNil(issuerDocumentDetailsCard)
+      XCTAssertEqual(issuerDocumentDetailsCard?.hasStatusRefreshFailed, false)
       XCTAssertFalse(isBookmarked)
       XCTAssertFalse(isRevoked)
+    case .failure:
+      XCTFail("Expected success, but got failure.")
+    }
+  }
+
+  func testFetchStoredDocument_WhenDocumentIsSuspended_ThenFlagsItAndShowsTheSuspendedCard() async throws {
+    let expectedDocument = Constants.createEuPidModel(credentialsUsageCounts: try .init(total: 10, remaining: 10))
+    let documentId = expectedDocument.id
+    stubFetchDocument(for: documentId, document: expectedDocument)
+    stubIsBookmarked(for: documentId, isBookmarked: false)
+    stubRevocationStatus(for: documentId, status: .suspended)
+    stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
+
+    let result = await interactor.fetchStoredDocument(documentId: documentId)
+
+    switch result {
+    case .success(_, let issuerDocumentDetailsCard, _, _, let isRevoked):
+      XCTAssertTrue(isRevoked)
+      XCTAssertEqual(issuerDocumentDetailsCard?.documentState, .suspended)
+      XCTAssertEqual(issuerDocumentDetailsCard?.dateText, .documentDetailsSuspendedDocument)
+    case .failure:
+      XCTFail("Expected success, but got failure.")
+    }
+  }
+
+  func testFetchStoredDocument_WhenABackgroundRenewalFailed_ThenTheIssuerCardSaysSo() async throws {
+    let expectedDocument = Constants.createEuPidModel(credentialsUsageCounts: try .init(total: 10, remaining: 10))
+    let documentId = expectedDocument.id
+    stubFetchDocument(for: documentId, document: expectedDocument)
+    stubIsBookmarked(for: documentId, isBookmarked: false)
+    stubRevocationStatus(for: documentId, status: nil, hasReIssuanceFailed: true)
+    stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
+
+    let result = await interactor.fetchStoredDocument(documentId: documentId)
+
+    switch result {
+    case .success(_, let issuerDocumentDetailsCard, _, _, _):
+      XCTAssertEqual(issuerDocumentDetailsCard?.hasReIssuanceFailed, true)
+      XCTAssertEqual(issuerDocumentDetailsCard?.hasStatusRefreshFailed, false)
+    case .failure:
+      XCTFail("Expected success, but got failure.")
+    }
+  }
+
+  func testFetchStoredDocument_WhenTheStatusCouldNotBeRefreshed_ThenTheIssuerCardSaysSoWithoutBlocking() async throws {
+    let expectedDocument = Constants.createEuPidModel(credentialsUsageCounts: try .init(total: 10, remaining: 10))
+    let documentId = expectedDocument.id
+    stubFetchDocument(for: documentId, document: expectedDocument)
+    stubIsBookmarked(for: documentId, isBookmarked: false)
+    stubRevocationStatus(for: documentId, status: nil, hasStatusRefreshFailed: true)
+    stubIsDocumentLowOnCredentials()
+    stubIsBatchCounterEnabled()
+
+    let result = await interactor.fetchStoredDocument(documentId: documentId)
+
+    switch result {
+    case .success(_, let issuerDocumentDetailsCard, _, _, let isRevoked):
+      XCTAssertFalse(isRevoked)
+      XCTAssertEqual(issuerDocumentDetailsCard?.hasStatusRefreshFailed, true)
     case .failure:
       XCTFail("Expected success, but got failure.")
     }
@@ -83,7 +165,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
-    stubIsRevoked(for: documentId, isRevoked: false)
+    stubRevocationStatus(for: documentId, status: nil)
     stubIsDocumentLowOnCredentials()
     stubIsBatchCounterEnabled()
 
@@ -108,7 +190,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
-    stubIsRevoked(for: documentId, isRevoked: false)
+    stubRevocationStatus(for: documentId, status: nil)
     stubIsDocumentLowOnCredentials()
     stubIsBatchCounterEnabled()
 
@@ -136,7 +218,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
-    stubIsRevoked(for: documentId, isRevoked: false)
+    stubRevocationStatus(for: documentId, status: nil)
     stubIsDocumentLowOnCredentials()
     stubIsBatchCounterEnabled()
 
@@ -178,7 +260,7 @@ final class TestDocumentDetailsInteractor: EudiTest {
     
     stubFetchDocument(for: documentId, document: expectedDocument)
     stubIsBookmarked(for: documentId, isBookmarked: false)
-    stubIsRevoked(for: documentId, isRevoked: true)
+    stubRevocationStatus(for: documentId, status: .revoked)
     stubIsDocumentLowOnCredentials()
     stubIsBatchCounterEnabled()
 
@@ -430,8 +512,69 @@ final class TestDocumentDetailsInteractor: EudiTest {
       XCTAssertTrue(true)
     case .issuerNotTrusted:
       XCTFail("Expected success, got issuerNotTrusted")
+    case .documentBlocked:
+      XCTFail("Expected success, got documentBlocked")
     case .failure:
       XCTFail("Expected success, got failure")
+    }
+
+    verify(sessionController).beginExternalFlow()
+    verify(sessionController).endExternalFlow(startedIn: any())
+    verify(walletWorkScheduler).scheduleRevocationCheck(afterReIssueOf: equal(to: identifier))
+  }
+
+  func testReIssueDocument_WhenTheDocumentIsRevoked_ThenItIsRefusedBeforeTheIssuerIsContacted() async {
+    let identifier = Constants.euPidModelId
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocumentStatuses()).thenReturn([identifier: .revoked])
+    }
+
+    let result = await assertReIssueRefused(identifier: identifier)
+
+    guard case .documentBlocked = result else {
+      return XCTFail("Expected documentBlocked, got \(result)")
+    }
+  }
+
+  func testReIssueDocument_WhenTheDocumentIsSuspended_ThenItIsRefusedBeforeTheIssuerIsContacted() async {
+    let identifier = Constants.euPidModelId
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocumentStatuses()).thenReturn([identifier: .suspended])
+    }
+
+    let result = await assertReIssueRefused(identifier: identifier)
+
+    guard case .documentBlocked = result else {
+      return XCTFail("Expected documentBlocked, got \(result)")
+    }
+  }
+
+  func testReIssueDocument_WhenTheRevocationRecordsCannotBeRead_ThenItIsRefused() async {
+    let identifier = Constants.euPidModelId
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocumentStatuses()).thenThrow(WalletCoreError.unableFetchDocuments)
+    }
+
+    let result = await assertReIssueRefused(identifier: identifier)
+
+    guard case .failure(let error) = result else {
+      return XCTFail("Expected failure, got \(result)")
+    }
+    XCTAssertEqual(error as? WalletCoreError, .unableFetchDocuments)
+  }
+
+  func testReIssueDocument_WhenAnotherDocumentIsBlocked_ThenThisOneIsReIssued() async {
+    let identifier = Constants.euPidModelId
+    stub(walletKitController) { mock in
+      when(mock.fetchRevokedDocumentStatuses()).thenReturn(["another": .revoked])
+      when(mock.reIssueDocument(identifier: equal(to: identifier), isBackgroundOperation: equal(to: false)))
+        .thenReturn(Constants.issuedPendingDocument)
+    }
+
+    let result = await interactor.reIssueDocument(identifier: identifier)
+
+    guard case .success = result else {
+      return XCTFail("Expected success, got \(result)")
     }
   }
 
@@ -452,12 +595,17 @@ final class TestDocumentDetailsInteractor: EudiTest {
       XCTFail("Expected failure, got success")
     case .issuerNotTrusted:
       XCTFail("Expected failure, got issuerNotTrusted")
+    case .documentBlocked:
+      XCTFail("Expected failure, got documentBlocked")
     case .failure(let error):
       XCTAssertEqual(
         error.localizedDescription,
         WalletCoreError.unableFetchDocument.localizedDescription
       )
     }
+
+    verify(sessionController).beginExternalFlow()
+    verify(sessionController).endExternalFlow(startedIn: any())
   }
 
   func testDeleteDocument_WhenForcePidActivationDisabled_ThenSkipsClearAllAndPerformsDelete() async {
@@ -516,11 +664,28 @@ extension TestDocumentDetailsInteractor {
     }
   }
 
-  func stubIsRevoked(for id: String, isRevoked: Bool) {
+  func stubRevocationStatus(
+    for id: String,
+    status: DocumentRevocationStatus?,
+    hasStatusRefreshFailed: Bool = false,
+    hasReIssuanceFailed: Bool = false
+  ) {
     stub(walletKitController) { stub in
-      when(stub.isDocumentRevoked(with: equal(to: id)))
-        .thenReturn(isRevoked)
+      when(stub.getDocumentRevocationStatus(with: equal(to: id)))
+        .thenReturn(status)
+      when(stub.hasStatusRefreshFailure(with: equal(to: id)))
+        .thenReturn(hasStatusRefreshFailed)
+      when(stub.hasReIssuanceFailure(with: equal(to: id)))
+        .thenReturn(hasReIssuanceFailed)
     }
+  }
+
+  func assertReIssueRefused(identifier: String) async -> DocumentDetailsReIssuancePartialState {
+    let result = await interactor.reIssueDocument(identifier: identifier)
+    verify(walletKitController, never()).reIssueDocument(identifier: any(), isBackgroundOperation: any())
+    verify(sessionController, never()).beginExternalFlow()
+    verify(walletWorkScheduler, never()).scheduleRevocationCheck(afterReIssueOf: any())
+    return result
   }
   
   func stubShouldRebootTrue(for id: String) {

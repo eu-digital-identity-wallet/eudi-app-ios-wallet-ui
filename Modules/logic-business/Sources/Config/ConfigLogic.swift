@@ -105,10 +105,9 @@ struct ConfigLogicImpl: ConfigLogic {
     false
   }
 
-  var keyChainConfig: KeyChainConfig {
-    KeyChainConfig(
-      documentStorageServiceName: Bundle.getDocumentStorageServiceName(),
-      keychainAccessGroup: Bundle.getKeychainAccessGroup()
-    )
-  }
+  /// Worked out once: finding the access group writes and deletes a probe item in the Keychain.
+  let keyChainConfig = KeyChainConfig(
+    documentStorageServiceName: Bundle.getDocumentStorageServiceName(),
+    keychainAccessGroup: Bundle.getKeychainAccessGroup()
+  )
 }

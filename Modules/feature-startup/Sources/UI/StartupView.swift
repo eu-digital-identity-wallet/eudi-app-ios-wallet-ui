@@ -39,6 +39,14 @@ struct StartupView<Router: RouterHost>: View {
     .task {
       await viewModel.initialize()
     }
+    .alertView(
+      isPresented: $viewModel.isSetupErrorAlertShowing,
+      title: .genericErrorTitle,
+      message: .custom(viewModel.viewState.setupError?.errorMessage ?? ""),
+      actions: {
+        Button(.tryAgain) { viewModel.onRetry() }
+      }
+    )
   }
 }
 

@@ -44,6 +44,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   var isTrustBlockedAlertShowing: Bool = false
   var itemsChanged: Bool = false
   var isRiskAcknowledged: Bool = false
+  var isUserImageConfirmationShowing: Bool = false
 
   public init(router: Router, originator: AppRoute) {
     super.init(
@@ -70,6 +71,10 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
 
   open func doWork() async {}
 
+  /// Called when the screen shows again after another screen covered it, for example when the user backs out of
+  /// biometry; a subclass resumes what it paused.
+  open func onReappear() async {}
+
   open func getRelyingParty() -> LocalizableStringKey {
     return .custom("")
   }
@@ -85,6 +90,33 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   open func onShare() {
     guard let route = getSuccessRoute() else { return }
     router.push(with: route)
+  }
+
+  /// Whether Share may send the response now: the request has loaded, the selection can be shared, and a
+  /// registration warning, if there is one, was acknowledged. The view enables Share with it, and
+  /// `onShareClick()` and `onUserImageShareConfirmed()` check it again before sharing.
+  var canShare: Bool {
+    viewState.initialized
+    && !viewState.isLoading
+    && viewState.allowShare
+    && (viewState.registrationWarning == nil || isRiskAcknowledged)
+  }
+
+  /// Shares, or first asks for confirmation when Share would disclose a picture of the holder, as on Android.
+  func onShareClick() {
+    guard canShare else { return }
+    guard viewState.items.sharesUserImage() else {
+      onShare()
+      return
+    }
+    isUserImageConfirmationShowing = true
+  }
+
+  /// Shares once the user has confirmed sending the picture of the holder.
+  func onUserImageShareConfirmed() {
+    isUserImageConfirmationShowing = false
+    guard canShare else { return }
+    onShare()
   }
 
   open func getPopRoute() -> AppRoute? {
@@ -154,7 +186,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         selectedCombinationIndex: 0,
         relyingParty: relyingParty,
         isTrusted: isTrusted,
-        allowShare: canShare(with: selectedItems),
+        allowShare: hasSharableSelection(selectedItems),
         initialized: true
       )
       .copy(error: nil)
@@ -169,35 +201,17 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         showMissingCredentials: false,
         items: selectedItems,
         selectedCombinationIndex: index,
-        allowShare: canShare(with: selectedItems)
+        allowShare: hasSharableSelection(selectedItems)
       )
     }
   }
 
-  public func resetState() {
-    isRiskAcknowledged = false
-    setState { previous in
-      .init(
-        isLoading: true,
-        error: nil,
-        errorTitle: nil,
-        showMissingCredentials: true,
-        items: RequestDataUiModel.mockData(),
-        combinations: [],
-        selectedCombinationIndex: 0,
-        relyingParty: .unknownVerifier,
-        isTrusted: false,
-        allowShare: false,
-        originator: previous.originator,
-        initialized: false,
-        relyingPartyRegistration: nil,
-        registrationWarning: nil,
-        isTrustBlocked: false
-      )
-    }
-  }
-
-  public func onReceivedRegistration(_ registration: RelyingPartyRegistration) {
+  /// Shows the registration and its warning. `isRelyingPartyTrusted` is false for a relying party that
+  /// did not authenticate, which then gets the access-certificate warning
+  /// (`RegistrationWarning.accessCertificateNotTrusted`) that keeps Share disabled. Both flows pass the
+  /// request's own verdict, as Android does; with the configured client identifier schemes wallet-kit
+  /// refuses an OpenID4VP verifier that did not authenticate before its request reaches this screen.
+  public func onReceivedRegistration(_ registration: RelyingPartyRegistration, isRelyingPartyTrusted: Bool) {
     isRiskAcknowledged = false
     let resolvedName = registration.name.map { LocalizableStringKey.custom($0) }
     setState {
@@ -205,7 +219,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         .copy(relyingParty: resolvedName ?? $0.relyingParty)
         .copy(isTrusted: registration.isFullyVerified)
         .copy(relyingPartyRegistration: registration.toRegistrationData(fallbackName: .unknownVerifier))
-        .copy(registrationWarning: registration.toWarning())
+        .copy(registrationWarning: registration.toWarning(isRelyingPartyTrusted: isRelyingPartyTrusted))
     }
   }
 
@@ -223,7 +237,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     )
   }
 
-  func onPop() {
+  public func onPop() {
     if let route = getPopRoute() {
       router.popTo(with: route)
     } else {
@@ -232,6 +246,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   }
 
   open func stopPresentation() async {}
+  /// Called when the user leaves the request with Back: a remote request sends the decline, and a proximity
+  /// request stops its Bluetooth session. Does nothing by default.
   open func declineRequest() async {}
   public func onTrustBlocked() {
     setState {
@@ -285,13 +301,13 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
           showMissingCredentials: false,
           items: isSelectedCombination ? updatedItems : $0.items,
           combinations: combinations,
-          allowShare: isSelectedCombination ? canShare(with: updatedItems) : $0.allowShare
+          allowShare: isSelectedCombination ? hasSharableSelection(updatedItems) : $0.allowShare
         )
       }
     }
   }
 
-  private func canShare(with items: [RequestDataUiModel]) -> Bool {
+  private func hasSharableSelection(_ items: [RequestDataUiModel]) -> Bool {
     items.canShare()
   }
 

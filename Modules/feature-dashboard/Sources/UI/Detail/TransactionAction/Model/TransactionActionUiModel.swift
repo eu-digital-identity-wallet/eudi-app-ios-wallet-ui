@@ -24,6 +24,8 @@ public struct TransactionActionUiModel: Equatable, Sendable {
   public let title: LocalizableStringKey
   public let content: Content
   public let contacts: [TransactionActionContactUi]
+  /// Shown above the content when the contacts come from an unverified registration.
+  public let registrationWarning: LocalizableStringKey?
 
   public enum Content: Equatable, Sendable {
     case confirmation(ConfirmationUi)
@@ -122,7 +124,8 @@ extension TransactionActionUiModel {
           followUp: .transactionActionReportFollowUp(["the authority"])
         )
       ),
-      contacts: []
+      contacts: [],
+      registrationWarning: nil
     )
   }
 }
@@ -158,7 +161,8 @@ extension TransactionLogDomain.Presentation {
             contact: preferred
           )
         ),
-        contacts: contacts
+        contacts: contacts,
+        registrationWarning: registrationWarning
       )
     case .reportSuspiciousTransaction:
       let name = registration?.dpa?.name?.nonBlankValue
@@ -175,7 +179,8 @@ extension TransactionLogDomain.Presentation {
             followUp: name.map { .transactionActionReportFollowUp([$0]) } ?? .transactionActionReportFollowUpNoAuthority
           )
         ),
-        contacts: contacts
+        contacts: contacts,
+        registrationWarning: registrationWarning
       )
     }
   }

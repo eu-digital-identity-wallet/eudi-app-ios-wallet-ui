@@ -17,6 +17,7 @@ import XCTest
 
 @testable import logic_test
 @testable import logic_authentication
+@testable import logic_business
 
 final class TestPinStorageController: EudiTest {
   
@@ -37,31 +38,31 @@ final class TestPinStorageController: EudiTest {
     self.provider = nil
   }
   
-  func testhasPin() {
+  func testHasPin_WhenAPinIsStored_ThenReturnsTrue() throws {
     //Given
     let expected = true
     stubHasPin(expected: expected)
     
     // When
-    let result = controller.hasPin()
+    let result = try controller.hasPin()
     
     //Then
     XCTAssertEqual(result, expected, "The hasPin result should match the expected value.")
   }
   
-  func testSetPin() {
+  func testSetPin_WhenCalled_ThenPassesThePinToTheProvider() throws {
     // Given
     let myPin = "1111"
     stubSetPin(expected: myPin)
     
     // When
-    controller.setPin(with: myPin)
+    try controller.setPin(with: myPin)
     
     // Then
     XCTAssertEqual(setPinCalledWith, myPin, "The provider should be called with the correct PIN.")
   }
   
-  func testIsPinValid() {
+  func testIsPinValid_WhenTheProviderAcceptsThePin_ThenReturnsTrue() {
     // Given
     let testPin = "1111"
     stubIsPinValid(result: true)
@@ -72,7 +73,26 @@ final class TestPinStorageController: EudiTest {
     // Then
     XCTAssertTrue(result, "The controller should return true for a valid pin.")
   }
-  
+
+  func testHasPin_WhenProviderReadFails_ThenThrowsTheProviderError() {
+    stub(provider) { mock in
+      when(mock.hasPin()).thenThrow(KeyChainError.readFailed(status: errSecInteractionNotAllowed))
+    }
+
+    XCTAssertThrowsError(try controller.hasPin()) { error in
+      XCTAssertEqual(error as? KeyChainError, .readFailed(status: errSecInteractionNotAllowed))
+    }
+  }
+
+  func testSetPin_WhenProviderWriteFails_ThenThrowsTheProviderError() {
+    stub(provider) { mock in
+      when(mock.setPin(with: any())).thenThrow(KeyChainError.writeFailed(status: errSecNotAvailable))
+    }
+
+    XCTAssertThrowsError(try controller.setPin(with: "1111")) { error in
+      XCTAssertEqual(error as? KeyChainError, .writeFailed(status: errSecNotAvailable))
+    }
+  }
 }
 
 extension TestPinStorageController {

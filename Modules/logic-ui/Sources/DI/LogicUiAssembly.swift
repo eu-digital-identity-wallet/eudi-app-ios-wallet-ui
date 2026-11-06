@@ -35,9 +35,21 @@ public final class LogicUiAssembly: Assembly {
     container.register(DeepLinkController.self) { r in
       DeepLinkControllerImpl(
         prefsController: r.force(PrefsController.self),
-        urlSchemaController: r.force(UrlSchemaController.self)
+        urlSchemaController: r.force(UrlSchemaController.self),
+        walletKitController: r.force(WalletKitController.self),
+        rqesCallbackUris: r.force(ConfigLogic.self).rqesConfig.rssps.map(\.authFlowRedirectionURI)
       )
     }
-    .inObjectScope(ObjectScope.transient)
+    .inObjectScope(ObjectScope.container)
+
+    container.register(UserInteractionController.self) { _ in
+      UserInteractionControllerImpl()
+    }
+    .inObjectScope(ObjectScope.container)
+
+    container.register(ScreenCaptureController.self) { r in
+      ScreenCaptureControllerImpl(isEnabled: r.force(ConfigUiLogic.self).hideContentWhileCaptured)
+    }
+    .inObjectScope(ObjectScope.container)
   }
 }

@@ -19,6 +19,8 @@ import logic_resources
 
 struct ProximityConnectionView<Router: RouterHost>: View {
 
+  @Environment(\.scenePhase) private var scenePhase
+
   @State private var viewModel: ProximityConnectionViewModel<Router>
 
   var contentSize: CGFloat = 0.0
@@ -42,6 +44,9 @@ struct ProximityConnectionView<Router: RouterHost>: View {
     }
     .task {
       await viewModel.initialize()
+    }
+    .onChange(of: scenePhase, initial: true) {
+      viewModel.setPhase(with: scenePhase)
     }
   }
 }

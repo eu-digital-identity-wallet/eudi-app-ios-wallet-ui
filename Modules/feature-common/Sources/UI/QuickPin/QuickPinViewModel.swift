@@ -41,6 +41,10 @@ struct QuickPinState: ViewState {
   let quickPinSize: Int
   let isLockedOut: Bool
   let lockoutMessage: LocalizableStringKey?
+  /// The notice for setup on a device without a passcode; with `isDeviceLockRequired` no PIN is accepted until one
+  /// is set.
+  let deviceLockNotice: LocalizableStringKey?
+  let isDeviceLockRequired: Bool
 }
 
 @Observable
@@ -132,7 +136,9 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
         step: config.isSetFlow ? .firstInput : .validate,
         quickPinSize: 6,
         isLockedOut: false,
-        lockoutMessage: nil
+        lockoutMessage: nil,
+        deviceLockNotice: nil,
+        isDeviceLockRequired: false
       )
     )
 
@@ -143,7 +149,18 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
     lockoutTickTask?.cancel()
   }
 
+  /// Checks the passcode again when the user comes back, for example from the device settings, as Android does on
+  /// every resume, so the notice goes once a passcode is set.
+  func setPhase(with phase: ScenePhase) async {
+    guard phase == .active, viewState.config.isSetFlow else { return }
+    await refreshDeviceLockState()
+  }
+
   func initialize() async {
+    if viewState.config.isSetFlow {
+      await refreshDeviceLockState()
+      return
+    }
     guard case .validate = viewState.step else { return }
     let state = await interactor.getPinLockoutState()
     if case .active(let remaining, _) = state {
@@ -227,7 +244,7 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
       case .validate:
         await onValidate()
       case .firstInput:
-        advanceToRetryInput()
+        await onFirstInput()
       case .retryInput(let previousPin):
         await confirmRetry(previousPin: previousPin)
       }
@@ -259,6 +276,34 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
         uiPinInputField = ""
       }
     }
+  }
+
+  /// Setup checks the passcode again, so a passcode set meanwhile in the device settings counts; a new PIN that is
+  /// easy to guess is refused when it is entered, as on Android.
+  private func onFirstInput() async {
+    if viewState.config.isSetFlow {
+      await refreshDeviceLockState()
+      guard !viewState.isDeviceLockRequired else {
+        uiPinInputField = ""
+        return
+      }
+    }
+    if case .failure(let error) = await interactor.checkNewPin(uiPinInputField) {
+      setState { $0.copy(pinError: .custom(error.errorMessage)) }
+      uiPinInputField = ""
+      return
+    }
+    advanceToRetryInput()
+  }
+
+  /// The notice for a device without a passcode, and whether the PIN must wait until one is set.
+  private func refreshDeviceLockState() async {
+    let (notice, isRequired): (LocalizableStringKey?, Bool) = switch await interactor.getDeviceLockState() {
+    case .secure: (nil, false)
+    case .missing: (.quickPinDeviceLockMissingWarning, false)
+    case .required: (.quickPinDeviceLockRequiredWarning, true)
+    }
+    setState { $0.copy(deviceLockNotice: notice).copy(isDeviceLockRequired: isRequired) }
   }
 
   private func advanceToRetryInput() {
@@ -296,8 +341,23 @@ final class QuickPinViewModel<Router: RouterHost>: ViewModel<Router, QuickPinSta
     await onSuccess()
   }
 
+  /// Setting a PIN needs the passcode when `requireDeviceSecure` is on; changing it does not, as on Android.
   private func onSuccess() async {
-    await interactor.setPin(newPin: uiPinInputField)
+    let result = viewState.config.isUpdateFlow
+    ? await interactor.updatePin(newPin: uiPinInputField)
+    : await interactor.setPin(newPin: uiPinInputField)
+    switch result {
+    case .success:
+      break
+    case .failure(let error):
+      setState { $0.copy(pinError: .custom(error.errorMessage)) }
+      uiPinInputField = ""
+      return
+    }
+
+    if viewState.config.isSetFlow {
+      await interactor.unlockSession()
+    }
 
     let visualKind: UIConfig.Success.VisualKind = viewState.config.isSetFlow ?
       .customIcon(

@@ -21,14 +21,12 @@ class DocumentIssuanceSuccessViewModel<Router: RouterHost, RequestItem: Sendable
   public init(
     router: Router,
     config: any UIConfigType,
-    deepLinkController: DeepLinkController,
     requestItems: [ListItemSection<RequestItem>]
   ) {
 
     super.init(
       router: router,
       config: config,
-      deepLinkController: deepLinkController,
       requestItems: requestItems
     )
   }

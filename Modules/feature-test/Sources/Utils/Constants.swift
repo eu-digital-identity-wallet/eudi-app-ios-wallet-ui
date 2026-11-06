@@ -64,15 +64,19 @@ extension Constants {
     var ageOverXX: [Int : Bool]
   }
   
-  static func createEuPidModel(credentialsUsageCounts: CredentialsUsageCounts? = nil) -> any DocClaimsDecodable {
+  static func createEuPidModel(
+    credentialsUsageCounts: CredentialsUsageCounts? = nil,
+    issuerLogo: String? = nil,
+    credentialIssuerIdentifier: String? = nil
+  ) -> any DocClaimsDecodable {
     return TestMdocModel(
       id: euPidModelId,
       createdAt: documentCreatedAt,
       modifiedAt: nil,
       displayName: euPidName,
       display: nil,
-      issuerDisplay: nil,
-      credentialIssuerIdentifier: nil,
+      issuerDisplay: issuerLogo.map { [.init(name: "Issuer", logo: .init(urlString: $0))] },
+      credentialIssuerIdentifier: credentialIssuerIdentifier,
       configurationIdentifier: nil,
       docType: dr.documents!.last!.issuerSigned.issuerAuth.mso.docType,
       docClaims: [

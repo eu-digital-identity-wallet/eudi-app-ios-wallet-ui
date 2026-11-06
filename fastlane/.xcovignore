@@ -1,13 +1,23 @@
 # Tests
 - GeneratedMocks.swift
-- Test.*.swift
+- ^Test.*.swift
+- ^Stub.*.swift
+- ^Recording.*.swift
+- .*\+Fixture.swift
+
+# App shell
+- Wallet/
 
 # Config
 - .*Config.*.swift
 - Config.*.swift
 
+# Errors
+- .*Error.swift
+
 # Views/Components
 - .*View.swift
+- .*View\+Extensions.swift
 - .*Shape.swift
 - .*Style.swift
 - .*Styles.swift
@@ -15,10 +25,6 @@
 - .*ToolBarContent.swift
 - EasySpacer.swift
 - DialogCompat.swift
-
-# ViewModel
-- ViewModel.swift
-- .*ViewModel.swift
 
 # UIModel
 - .*UIModel.swift
@@ -34,22 +40,16 @@
 - .*Router.swift
 - AppRoute.swift
 - AppRouteModule.swift
-- RouterHost.swift
 
 # DI
 - .*Assembly.swift
 - DIGraph.swift
 
-# Extensions
-- .*Extensions.swift
-
 # Attribute
 - .*Attributes.swift
 
 # Controller
-- PrefsController.swift
 - ReachabilityController.swift
-- KeyChainController.swift
 - UrlSchemaController.swift
 
 # Interactor

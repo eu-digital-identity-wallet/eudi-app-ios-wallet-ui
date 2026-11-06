@@ -28,6 +28,8 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
   public var id: String
 
   public let section: PresentationListItemSection
+  /// The ids of the claims that hold a picture of the holder (`ConfigUiLogic.userImageClaimKeys`).
+  public let userImageItemIds: Set<String>
 
   public var log: String {
     "id: \(section.id), title: \(section.title)"
@@ -35,10 +37,12 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
 
   public init(
     id: String = UUID().uuidString,
-    section: PresentationListItemSection
+    section: PresentationListItemSection,
+    userImageItemIds: Set<String> = []
   ) {
     self.id = id
     self.section = section
+    self.userImageItemIds = userImageItemIds
   }
 }
 
@@ -311,6 +315,35 @@ public extension Array where Element == RequestDataUiModel {
       return false
     }
   }
+
+  /// True when a document of the option requests a picture of the holder, such as the portrait.
+  func requestsUserImage() -> Bool {
+    contains { !$0.userImageItemIds.isEmpty }
+  }
+
+  /// True when Share would disclose a picture of the holder: its row is selected, or has no checkbox because the
+  /// document's claims are disclosed as a whole.
+  func sharesUserImage() -> Bool {
+    contains { model in
+      model.section.listItems.contains { $0.disclosesAnyOf(model.userImageItemIds) }
+    }
+  }
+}
+
+private extension ExpandableListItem where T == DocumentElementClaim {
+  /// True when a row among `itemIds` would be disclosed: selected, or without a checkbox.
+  func disclosesAnyOf(_ itemIds: Set<String>) -> Bool {
+    switch self {
+    case .nested(let item):
+      return item.expanded.contains { $0.disclosesAnyOf(itemIds) }
+    case .single(let item):
+      guard let id = item.domainModel?.id, itemIds.contains(id) else { return false }
+      if case .checkbox(_, let isSelected, _) = item.collapsed.trailingContent {
+        return isSelected
+      }
+      return true
+    }
+  }
 }
 
 public extension RequestDataUiModel {
@@ -371,6 +404,7 @@ public extension Array where Element == DocElements {
   func toUiModels(
     with walletKitController: WalletKitController,
     claimsAreSelectable: Bool = true,
+    userImageClaimKeys: Set<String> = [],
     overaskedPaths: [String: Set<[String]>] = [:]
   ) -> [RequestDataUiModel] {
     self.compactMap { element in
@@ -438,7 +472,8 @@ public extension Array where Element == DocElements {
             claimsAreSelectable: claimsAreSelectable,
             overaskedPaths: overaskedPathsForDocument
           )
-        )
+        ),
+        userImageItemIds: dataFields.userImageItemIds(userImageClaimKeys: userImageClaimKeys)
       )
     }
   }
@@ -471,6 +506,20 @@ private extension Array where Element == DocClaim {
 }
 
 private extension Array where Element == DocumentElementClaim {
+
+  /// The ids of the claims, in groups too, whose last path element is one of `userImageClaimKeys`.
+  func userImageItemIds(userImageClaimKeys: Set<String>) -> Set<String> {
+    reduce(into: Set<String>()) { ids, claim in
+      switch claim {
+      case .group(_, _, let items):
+        ids.formUnion(items.userImageItemIds(userImageClaimKeys: userImageClaimKeys))
+      case .primitive(let id, _, _, _, let path, _, _, _):
+        if let key = path.last, userImageClaimKeys.contains(key) {
+          ids.insert(id)
+        }
+      }
+    }
+  }
 
   func toListItems(
     claimsAreSelectable: Bool,

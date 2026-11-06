@@ -274,7 +274,7 @@ extension TestTransactionDetailsInteractor {
     }
   }
 
-  func testPerformDataProtectionAction_WhenDeletionContactIsRecorded_ThenRecordsAndReturnsMailUrl() async {
+  func testPerformDataProtectionAction_WhenDeletionContactIsRecorded_ThenReturnsMailUrlWithoutRecording() async {
     // Given
     stubFetchPresentationWithContacts()
     stub(walletKitController) { stub in
@@ -295,10 +295,10 @@ extension TestTransactionDetailsInteractor {
     XCTAssertEqual(url.scheme, "mailto")
     XCTAssertTrue(url.absoluteString.hasPrefix("mailto:support@verifier.example?subject="))
     XCTAssertTrue(url.absoluteString.contains("body="))
-    verify(walletKitController).recordDataDeletionRequest(for: any(), contactUrl: equal(to: URL(string: "mailto:support@verifier.example")!))
+    verify(walletKitController, never()).recordDataDeletionRequest(for: any(), contactUrl: any())
   }
 
-  func testPerformDataProtectionAction_WhenReportContactIsRecorded_ThenRecordsReportAndKeepsWebUrl() async {
+  func testPerformDataProtectionAction_WhenReportContactIsRecorded_ThenKeepsWebUrlWithoutRecording() async {
     // Given
     stubFetchPresentationWithContacts()
     stub(walletKitController) { stub in
@@ -317,7 +317,7 @@ extension TestTransactionDetailsInteractor {
       return XCTFail("Expected success, but got \(result).")
     }
     XCTAssertEqual(url, URL(string: "https://dpa.example/report"))
-    verify(walletKitController).recordDpaReport(for: any(), contactUrl: any())
+    verify(walletKitController, never()).recordDpaReport(for: any(), contactUrl: any())
   }
 
   func testPerformDataProtectionAction_WhenContactIsNotRecorded_ThenReturnsUnavailableWithoutRecording() async {
@@ -338,23 +338,74 @@ extension TestTransactionDetailsInteractor {
     verify(walletKitController, never()).recordDataDeletionRequest(for: any(), contactUrl: any())
   }
 
-  func testPerformDataProtectionAction_WhenRecordingFails_ThenReturnsFailure() async {
-    // Given
+  func testRecordDataProtectionAction_WhenTheHandOffSucceeded_ThenRecordsTheDeletionRequest() async {
     stubFetchPresentationWithContacts()
     stub(walletKitController) { stub in
-      when(stub.recordDataDeletionRequest(for: any(), contactUrl: any())).thenThrow(WalletCoreError.unableToRecordTransactionAction)
+      when(stub.recordDataDeletionRequest(for: any(), contactUrl: any())).thenDoNothing()
     }
 
-    // When
-    let result = await interactor.performDataProtectionAction(
+    let result = await interactor.recordDataProtectionAction(
       transactionId: "tx-contacts",
       action: .requestDataDeletion,
       contactUrl: URL(string: "mailto:support@verifier.example")!
     )
 
-    // Then
+    guard case .success = result else {
+      return XCTFail("Expected recorded, but got \(result).")
+    }
+    verify(walletKitController).recordDataDeletionRequest(
+      for: any(),
+      contactUrl: equal(to: URL(string: "mailto:support@verifier.example")!)
+    )
+  }
+
+  func testRecordDataProtectionAction_WhenTheHandOffSucceeded_ThenRecordsTheReport() async {
+    stubFetchPresentationWithContacts()
+    stub(walletKitController) { stub in
+      when(stub.recordDpaReport(for: any(), contactUrl: any())).thenDoNothing()
+    }
+
+    let result = await interactor.recordDataProtectionAction(
+      transactionId: "tx-contacts",
+      action: .reportSuspiciousTransaction,
+      contactUrl: URL(string: "https://dpa.example/report")!
+    )
+
+    guard case .success = result else {
+      return XCTFail("Expected recorded, but got \(result).")
+    }
+    verify(walletKitController).recordDpaReport(for: any(), contactUrl: any())
+  }
+
+  func testRecordDataProtectionAction_WhenTheContactIsNotTheTransactions_ThenRecordsNothing() async {
+    stubFetchPresentationWithContacts()
+
+    let result = await interactor.recordDataProtectionAction(
+      transactionId: "tx-contacts",
+      action: .requestDataDeletion,
+      contactUrl: URL(string: "mailto:someone@else.example")!
+    )
+
+    guard case .unavailable = result else {
+      return XCTFail("Expected unavailable, but got \(result).")
+    }
+    verify(walletKitController, never()).recordDataDeletionRequest(for: any(), contactUrl: any())
+  }
+
+  func testRecordDataProtectionAction_WhenRecordingFails_ThenReturnsFailure() async {
+    stubFetchPresentationWithContacts()
+    stub(walletKitController) { stub in
+      when(stub.recordDataDeletionRequest(for: any(), contactUrl: any())).thenThrow(WalletCoreError.unableToRecordTransactionAction)
+    }
+
+    let result = await interactor.recordDataProtectionAction(
+      transactionId: "tx-contacts",
+      action: .requestDataDeletion,
+      contactUrl: URL(string: "mailto:support@verifier.example")!
+    )
+
     guard case .failure(let error) = result else {
-      return XCTFail("Expected failure, but got success.")
+      return XCTFail("Expected failure, but got \(result).")
     }
     XCTAssertEqual(error as? WalletCoreError, WalletCoreError.unableToRecordTransactionAction)
   }

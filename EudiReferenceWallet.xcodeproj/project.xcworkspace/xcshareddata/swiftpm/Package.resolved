@@ -1,5 +1,5 @@
 {
-  "originHash" : "196ddc86c955c684290b3311f3a39a34d1562223e021c94abbeb06329f796a40",
+  "originHash" : "f16de3aec9714905967b7bd82a749829a0102dd15d69ceb6b243ae9846193a04",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tadija/AEXML.git",
       "state" : {
-        "revision" : "db806756c989760b35108146381535aec231092b",
-        "version" : "4.7.0"
+        "revision" : "dd9206de0717d658daec6a064992894fdab8ae17",
+        "version" : "4.7.3"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/av-lib-ios-w3c-dc-api.git",
       "state" : {
-        "revision" : "f1e76e2f2c92fe0815ff0f2b999872909dbfcc87",
-        "version" : "0.26.2"
+        "revision" : "14505c81dfbb08d082a58ad31b2b0f6d20ec780e",
+        "version" : "0.28.2"
       }
     },
     {
@@ -60,7 +60,6 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/rhummelmose/BluetoothKit.git",
       "state" : {
-        "branch" : "master",
         "revision" : "d6ab93cb3f98d9c4033bd37413d9fe90a4647cb4"
       }
     },
@@ -114,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
       "state" : {
-        "revision" : "d3dfc244fe5737fc1ea2fa137bffcd9914ab2e72",
-        "version" : "0.27.2"
+        "revision" : "d86c695dae25f01254341addfbbe4580e899910b",
+        "version" : "0.28.1"
       }
     },
     {
@@ -123,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "ebaa2f516f6b2dc33310afec273b01f39060499c",
-        "version" : "0.28.1"
+        "revision" : "14387b2ebcc0399741e688132c8b186a50d71319",
+        "version" : "0.28.5"
       }
     },
     {
@@ -132,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
-        "revision" : "73ef6927be23c1f8f2c5c8c37d7b4459c36e4d9e",
-        "version" : "0.28.1"
+        "revision" : "7f4583a4f66b66eaed4a8338ba5321089e97ecc5",
+        "version" : "0.28.4"
       }
     },
     {
@@ -141,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "9126d54189c08f4ee38f78f800bc6011648d8bf4",
-        "version" : "0.55.5"
+        "revision" : "79d5df2fc179f21edf9f5bef7916aa2fc32c818e",
+        "version" : "0.55.6"
       }
     },
     {
@@ -150,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vp-swift.git",
       "state" : {
-        "revision" : "22ab73cc7a42195b7f8ac1a526d49c97d61e8bda",
-        "version" : "0.43.3"
+        "revision" : "d65bd3cc8c4e2aff3b3496926c29bde69e1d4def",
+        "version" : "0.44.1"
       }
     },
     {
@@ -186,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-statium-swift.git",
       "state" : {
-        "revision" : "da66b71423a5b8a27799d105449d3c0e154230dc",
-        "version" : "0.6.0"
+        "revision" : "f1412752f75ab91fbdd9a81b5c6f12a0e814baa2",
+        "version" : "0.6.1"
       }
     },
     {
@@ -195,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "8a3b97da681c8d74056709d9b42eaf6523450eb7",
-        "version" : "0.56.6"
+        "revision" : "3c77e574efc31547efd7cdece5f0abc9b1947381",
+        "version" : "0.58.8"
       }
     },
     {
@@ -285,8 +284,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/PhoneNumberKit/PhoneNumberKit",
       "state" : {
-        "revision" : "cf2f1df6f2fe8b49701f4b43f0e97c7bd113d034",
-        "version" : "5.0.8"
+        "revision" : "df3bcccd1d88ba96fb89cccf51b84b7b6f7f53fe",
+        "version" : "5.0.12"
       }
     },
     {
@@ -294,8 +293,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Rainbow",
       "state" : {
-        "revision" : "cdf146ae671b2624917648b61c908d1244b98ca1",
-        "version" : "4.2.1"
+        "revision" : "711ca908ca19d16e577d575c8d0a48151a16bb1b",
+        "version" : "4.2.2"
       }
     },
     {
@@ -330,8 +329,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GigaBitcoin/secp256k1.swift.git",
       "state" : {
-        "revision" : "e70a10e036a55fffea31568f0af92d69b6d449cd",
-        "version" : "0.23.2"
+        "revision" : "bcd6dd8e615ce243eab7097f213c8c4b39305a2e",
+        "version" : "0.24.0"
       }
     },
     {
@@ -366,8 +365,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-asn1.git",
       "state" : {
-        "revision" : "d9a5b37470adc940d22c3bcd5ca6953a516b727f",
-        "version" : "1.7.2"
+        "revision" : "3b6410f7dee09eb33cdd26260c5fd47fda19b0e2",
+        "version" : "1.7.3"
       }
     },
     {
@@ -375,8 +374,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-certificates.git",
       "state" : {
-        "revision" : "c8aece90ea05f9866bd392a5bf13b5cae56c0e03",
-        "version" : "1.20.0"
+        "revision" : "ff86b924ead66f853b8baf91f3c41926a8f36177",
+        "version" : "1.21.0"
       }
     },
     {
@@ -384,8 +383,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "a0cb0954ecb21e4e31b0070e6ed5674e8556685a",
-        "version" : "1.6.0"
+        "revision" : "f96b909e1a9e469620bc5037c1e24e00153f376f",
+        "version" : "1.7.5"
       }
     },
     {
@@ -402,8 +401,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "9c6fb14227f55d8f711ce3847dc2f419fb0ecacb",
-        "version" : "1.15.1"
+        "revision" : "c9c6bb9d275ec0d95c3ad16391f3f045dc623104",
+        "version" : "1.16.2"
       }
     },
     {
@@ -420,8 +419,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/niscy-eudiw/SwiftCBOR.git",
       "state" : {
-        "revision" : "e8fef8613a4c32b150885fec8f32c2ebfe0501c4",
-        "version" : "0.6.5"
+        "revision" : "89360f74e895effa3b65e5e2f2c1e359160f8b69",
+        "version" : "0.7.0"
       }
     },
     {
@@ -479,12 +478,21 @@
       }
     },
     {
+      "identity" : "xcode-project-format",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/xcode-project-format.git",
+      "state" : {
+        "revision" : "c132630aabf40f6d6c3f7bb004595d2e5a28ea42",
+        "version" : "0.1.0"
+      }
+    },
+    {
       "identity" : "xcodeproj",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tuist/XcodeProj",
       "state" : {
-        "revision" : "cfc3234fa2a60babbd26712ac0dec0d44734c019",
-        "version" : "9.16.0"
+        "revision" : "b505c06bb190b9306b29d5d96e3284e139af3cc8",
+        "version" : "9.17.6"
       }
     },
     {
