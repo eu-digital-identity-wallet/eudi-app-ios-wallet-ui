@@ -16,7 +16,10 @@
 
 public protocol SessionCoordinatorHolder: Sendable {
   func clear() async
+  /// Lets `coordinator` go if it is still the active remote coordinator; a later one stays.
   func clearRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) async
+  /// If `coordinator` is still the active proximity coordinator, stops its Bluetooth session and keeps it only until
+  /// the next one starts; a later one keeps running.
   func clearProximityCoordinator(_ coordinator: ProximitySessionCoordinator) async
   func setActiveRemoteCoordinator(_ coordinator: RemoteSessionCoordinator) async
   func setActiveProximityCoordinator(_ coordinator: ProximitySessionCoordinator) async

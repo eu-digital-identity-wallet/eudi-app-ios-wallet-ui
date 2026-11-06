@@ -36,7 +36,11 @@ public protocol WalletKitController: Sendable {
   func startSameDevicePresentation(deepLink: URLComponents) async -> RemoteSessionCoordinator
   func startCrossDevicePresentation(urlString: String) async -> RemoteSessionCoordinator
   func stopPresentation() async
+  /// Clears `coordinator` as the active remote session if it still is; a session that started after it stays. The
+  /// caller stops the coordinator itself.
   func stopRemotePresentation(_ coordinator: RemoteSessionCoordinator) async
+  /// Stops the Bluetooth session of `coordinator` only while it is the active one, so a presentation that ends
+  /// never stops one that started after it.
   func stopProximityPresentation(_ coordinator: ProximitySessionCoordinator) async
 
   func fetchAllDocuments() async -> [any DocClaimsDecodable]

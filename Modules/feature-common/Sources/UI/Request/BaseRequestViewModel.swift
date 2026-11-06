@@ -92,6 +92,9 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     router.push(with: route)
   }
 
+  /// Whether Share may send the response now: the request has loaded, the selection can be shared, and a
+  /// registration warning, if there is one, was acknowledged. The view enables Share with it, and
+  /// `onShareClick()` and `onUserImageShareConfirmed()` check it again before sharing.
   var canShare: Bool {
     viewState.initialized
     && !viewState.isLoading
@@ -243,6 +246,8 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   }
 
   open func stopPresentation() async {}
+  /// Called when the user leaves the request with Back: a remote request sends the decline, and a proximity
+  /// request stops its Bluetooth session. Does nothing by default.
   open func declineRequest() async {}
   public func onTrustBlocked() {
     setState {
