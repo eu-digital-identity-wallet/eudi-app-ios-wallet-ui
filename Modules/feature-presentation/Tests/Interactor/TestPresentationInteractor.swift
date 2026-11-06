@@ -174,21 +174,19 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testStopPresentation_WhenInteractorMethodCalled_ThenStopsOnlyItsOwnSession() async {
-    // Given
     let ownSession = presentationCoordinator!
     stub(walletKitController) { mock in
       when(mock.stopRemotePresentation(any())).thenDoNothing()
     }
-    // When
+
     await interactor.stopPresentation()
-    // Then
+
     verify(walletKitController).stopRemotePresentation(ParameterMatcher { $0 === ownSession })
     verify(walletKitController, never()).stopPresentation()
     verify(presentationCoordinator).stopPresentation()
   }
 
   func testOnDeclineRequest_WhenTheDeclineIsSent_ThenStopsOnlyItsOwnSession() async {
-    // Given
     let ownSession = presentationCoordinator!
     stub(presentationCoordinator) { mock in
       when(mock.declineResponse()).thenDoNothing()
@@ -196,10 +194,9 @@ final class TestPresentationInteractor: EudiTest {
     stub(walletKitController) { mock in
       when(mock.stopRemotePresentation(any())).thenDoNothing()
     }
-    // When
+
     await interactor.onDeclineRequest()
 
-    // Then
     verify(presentationCoordinator).declineResponse()
     verify(walletKitController).stopRemotePresentation(ParameterMatcher { $0 === ownSession })
     verify(walletKitController, never()).stopPresentation()
@@ -432,16 +429,13 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenTransactionDataIsReadableAndBoundToAShownDocument_ThenTheOptionShowsIt() async throws {
-    // Given
     let transaction: PresentationTransactionDataDomain = .qes(.init(credentialIds: ["pid"], signatureRequests: []))
     await stubReceivedRequest(
       Self.presentationRequest(transactionDataSets: [[Constants.isoMdlModelId: [transaction]]], requestNames: ["option-1"])
     )
 
-    // When
     let state = await interactor.onRequestReceived()
 
-    // Then
     guard case .success(let model) = state else {
       return XCTFail("Wrong state \(state)")
     }

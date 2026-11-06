@@ -232,14 +232,13 @@ final class TestProximityInteractor: EudiTest {
   }
   
   func testStopPresentation_WhenInteractorMethodCalled_ThenStopsOnlyItsOwnSession() async {
-    // Given
     let ownSession = presentationSessionCoordinator!
     stub(walletKitController) { mock in
       when(mock.stopProximityPresentation(any())).thenDoNothing()
     }
-    // When
+
     await interactor.stopPresentation()
-    // Then
+
     verify(walletKitController).stopProximityPresentation(ParameterMatcher { $0 === ownSession })
     verify(walletKitController, never()).stopPresentation()
     verify(presentationSessionCoordinator).stopPresentation()
