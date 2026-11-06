@@ -166,7 +166,8 @@ You will also need to download the EUDI Verifier app. More information can be fo
 6. After submission, a success screen will appear. If the issuer issued only some of the offered documents, it
    names the ones that were not added to your wallet. Tap "Done".
 7. You will be redirected back to the "Documents" tab within the "Dashboard" screen. The flow is now complete.
-   An offer from an issuer the wallet is not set up to use is refused before anything is fetched.
+   An offer from an issuer the wallet is not set up to use is refused before the wallet contacts that issuer; an
+   offer passed by address is fetched only from a configured issuer's site.
 
 With "Check Registration Certificates" enabled in Settings, both issuance flows require the provider
 to be registered for what it offers. If its registration certificate is missing, cannot be

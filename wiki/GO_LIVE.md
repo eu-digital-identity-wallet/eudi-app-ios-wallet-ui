@@ -1227,19 +1227,23 @@ carries no reader authentication to combine it with.
 
 ## Issuer Configuration: `issuersConfig`
 
-Credential offers are accepted only from the issuers in `issuersConfig` (`OfferIssuer`, checked before anything is
-fetched). An offer that carries itself in the link must name a configured issuer as its `credential_issuer`, written
-exactly as its `credentialIssuerURL`; an offer passed by address must be fetched over `https` from a configured
-issuer's origin. Any other offer is refused with "This offer comes from an issuer that this wallet is not set up to
-use", as on Android, because wallet-kit would otherwise give an unknown issuer the first configured issuer's client
-settings. To accept an issuer's offers, add a `VciConfig` entry for it to `issuersConfig` in the build variants that
-need it. Once WalletKit has resolved the offer, the issuer its metadata names must also be configured, compared
-exactly (`WalletKitController.resolveOfferUrlDocTypes`, WalletKit 0.58.1 and later), as the Android wallet checks the
-resolved offer. WalletKit exposes only the metadata, not the issuer the offer itself names, and the OpenID4VCI
-library does not check that the metadata names the issuer it was fetched from; with `requireSignedMetadata` on, the
-metadata must still be signed for that issuer by a trusted access certificate. For an offer passed by address, the
-issuer the fetched offer names is not compared with that address, and redirects are followed; the Android wallet has
-the same limitation (owner, 16 October 2026).
+Credential offers are accepted only from the issuers in `issuersConfig` (`OfferIssuer`; the link is checked before
+anything is fetched). An offer that carries itself in the link must name a configured issuer as its
+`credential_issuer`, written exactly as its `credentialIssuerURL`; an offer passed by address must be fetched over
+`https` from a configured issuer's origin. Any other offer is refused with "This offer comes from an issuer that
+this wallet is not set up to use", as on Android, because wallet-kit would otherwise give an unknown issuer the
+first configured issuer's client settings. To accept an issuer's offers, add a `VciConfig` entry for it to
+`issuersConfig` in the build variants that need it. The wallet fetches an offer passed by address itself, through
+the app's session, and the issuer that offer names as its `credential_issuer` must be configured too, compared
+exactly (`WalletKitControllerImpl.checkedOfferLink(for:)`, for the resolution and the issuance alike). An offer that
+cannot be fetched or read fails with WalletKit's "Credential offer from server cannot be trusted." WalletKit then
+gets the offer by value, so it does not fetch it again and contacts no issuer the wallet is not set up to use, and
+the issuance uses the offer that was checked. The Android wallet compares the same issuer once Wallet Core has
+resolved the offer, by which time Wallet Core has fetched that issuer's metadata. The fetched offer may name a
+configured issuer other than the one whose origin served it, and redirects are followed; the Android wallet does the
+same. The OpenID4VCI library does not compare the metadata's `credential_issuer` with the issuer it was fetched
+from; with `requireSignedMetadata` on, the signed metadata's `sub` must name that issuer, and a trusted access
+certificate must sign it.
 
 When an issuer issues only some of the documents of an offer, the success screen names the ones not added
 (`DocumentSuccessUIConfig.notIssuedDocumentNames`), as on Android; the cause wallet-kit reports is not shown.

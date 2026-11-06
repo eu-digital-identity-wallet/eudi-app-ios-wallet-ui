@@ -55,6 +55,7 @@ let package = Package(
         "logic-core",
         "logic-business",
         "logic-storage",
+        "logic-api",
         "logic-test"
       ],
       path: "./Tests"

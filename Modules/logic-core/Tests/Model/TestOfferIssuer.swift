@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
+import OpenID4VCI
 @testable import logic_core
 @testable import logic_test
 
@@ -119,29 +120,35 @@ final class TestOfferIssuer: EudiTest {
     )
   }
 
-  func testRequireConfigured_WhenTheResolvedOfferNamesAConfiguredIssuer_ThenPasses() {
-    XCTAssertNoThrow(
-      try OfferIssuer.requireConfigured(resolvedIssuer: "https://backend.example:8443", configuredIssuers: configured)
+  func testByValueLink_WhenAFetchedOfferIsPassedOn_ThenTheLibraryReadsExactlyThatOffer() throws {
+    let fetched = "{\"credential_issuer\":\"https://issuer.example\",\"credential_configuration_ids\":[\"a&b=c+d#e%20é\"]}"
+
+    let link = try XCTUnwrap(
+      OfferIssuer.byValueLink(offerUri: byReference("https://issuer.example/offers/1") + "#fragment", offer: fetched)
     )
+
+    XCTAssertTrue(link.hasPrefix("openid-credential-offer://?credential_offer="))
+    XCTAssertFalse(link.contains("#"))
+    guard case .passByValue(let offer) = try CredentialOfferRequest(urlString: link) else {
+      return XCTFail("Expected the offer by value")
+    }
+    XCTAssertEqual(offer, fetched)
   }
 
-  func testRequireConfigured_WhenTheResolvedOfferNamesAnotherIssuer_ThenThrowsIssuerNotConfigured() {
-    for issuer in ["https://attacker.example", "https://issuer.example/", "https://ISSUER.example"] {
-      XCTAssertThrowsError(
-        try OfferIssuer.requireConfigured(resolvedIssuer: issuer, configuredIssuers: configured),
-        issuer
-      ) { error in
-        XCTAssertEqual(error.localizedDescription, WalletCoreError.issuerNotConfigured.localizedDescription)
-      }
-    }
+  func testByValueLink_WhenTheFetchedOfferNamesAConfiguredIssuer_ThenTheLinkComesFromIt() throws {
+    let link = try XCTUnwrap(
+      OfferIssuer.byValueLink(offerUri: byReference("https://issuer.example/offers/1"), offer: offer(issuer: "https://issuer.example"))
+    )
+
+    XCTAssertEqual(OfferIssuer.of(offerUri: link, configuredIssuers: configured), .configured("https://issuer.example"))
   }
 
-  func testRequireConfigured_WhenTheResolvedOfferHasNoIssuerMetadata_ThenThrowsIssuerNotConfigured() {
-    XCTAssertThrowsError(
-      try OfferIssuer.requireConfigured(resolvedIssuer: nil, configuredIssuers: configured)
-    ) { error in
-      XCTAssertEqual(error.localizedDescription, WalletCoreError.issuerNotConfigured.localizedDescription)
-    }
+  func testByValueLink_WhenTheFetchedOfferNamesAnotherIssuer_ThenTheLinkIsNotConfigured() throws {
+    let link = try XCTUnwrap(
+      OfferIssuer.byValueLink(offerUri: byReference("https://issuer.example/offers/1"), offer: offer(issuer: "https://attacker.example"))
+    )
+
+    XCTAssertEqual(OfferIssuer.of(offerUri: link, configuredIssuers: configured), .notConfigured)
   }
 }
 

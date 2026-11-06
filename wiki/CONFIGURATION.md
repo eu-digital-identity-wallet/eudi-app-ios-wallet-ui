@@ -676,7 +676,8 @@ If you want to add or adjust the displayed scoped documents, you must modify the
 Issuer logos load only over `https`, from the issuer's own origin or one of that issuer's `VciConfig.logoOrigins`
 (the backend issuers list `https://eudiw.dev`, as on Android), so one issuer's metadata cannot point at another
 issuer's origins (`IssuerLogoOrigins`, checked with `URL.isAllowedIssuerLogo(allowedOrigins:)`). An offer's logo
-follows the configured issuer the offer link names.
+follows the configured issuer the offer link names; for an offer passed by address, the issuer whose origin served
+it, even when the fetched offer names another configured issuer.
 Every remote image, relying-party and Trust Mark logos included, loads only over `https` (`RemoteImagePolicy`). A
 redirect is followed only within the image's origin and over `https`, a download stops once it exceeds
 `RemoteImagePolicy.maxImageByteCount` (2 MiB) whether or not the response declares its size
@@ -687,13 +688,16 @@ Android has the same residual.
 Images inside credentials, such as the portrait, are decoded within Android's limits (`ImageDecodeLimits`): an
 image above 40 megapixels is not decoded, and a side above 2048 px is scaled down while decoding.
 
-Credential offers are accepted only from the issuers in `issuersConfig` (`OfferIssuer`, checked before anything is
-fetched). An offer that carries itself in the link must name a configured issuer as its `credential_issuer`, written
-exactly as its `credentialIssuerURL`; an offer passed by address must be fetched over `https` from a configured
-issuer's origin. Any other offer is refused with "This offer comes from an issuer that this wallet is not set up to
-use", as on Android, because wallet-kit would otherwise give an unknown issuer the first configured issuer's client
-settings. To accept an issuer's offers, add a `VciConfig` entry for it to `issuersConfig` in the build variants that
-need it.
+Credential offers are accepted only from the issuers in `issuersConfig` (`OfferIssuer`; the link is checked before
+anything is fetched). An offer that carries itself in the link must name a configured issuer as its
+`credential_issuer`, written exactly as its `credentialIssuerURL`; an offer passed by address must be fetched over
+`https` from a configured issuer's origin. Any other offer is refused with "This offer comes from an issuer that
+this wallet is not set up to use", as on Android, because wallet-kit would otherwise give an unknown issuer the
+first configured issuer's client settings. The wallet fetches an offer passed by address itself, and that offer must
+name a configured issuer as its `credential_issuer` in turn, compared exactly; WalletKit then gets it by value and
+does not fetch it again. An offer that cannot be fetched or read fails with WalletKit's "Credential offer from
+server cannot be trusted." To accept an issuer's offers, add a `VciConfig` entry for it to `issuersConfig` in the
+build variants that need it.
 
 ## How to work with self-signed certificates
 
