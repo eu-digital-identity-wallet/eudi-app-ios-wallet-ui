@@ -426,9 +426,13 @@ final actor WalletKitControllerImpl: WalletKitController {
 
     let response = try await wallet.issueDocuments(
       issuerName: issuerId,
-      docTypeIdentifiers: identifiers.map { .identifier($0) },
-      credentialOptions: credentialOptions,
-      keyOptions: walletKitConfig.keyOptions
+      configuration: identifiers.map {
+        DocumentIssuanceConfiguration(
+          docTypeIdentifier: .identifier($0),
+          credentialOptions: credentialOptions,
+          keyOptions: walletKitConfig.keyOptions
+        )
+      }
     )
     await reconcileRegistrations()
     return IssuanceResult(
