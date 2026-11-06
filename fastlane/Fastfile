@@ -114,11 +114,7 @@ platform :ios do
 
     clean_build_artifacts
 
-    reset_project(
-      targets: ENV["APP_TARGETS"],
-      configName: ENV["APP_VERSION_CONFIG"],
-      buildType: ENV["APP_BUILD_TYPE"],
-    )
+    reset_project
 
     add_git_tag(
       tag: tagVersion,
@@ -189,19 +185,8 @@ platform :ios do
   end
 
   desc "Reset default project settings"
-  lane :reset_project do |values|
-    targets = values[:targets]
-    configName = values[:configName]
-    buildType = values[:buildType]
-    update_build_number(
-      targets: targets,
-      number: 1,
-    )
-    update_version(
-      targets: targets,
-      configName: configName,
-      version: "yyyy.mm.v",
-    )
+  lane :reset_project do
+    sh("git", "checkout", "--", ":/*.pbxproj", ":/*.plist")
   end
 
   desc "Set build number"

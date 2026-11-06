@@ -33,13 +33,13 @@ The iOS build still uses the Xcode project, schemes, and configuration described
 | --- | --- |
 | `ios tests` | Runs the selected scheme's test plan with `scan`. |
 | `ios code_coverage` | Runs tests with coverage enabled and generates `xcov` output in `xcov_output/`. Failing tests do not fail the lane (`fail_build: false`); read the test results there. `fastlane/.xcovignore` leaves out test code, the app shell, configuration, errors, views and other UI components, UI models, routes and dependency injection; view models, extensions, the navigation host and the storage controllers are counted. xcov matches each entry, lowercased, against file names as a regular expression anchored at the end, or as a path prefix. |
-| `ios deploy` | Pulls the latest Git state, creates an App Store Connect API key, calculates a build number from TestFlight, sets version and build number values, archives the app, uploads it to App Store Connect/TestFlight, deletes the IPA and dSYM files, resets project version values, tags the release, pushes the tag to any configured remote, and optionally creates a GitHub release. |
+| `ios deploy` | Pulls the latest Git state, creates an App Store Connect API key, calculates a build number from TestFlight, sets version and build number values, archives the app, uploads it to App Store Connect/TestFlight, deletes the IPA and dSYM files, restores the project version values with `reset_project`, tags the release, pushes the tag to any configured remote, and optionally creates a GitHub release. |
 | `ios upload_appstore` | Uploads the generated IPA to App Store Connect/TestFlight with `pilot`, without waiting for processing or distributing the build to testers. |
 | `ios github_release` | Creates a GitHub release from the repository, token, tag and version that `deploy` passes in. |
 | `ios upload_tag` | Sets the URL of the `origin` remote to the given remote and pushes a Git tag to it. The previous URL is not restored. |
 | `ios update_build_number` | Updates build numbers in plist and Xcode project values for configured targets. |
 | `ios update_version` | Updates marketing version in the Xcode project for configured targets and configuration. |
-| `ios reset_project` | Resets build number and version values back to repository defaults. |
+| `ios reset_project` | Restores every tracked `.pbxproj` and `.plist` file from Git (`git checkout`), which puts the build number and version values back to the repository defaults and keeps the project file in the layout it was committed in. Uncommitted edits to those files are discarded; other files are left alone. |
 | `ios build_number` | Adds one to the build number passed in; `deploy` passes the latest TestFlight build number. |
 | `ios tag_name` | Builds the release tag name. |
 | `ios full_version` | Builds the CalVer-style full version string. |
@@ -163,11 +163,12 @@ Before using Fastlane for production:
 ## Release Cautions
 
 The current `deploy` lane mutates version and build number values, archives the app, uploads it to
-App Store Connect/TestFlight, deletes the IPA and dSYM files, and resets project version values. Only
-then does it create a Git tag, push it to the configured remotes and, if configured, create a GitHub
-release. To push the tag, `upload_tag` sets the URL of the `origin` remote to `PROD_REMOTE_REPO` or
-`DEV_REMOTE_REPO` and does not restore it, so after a run `origin` points at the last of them. Run
-the lane only from a clean working tree and a controlled CI environment.
+App Store Connect/TestFlight, deletes the IPA and dSYM files, and restores the project version
+values from Git. Only then does it create a Git tag, push it to the configured remotes and, if
+configured, create a GitHub release. To push the tag, `upload_tag` sets the URL of the `origin`
+remote to `PROD_REMOTE_REPO` or `DEV_REMOTE_REPO` and does not restore it, so after a run `origin`
+points at the last of them. Run the lane only from a clean working tree and a controlled CI
+environment.
 
 For production, ensure the pipeline fails if the archive contains any of the demo values listed in
 [Pre-Release Automated Checks](../wiki/GO_LIVE.md#pre-release-automated-checks).
