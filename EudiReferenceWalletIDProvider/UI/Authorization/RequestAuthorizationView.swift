@@ -21,6 +21,7 @@ import feature_common
 struct RequestAuthorizationView: View {
 
   @State private var viewModel: RequestAuthorizationViewModel
+  @State private var scrollAreaHeight: CGFloat = .zero
 
   init(with viewModel: RequestAuthorizationViewModel) {
     self._viewModel = State(wrappedValue: viewModel)
@@ -89,9 +90,11 @@ struct RequestAuthorizationView: View {
                   backgroundColor: Theme.shared.color.groupedElevatedBackground,
                   hideSensitiveContent: false,
                   isLoading: viewState.isLoading,
-                  onExpand: { showOpenedDocument(index, with: proxy) }
+                  onExpand: { headerId, height in
+                    showOpened(headerId ?? section.id, height: height, with: proxy)
+                  }
                 )
-                .id(index)
+                .id(section.id)
                 .accessibilityElement()
                 .combineChilrenAccessibility(
                   locator: BaseRequestLocators.requestedDocument(index.string)
@@ -104,6 +107,11 @@ struct RequestAuthorizationView: View {
           }
           .shimmer(isLoading: viewState.isLoading)
         }
+        .onGeometryChange(for: CGFloat.self) { geometry in
+          geometry.size.height - geometry.safeAreaInsets.top - geometry.safeAreaInsets.bottom
+        } action: { height in
+          scrollAreaHeight = height
+        }
       }
 
       actionButtonsFooter()
@@ -111,11 +119,12 @@ struct RequestAuthorizationView: View {
   }
 
   /// The sheet's buttons, and its warning when one is shown, stay fixed below a short scroll area, so the claims
-  /// of a document opened near the scroll area's bottom edge would be out of sight; the opened document is
-  /// scrolled to the top instead.
-  private func showOpenedDocument(_ index: Int, with proxy: ScrollViewProxy) {
+  /// of a document or group opened near the scroll area's bottom edge would be out of sight. An opened item that
+  /// fits is scrolled the least that shows it whole, which keeps as much of the requester in view as there is room
+  /// for; a taller one is scrolled to the top, so its first claims show rather than its last.
+  private func showOpened(_ id: String, height: CGFloat, with proxy: ScrollViewProxy) {
     withAnimation {
-      proxy.scrollTo(index, anchor: .top)
+      proxy.scrollTo(id, anchor: height > scrollAreaHeight ? .top : nil)
     }
   }
 
