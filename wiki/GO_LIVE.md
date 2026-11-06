@@ -778,7 +778,7 @@ Production meaning:
 | --- | --- | --- |
 | `.x509SanDns` | Verifier client identity is bound to a DNS name in an X.509 certificate. | Use when verifier certificates and trust anchors are managed and audited. |
 | `.x509Hash` | Verifier identity is bound to a certificate hash. | Use when the verifier ecosystem requires hash-based certificate binding. |
-| `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add the production client ID, legal name and request-signing keys, and the request signing algorithm when it is not RS256. |
+| `.preregistered` | Verifiers are explicitly configured in the wallet. | Use for closed pilots or controlled ecosystems. Add the production client ID, legal name and request-signing keys, and the request signing algorithm: ES256 for a Request Object fetched by `request_uri` (see the rules below). |
 | `supportedTransactionDataTypes` | OpenID4VP `transaction_data` types the wallet accepts. The OpenID4VP library rejects any request whose transaction data type is not listed; an empty list rejects every request that carries transaction data. The app accepts the CSC `https://cloudsignatureconsortium.org/2025/qes-approval` (`.qesApprovalRequest`) and `https://cloudsignatureconsortium.org/2025/qes` (`.qesRequest`) types. The same list is used to read the transaction data recorded in presentation logs. | Keep both QES types when supporting signing flows. Add another type only once the wallet can display it, since WalletKit exposes it as raw JSON, which the wallet cannot show, so the app declines the request (`WalletCoreError.transactionDataNotShown`). |
 | `validateRegistrationCertificate` | Whether the verifier's WRP registration certificate is validated during OpenID4VP. Set from `validateIssuerRegistrationCertificate`. | See [Registration Certificates: The Second Trust Layer](#registration-certificates-the-second-trust-layer). |
 
@@ -815,7 +815,9 @@ you define.
 Rules:
 
 * `webKeys` must hold the verifier's production request-signing public keys.
-* `jarSigningAlg` must match the algorithm the verifier signs its requests with. It defaults to RS256.
+* `jarSigningAlg` must match the algorithm the verifier signs its requests with. WalletKit 0.58.8 accepts only ES256
+  for a Request Object fetched by `request_uri`, so set `JWSAlgorithm(.ES256)`; the RS256 default works only for a
+  request passed by value.
 * `verifierLegalName` must be the official entity name shown to users.
 * `clientId` must match verifier registration and protocol profile.
 * Do not include development verifier URLs in production.
@@ -823,7 +825,8 @@ Rules:
 * WalletKit accepts a Request Object fetched with `request_uri_method=post` whether or not the verifier encrypts it,
   and accepts ES256 signatures. The signature and the verifier's certificate are checked either way.
   `OpenId4VpConfiguration.requiresJarEncryption` and `jarSigningAlgorithms` exist since WalletKit 0.57.3, but
-  WalletKit 0.58.8 does not apply them, so neither changes this.
+  WalletKit 0.58.8 does not apply them, so neither changes this, except that an empty `jarSigningAlgorithms` list
+  fails every request.
 * For an mdoc presentation, the session transcript binds the key that encrypts the response, whether or not the
   verifier marks it with `use` (WalletKit 0.58.8 and later). OpenID4VP 1.0 does not require `use` on that key.
 
@@ -858,9 +861,9 @@ is more than one, as on Android:
   the query, a reader certificate whose authentication was required and not established), it sends the error to the
   verifier's response endpoint, and the wallet then shows its error screen, or for the certificate the trust alert
   (WalletKit 0.57.1 and later; the app has no setting for these). A request whose reader certificate is not trusted is
-  reported too, because WalletKit's `OpenId4VpConfiguration.errorDispatchPolicy` defaults to `.allClients`;
-  `.onlyAuthenticatedClients`, set in `WalletKitConfigImpl.vpConfig`, withholds that report from a verifier that did
-  not authenticate.
+  reported too, because WalletKit's `OpenId4VpConfiguration.errorDispatchPolicy` defaults to `.allClients`. The
+  reference app keeps the default; set `errorDispatchPolicy: .onlyAuthenticatedClients` in
+  `WalletKitConfigImpl.vpConfig` to withhold that report from a verifier that did not authenticate.
 * Back on the request screen declines a remote request (`RemoteSessionCoordinator.declineResponse`), unless the wallet
   has already tried to send its response: after a failed send, whether WalletKit reported the failure, the verifier
   rejected the response or the network failed, Back closes the request without a second answer, so the history keeps
@@ -1009,10 +1012,11 @@ Current registration behavior:
   updated whenever a revocation check stores or clears a record; when the records cannot be read nothing is
   registered, as on Android. The extension also declines a request that would include such a document
   (`RequestAuthorizationInteractor.loadRequestData`). See [Revocation And Status Checking](#revocation-and-status-checking).
-* Settings has a switch, "Allow document requests from apps and websites (DC API)", which is on by default and shown only on iOS 26
-  and later. While it is off, nothing is registered and every registration is withdrawn when the user turns it off
-  (`Prefs.Key.offerDocumentsToApps`, on by default in `PrefsControllerImpl`). The extension declines a request that still arrives, after
-  the login and before any requested data is shown, and again on Accept, as Android does.
+* Settings has a switch, "Allow document requests from apps and websites (DC API)", which is on by default and shown
+  only on iOS 26 and later. While it is off, nothing is registered and every registration is withdrawn when the user
+  turns it off (`Prefs.Key.offerDocumentsToApps`, on by default in `PrefsControllerImpl`). The extension declines a
+  request that still arrives, after the login and before any requested data is shown, and again on Accept, as Android
+  does.
 
 Current request handling:
 
