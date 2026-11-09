@@ -2089,7 +2089,7 @@ checks restart at once; after a reset they start with the dashboard, after the n
 
 The reset does not reach: files the app or an integrator writes outside Caches and the temporary directory; the
 cookies of WalletKit's sign-in sheet, which are Safari's (see [Network Security](#network-security)); the RQES SDK's
-signing session, which `EudiRQESUi` (0.4.7) keeps in memory and the app cannot clear, so a matching `rqes://` callback
+signing session, which `EudiRQESUi` (0.4.8) keeps in memory and the app cannot clear, so a matching `rqes://` callback
 can reopen it at its last step until the app restarts, which also holds after a lock (reported to the SDK's owner);
 and a request the ID Provider extension answers while the reset runs, since the extension runs in its own process.
 Data already shared with relying parties is outside the wallet.
