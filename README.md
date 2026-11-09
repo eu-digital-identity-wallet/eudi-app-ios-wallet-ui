@@ -104,9 +104,9 @@ If you're planning to use this application in production, we recommend reviewing
   Settings, which is off by default; while it is off, no registration is checked. With it on, an
   issuer that is not registered for the document it offers is refused as well, and on presentation
   the registration is shown to the user and a request beyond its scope requires explicit
-  acknowledgement before sharing. Whatever that setting, a proximity reader that does not
-  authenticate with a trusted reader certificate is shown with a warning, and sharing waits for the
-  same acknowledgement; a remote verifier that does not authenticate is refused. See
+  acknowledgement before sharing. Whatever that setting, a proximity reader that sends no reader
+  authentication is shown with a warning, and sharing waits for the same acknowledgement; a proximity
+  reader whose authentication fails, and a remote verifier that does not authenticate, are refused. See
   [wiki/GO_LIVE.md](wiki/GO_LIVE.md#registration-certificates-the-second-trust-layer) for the
   production requirements this places on your backends.
 
@@ -222,10 +222,11 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
    with the Verifier. You must select at least one attribute to proceed. If the request can be satisfied
    in more than one way, choose the option you prefer, as in the remote flow. As in the remote flow, and
    subject to the same setting, a reader whose registration certificate cannot be validated raises a
-   warning that keeps "Share" disabled until you acknowledge it. A reader that does not authenticate
-   with a trusted reader certificate is shown with a generic name (unless a verified registration
-   certificate names it) and the warning that its identity could not be verified, which keeps "Share"
-   disabled the same way, whatever the setting. If the reader ends the Bluetooth session before you
+   warning that keeps "Share" disabled until you acknowledge it. A reader that sends no reader
+   authentication is shown with a generic name (unless a verified registration certificate names it)
+   and the warning that its identity could not be verified, which keeps "Share" disabled the same way,
+   whatever the setting. A reader whose authentication fails is refused: the wallet says the presentation
+   was blocked and sends nothing. If the reader ends the Bluetooth session before you
    answer, the wallet stops the presentation and returns to the screen you started from. As in the
    remote flow, a request for your portrait shows the biometric-data notice.
 8. Tap "Share". While your portrait is selected, confirm that you want to share it.

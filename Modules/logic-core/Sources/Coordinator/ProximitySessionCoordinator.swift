@@ -95,6 +95,13 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
         }
       }
       .store(in: &sendableAnyCancellable.cancellables)
+    self.session.$uiError
+      .compactMap { $0 }
+      .filter { $0.code == .notSecuredRequest }
+      .sink { [weak self] _ in
+        self?.sendableCurrentValueSubject.setValue(.error(WalletCoreError.presentationBlocked))
+      }
+      .store(in: &sendableAnyCancellable.cancellables)
   }
 
   /// Ends only the state stream. Stopping the Bluetooth transfer here would start the transfer library's

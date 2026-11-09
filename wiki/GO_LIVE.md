@@ -815,7 +815,7 @@ you define.
 Rules:
 
 * `webKeys` must hold the verifier's production request-signing public keys.
-* `jarSigningAlg` must match the algorithm the verifier signs its requests with. WalletKit 0.58.8 accepts only ES256
+* `jarSigningAlg` must match the algorithm the verifier signs its requests with. WalletKit 0.59.0 accepts only ES256
   for a Request Object fetched by `request_uri`, so set `JWSAlgorithm(.ES256)`; the RS256 default works only for a
   request passed by value.
 * `verifierLegalName` must be the official entity name shown to users.
@@ -825,7 +825,7 @@ Rules:
 * WalletKit accepts a Request Object fetched with `request_uri_method=post` whether or not the verifier encrypts it,
   and accepts ES256 signatures. The signature and the verifier's certificate are checked either way.
   `OpenId4VpConfiguration.requiresJarEncryption` and `jarSigningAlgorithms` exist since WalletKit 0.57.3, but
-  WalletKit 0.58.8 does not apply them, so neither changes this, except that an empty `jarSigningAlgorithms` list
+  WalletKit 0.59.0 does not apply them, so neither changes this, except that an empty `jarSigningAlgorithms` list
   fails every request.
 * For an mdoc presentation, the session transcript binds the key that encrypts the response, whether or not the
   verifier marks it with `use` (WalletKit 0.58.8 and later). OpenID4VP 1.0 does not require `use` on that key.
@@ -855,7 +855,7 @@ is more than one, as on Android:
 * A request whose transaction data cannot be shown in full is declined with an explanation, never shown in part
   (`PresentationInteractorImpl.canShowTransactionData`): an entry WalletKit cannot read, or an entry bound to a
   document the consent screen does not show. Each option is checked against its own transaction data; an option
-  that is not offered, because its documents are blocked, is not checked. WalletKit 0.58.8 binds transaction data
+  that is not offered, because its documents are blocked, is not checked. WalletKit 0.59.0 binds transaction data
   to SD-JWT and mdoc documents alike.
 * When WalletKit itself cannot take a remote request (transaction data it cannot process, no document that satisfies
   the query, a reader certificate whose authentication was required and not established), it sends the error to the
@@ -1097,22 +1097,24 @@ var staticRootCertificates: [Data] {
 * `revocationPolicy` (`PkixRevocationPolicy`) on `EtsiTrustSource` and on `StaticListTrustSource` decides whether
   and how PKIX chain validation checks certificate revocation: `.disabled`, `.ocspOnly`, `.ocspPriority` (OCSP, then
   CRL), `.crlOnly` or `.crlPriority` (CRL, then OCSP). Every policy other than `.disabled` needs a positive answer:
-  there is no soft-fail, so a chain whose revocation status cannot be obtained is not trusted. iOS checks revocation
+  there is no soft-fail, so a chain whose revocation status cannot be obtained is not trusted. iOS checks OCSP
   in its own trust evaluation (the ETSI library sets a `SecPolicyCreateRevocation` policy), outside the app's
   network session and App Transport Security. Unlike on Android, where the wallet refuses cleartext revocation
-  downloads, an `http://` OCSP or CRL address is not refused. The reference app sets `.disabled` on the
-  `EtsiTrustSource` for every build variant, and `.ocspOnly` on the fallback `StaticListTrustSource`, so a chain
-  the fallback validates needs a positive OCSP answer. That is what the fallback did before MdocSecurity 0.28.4;
-  the library default is now `.crlPriority`, so the policy is set explicitly. The CRL policies have not been
-  tested on a device.
+  downloads, an `http://` OCSP address is not refused. CRLs are checked by a `crlChecker` (`CheckRevocationIos`)
+  that the app supplies on the trust source, because `Security.framework` never reports a positive response from a
+  CRL: every policy that uses CRLs needs one, and the validator cannot be created without it. The reference app
+  sets `.disabled` on the `EtsiTrustSource` for every build variant, and `.ocspOnly` on the fallback
+  `StaticListTrustSource`, so a chain the fallback validates needs a positive OCSP answer. The policy is set
+  explicitly so that a library default does not change it: the default was `.crlPriority` in MdocSecurity 0.28.4
+  and is `.ocspOnly` since 0.29.
 
 Production guidance:
 
 * Replace the demo LoTE endpoints in `trustConfiguration` with your production trusted-list locations.
 * Set a `revocationPolicy` other than `.disabled` on the production `EtsiTrustSource`. `.disabled` suits only the
-  development trust lists. Choose the method your PKI serves: with `.ocspOnly` or `.ocspPriority`, every
-  certificate below a list entry, in every chain the wallet validates, must name an OCSP responder that answers for
-  it; with `.crlOnly` or `.crlPriority`, a CRL distribution point that can be fetched. Set the fallback's policy
+  development trust lists. Choose the method your PKI serves: with `.ocspOnly`, every certificate below a
+  list entry, in every chain the wallet validates, must name an OCSP responder that answers for it; `.crlOnly`,
+  `.crlPriority` and `.ocspPriority` also need a `crlChecker` that you supply. Set the fallback's policy
   explicitly as well, since a library update can change the default. Test issuance, presentation and the
   registration checks with revocation on before release.
 * Keep the PID at `.enforce`. Classify every other doc type your trust framework covers and enforce
@@ -1121,9 +1123,12 @@ Production guidance:
   against the trusted lists.
 * Keep `requireSignedMetadata` at `true`. Set `statusTrustPolicy` to `.enforce` once the status-list
   signers of your issuers validate against the access-certificate list.
-* Keep `readerTrustPolicy` at `.enforce`, so an OpenID4VP request whose reader access certificate
-  chain is not trusted is refused. `.warning` lets such a signed request proceed with an untrusted
-  certificate.
+* Keep `readerTrustPolicy` at `.enforce`, so that a request whose reader authentication fails is refused: an
+  OpenID4VP request whose reader access certificate chain is not trusted and, since WalletKit 0.58.9, a BLE reader
+  whose signature or certificate chain does not validate. `.warning` lets such a signed OpenID4VP request proceed
+  with an untrusted certificate, and only reports a BLE reader's result. A BLE reader that authenticates must chain
+  to a `wrpacProviders` entry and meet the ETSI certificate profile; unlike the Android Dev and Demo builds, which
+  relax the profile, `EtsiTrustSource` has no option for this.
 * Configure `wrprcProviders` as well; without it the registration certificates covered in the next
   section have no trust source, and no registration can be validated in either direction.
 * Remove demo and staging fallback trust anchors that are not part of the production trust framework.
@@ -1176,14 +1181,17 @@ The app treats the two directions differently, and the asymmetry is intentional:
   beyond the registered scope keeps the badge, marks each requested claim outside that scope as
   "Not registered data", and gates sharing behind the same acknowledgement. The acknowledgement is
   not remembered between requests. Access-certificate failures continue to block outright where the
-  protocol allows it. A proximity (BLE) reader that did not authenticate (no reader certificate, or
-  one that failed validation) is not refused: ISO/IEC 18013-5 makes reader authentication optional,
-  and WalletKit checks it only for OpenID4VP. It gets a warning of its own, "The identity of this
+  protocol allows it. A proximity (BLE) reader that sends no reader authentication is not refused:
+  ISO/IEC 18013-5 makes it optional. It gets a warning of its own, "The identity of this
   relying party could not be verified", ahead of any registration outcome and whatever
   `validateIssuerRegistrationCertificate` says: no badge, the generic name instead of the one in its
   certificate (a verified registration certificate still names it, as on Android), and Share disabled
   until the user acknowledges it. The Android wallet shows the same warning
-  (`ACCESS_CERTIFICATE_NOT_TRUSTED`).
+  (`ACCESS_CERTIFICATE_NOT_TRUSTED`). A BLE reader whose authentication fails is refused under
+  `readerTrustPolicy: .enforce` (WalletKit 0.58.9 and later): the QR screen says the presentation was blocked, no
+  request is shown, and nothing is sent, not even an error response. The Android wallet shows such a request with
+  the warning and answers with an empty response. A request using `readerAuthAll` is refused as well. A registration
+  certificate counts only against a reader certificate that was validated.
 
 Production requirements:
 
@@ -1756,7 +1764,7 @@ Modules/logic-api/Sources/Provider/NetworkSessionProvider.swift
 A cookie one relying party sets is therefore never sent to another through that session. Three paths sit outside it,
 and the app cannot change them:
 
-* WalletKit 0.58.8 fetches an SD-JWT issuer's keys, when the credential carries no `x5c` chain, with
+* WalletKit 0.59.0 fetches an SD-JWT issuer's keys, when the credential carries no `x5c` chain, with
   `URLSession.shared`.
 * WalletKit's sign-in sheet for issuers (`ASWebAuthenticationSession` in `OpenId4VciService`) is not ephemeral, so
   it shares Safari's cookies: an issuer can recognise the browser across issuances, and the wallet's reset does not
@@ -1979,7 +1987,7 @@ filters, search and date range work over all entries.
 `eudi-lib-ios-iso18013-data-model`), and the app stores it as JSON in the store's `TransactionLog` table. The log
 records the relying party, the attestation types and the identifiers of the attributes requested and presented, never
 their values; this is the rule the ARF and the Implementing Acts set for it (HLR.64, HLR.65 and IA.34, as the security
-review maps them). With WalletKit 0.58.8:
+review maps them). With WalletKit 0.59.0:
 
 * a presentation entry records the requested and presented claims as attestation type (mdoc `docType` or SD-JWT VC
   `vct`) and claim paths, without values, and the relying party's details WalletKit has for it: name, identifier,
@@ -2832,6 +2840,8 @@ Before release candidate approval, test:
 * A DC API request for claims that two documents of the same type hold between them: each document is sent with only
   the claims the sheet showed for it.
 * A proximity request that several document sets satisfy offers the choice.
+* A BLE reader whose authentication fails is refused on the QR screen and receives nothing; a reader that sends no
+  reader authentication raises the warning.
 * PID issuance from list.
 * Credential offer issuance by QR.
 * Authorization-code issuance redirect.
