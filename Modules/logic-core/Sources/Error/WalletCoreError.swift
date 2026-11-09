@@ -31,6 +31,7 @@ public enum WalletCoreError: LocalizedError, Equatable {
   case documentOfferingDisabled
   case issuerNotConfigured
   case transactionDataNotShown
+  case presentationBlocked
 
   public var errorDescription: String? {
     return switch self {
@@ -62,6 +63,8 @@ public enum WalletCoreError: LocalizedError, Equatable {
       LocalizableStringKey.issuanceOfferIssuerNotConfiguredError.toString
     case .transactionDataNotShown:
       LocalizableStringKey.requestTransactionDataNotShownError.toString
+    case .presentationBlocked:
+      LocalizableStringKey.presentationBlockedMessage.toString
     }
   }
 }

@@ -552,7 +552,7 @@ any other way, such as assigning `Theme.shared`, does not; apply it in the exten
 * **Run both variants.** Build `Dev` and `Demo` and confirm the app icon is correct for each (the
   display name is shared by default).
 * **Screenshot the key surfaces:** splash, dashboard/home, a presentation request (remote and
-  proximity, including the warning a proximity reader without a trusted reader certificate raises),
+  proximity, including the warning a proximity reader without reader authentication raises),
   the PIN screen, document details, a revoked and a suspended document (the documents list draws
   both in `red` with the `errorIndicator` image, the issuer card in `red`, and the dashboard notice
   lists both under one title), a document whose status could not be refreshed, and one the wallet

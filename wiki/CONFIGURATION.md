@@ -257,8 +257,7 @@ The app enforces signer trust for the PID only and warns for every other
 attestation: those doc types have no verification context, so enforcing them would refuse every
 EAA. `revocationPolicy: .disabled` turns off PKIX revocation checks for the dev trust lists, as
 `relaxPkixRevocation()` does on Android; choose another policy for production. The static fallback sets
-`.ocspOnly` explicitly, so that the fallback keeps the OCSP-only check it had before MdocSecurity 0.28.4, whose
-default is `.crlPriority`.
+`.ocspOnly` explicitly, so that a library default does not change it.
 Every policy other than `.disabled` needs a positive answer for every certificate below a list entry; see GO_LIVE
 [Trust Store](GO_LIVE.md#trust-store).
 
@@ -324,7 +323,9 @@ request, independently of both. The app keeps it at `.enforce`, as `enforceIfPre
 Android: a signed request whose reader certificate chain is not trusted is refused. Under
 `.warning` (wallet-kit 0.56.0 and later) such a request proceeds and reports
 `ReaderAuthenticationStatus.authenticatedWithUntrustedCertificate`; the app treats only
-`.authenticated` as a trusted reader, so it is not shown as trusted.
+`.authenticated` as a trusted reader, so it is not shown as trusted. The same policy applies to BLE since
+wallet-kit 0.58.9: under `.enforce` a reader whose authentication fails is refused, and under `.warning` its result
+is only reported. A reader that sends no reader authentication is not refused under either.
 
 Note what none of these policies changes: WalletKit reports a WRPRC status list that cannot be retrieved only
 as a warning. The app refuses an issuance on any registration warning, so an unreachable status list

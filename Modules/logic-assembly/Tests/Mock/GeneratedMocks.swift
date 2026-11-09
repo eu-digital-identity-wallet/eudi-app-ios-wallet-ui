@@ -5863,6 +5863,9 @@ import Cuckoo
 import SwiftUI
 import logic_storage
 import logic_api
+import enum OpenID4VCI.CredentialOfferRequest
+import struct OpenID4VCI.CredentialOfferRequestObject
+import struct OpenID4VCI.Fetcher
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics
