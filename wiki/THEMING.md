@@ -327,7 +327,7 @@ treat the dimension manager as the small set of global measurements rather than 
 
 ## Logos and in-app imagery
 
-[`ImageManager`](../Modules/logic-resources/Sources/Manager/ImageManager.swift) exposes ~60 image
+[`ImageManager`](../Modules/logic-resources/Sources/Manager/ImageManager.swift) exposes 66 image
 roles. They come from **two sources**, and only one is brandable:
 
 * **Bundled imagesets** (`Image(name, bundle:)`) in
@@ -414,6 +414,7 @@ in the theme. If you rename the product, search the catalog for `EUDI`/`Wallet` 
 * `quick_pin_set_title` ("Welcome to your wallet"), `quick_pin_set_success` and
   `quick_pin_set_step_one_caption` — onboarding / PIN-setup copy.
 * `my_eu_wallet` ("My EU Wallet") — side-menu navigation title.
+* `trust_mark_about_title` ("About EUDI Wallet") — side-menu item and Trust Mark screen title.
 * `wallet_is_secured` ("Your wallet is secured!") — success copy.
 * `login_caption` / `login_caption_quick_pin_only` ("…access the EUDI Wallet…") — login auth prompts,
   shown at app unlock and before a request in the ID Provider extension. The system biometric prompt
@@ -527,8 +528,8 @@ container.register(ConfigUiLogic.self) { _ in
 first frame. `ThemeConfiguration.init` is `public` for exactly this purpose. This is the iOS analog of
 Android's `ThemeManager.Builder`, and is intentionally left at `.default` in the reference app.
 
-The ID Provider extension creates `ConfigUiLogicImpl` too, when its request screen resolves
-`RequestAuthorizationInteractor` (`LogicIDPModule`, for `userImageClaimKeys`), so a theme passed in the
+The ID Provider extension creates `ConfigUiLogicImpl` too, in `DocumentProviderExtension`'s `init()`,
+where resolving `ScreenCaptureController` reads `hideContentWhileCaptured`, before any screen is drawn, so a theme passed in the
 `ConfigUiLogic` registration of `LogicUiAssembly` reaches it. Asset-catalog edits reach it as well. A theme applied
 any other way, such as assigning `Theme.shared`, does not; apply it in the extension too, for example in
 `DocumentProviderExtension`'s `init()`.

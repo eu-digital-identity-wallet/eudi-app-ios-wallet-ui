@@ -34,7 +34,7 @@ The EUDI Wallet Reference Implementation is based on a modular architecture comp
 
 The EUDI Wallet Reference Implementation is the application that allows users to:
 
-1. To obtain, store, and present PID and mDL.
+1. Obtain, store, and present PID and mDL.
 2. Authenticate the verifiers and readers that request their data.
 3. Share data on proximity scenarios.
 4. Support remote QES and more use cases with the modules included.
@@ -43,7 +43,7 @@ The EUDIW project provides an iOS app through this repository. Please refer to t
  
 ## Specifications Employed
 
-The app consumes the SDK called EUDIW Wallet core [Wallet kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) and a list of available libraries to facilitate remote presentation, proximity, and issuing test/demo functionality following the specification of the [ARF](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework), including:
+The app consumes the EUDI [Wallet Kit](https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit) SDK and a list of available libraries to facilitate remote presentation, proximity, and issuing test/demo functionality following the specification of the [ARF](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework), including:
  
 - OpenID4VP v1 (remote presentation), DCQL
  
@@ -91,7 +91,7 @@ If you're planning to use this application in production, we recommend reviewing
 - Configure the application properly by following the guide [here](wiki/CONFIGURATION.md)
 - Follow the production go-live guide [here](wiki/GO_LIVE.md) before creating a release candidate.
 - Review the go-live guide's out-of-scope section [here](wiki/GO_LIVE.md#out-of-scope) and design the required Member State onboarding, enrollment, and operational processes around the app.
-- The Pin storage configuration matches your security requirements, or provide your own by following this guide [Pin Storage Configuration](wiki/CONFIGURATION.md#pin-storage-configuration)
+- Check that the PIN storage configuration matches your security requirements, or provide your own by following [Pin Storage Configuration](wiki/CONFIGURATION.md#pin-storage-configuration).
 - Assess the application against OWASP MASVS before release; the reference implementation does not
   claim compliance. The go-live guide's
   [MASVS section](wiki/GO_LIVE.md#owasp-masvs-production-alignment) lists the controls to evidence
@@ -101,7 +101,8 @@ If you're planning to use this application in production, we recommend reviewing
   they are, and a registration certificate establishes what they are registered to do. Issuance
   always requires the first: an issuer whose signed metadata cannot be authenticated is refused and
   nothing is stored. The second is governed by "Check Registration Certificates" in the app's
-  Settings, which is off by default; while it is off, no registration is checked. With it on, an
+  Settings, which is off by default and takes effect after the app restarts; while it is off, no
+  registration is checked. With it on, an
   issuer that is not registered for the document it offers is refused as well, and on presentation
   the registration is shown to the user and a request beyond its scope requires explicit
   acknowledgement before sharing. Whatever that setting, a proximity reader that sends no reader
@@ -176,11 +177,11 @@ With "Check Registration Certificates" enabled in Settings, both issuance flows 
 to be registered for what it offers. If its registration certificate is missing, cannot be
 validated, or does not cover the offered document, the flow stops on an "Issuance blocked" alert
 and nothing is added to the Wallet. With the setting off, its default, no registration is checked.
-A change to the setting applies after the app restarts.
+A change to the setting applies after the app restarts, for issuance and presentation alike.
 
 To delete a document, navigate to the 'Documents' tab within the 'Dashboard' screen, tap on the document you wish to remove, then tap 'Remove from wallet' on its 'Details' screen and confirm with 'Remove'.
 
-### Presentation (Online authentication/Same device) flow.
+### Presentation (Online authentication/Same device) flow
 
 1. Go to the browser application on your device and enter "https://verifier.eudiw.dev"
 2. Expand the Person Identification Data (PID) card and select:
@@ -238,7 +239,7 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
 
 ## How to build - Quick start guide
 
-[This document](wiki/HOW_TO_BUILD.md) describes how you can build the application and deploy the issuing and verification services locally.
+[This document](wiki/HOW_TO_BUILD.md) describes how you can build the application and run it against the issuing and verification services, remote or local.
 
 ## Application configuration
 

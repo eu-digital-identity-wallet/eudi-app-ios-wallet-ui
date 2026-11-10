@@ -6,7 +6,10 @@
 * [Setup Apps](#setup-apps)
 * [Build configurations](#build-configurations)
 * [Build commands](#build-commands)
-* [How to work with self-signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
+* [Running against services](#running-against-services)
+  * [Running with remote services](#running-with-remote-services)
+  * [Running with local services](#running-with-local-services)
+  * [How to work with self-signed certificates on iOS](#how-to-work-with-self-signed-certificates-on-ios)
 * [Document Provider extension configuration](#document-provider-extension-configuration)
 * [Production note](#production-note)
 
@@ -18,7 +21,7 @@ This guide aims to assist developers in building the application.
 
 ### EUDI iOS Wallet reference application
 
-You need [Xcode](https://xcodereleases.com/) and its command-line tools installed. Use Xcode 26.0 or
+You need [Xcode](https://developer.apple.com/xcode/) and its command-line tools installed. Use Xcode 26.0 or
 newer, which ships the iOS 26.0 SDK and Swift 6.2: the Identity Document Provider extension targets
 iOS 26.0, and the local packages declare `swift-tools-version: 6.2`. An older Xcode will not build
 the project.
@@ -58,8 +61,9 @@ reset via *File ▸ Packages ▸ Reset Package Caches* and retry.
 To run the app on the simulator, select your app scheme and press Run.
 
 > On an Apple-silicon Mac, build for a named simulator and pin `ARCHS=arm64 ONLY_ACTIVE_ARCH=YES`,
-> as the simulator command below does, so that only the arm64 slice is built. The two binary
-> dependencies, PoDoFo and `EudiEtsi1196x2`, ship both arm64 and x86_64 simulator slices.
+> as the simulator command below does, so that only the arm64 slice is built. The pin only avoids
+> building an unused x86_64 slice: the two binary dependencies, PoDoFo and `EudiEtsi1196x2`, ship both
+> arm64 and x86_64 simulator slices, so either links.
 
 To run the app on a device, follow similar steps to running it on the simulator. Both targets, the
 app (`EudiWallet`) and the extension (`EudiReferenceWalletIDProvider`), use manual signing with the
@@ -86,7 +90,9 @@ example `EUDI Wallet Prod`, `Debug Prod`, and `Release Prod`. Do not ship `Relea
 
 The `generic/platform=iOS` commands below build for a device, so they sign both targets with the
 project's manual signing settings. They succeed only once those settings name your own team and
-profiles; for a compile-only check, add `CODE_SIGNING_ALLOWED=NO`.
+profiles; for a compile-only check, add `CODE_SIGNING_ALLOWED=NO`. On a host where nobody has trusted the
+package macro (`SwiftCopyableMacro`) in Xcode, such as a fresh CI runner, also add
+`-skipPackagePluginValidation -skipMacroValidation`, as the fastlane lanes do.
 
 Build the Dev scheme:
 
@@ -141,6 +147,8 @@ xcodebuild \
 > lanes read their settings from environment variables such as `APP_SCHEME`; see
 > [fastlane/USAGE.md](../fastlane/USAGE.md). For local development the Xcode GUI build above is
 > sufficient.
+
+## Running against services
 
 ### Running with remote services
 
@@ -243,14 +251,22 @@ The first step is to run the backend services locally — the issuer and the web
 * [Web Verifier UI](https://github.com/eu-digital-identity-wallet/eudi-web-verifier)
 * [Web Verifier Endpoint](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt)
 
+To use them, add the local issuer to `issuersConfig` in `WalletKitConfigImpl`: an offer or scoped
+issuance from an issuer not listed there is refused. Sign the issuer's metadata with a certificate that
+chains to the access-certificate (WRPAC) trusted list (`wrpacProviders`; the static fallback roots do not
+count), since `requireSignedMetadata` is `true`, and give the verifier an access certificate that chains to
+the same list, since `readerTrustPolicy` is `.enforce`. See [General configuration](CONFIGURATION.md#general-configuration).
+
 ### How to work with self-signed certificates on iOS
 
 To enable the app to interact with a locally running service, a minor code change is required.
 
 > Warning: this change turns off server certificate validation for the host it names. It applies to
 > the session that carries the app's own requests and the OpenID4VCI and OpenID4VP traffic that
-> wallet-kit sends, except wallet-kit's fetch of an SD-JWT issuer's keys when the credential carries no `x5c`
-> chain, which uses `URLSession.shared`. Use it only for local development and never let it reach a release build; see
+> wallet-kit sends. It does not cover wallet-kit's fetch of an SD-JWT issuer's keys when the credential
+> carries no `x5c` chain (`URLSession.shared`), the issuer's sign-in page, which wallet-kit opens in a
+> system sign-in sheet (`ASWebAuthenticationSession`), or the RQES library's calls (`URLSession.shared`);
+> for those, install and trust the local certificate on the simulator or device. Use it only for local development and never let it reach a release build; see
 > [Network Security](GO_LIVE.md#network-security) and
 > [Local Development With Self-Signed Certificates](GO_LIVE.md#local-development-with-self-signed-certificates)
 > in the go-live guide.

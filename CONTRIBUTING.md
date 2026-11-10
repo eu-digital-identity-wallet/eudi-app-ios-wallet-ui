@@ -32,7 +32,7 @@ for making contributions to this project. This means that:
 
    ```bash
    git add .
-   git commit -m "Add a new feature"
+   git commit -m "Fix short description"
    git push origin fix/short-description
    ```
 
@@ -100,8 +100,8 @@ chore/update-dependencies
 * Please provide as much context as possible when you open an issue. The information you provide
   must be comprehensive enough to reproduce that issue for the assignee.
 
-* Please apply one or more applicable [labels](/../../labels) to your issue so that all community
-  members are able to cluster the issues better.
+* Please suggest one or more applicable [labels](/../../labels) in your issue; the maintainers apply
+  them, so that all community members are able to cluster the issues better.
 
 ## Code of Conduct
 
