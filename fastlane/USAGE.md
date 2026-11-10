@@ -24,7 +24,7 @@ The `tests` lane stops unless a scheme is given, through `APP_SCHEME` or as a la
 (`bundle exec fastlane ios tests scheme:"EUDI Wallet Dev"`). Neither test lane names a simulator, so
 `scan` picks one unless `SCAN_DEVICE` is set.
 
-The iOS build still uses the Xcode project, schemes, and configuration described in
+The lanes build the Xcode project, schemes and configurations described in
 [../wiki/HOW_TO_BUILD.md](../wiki/HOW_TO_BUILD.md).
 
 ## Common Lanes
@@ -32,7 +32,7 @@ The iOS build still uses the Xcode project, schemes, and configuration described
 | Lane | Purpose |
 | --- | --- |
 | `ios tests` | Runs the selected scheme's test plan with `scan`. |
-| `ios code_coverage` | Runs tests with coverage enabled and generates `xcov` output in `xcov_output/`. Failing tests do not fail the lane (`fail_build: false`); read the test results there. `fastlane/.xcovignore` leaves out test code, the app shell, configuration, errors, views and other UI components, UI models, routes and dependency injection; view models, extensions, the navigation host and the storage controllers are counted. xcov matches each entry, lowercased, against file names as a regular expression anchored at the end, or as a path prefix. |
+| `ios code_coverage` | Runs tests with coverage enabled and generates `xcov` output in `xcov_output/`. Failing tests do not fail the lane (`fail_build: false`); read the test results there. `fastlane/.xcovignore` leaves out test code, the app shell, configuration, errors, views and other UI components, UI models, accessibility identifiers, data models and attributes, routes, dependency injection, two named controllers, one interactor and the `logic-business` support folders; view models, extensions, the navigation host and the storage controllers are counted. xcov matches each entry, lowercased, against file names as a regular expression anchored at the end, or as a path prefix. |
 | `ios deploy` | Stops unless every tracked file is committed, then pulls the latest Git state, creates an App Store Connect API key, calculates a build number from TestFlight, sets version and build number values, archives the app, uploads it to App Store Connect/TestFlight, deletes the IPA and dSYM files, restores the project version values with `reset_project`, tags the release, pushes the tag to any configured remote, and optionally creates a GitHub release. |
 | `ios upload_appstore` | Uploads the generated IPA to App Store Connect/TestFlight with `pilot`, without waiting for processing or distributing the build to testers. |
 | `ios github_release` | Creates a GitHub release from the repository, token, tag and version that `deploy` passes in. |
@@ -45,10 +45,15 @@ The iOS build still uses the Xcode project, schemes, and configuration described
 | `ios full_version` | Builds the CalVer-style full version string. |
 | `ios minified_version` | Computes and writes the App Store-compatible version without the build-type suffix. |
 
-The lanes after `deploy` are helpers that `deploy` calls. They take lane parameters rather than
+The lanes after `deploy` are helpers that `deploy` calls, directly or through another helper. Apart from
+`reset_project`, which takes no parameters (see its row above for what it discards), they take lane parameters rather than
 environment variables, and most of them fail when run on their own without those parameters.
 
 ## Required Environment Variables
+
+Set the variables in the environment or in an env file: `--env <name>` loads `fastlane/.env.<name>` (for example
+`bundle exec fastlane ios deploy --env demo`). `.gitignore` covers `.env.dev`, `.env.demo` and `*.p8` only; keep any
+other env file and every key out of Git.
 
 The `tests` and `code_coverage` lanes expect:
 
@@ -57,7 +62,7 @@ The `tests` and `code_coverage` lanes expect:
 | `APP_PROJECT` | Coverage | Xcode project path, for example `EudiReferenceWallet.xcodeproj`. |
 | `APP_SCHEME` | Tests and coverage | Scheme to test, for example `EUDI Wallet Dev`, `EUDI Wallet Demo`, or a production scheme. |
 | `XCOV_EXCLUDE_TARGETS` | Coverage | Optional comma-separated targets to exclude from coverage, named as in the coverage report, for example `EudiReferenceWalletIDProvider.appex`. |
-| `SCAN_DEVICE` | Tests and coverage | Optional simulator to test on, with its runtime, for example `iPhone 17 Pro (26.5)`. Without it, `scan` picks a simulator. |
+| `SCAN_DEVICE` | Tests and coverage | Optional simulator to test on, with its runtime, for example `iPhone 17 Pro (26.5)`; use one that `xcrun simctl list devices available` lists. Without it, `scan` picks a simulator. |
 
 The `deploy` lane expects:
 
@@ -70,14 +75,12 @@ The `deploy` lane expects:
 | `APP_TAG` | Tags | Tag namespace or brand segment used in the generated Git tag. |
 | `APP_BUNDLE_ID` | Upload and export options | Main app bundle identifier. |
 | `APP_PROVISION_PROFILE` | Export options | Main app provisioning profile name. |
-| `APP_EXTENSION_BUNDLE_ID` | Export options | Identity Document Provider extension bundle identifier. Not read by the checked-in lane; used by the export mapping below. |
-| `APP_EXTENSION_PROVISION_PROFILE` | Export options | Extension provisioning profile name. Not read by the checked-in lane; used by the export mapping below. |
 | `APP_IPA_PATH` | Upload | Path to the generated IPA. |
 | `TESTFLIGHT_GROUPS` | Upload | Optional comma-separated TestFlight groups, passed to `pilot`. They have no effect at present: the lane sets `skip_waiting_for_build_processing`, so `pilot` returns before it distributes the build. Assign testers in App Store Connect. |
 | `CONNECT_KEY_ID` | App Store Connect | App Store Connect API key ID. |
 | `CONNECT_ISSUER_ID` | App Store Connect | App Store Connect API issuer ID. |
 | `CONNECT_KEY_PATH` | App Store Connect | Path to the private key file injected by CI secret storage. |
-| `CONNECT_APPLE_ID` | App Store Connect | Apple account used by Fastlane metadata. |
+| `CONNECT_APPLE_ID` | App Store Connect | Apple account used by Fastlane metadata (read by `fastlane/Appfile`, as are the next three). |
 | `CONNECT_ITC_TEAM_ID` | App Store Connect | App Store Connect team ID. |
 | `CONNECT_TEAM_NAME` | App Store Connect | Apple Developer team name. |
 | `CONNECT_TEAM_ID` | App Store Connect | Apple Developer team ID. |
@@ -86,11 +89,14 @@ The `deploy` lane expects:
 | `GITHUB_RELEASE_REPO` | Optional GitHub release | Repository name for GitHub releases, for example `owner/repo`. |
 | `GITHUB_RELEASE_TOKEN` | Optional GitHub release | Token used by Fastlane to create the release. |
 
-Current lane caveat:
+Extension provisioning profile:
 
-The checked-in `deploy` lane currently passes only the main app provisioning profile to
-`build_app`. The app target embeds `EudiReferenceWalletIDProvider`, so production CI must extend the
-lane so the exported IPA includes explicit profile mappings for both the main app and the extension.
+The lane passes only the main app's profile to `build_app` explicitly. The app embeds
+`EudiReferenceWalletIDProvider`; both targets sign manually with the profile their `PROVISIONING_PROFILE_SPECIFIER`
+names, so set both in the production configuration: the archive is signed with them, and gym adds the extension's
+profile to the export mapping. An explicit entry, as in the mapping below (which reads two more variables,
+`APP_EXTENSION_BUNDLE_ID` and `APP_EXTENSION_PROVISION_PROFILE`), replaces the project's profile only when its name
+contains the export method (for `app-store`, a name such as "Wallet App Store").
 
 ## Example Commands
 
@@ -133,7 +139,7 @@ CONNECT_TEAM_ID="<team-id>" \
 bundle exec fastlane ios deploy
 ```
 
-Production export mapping for the embedded extension:
+Optional explicit export mapping for the embedded extension:
 
 ```ruby
 provisioningProfiles = {
@@ -149,12 +155,12 @@ Before using Fastlane for production:
 * Add a dedicated production scheme, for example `EUDI Wallet Prod`.
 * Add production build configurations, for example `Debug Prod` and `Release Prod`.
 * Add production `.xcconfig` files and a `PROD` app build variant.
-* Update the lane or export options to include provisioning profile mappings for both the main app
-  and the Identity Document Provider extension; the current lane only maps the main app profile.
+* Give the Identity Document Provider extension its production profile through its
+  `PROVISIONING_PROFILE_SPECIFIER` in the production configuration.
 * Add secret scanning and demo-endpoint checks before upload.
 * Archive the IPA, dSYM files, entitlements, provisioning profile metadata, dependency report, SBOM,
   signing certificate fingerprint, Git commit, and test reports. The current `deploy` lane deletes the
-  IPA and dSYM files after the upload (`clean_build_artifacts`), so copy them before that step.
+  IPA and dSYM files after the upload, so add a step that copies them before `clean_build_artifacts`.
 * Store App Store Connect API keys, certificates, profiles, and passwords only in approved CI secret
   storage.
 * Do not rely on TestFlight build numbers as the only source of production release numbering unless
@@ -169,6 +175,9 @@ values from Git. Only then does it create a Git tag, push it to the configured r
 configured, create a GitHub release. To push the tag, `upload_tag` sets the URL of the `origin`
 remote to `PROD_REMOTE_REPO` or `DEV_REMOTE_REPO` and does not restore it, so after a run `origin`
 points at the last of them. Run the lane from a controlled CI environment.
+
+If the lane fails before `reset_project`, the version and build-number changes stay in the working tree and the next
+`deploy` stops on them; restore them with `bundle exec fastlane ios reset_project`.
 
 For production, ensure the pipeline fails if the archive contains any of the demo values listed in
 [Pre-Release Automated Checks](../wiki/GO_LIVE.md#pre-release-automated-checks).

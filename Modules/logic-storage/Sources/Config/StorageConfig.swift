@@ -89,8 +89,8 @@ private extension StorageConfigImpl {
 private extension URL {
 
   /// Keeps the history, revocation records and bookmarks out of iCloud backup and device-to-device transfer, as the
-  /// Android wallet's backup rules do (owner, 19 October 2026). A restore to the same device brings the documents
-  /// back from the Keychain without their revocation records until the first check after login.
+  /// Android wallet's backup rules do. The documents are not restored either: wallet-storage keeps them in the
+  /// Keychain as `kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly`, a class iOS never backs up.
   mutating func excludeFromBackup() {
     var values = URLResourceValues()
     values.isExcludedFromBackup = true

@@ -65,73 +65,80 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var issuersConfig: [String: VciConfig] {
-  let openId4VciConfigurations: [VciConfig] = {
-    switch configLogic.appBuildVariant {
+    let openId4VciConfigurations: [VciConfig] = {
+      switch configLogic.appBuildVariant {
       case .DEMO:
         return [
           .init(
             config: .init(
-                credentialIssuerURL: "your_demo_issuer_url",
-                clientId: "your_demo_client_id_or_nil",
-                keyAttestationsConfig: .init(
-                  walletAttestationsProvider: walletKitAttestationProvider,
-                  popKeyOptions: KeyOptions(
-                    secureAreaName: SecureEnclaveSecureArea.name,
-                    accessControl: .empty
-                  )
-                ),
-                authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
-                parUsage: .required(authorizationCodeDPoPBinding: should_bind_par_dpop_bool),
-                allowPlainJwtProof: should_allow_plain_jwt_proof_bool,
-                requireDpop: should_use_dpop_bool,
-                issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-                validateRegistrationCertificate: validateIssuerRegistrationCertificate,
-                encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
+              credentialIssuerURL: "your_demo_issuer_url",
+              clientId: "your_demo_client_id_or_nil",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: .empty
+                )
+              ),
+              authFlowRedirectionURI: URL(string: "your_demo_redirect")!,
+              parUsage: .required(authorizationCodeDPoPBinding: should_bind_par_dpop_bool),
+              allowPlainJwtProof: should_allow_plain_jwt_proof_bool,
+              requireDpop: should_use_dpop_bool,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
+              encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
             ),
-            order: issuer_order_int
+            order: issuer_order_int,
+            logoOrigins: ["your_logo_origin"] // optional, default none
           )
         ]
-            
-        case .DEV:
-          return [
-            .init(
-              config: .init(
-                  credentialIssuerURL: "your_dev_issuer_url",
-                  clientId: "your_dev_client_id_or_nil",
-                  keyAttestationsConfig: .init(
-                    walletAttestationsProvider: walletKitAttestationProvider,
-                    popKeyOptions: KeyOptions(
-                      secureAreaName: SecureEnclaveSecureArea.name,
-                      accessControl: .empty
-                    )
-                  ),
-                  authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
-                  parUsage: .required(authorizationCodeDPoPBinding: should_bind_par_dpop_bool),
-                  allowPlainJwtProof: should_allow_plain_jwt_proof_bool,
-                  requireDpop: should_use_dpop_bool,
-                  issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
-                  validateRegistrationCertificate: validateIssuerRegistrationCertificate,
-                  encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
+      case .DEV:
+        return [
+          .init(
+            config: .init(
+              credentialIssuerURL: "your_dev_issuer_url",
+              clientId: "your_dev_client_id_or_nil",
+              keyAttestationsConfig: .init(
+                walletAttestationsProvider: walletKitAttestationProvider,
+                popKeyOptions: KeyOptions(
+                  secureAreaName: SecureEnclaveSecureArea.name,
+                  accessControl: .empty
+                )
               ),
-              order: issuer_order_int
-            )
-          ]
-        }
+              authFlowRedirectionURI: URL(string: "your_dev_redirect")!,
+              parUsage: .required(authorizationCodeDPoPBinding: should_bind_par_dpop_bool),
+              allowPlainJwtProof: should_allow_plain_jwt_proof_bool,
+              requireDpop: should_use_dpop_bool,
+              issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy,
+              validateRegistrationCertificate: validateIssuerRegistrationCertificate,
+              encryptionSupportConfig: .init(credentialResponseEncryptionPolicy: .supported)
+            ),
+            order: issuer_order_int,
+            logoOrigins: ["your_logo_origin"] // optional, default none
+          )
+        ]
+      }
     }()
-
-	// ...
-	}
+    // ...
+  }
 }
 ```
 
 Keep the three parameters the reference app sets on every issuer, or a copied entry falls back to
 WalletKit's defaults. `issuerMetadataPolicy: trustConfiguration.issuerMetadataPolicy` requires
-signed issuer metadata whose signer chains to the trusted lists, since `requireSignedMetadata` is
-`true`; the default, `.ignoreSigned`, accepts unsigned metadata. `validateRegistrationCertificate`
+signed issuer metadata whose signer validates against the access-certificate list (`wrpacProviders`),
+since `requireSignedMetadata` is `true`; the default, `.ignoreSigned`, accepts unsigned metadata. `validateRegistrationCertificate`
 passes the "Check Registration Certificates" setting through (see
 `validateIssuerRegistrationCertificate` below); the default is `false`. `popKeyOptions` keeps the
 client-attestation proof-of-possession key in the Secure Enclave; without it WalletKit creates a
 software key in the Keychain.
+
+`authorizationFlowHandler` (WalletKit 0.60.0 and later) presents the issuer's sign-in during the
+authorization code flow and returns the redirect. It is optional: left unset, as in the reference app,
+WalletKit shows the sign-in in an `ASWebAuthenticationSession` sheet. A custom `AuthorizationFlowHandler`
+must return the full URL the issuer redirected to, and any error it throws fails the issuance unchanged.
+The session lock treats the issuer's sign-in the same way whichever handler shows it; see
+[Session lock configuration](#session-lock-configuration).
 
 `allowPlainJwtProof` selects the credential proof policy for that issuer. Leave it `false` (the default) to stay HAIP-compliant: the wallet sends only attested proofs, either the `attestation` proof type or a `jwt` proof carrying a key attestation from the Wallet Provider. Set it to `true` only for an issuer that does not support key attestation and requires a plain JWT proof; the wallet then also accepts plain `jwt` proofs signed with ES256, ES384 or ES512, and the proof key is no longer attested. The reference issuers require attested proofs, so every issuer in this repo sets it to `false`.
 
@@ -254,8 +261,8 @@ context in either trust source cannot be validated, so under `.enforce` it is re
 its issuer is legitimate. Map every doc type the wallet issues before enforcing.
 
 The app enforces signer trust for the PID only and warns for every other
-attestation: those doc types have no verification context, so enforcing them would refuse every
-EAA. `revocationPolicy: .disabled` turns off PKIX revocation checks for the dev trust lists, as
+attestation: those doc types, apart from the mDL that the static fallback maps by default, have no
+verification context, so enforcing them would refuse every EAA. `revocationPolicy: .disabled` turns off PKIX revocation checks for the dev trust lists, as
 `relaxPkixRevocation()` does on Android; choose another policy for production. The static fallback sets
 `.ocspOnly` explicitly, so that a library default does not change it.
 Every policy other than `.disabled` needs a positive answer for every certificate below a list entry; see GO_LIVE
@@ -315,8 +322,8 @@ the first governs presentation as well:
 
 `wrprcVpTrustPolicy` is the same decision for **presentations**, and the app deliberately sets it to
 `.warning` so a failed check reaches the consent screen behind an acknowledgement rather than ending
-the flow. A single policy governed both directions until wallet-kit 0.40.2, which could not express
-that asymmetry.
+the flow. Before wallet-kit 0.40.2 a single policy (`wrprcTrustPolicy`) governed both directions and
+could not express that asymmetry.
 
 `readerTrustPolicy` decides what an untrusted access certificate (WRPAC) does to an OpenID4VP
 request, independently of both. The app keeps it at `.enforce`, as `enforceIfPresent()` does on
@@ -393,8 +400,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
 ```
 
 `webKeys` is the verifier's public key set; `WebKeySet(_:)` also parses a JWKS JSON string.
-`jarSigningAlg` defaults to RS256. Set it when the verifier signs its requests with another
-algorithm, for example `JWSAlgorithm(.ES256)`. Keep the last two arguments of the configuration, as
+`jarSigningAlg` defaults to RS256, which works only for a request passed by value. WalletKit accepts
+only ES256 for a Request Object fetched through `request_uri` (see GO_LIVE
+[OpenID4VP Configuration](GO_LIVE.md#openid4vp-configuration)), so set `jarSigningAlg: JWSAlgorithm(.ES256)`
+for a verifier that uses `request_uri`. Keep the last two arguments of the configuration, as
 the reference app passes them. The initialiser's defaults are an empty
 `supportedTransactionDataTypes`, which rejects every request that carries transaction data, RQES
 requests included, and `validateRegistrationCertificate: true`, which turns WRPRC checks on whatever
@@ -504,7 +513,7 @@ production values for every config surface listed below.
 | Configuration area | Source file | Production value to provide |
 | --- | --- | --- |
 | Build variant/type | `Wallet/Config/*.xcconfig`, `ConfigLogic.swift` | `BUILD_VARIANT = PROD`, `BUILD_TYPE = RELEASE` for production archives. |
-| Issuers | `WalletKitConfig.swift` | Production OpenID4VCI issuer URLs, client IDs, redirect URIs, PAR/DPoP policy, proof-type policy (`allowPlainJwtProof`), signed-metadata policy (`issuerMetadataPolicy`), registration check (`validateRegistrationCertificate`), credential encryption policy (`encryptionSupportConfig`), PoP key options (`popKeyOptions`), logo origins (`logoOrigins`) and display order. |
+| Issuers | `WalletKitConfig.swift` | Production OpenID4VCI issuer URLs, client IDs, redirect URIs, PAR/DPoP policy, proof-type policy (`allowPlainJwtProof`), signed-metadata policy (`issuerMetadataPolicy`), registration check (`validateRegistrationCertificate`), credential encryption policy (`encryptionSupportConfig`), PoP key options (`popKeyOptions`), logo origins (`logoOrigins`), sign-in presentation (`authorizationFlowHandler`, optional) and display order. |
 | Wallet provider attestation | `WalletProviderAttestationConfig.swift` | Production Wallet Provider host used for wallet/key attestation. |
 | Reader trust anchors | `WalletKitConfig.swift`, certificate resources | Production IACA/reader/verifier trust anchors only, and a `revocationPolicy` other than `.disabled` on both trust sources; see GO_LIVE [Trust Store](GO_LIVE.md#trust-store). |
 | OpenID4VP | `WalletKitConfig.swift` | Approved client ID schemes, preregistered verifier entries where needed, the accepted transaction data types (`supportedTransactionDataTypes`), and the registration check (`validateRegistrationCertificate`). |
@@ -686,7 +695,7 @@ redirect is followed only within the image's origin and over `https`, a download
 (`RemoteImageDownloadOperation`), and a large image is scaled down while it is decoded. The placeholder icon shows
 otherwise. The rule applies even when Core or Kit pass an `http` address. An SVG within 2 MiB is still parsed and
 drawn (`SDWebImageSVGCoder`), whatever size it declares, so a hostile but allowed source can slow the screen down;
-Android has the same residual.
+the Android wallet behaves the same.
 Images inside credentials, such as the portrait, are decoded within Android's limits (`ImageDecodeLimits`): an
 image above 40 megapixels is not decoded, and a side above 2048 px is scaled down while decoding.
 
@@ -939,8 +948,8 @@ screen it left and what covers the wallet then, as on Android. A lock ends every
 `hideContentWhileCaptured` is separate).
 
 On Android only the RQES screens pause the idle timeout, because the issuer's sign-in opens in the
-browser and the wallet goes to the background. On iOS wallet-kit shows the sign-in in a sheet inside the
-wallet's own scene, which stays active, so without the pause the idle timeout would end the session while
+browser and the wallet goes to the background. On iOS wallet-kit shows the sign-in, unless an
+`authorizationFlowHandler` is configured, in an `ASWebAuthenticationSession` sheet inside the wallet's own scene, which stays active, so without the pause the idle timeout would end the session while
 the user fills in the issuer's form. The pause is therefore bounded: a sign-in that is still open after
 `protectedFlowLockTimeout` locks the wallet, so an issuance that never returns cannot keep it open.
 Wallet-kit's client attestation also has a lifetime of its own, and the dev issuer refuses a sign-in that
@@ -982,7 +991,7 @@ outlasts it ("Client Attestation has expired"); that limit is wallet-kit's, not 
 
 The application allows the configuration of multiple analytics providers. You can configure the following:
 
-1. Initializing the provider (e.g., Firebase, Appcenter, etc)
+1. Initializing the provider (e.g., Firebase)
 2. Screen logging
 3. Event logging
 
@@ -1002,25 +1011,18 @@ You can implement the *AnalyticsProvider* protocol and add it to your *Analytics
 Implementation Example:
 
 ```swift
-struct AppCenterProvider: AnalyticsProvider {
- 
+struct MyAnalyticsProvider: AnalyticsProvider {
+
   func initialize(key: String) {
-    AppCenter.start(
-      withAppSecret: key,
-      services: [
-        Analytics.self
-      ]
-    )
+    // Start your analytics SDK with the key here.
   }
- 
+
   func logScreen(screen: String, arguments: [String: String]) {
-    if Analytics.enabled {
-      logEvent(event: screen, arguments: arguments)
-    }
+    logEvent(event: screen, arguments: arguments)
   }
- 
+
   func logEvent(event: String, arguments: [String: String]) {
-    Analytics.trackEvent(event, withProperties: arguments)
+    // Send the event to your analytics SDK here.
   }
 }
 ```
@@ -1031,7 +1033,7 @@ Config Example:
 @objc(AnalyticsConfigImpl)
 final class AnalyticsConfigImpl: NSObject, AnalyticsConfig {
   var analyticsProviders: [String: AnalyticsProvider] {
-    return ["YOUR_OWN_KEY": AppCenterProvider()]
+    return ["YOUR_OWN_KEY": MyAnalyticsProvider()]
   }
 }
 ```
@@ -1142,7 +1144,8 @@ Registrations are reconciled against wallet storage after every operation that a
 - On iOS 26.0 and later, registered CBOR documents appear in the extension request flow.
 - The extension asks for the PIN or biometrics before it shows a request, and again on Accept.
 - The requester is shown without the verified badge and with the warning that its identity could not be
-  verified; Accept waits for its acknowledgement. `DcApiHandler` returns no reader trust verdict (see GO_LIVE).
+  verified; Accept waits for its acknowledgement. `DcApiHandler` returns no reader trust verdict (see GO_LIVE
+  [Digital Credentials API And Identity Document Provider](GO_LIVE.md#digital-credentials-api-and-identity-document-provider)).
 
 ## Trust Mark configuration
 
