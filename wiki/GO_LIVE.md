@@ -1998,8 +1998,8 @@ filters, search and date range work over all entries.
 **Transaction log contents.** WalletKit produces each history entry in the TS10 model (`TransactionEntry`, from
 `eudi-lib-ios-iso18013-data-model`), and the app stores it as JSON in the store's `SDTransactionLog` model. The log
 records the relying party, the attestation types and the identifiers of the attributes requested and presented, never
-the attributes' values, as the ARF and the Implementing Acts require (HLR.64, HLR.65 and IA.34). Transaction data is
-the exception: it is recorded as received (see below). With WalletKit 0.60.1:
+the attributes' values, as the ARF and the Implementing Acts require. Transaction data is the exception: it is
+recorded as received (see below). With WalletKit 0.60.1:
 
 * a presentation entry records the requested and presented claims as attestation type (mdoc `docType` or SD-JWT VC
   `vct`) and claim paths, without values, and the relying party's details WalletKit has for it: name, identifier,
