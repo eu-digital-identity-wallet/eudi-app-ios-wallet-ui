@@ -815,7 +815,7 @@ you define.
 Rules:
 
 * `webKeys` must hold the verifier's production request-signing public keys.
-* `jarSigningAlg` must match the algorithm the verifier signs its requests with. WalletKit 0.60.0 accepts only ES256
+* `jarSigningAlg` must match the algorithm the verifier signs its requests with. WalletKit 0.60.1 accepts only ES256
   for a Request Object fetched by `request_uri`, so set `JWSAlgorithm(.ES256)`; the RS256 default works only for a
   request passed by value.
 * `verifierLegalName` must be the official entity name shown to users.
@@ -825,7 +825,7 @@ Rules:
 * WalletKit accepts a Request Object fetched with `request_uri_method=post` whether or not the verifier encrypts it,
   and accepts ES256 signatures. The signature and the verifier's certificate are checked either way.
   `OpenId4VpConfiguration.requiresJarEncryption` and `jarSigningAlgorithms` exist since WalletKit 0.57.3, but
-  WalletKit 0.60.0 does not apply them, so neither changes this, except that an empty `jarSigningAlgorithms` list
+  WalletKit 0.60.1 does not apply them, so neither changes this, except that an empty `jarSigningAlgorithms` list
   fails every request.
 * For an mdoc presentation, the session transcript binds the key that encrypts the response, whether or not the
   verifier marks it with `use` (WalletKit 0.58.8 and later). OpenID4VP 1.0 does not require `use` on that key.
@@ -855,7 +855,7 @@ is more than one, as on Android:
 * A request whose transaction data cannot be shown in full is declined with an explanation, never shown in part
   (`PresentationInteractorImpl.canShowTransactionData`): an entry WalletKit cannot read, or an entry bound to a
   document the consent screen does not show. Each option is checked against its own transaction data; an option
-  that is not offered, because its documents are blocked, is not checked. WalletKit 0.60.0 binds transaction data
+  that is not offered, because its documents are blocked, is not checked. WalletKit 0.60.1 binds transaction data
   to SD-JWT and mdoc documents alike.
 * When WalletKit itself cannot take a remote request (transaction data it cannot process, no document that satisfies
   the query, a reader certificate whose authentication was required and not established), it sends the error to the
@@ -1765,7 +1765,7 @@ Modules/logic-api/Sources/Provider/NetworkSessionProvider.swift
 A cookie one relying party sets is therefore never sent to another through that session. Three paths sit outside it,
 and the app can change only the second:
 
-* WalletKit 0.60.0 fetches an SD-JWT issuer's keys, when the credential carries no `x5c` chain, with
+* WalletKit 0.60.1 fetches an SD-JWT issuer's keys, when the credential carries no `x5c` chain, with
   `URLSession.shared`.
 * WalletKit's sign-in sheet for issuers (`ASWebAuthenticationSession`, used unless `OpenId4VciConfiguration` is given
   an `authorizationFlowHandler`) is not ephemeral, so it shares Safari's cookies: an issuer can recognise the browser
@@ -1988,7 +1988,7 @@ filters, search and date range work over all entries.
 `eudi-lib-ios-iso18013-data-model`), and the app stores it as JSON in the store's `TransactionLog` table. The log
 records the relying party, the attestation types and the identifiers of the attributes requested and presented, never
 their values; this is the rule the ARF and the Implementing Acts set for it (HLR.64, HLR.65 and IA.34, as the security
-review maps them). With WalletKit 0.60.0:
+review maps them). With WalletKit 0.60.1:
 
 * a presentation entry records the requested and presented claims as attestation type (mdoc `docType` or SD-JWT VC
   `vct`) and claim paths, without values, and the relying party's details WalletKit has for it: name, identifier,
