@@ -1,5 +1,5 @@
 {
-  "originHash" : "aefc1d41612ca30653b33ce1900b131b11427aebde01b96d75d8b7bfa24f3468",
+  "originHash" : "75d2dc527090126408478cad47e01b10e6d0236002e7c39ce04dba58439341fa",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -140,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vci-swift.git",
       "state" : {
-        "revision" : "79d5df2fc179f21edf9f5bef7916aa2fc32c818e",
-        "version" : "0.55.6"
+        "revision" : "02e47782c663d469242bfd24e5ef7f3cb3f70260",
+        "version" : "0.55.7"
       }
     },
     {
@@ -149,8 +149,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-openid4vp-swift.git",
       "state" : {
-        "revision" : "d65bd3cc8c4e2aff3b3496926c29bde69e1d4def",
-        "version" : "0.44.1"
+        "revision" : "2c4a6b0c0d5e664c77b225d24fd9a5bc5c06e09c",
+        "version" : "0.44.2"
       }
     },
     {
@@ -194,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "0670c20f8d8b8455220f1826148994fa4f292bd3",
-        "version" : "0.60.1"
+        "revision" : "b45c4a0e1841fad0d1f73b6206861577d1ec16ee",
+        "version" : "0.61.0"
       }
     },
     {

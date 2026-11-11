@@ -481,7 +481,7 @@ The wallet's `RQESConfig` declares neither, so it inherits both SDK defaults.
 The reference app leaves both `theme` and `translations` at their SDK defaults — the RQES flow is
 **not** rethemed by the wallet. Consequences:
 
-* The app pins RQES UI SDK **0.4.8** (`exact:` in
+* The app pins the RQES UI SDK to one exact version (`exact:` in
   [`logic-business/Package.swift`](../Modules/logic-business/Package.swift)). Its default theme
   follows the **same model as the wallet's SwiftUI theme** (Layer 1): iOS **system colors**
   (`primaryLabel`, `secondaryLabel`, `background`, `accent`) with only a few brand colors baked into
@@ -493,7 +493,7 @@ The reference app leaves both `theme` and `translations` at their SDK defaults �
   they keep the SDK default look (notably the system-blue `accent`) until you set `RQESConfig.theme`.
 
 If you want the signing flow to match your brand, set `theme` in `RQESConfig` with a custom
-`ThemeProtocol`. In 0.4.8 its `ColorManagerProtocol` mirrors a subset of the wallet's color
+`ThemeProtocol`. Its `ColorManagerProtocol` mirrors a subset of the wallet's color
 roles — `black`, `white`, `success`, `successBackground`, `groupedBackground`, `primaryLabel`,
 `secondaryLabel`, `background`, `accent` — and its `TypographyManagerProtocol` exposes the same type
 scale (`displayLarge` … `labelSmall`); point these at the same values your wallet theme uses. If you
