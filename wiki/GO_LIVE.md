@@ -821,6 +821,8 @@ Rules:
 * `jarSigningAlg` must match the algorithm the verifier signs its requests with. WalletKit accepts only ES256
   for a Request Object fetched by `request_uri`, so set `JWSAlgorithm(.ES256)`; the RS256 default works only for a
   request passed by value.
+* The verifier's Request Object must carry the JOSE header `typ: oauth-authz-req+jwt`; the wallet refuses one
+  with any other type.
 * `verifierLegalName` must be the official entity name shown to users.
 * `clientId` must match verifier registration and protocol profile.
 * Do not include development verifier URLs in production.
@@ -1254,9 +1256,9 @@ offer from server cannot be trusted." WalletKit then gets the offer by value, so
 contacts no issuer the wallet is not set up to use, and the issuance uses the offer that was checked. The Android
 wallet compares the same issuer once Wallet Core has resolved the offer, by which time Wallet Core has fetched that
 issuer's metadata. The fetched offer may name a configured issuer other than the one whose origin served it, and
-redirects are followed; the Android wallet does the same. The OpenID4VCI library does not compare the metadata's
-`credential_issuer` with the issuer it was fetched from; with `requireSignedMetadata` on, the signed metadata's
-`sub` must name that issuer, and a trusted access certificate must sign it.
+redirects are followed; the Android wallet does the same. The OpenID4VCI library refuses issuer metadata whose
+`credential_issuer` is not exactly the issuer it was fetched from; with `requireSignedMetadata` on, the signed
+metadata's `sub` must also name that issuer, and a trusted access certificate must sign it.
 
 When an issuer issues only some of the documents of an offer, WalletKit returns the documents it stored together
 with the ones that failed, and the success screen names the ones not added
@@ -1310,14 +1312,15 @@ case .PROD:
 
 | Field | Meaning | Production value |
 | --- | --- | --- |
-| `credentialIssuerURL` | Base URL of an OpenID4VCI credential issuer. | Your production issuer base URL. It must expose valid issuer and authorization metadata. |
+| `credentialIssuerURL` | Base URL of an OpenID4VCI credential issuer. | Your production issuer base URL, written exactly as the issuer's `credential_issuer`, with or without a trailing slash as the issuer has it: metadata whose `credential_issuer` differs is refused. It must expose valid issuer and authorization metadata. |
 | `clientId` | Wallet client identifier known to the issuer or authorization server. | Use the registered production wallet client ID. |
 | `keyAttestationsConfig` | Wallet/key attestation provider used during issuance. `popKeyOptions` keeps the client-attestation proof-of-possession key in the Secure Enclave; without it WalletKit creates a software key. | Use the production wallet attestation provider, and keep `popKeyOptions`. |
 | `authFlowRedirectionURI` | Redirect URI used after authorization. | Must match the issuer's client registration exactly. With the default sign-in sheet it is not registered in `Wallet.plist`, because the sheet captures the redirect itself; use a scheme unique to the wallet. |
-| `authorizationFlowHandler` | Presents the issuer's sign-in during the authorization code flow and returns the redirect. Optional; without it WalletKit uses `ASWebAuthenticationSession`. | Leave unset to keep the system sheet, as the reference build does. A custom handler must present the sign-in in `ASWebAuthenticationSession` or the system browser, never in an embedded web view (RFC 8252); with the system browser the app must receive the redirect itself (a registered scheme or universal link) and route it to the handler, which the app's deep-link handling does not do. It can set `prefersEphemeralWebBrowserSession` so that the sign-in does not share Safari's cookies; users then sign in each time. It must complete on `authFlowRedirectionURI`, as the default sheet does, and return that URL exactly as received: WalletKit takes `code` and `state` from the returned URL without checking its host or path, and relies on the `state` check that follows. Any error it throws fails the issuance and reaches the app unchanged, and the app shows its message to the user. |
+| `authorizationFlowHandler` | Presents the issuer's sign-in during the authorization code flow and returns the redirect. Optional; without it WalletKit uses `ASWebAuthenticationSession`. | Leave unset to keep the system sheet, as the reference build does. A custom handler must present the sign-in in `ASWebAuthenticationSession` or the system browser, never in an embedded web view (RFC 8252); with the system browser the app must receive the redirect itself (a registered scheme or universal link) and route it to the handler, which the app's deep-link handling does not do. It can set `prefersEphemeralWebBrowserSession` so that the sign-in does not share Safari's cookies; users then sign in each time. It must complete on `authFlowRedirectionURI`, as the default sheet does, and return that URL exactly as received: WalletKit takes `code`, `state` and `iss` from the returned URL without checking its host or path, and relies on the `state` check that follows. Any error it throws fails the issuance and reaches the app unchanged, and the app shows its message to the user. |
+| `authResponseIssChecking` | Whether the `iss` parameter of the issuer's authorization response is checked (RFC 9207). `.never` does not check it; `.ifSupported` requires it when the authorization server advertises `authorization_response_iss_parameter_supported` and checks any `iss` it receives against that server; `.required` also fails the issuance when the server does not advertise it. | The reference app sets no value and does not check `iss`, like the Android wallet. In production use `.ifSupported`, or `.required` once every issuer's authorization server supports it. |
 | `parUsage` | Pushed authorization request (PAR) usage policy. Use `.required(authorizationCodeDPoPBinding:)` to require PAR, optionally binding the authorization code to DPoP. | Prefer `.required(authorizationCodeDPoPBinding: true)` where the production profile requires PAR with sender-constrained authorization codes. |
 | `allowPlainJwtProof` | Credential proof policy. `false` (default) is HAIP-compliant: only attested proofs are sent (`attestation`, or `jwt` with a Wallet Provider key attestation). `true` additionally accepts plain `jwt` proofs (ES256/ES384/ES512) without key attestation, so the proof key is no longer attested. | Keep `false`. Set `true` only for a specific issuer that does not support key attestation, after a documented risk decision. |
-| `requireDpop` | Whether DPoP is required. | Prefer `true` where the production profile requires sender-constrained tokens. |
+| `requireDpop` | Whether DPoP is required. With `true`, issuance stops when the authorization server advertises no DPoP algorithms or issues an access token that is not a DPoP token. | Prefer `true` where the production profile requires sender-constrained tokens. |
 | `issuerMetadataPolicy` | Signed-metadata policy. `trustConfiguration.issuerMetadataPolicy` requires signed issuer metadata whose signer validates against the access-certificate list (`wrpacProviders`), since `requireSignedMetadata` is `true`. WalletKit's default, `.ignoreSigned`, accepts unsigned metadata. | Keep `trustConfiguration.issuerMetadataPolicy`. |
 | `validateRegistrationCertificate` | Whether the issuer's registration certificate is validated during issuance. WalletKit's default is `false`. | Pass `validateIssuerRegistrationCertificate`; see [Registration Certificates: The Second Trust Layer](#registration-certificates-the-second-trust-layer). |
 | `encryptionSupportConfig` | Credential request and response encryption. With `credentialResponseEncryptionPolicy: .supported` (wallet-kit's default) the wallet encrypts whenever the issuer's metadata advertises encryption, and otherwise exchanges plain JSON over TLS; `.required` refuses an issuer that does not support encryption. `ecConfig`, `rsaConfig` and `supportedEncryptionMethods` restrict key types and methods. | Prefer `.required` where the production profile mandates encrypted credential responses and every production issuer supports them. |
@@ -1331,7 +1334,7 @@ Rules:
 * Do not point production wallets to development or staging issuers.
 * Confirm issuer metadata contains only production credential configurations.
 * Confirm issuer credential signing keys, status endpoints, and trust chains are production keys.
-* Confirm issuer and wallet agree on redirect URI, client ID, PAR, DPoP, proof type (`allowPlainJwtProof`), credential encryption (`encryptionSupportConfig`), and attestation policy.
+* Confirm issuer and wallet agree on redirect URI, client ID, PAR, DPoP, the authorization response's `iss` check (`authResponseIssChecking`), proof type (`allowPlainJwtProof`), credential encryption (`encryptionSupportConfig`), and attestation policy.
 
 ## Wallet Provider Attestation
 

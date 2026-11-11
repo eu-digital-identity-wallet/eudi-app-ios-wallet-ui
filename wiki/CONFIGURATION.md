@@ -140,6 +140,11 @@ redirected to, and any error it throws fails the issuance unchanged.
 The session lock treats the issuer's sign-in the same way whichever handler shows it; see
 [Session lock configuration](#session-lock-configuration).
 
+`authResponseIssChecking` decides whether the `iss` parameter of the issuer's authorization response is checked
+(RFC 9207): `.never` does not check it; `.ifSupported` requires it when the authorization server advertises support
+and checks any `iss` it receives; `.required` also fails the issuance when the server does not advertise it. The
+reference app sets no value and does not check `iss`, like the Android wallet.
+
 `allowPlainJwtProof` selects the credential proof policy for that issuer. Leave it `false` (the default) to stay HAIP-compliant: the wallet sends only attested proofs, either the `attestation` proof type or a `jwt` proof carrying a key attestation from the Wallet Provider. Set it to `true` only for an issuer that does not support key attestation and requires a plain JWT proof; the wallet then also accepts plain `jwt` proofs signed with ES256, ES384 or ES512, and the proof key is no longer attested. The reference issuers require attested proofs, so every issuer in this repo sets it to `false`.
 
 `encryptionSupportConfig` selects the credential request and response encryption policy for that issuer. Every issuer in this repo keeps wallet-kit's default, `credentialResponseEncryptionPolicy: .supported`: the wallet encrypts the credential request and asks for an encrypted response whenever the issuer's metadata advertises encryption, and otherwise exchanges plain JSON over TLS. Set it to `.required` to refuse an issuer that does not support encryption; issuance then fails instead of falling back to plain JSON. `ecConfig`, `rsaConfig` and `supportedEncryptionMethods` restrict the key types and content encryption methods the wallet uses, and default to EC P-256, RSA 2048 and every method the platform supports.
