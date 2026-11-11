@@ -133,10 +133,10 @@ passes the "Check Registration Certificates" setting through (see
 client-attestation proof-of-possession key in the Secure Enclave; without it WalletKit creates a
 software key in the Keychain.
 
-`authorizationFlowHandler` (WalletKit 0.60.0 and later) presents the issuer's sign-in during the
-authorization code flow and returns the redirect. It is optional: left unset, as in the reference app,
-WalletKit shows the sign-in in an `ASWebAuthenticationSession` sheet. A custom `AuthorizationFlowHandler`
-must return the full URL the issuer redirected to, and any error it throws fails the issuance unchanged.
+`authorizationFlowHandler` presents the issuer's sign-in during the authorization code flow and returns the
+redirect. It is optional: left unset, as in the reference app, WalletKit shows the sign-in in an
+`ASWebAuthenticationSession` sheet. A custom `AuthorizationFlowHandler` must return the full URL the issuer
+redirected to, and any error it throws fails the issuance unchanged.
 The session lock treats the issuer's sign-in the same way whichever handler shows it; see
 [Session lock configuration](#session-lock-configuration).
 
@@ -322,16 +322,15 @@ the first governs presentation as well:
 
 `wrprcVpTrustPolicy` is the same decision for **presentations**, and the app deliberately sets it to
 `.warning` so a failed check reaches the consent screen behind an acknowledgement rather than ending
-the flow. Before wallet-kit 0.40.2 a single policy (`wrprcTrustPolicy`) governed both directions and
-could not express that asymmetry.
+the flow.
 
 `readerTrustPolicy` decides what an untrusted access certificate (WRPAC) does to an OpenID4VP
 request, independently of both. The app keeps it at `.enforce`, as `enforceIfPresent()` does on
 Android: a signed request whose reader certificate chain is not trusted is refused. Under
-`.warning` (wallet-kit 0.56.0 and later) such a request proceeds and reports
+`.warning` such a request proceeds and reports
 `ReaderAuthenticationStatus.authenticatedWithUntrustedCertificate`; the app treats only
-`.authenticated` as a trusted reader, so it is not shown as trusted. The same policy applies to BLE since
-wallet-kit 0.58.9: under `.enforce` a reader whose authentication fails is refused, and under `.warning` its result
+`.authenticated` as a trusted reader, so it is not shown as trusted. The same policy applies to BLE:
+under `.enforce` a reader whose authentication fails is refused, and under `.warning` its result
 is only reported. A reader that sends no reader authentication is not refused under either.
 
 Note what none of these policies changes: WalletKit reports a WRPRC status list that cannot be retrieved only

@@ -549,15 +549,12 @@ For the complete lane usage notes, see [../fastlane/USAGE.md](../fastlane/USAGE.
 
 ## Dependency Governance
 
-* Use released versions, not snapshots or branch dependencies, unless formally approved. BluetoothKit is the one
-  exception in the reference app (see below): approve its pinned commit formally or replace the library.
+* Use released versions, not snapshots or branch dependencies, unless formally approved.
 * Subscribe to security advisories for WalletKit, RQES UI, OpenID4VCI, OpenID4VP, ISO18013
   libraries, Wallet Storage, KeychainAccess, BluetoothKit, Swinject, and the Swift/Xcode toolchain.
 * Keep a dependency update SLA.
 * Keep `Package.resolved` committed and reviewed.
-* Avoid branch dependencies for production unless the commit is pinned and approved. The reference app has none:
-  BluetoothKit has no release Swift Package Manager can use (its last tag, 0.4.0, predates its `Package.swift`), so
-  `logic-business` pins it to a commit with `revision:`. Move that revision only after reviewing the new commits.
+* Avoid branch dependencies for production unless the commit is pinned and approved.
 * Generate and archive an SBOM for every release.
 * Run SCA before each release.
 * Review all transitive dependencies used by WalletKit, RQES, DC API, cryptography, parsing, and UI.
@@ -821,7 +818,7 @@ you define.
 Rules:
 
 * `webKeys` must hold the verifier's production request-signing public keys.
-* `jarSigningAlg` must match the algorithm the verifier signs its requests with. WalletKit 0.60.1 accepts only ES256
+* `jarSigningAlg` must match the algorithm the verifier signs its requests with. WalletKit accepts only ES256
   for a Request Object fetched by `request_uri`, so set `JWSAlgorithm(.ES256)`; the RS256 default works only for a
   request passed by value.
 * `verifierLegalName` must be the official entity name shown to users.
@@ -830,11 +827,8 @@ Rules:
 * If a verifier is not trusted, the user interface must clearly show that status before disclosure.
 * WalletKit accepts a Request Object fetched with `request_uri_method=post` whether or not the verifier encrypts it,
   and accepts ES256 signatures. The signature and the verifier's certificate are checked either way.
-  `OpenId4VpConfiguration.requiresJarEncryption` and `jarSigningAlgorithms` exist since WalletKit 0.57.3, but
-  WalletKit 0.60.1 does not apply them, so neither changes this, except that an empty `jarSigningAlgorithms` list
-  fails every request.
 * For an mdoc presentation, the session transcript binds the key that encrypts the response, whether or not the
-  verifier marks it with `use` (WalletKit 0.58.8 and later). OpenID4VP 1.0 does not require `use` on that key.
+  verifier marks it with `use`. OpenID4VP 1.0 does not require `use` on that key.
 
 When a presentation request includes transaction data for signing, each applicable option on the
 request screen shows a "Data to be signed" section below its requested data. Its "Signature details" row is
@@ -861,12 +855,12 @@ is more than one, as on Android:
 * A request whose transaction data cannot be shown in full is declined with an explanation, never shown in part
   (`PresentationInteractorImpl.canShowTransactionData`): an entry WalletKit cannot read, or an entry bound to a
   document the consent screen does not show. Each option is checked against its own transaction data; an option
-  that is not offered, because its documents are blocked, is not checked. WalletKit 0.60.1 binds transaction data
+  that is not offered, because its documents are blocked, is not checked. WalletKit binds transaction data
   to SD-JWT and mdoc documents alike.
 * When WalletKit itself cannot take a remote request (transaction data it cannot process, no document that satisfies
   the query, a reader certificate whose authentication was required and not established), it sends the error to the
   verifier's response endpoint, and the wallet then shows its error screen, or for the certificate the trust alert
-  (WalletKit 0.57.1 and later; the app has no setting for these, and `errorDispatchPolicy` does not apply to them).
+  (the app has no setting for these, and `errorDispatchPolicy` does not apply to them).
   A request whose reader certificate is not trusted is reported too, because WalletKit's `OpenId4VpConfiguration.errorDispatchPolicy` defaults to `.allClients`. The
   reference app keeps the default; set `errorDispatchPolicy: .onlyAuthenticatedClients` in
   `WalletKitConfigImpl.vpConfig` to withhold that report from a verifier that did not authenticate.
@@ -1034,8 +1028,7 @@ Current request handling:
   documents and claims the sheet showed (`DocumentProviderSelection`), after reading their revocation records
   again, and then completes that entry. Each document's claims are worked out from that document alone, and a
   document with none of them is left out, so documents of the same type with different claims are each sent with
-  their own (`av-lib-ios-w3c-dc-api` 0.28.2 and `eudi-lib-ios-iso18013-data-transfer` 0.28.5). Before those versions,
-  one of two such documents could be sent in full. A request declined while it loads, after its validation, or one
+  their own. A request declined while it loads, after its validation, or one
   the user rejects with the Reject button, is recorded as not completed, with the reason; once Accept or a decline has
   recorded the outcome, Reject only closes the sheet. A sheet dismissed another way leaves the entry not completed,
   without a reason.
@@ -1111,8 +1104,7 @@ var staticRootCertificates: [Data] {
   CRL: every policy that uses CRLs needs one, and the validator cannot be created without it. The reference app
   sets `.disabled` on the `EtsiTrustSource` for every build variant, and `.ocspOnly` on the fallback
   `StaticListTrustSource`, so a chain the fallback validates needs a positive OCSP answer. The policy is set
-  explicitly so that a library default does not change it: the default was `.crlPriority` in MdocSecurity 0.28.4
-  and is `.ocspOnly` since 0.29.
+  explicitly so that a library default does not change it.
 
 Production guidance:
 
@@ -1130,7 +1122,7 @@ Production guidance:
 * Keep `requireSignedMetadata` at `true`. Set `statusTrustPolicy` to `.enforce` once the status-list
   signers of your issuers validate against the access-certificate list.
 * Keep `readerTrustPolicy` at `.enforce`, so that a request whose reader authentication fails is refused: an
-  OpenID4VP request whose reader access certificate chain is not trusted and, since WalletKit 0.58.9, a BLE reader
+  OpenID4VP request whose reader access certificate chain is not trusted and a BLE reader
   whose signature or certificate chain does not validate. `.warning` lets such a signed OpenID4VP request proceed
   with an untrusted certificate, and only reports a BLE reader's result. A BLE reader that authenticates must chain
   to a `wrpacProviders` entry and meet the ETSI certificate profile; unlike the Android Dev and Demo builds, which
@@ -1182,7 +1174,7 @@ app treats the two directions differently, and the asymmetry is intentional:
 * **Presentation warns rather than blocks.** A request whose registration could not be validated
   still reaches the consent screen, shown without the verified badge and behind a warning the user
   must acknowledge before sharing. So does an OpenID4VP request that carries no registration
-  certificate (WalletKit 0.57.3 and later); its history entry records the registration as not
+  certificate; its history entry records the registration as not
   verified. A proximity request without one gets no registration warning, as WalletKit checks only a
   certificate that is there. A request whose registration *is* verified but that reaches
   beyond the registered scope keeps the badge, marks each requested claim outside that scope as
@@ -1195,7 +1187,7 @@ app treats the two directions differently, and the asymmetry is intentional:
   certificate (a verified registration certificate still names it, as on Android), and Share disabled
   until the user acknowledges it. The Android wallet shows the same warning
   (`ACCESS_CERTIFICATE_NOT_TRUSTED`). A BLE reader whose authentication fails is refused under
-  `readerTrustPolicy: .enforce` (WalletKit 0.58.9 and later): the QR screen says the presentation was blocked, no
+  `readerTrustPolicy: .enforce`: the QR screen says the presentation was blocked, no
   request is shown, and nothing is sent, not even an error response. The Android wallet shows such a request with
   the warning and answers with an empty response. A request using `readerAuthAll` is refused as well. A registration
   certificate counts only against a reader certificate that was validated.
@@ -1266,10 +1258,9 @@ redirects are followed; the Android wallet does the same. The OpenID4VCI library
 `credential_issuer` with the issuer it was fetched from; with `requireSignedMetadata` on, the signed metadata's
 `sub` must name that issuer, and a trusted access certificate must sign it.
 
-When an issuer issues only some of the documents of an offer, the success screen names the ones not added
-(`DocumentSuccessUIConfig.notIssuedDocumentNames`), as on Android; the cause wallet-kit reports is not shown.
-WalletKit 0.58.0 and later returns the documents it stored together with the ones that failed; before, the first
-failure failed the whole issuance, and the wallet showed an error although documents had been stored. The
+When an issuer issues only some of the documents of an offer, WalletKit returns the documents it stored together
+with the ones that failed, and the success screen names the ones not added
+(`DocumentSuccessUIConfig.notIssuedDocumentNames`), as on Android; the cause wallet-kit reports is not shown. The
 "Add document" flow does the same for its combined PID entry, which asks for every PID format at once: a format the
 issuer did not issue is named, found by the configuration identifier each issued document records
 (`AddDocumentInteractorImpl.notIssuedConfigIds`).
@@ -1323,7 +1314,7 @@ case .PROD:
 | `clientId` | Wallet client identifier known to the issuer or authorization server. | Use the registered production wallet client ID. |
 | `keyAttestationsConfig` | Wallet/key attestation provider used during issuance. `popKeyOptions` keeps the client-attestation proof-of-possession key in the Secure Enclave; without it WalletKit creates a software key. | Use the production wallet attestation provider, and keep `popKeyOptions`. |
 | `authFlowRedirectionURI` | Redirect URI used after authorization. | Must match the issuer's client registration exactly. With the default sign-in sheet it is not registered in `Wallet.plist`, because the sheet captures the redirect itself; use a scheme unique to the wallet. |
-| `authorizationFlowHandler` | Presents the issuer's sign-in during the authorization code flow and returns the redirect. Optional; without it WalletKit uses `ASWebAuthenticationSession`. | Leave unset to keep the system sheet, as the reference build does. A custom handler must present the sign-in in `ASWebAuthenticationSession` or the system browser, never in an embedded web view (RFC 8252); with the system browser the app must receive the redirect itself (a registered scheme or universal link) and route it to the handler, which the app's deep-link handling does not do. It can set `prefersEphemeralWebBrowserSession` so that the sign-in does not share Safari's cookies; users then sign in each time. It must complete on `authFlowRedirectionURI`, as the default sheet does, and return that URL exactly as received: WalletKit 0.60.1 takes `code` and `state` from the returned URL without checking its host or path, and relies on the `state` check that follows. Any error it throws fails the issuance and reaches the app unchanged, and the app shows its message to the user. |
+| `authorizationFlowHandler` | Presents the issuer's sign-in during the authorization code flow and returns the redirect. Optional; without it WalletKit uses `ASWebAuthenticationSession`. | Leave unset to keep the system sheet, as the reference build does. A custom handler must present the sign-in in `ASWebAuthenticationSession` or the system browser, never in an embedded web view (RFC 8252); with the system browser the app must receive the redirect itself (a registered scheme or universal link) and route it to the handler, which the app's deep-link handling does not do. It can set `prefersEphemeralWebBrowserSession` so that the sign-in does not share Safari's cookies; users then sign in each time. It must complete on `authFlowRedirectionURI`, as the default sheet does, and return that URL exactly as received: WalletKit takes `code` and `state` from the returned URL without checking its host or path, and relies on the `state` check that follows. Any error it throws fails the issuance and reaches the app unchanged, and the app shows its message to the user. |
 | `parUsage` | Pushed authorization request (PAR) usage policy. Use `.required(authorizationCodeDPoPBinding:)` to require PAR, optionally binding the authorization code to DPoP. | Prefer `.required(authorizationCodeDPoPBinding: true)` where the production profile requires PAR with sender-constrained authorization codes. |
 | `allowPlainJwtProof` | Credential proof policy. `false` (default) is HAIP-compliant: only attested proofs are sent (`attestation`, or `jwt` with a Wallet Provider key attestation). `true` additionally accepts plain `jwt` proofs (ES256/ES384/ES512) without key attestation, so the proof key is no longer attested. | Keep `false`. Set `true` only for a specific issuer that does not support key attestation, after a documented risk decision. |
 | `requireDpop` | Whether DPoP is required. | Prefer `true` where the production profile requires sender-constrained tokens. |
@@ -1421,7 +1412,7 @@ Current code configures `documentIssuanceConfig` with:
 * Current Dev PID batch size: `60`.
 * The combined PID entry of "Add document" issues every PID format with one set of options
   (`WalletKitController.issueDocuments`), so keep the options of `mDocPid` and `sdJwtPid` the same. WalletKit's
-  `DocumentIssuanceConfiguration` (0.58.7 and later) takes options per document, if they have to differ.
+  `DocumentIssuanceConfiguration` takes options per document, if they have to differ.
 * Background reissuance rule (`reIssuanceBackgroundRule`):
   * `backgroundIntervalSeconds: 300`
 
@@ -1480,7 +1471,7 @@ creation, and the documents are loaded at the same point. Start-up loads none, a
 opened before login is kept without starting its session (see
 [Deep Links And Redirect URIs](#deep-links-and-redirect-uris)). The first revocation check
 runs 30 seconds after the workers start, and later checks follow every `revocationIntervalSeconds`.
-WalletKit (0.58.4 and later) keeps each status list it has verified, per address and while the app runs, until the
+WalletKit keeps each status list it has verified, per address and while the app runs, until the
 list's `ttl` or `exp` ends. A check within that time reads the kept list, so a change of status shows once the list
 is fetched again, not at the next check. A list that cannot be fetched or verified is not kept.
 Only the factory reset calls `WalletWorkScheduler.stop()`; otherwise the workers run until the process ends. A
@@ -1601,9 +1592,9 @@ Production rules:
   the app fetch the CRLs and the OCSP response itself (`rqes-csc-swift`'s `PodofoManager`, through
   `URLSession.shared`), where App Transport Security refuses plain `http`. Every CRL distribution point and OCSP
   address in the signing and timestamp certificates must then be an `https://` URL: a CRL of the signing chain
-  that cannot be fetched stops the signature, and an OCSP response that cannot be fetched is left out of it. RQES UI
-  0.4.8 and rqes-kit 0.11.3 always sign at B-B, which fetches neither, and offer no setting for the level, so
-  `includeRevocationInfo` has no effect until the library supports B-LT or B-LTA.
+  that cannot be fetched stops the signature, and an OCSP response that cannot be fetched is left out of it. The RQES
+  libraries always sign at B-B, which fetches neither, and offer no setting for the level, so
+  `includeRevocationInfo` has no effect until they support B-LT or B-LTA.
 * Disable verbose logs in production.
 * Test success, cancellation, network failure, expired authorization, and rejected signing flows.
 
@@ -1776,12 +1767,12 @@ Modules/logic-api/Sources/Provider/NetworkSessionProvider.swift
 A cookie one relying party sets is therefore never sent to another through that session. Three paths sit outside it,
 and the app can change only the second:
 
-* WalletKit 0.60.1 fetches an SD-JWT issuer's keys, when the credential carries no `x5c` chain, with
+* WalletKit fetches an SD-JWT issuer's keys, when the credential carries no `x5c` chain, with
   `URLSession.shared`.
 * WalletKit's sign-in sheet for issuers (`ASWebAuthenticationSession`, used unless `OpenId4VciConfiguration` is given
   an `authorizationFlowHandler`) is not ephemeral, so it shares Safari's cookies: an issuer can recognise the browser
   across issuances, and the wallet's reset does not clear them. The reference build keeps this default.
-* The RQES library (`rqes-csc-swift` 0.11.0, `HTTPService`) calls the QTSP with `URLSession.shared`, whose cookies
+* The RQES library (`rqes-csc-swift`, `HTTPService`) calls the QTSP with `URLSession.shared`, whose cookies
   and response cache the app shares; the reset clears both.
 
 Only WalletKit and the RQES library can change the first and the last.
@@ -1999,7 +1990,7 @@ filters, search and date range work over all entries.
 `eudi-lib-ios-iso18013-data-model`), and the app stores it as JSON in the store's `SDTransactionLog` model. The log
 records the relying party, the attestation types and the identifiers of the attributes requested and presented, never
 the attributes' values, as the ARF and the Implementing Acts require. Transaction data is the exception: it is
-recorded as received (see below). With WalletKit 0.60.1:
+recorded as received (see below). In detail:
 
 * a presentation entry records the requested and presented claims as attestation type (mdoc `docType` or SD-JWT VC
   `vct`) and claim paths, without values, and the relying party's details WalletKit has for it: name, identifier,
@@ -2101,7 +2092,7 @@ checks restart at once; after a reset they start with the dashboard, after the n
 
 The reset does not reach: files the app or an integrator writes outside Caches and the temporary directory; the
 cookies of WalletKit's sign-in sheet, which are Safari's (see [Network Security](#network-security)); the RQES SDK's
-signing session, which `EudiRQESUi` (0.4.8) keeps in memory and the app cannot clear, so a matching `rqes://` callback
+signing session, which `EudiRQESUi` keeps in memory and the app cannot clear, so a matching `rqes://` callback
 can reopen it at its last step until the app restarts, which also holds after a lock;
 and a request the ID Provider extension answers while the reset runs, since the extension runs in its own process.
 Data already shared with relying parties is outside the wallet.
@@ -2666,7 +2657,7 @@ Project-specific actions:
 * Add release checks for demo endpoints.
 * Review exception messages shown to users.
 * Implement forced update or minimum supported version through backend policy.
-* Review branch-based SPM dependencies (none in the reference app) and commit-pinned ones (BluetoothKit).
+* Review branch-based and commit-pinned SPM dependencies.
 
 ### MASVS-RESILIENCE
 
