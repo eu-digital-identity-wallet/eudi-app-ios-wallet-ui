@@ -614,6 +614,70 @@ final class TestPresentationInteractor: EudiTest {
     }
   }
 
+  func testOnRequestReceived_WhenAnOptionHoldsARevokedDocument_ThenTheWholeOptionIsLeftOut() async {
+    let request = Constants.mockPresentationRequest
+    let shown = request.itemSets[0][0]
+    let revoked = DocElements.sdJwt(.init(docId: "pid-sd", vct: "urn:eudi:pid:1", sdJwtElements: []))
+    stub(presentationCoordinator) { mock in
+      when(mock.requestReceived()).thenReturn(
+        PresentationRequest(
+          itemSets: [[revoked, shown], [shown]],
+          relyingParty: request.relyingParty,
+          dataRequestInfo: request.dataRequestInfo,
+          isTrusted: request.isTrusted,
+          overaskedClaims: request.overaskedClaims,
+          transactionDataSets: [],
+          requestNames: ["option-with-revoked", "option-valid"]
+        )
+      )
+      when(mock.setState(presentationState: any())).thenDoNothing()
+    }
+    stubRevokedDocumentStatuses(with: ["pid-sd"])
+
+    let result = await interactor.onRequestReceived()
+    let state = await interactor.onResponsePrepare(combinationIndex: 0)
+
+    guard case .success(let model) = result else {
+      return XCTFail("Expected success, got \(result)")
+    }
+    XCTAssertEqual(model.requestDataCombinations.count, 1)
+    guard case .success(let response) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    XCTAssertEqual(response.items, Self.mockRequestItems)
+    XCTAssertEqual(response.requestName, "option-valid")
+  }
+
+  func testOnRequestReceived_WhenAnOptionWithARevokedDocumentHasTransactionData_ThenTheOtherKeepsItsOwn() async throws {
+    let request = Constants.mockPresentationRequest
+    let shown = request.itemSets[0][0]
+    let revoked = DocElements.sdJwt(.init(docId: "pid-sd", vct: "urn:eudi:pid:1", sdJwtElements: []))
+    let transaction: PresentationTransactionDataDomain = .qes(.init(credentialIds: ["pid"], signatureRequests: []))
+    stub(presentationCoordinator) { mock in
+      when(mock.requestReceived()).thenReturn(
+        PresentationRequest(
+          itemSets: [[revoked, shown], [shown]],
+          relyingParty: request.relyingParty,
+          dataRequestInfo: request.dataRequestInfo,
+          isTrusted: request.isTrusted,
+          overaskedClaims: request.overaskedClaims,
+          transactionDataSets: [["pid-sd": [.unavailable]], [Constants.isoMdlModelId: [transaction]]],
+          requestNames: [nil, nil]
+        )
+      )
+    }
+    stubRevokedDocumentStatuses(with: ["pid-sd"])
+
+    let state = await interactor.onRequestReceived()
+
+    guard case .success(let model) = state else {
+      return XCTFail("Expected success, got \(state)")
+    }
+    XCTAssertEqual(model.requestDataCombinations.count, 1)
+    let transactionData = try XCTUnwrap(model.requestDataCombinations.first?.transactionData)
+    XCTAssertEqual(transactionData.details.id, "transaction-data:1")
+  }
+
   func testOnRequestReceived_WhenTheRevocationRecordsCannotBeRead_ThenFails() async {
     stub(presentationCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(Self.mockPresentationRequest)
