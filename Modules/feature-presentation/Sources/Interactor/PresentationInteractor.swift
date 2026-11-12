@@ -103,9 +103,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   }
 
   /// Offers only the options whose documents are all unblocked, each as WalletKit built it. An option that holds a
-  /// revoked, suspended or unrecognised document is left out whole, not offered without that document: WalletKit
-  /// labels a response by the option it offered, so a reduced option would be sent under the wrong queries or
-  /// without a required one.
+  /// revoked, suspended or unrecognised document is left out whole, not offered without that document.
   public func onRequestReceived() async -> PresentationRequestPartialState {
     do {
       let coordinator = presentationCoordinator

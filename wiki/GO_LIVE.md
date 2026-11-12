@@ -1498,16 +1498,16 @@ The rules are the Android wallet's (`RevocationRecordUpdate`, Android's `revocat
   records that status. A record stored before the status was kept counts as unrecognised too, so the
   next check that reads the document's status replaces or clears it.
 * Every record blocks the document. A revoked, suspended or unrecognised document is left out of
-  proximity presentations, and a remote request does not offer an option that holds one. WalletKit
-  labels a response by the option it offered, so the wallet never offers an option with a blocked
-  document removed. The documents that match one `multiple: true` query form a single option, so it
-  is not offered when one of them is blocked (`PresentationInteractorImpl.onRequestReceived`). If the
-  records cannot be read, the request fails rather than
-  offer a blocked document. The Digital Credentials API registrations leave them out; the extension declines a
-  request that would include one, when it loads and again on Accept, and declines when the records cannot be read
-  (`WalletKitController.reconcileRegistrations`, `DocumentProviderPolicy.checkRequest`). The documents list,
-  the details screen and the issuer card show a suspended document as suspended and the others as
-  revoked; the list's "Revoked" filter lists all of them.
+  proximity presentations, and a remote request does not offer an option that holds one: the wallet
+  never offers an option with a blocked document removed. The documents that match one
+  `multiple: true` query form a single option, so it is not offered when one of them is blocked
+  (`PresentationInteractorImpl.onRequestReceived`). If the records cannot be read, the request fails
+  rather than offer a blocked document. The Digital Credentials API registrations leave them out;
+  the extension declines a request that would include one, when it loads and again on Accept, and
+  declines when the records cannot be read (`WalletKitController.reconcileRegistrations`,
+  `DocumentProviderPolicy.checkRequest`). The documents list, the details screen and the issuer card
+  show a suspended document as suspended and the others as revoked; the list's "Revoked" filter
+  lists all of them.
 * When the records cannot be read, the documents tab shows every document as revoked, as the sharing flows refuse.
 * The dashboard notice, "Revoked or suspended documents", lists only the documents a check blocks for
   the first time. A change from one blocked status to another (suspended to revoked) refreshes the
