@@ -63,6 +63,14 @@ Upload tag to remote repo
 
 Upload IPA to TestFlight
 
+### ios prepare_binary
+
+```sh
+[bundle exec] fastlane ios prepare_binary
+```
+
+Rename the IPA to the full version name
+
 ### ios check_browserstack
 
 ```sh
