@@ -121,8 +121,11 @@ platform :ios do
     reset_project
 
     if browserstackEnabled
+      ipaPath = prepare_binary(
+        appVersion: fullVersion,
+      )
       upload_browserstack(
-        filePath: ENV["APP_IPA_PATH"],
+        filePath: ipaPath,
       )
     else
       UI.important("BrowserStack upload skipped: BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY are not set.")
@@ -196,6 +199,22 @@ platform :ios do
       skip_waiting_for_build_processing: true,
       groups: groups&.split(',')&.map(&:strip)
     )
+  end
+
+  desc "Rename the IPA to the full version name"
+  lane :prepare_binary do |values|
+    appVersion = values[:appVersion].to_s.strip
+    UI.user_error!("Missing required parameter: appVersion") if appVersion.empty?
+    ipaPath = File.expand_path(values[:ipaPath] || ENV["APP_IPA_PATH"].to_s, File.expand_path("..", __dir__))
+    UI.user_error!("IPA not found at: #{ipaPath}") unless File.file?(ipaPath)
+
+    newIpaPath = File.join(File.dirname(ipaPath), "#{appVersion}.ipa")
+    FileUtils.rm_f(newIpaPath)
+    FileUtils.mv(ipaPath, newIpaPath)
+    lane_context[SharedValues::IPA_OUTPUT_PATH] = newIpaPath
+
+    UI.message("Renamed #{File.basename(ipaPath)} -> #{File.basename(newIpaPath)}")
+    newIpaPath
   end
 
   desc "Check the BrowserStack settings: false when the upload is not configured, an error when it is only partly configured"
