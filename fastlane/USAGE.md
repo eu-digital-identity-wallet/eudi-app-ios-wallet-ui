@@ -33,9 +33,10 @@ The lanes build the Xcode project, schemes and configurations described in
 | --- | --- |
 | `ios tests` | Runs the selected scheme's test plan with `scan`. |
 | `ios code_coverage` | Runs tests with coverage enabled and generates `xcov` output in `xcov_output/`. Failing tests do not fail the lane (`fail_build: false`); read the test results there. `fastlane/.xcovignore` leaves out test code, the app shell, configuration, errors, views and other UI components, UI models, accessibility identifiers, data models and attributes, routes, dependency injection, two named controllers, one interactor and the `logic-business` support folders; view models, extensions, the navigation host and the storage controllers are counted. xcov matches each entry, lowercased, against file names as a regular expression anchored at the end, or as a path prefix. |
-| `ios deploy` | Stops unless every tracked file is committed, then pulls the latest Git state, creates an App Store Connect API key, calculates a build number from TestFlight, sets version and build number values, archives the app, uploads it to App Store Connect/TestFlight, restores the project version values with `reset_project`, uploads the IPA to BrowserStack App Automate when BrowserStack credentials are set, deletes the IPA and dSYM files, tags the release, pushes the tag to any configured remote, and optionally creates a GitHub release. |
+| `ios deploy` | Stops unless every tracked file is committed and unless the BrowserStack settings are complete or absent (`check_browserstack`), then pulls the latest Git state, creates an App Store Connect API key, calculates a build number from TestFlight, sets version and build number values, archives the app, uploads it to App Store Connect/TestFlight, restores the project version values with `reset_project`, uploads the IPA to BrowserStack App Automate when BrowserStack credentials are set, deletes the IPA and dSYM files, tags the release, pushes the tag to any configured remote, and optionally creates a GitHub release. |
 | `ios upload_appstore` | Uploads the generated IPA to App Store Connect/TestFlight with `pilot`, without waiting for processing or distributing the build to testers. |
-| `ios upload_browserstack` | Uploads an IPA to BrowserStack App Automate with the BrowserStack plugin and the `BROWSERSTACK_` variables: the IPA given as `filePath:`, otherwise `APP_IPA_PATH`. Run it on its own to retry an upload that failed in `deploy`. |
+| `ios check_browserstack` | Returns `false` when `BROWSERSTACK_USERNAME` and `BROWSERSTACK_ACCESS_KEY` are both empty. Otherwise it stops unless both are set together with `BROWSERSTACK_CUSTOM_ID` and `BROWSERSTACK_IOS_KEYCHAIN_SUPPORT` (`true` or `false`), and returns `true`. |
+| `ios upload_browserstack` | Runs `check_browserstack` and stops when the upload is not configured, then uploads an IPA to BrowserStack App Automate with the BrowserStack plugin and the `BROWSERSTACK_` variables: the IPA given as `filePath:`, otherwise `APP_IPA_PATH`. Run it on its own to retry an upload that failed in `deploy`. |
 | `ios github_release` | Creates a GitHub release from the repository, token, tag and version that `deploy` passes in. |
 | `ios upload_tag` | Sets the URL of the `origin` remote to the given remote and pushes a Git tag to it. The previous URL is not restored. |
 | `ios update_build_number` | Updates build numbers in plist and Xcode project values for configured targets. |
@@ -47,8 +48,8 @@ The lanes build the Xcode project, schemes and configurations described in
 | `ios minified_version` | Computes and writes the App Store-compatible version without the build-type suffix. |
 
 The lanes after `deploy` are helpers that `deploy` calls, directly or through another helper. Apart from
-`reset_project`, which takes no parameters (see its row above for what it discards), and `upload_browserstack`, which
-reads the `BROWSERSTACK_` variables and `APP_IPA_PATH` and can run on its own, they take lane parameters rather than
+`reset_project`, which takes no parameters (see its row above for what it discards), and `check_browserstack` and
+`upload_browserstack`, which read the `BROWSERSTACK_` variables (and `APP_IPA_PATH`) and can run on their own, they take lane parameters rather than
 environment variables, and most of them fail when run on their own without those parameters.
 
 ## Required Environment Variables
@@ -90,10 +91,10 @@ The `deploy` lane expects:
 | `DEV_REMOTE_REPO` | Optional tag upload | Remote URL to push tags to a development mirror, after the production one. `upload_tag` sets `origin` to this URL. |
 | `GITHUB_RELEASE_REPO` | Optional GitHub release | Repository name for GitHub releases, for example `owner/repo`. |
 | `GITHUB_RELEASE_TOKEN` | Optional GitHub release | Token used by Fastlane to create the release. |
-| `BROWSERSTACK_USERNAME` | Optional BrowserStack upload | BrowserStack user name. `deploy` uploads the IPA only when this and `BROWSERSTACK_ACCESS_KEY` are both set, and skips the step otherwise. |
+| `BROWSERSTACK_USERNAME` | Optional BrowserStack upload | BrowserStack user name. `deploy` skips the BrowserStack upload when this and `BROWSERSTACK_ACCESS_KEY` are both empty. When either is set, `deploy` checks before it builds anything that both are set, with `BROWSERSTACK_CUSTOM_ID` and `BROWSERSTACK_IOS_KEYCHAIN_SUPPORT`, and stops if one is missing. |
 | `BROWSERSTACK_ACCESS_KEY` | Optional BrowserStack upload | BrowserStack access key. Keep it in an env file or CI secret storage, never in Git. With `--env`, an empty line for a key in the env file overrides the value set in the environment; leave the key out of the file when CI provides it. |
-| `BROWSERSTACK_CUSTOM_ID` | Optional BrowserStack upload | Custom ID given to the upload, for example `eudi-wallet-ios`. Tests can name the app by it; it refers to the latest upload with that ID. |
-| `BROWSERSTACK_IOS_KEYCHAIN_SUPPORT` | Optional BrowserStack upload | `true` or `false`. `true` has BrowserStack adjust the keychain access group that re-signing changes and clear the keychain after every test session, so each session starts with an empty wallet. The wallet keeps its keys and documents in the keychain and reads its access group at runtime; set it to `true`. |
+| `BROWSERSTACK_CUSTOM_ID` | BrowserStack upload | Required with the credentials. Custom ID given to the upload, for example `eudi-wallet-ios`. Tests can name the app by it; it refers to the latest upload with that ID. |
+| `BROWSERSTACK_IOS_KEYCHAIN_SUPPORT` | BrowserStack upload | Required with the credentials: `true` or `false`, in any case. `true` has BrowserStack adjust the keychain access group that re-signing changes and clear the keychain after every test session, so each session starts with an empty wallet. The wallet keeps its keys and documents in the keychain and reads its access group at runtime; set it to `true`. |
 
 Extension provisioning profile:
 
@@ -181,7 +182,8 @@ Before using Fastlane for production:
 ## Release Cautions
 
 The current `deploy` lane stops when a tracked file has uncommitted changes, so the build and its
-tag match `HEAD`. It then mutates version and build number values, archives the app, uploads it to
+tag match `HEAD`, and when the BrowserStack settings are only partly set (`check_browserstack`), before
+it pulls or builds anything. It then mutates version and build number values, archives the app, uploads it to
 App Store Connect/TestFlight and restores the project version values from Git. When BrowserStack
 credentials are set, it then uploads the IPA to BrowserStack App Automate; if that upload fails, the
 lane stops there: the TestFlight build stays without a tag (the next run takes the next build

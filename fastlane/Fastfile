@@ -57,6 +57,8 @@ platform :ios do
       UI.user_error!("Commit or stash the changes to tracked files first: deploy builds and tags HEAD, and restores the .pbxproj and .plist files from Git when it ends.")
     end
 
+    browserstackEnabled = check_browserstack
+
     git_pull
 
     connect_api = app_store_connect_api_key(
@@ -118,12 +120,12 @@ platform :ios do
 
     reset_project
 
-    if ENV['BROWSERSTACK_USERNAME'].to_s.strip.empty? || ENV['BROWSERSTACK_ACCESS_KEY'].to_s.strip.empty?
-      UI.important("BrowserStack upload skipped: BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY are not both set.")
-    else
+    if browserstackEnabled
       upload_browserstack(
         filePath: ENV["APP_IPA_PATH"],
       )
+    else
+      UI.important("BrowserStack upload skipped: BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY are not set.")
     end
 
     clean_build_artifacts
@@ -196,16 +198,39 @@ platform :ios do
     )
   end
 
+  desc "Check the BrowserStack settings: false when the upload is not configured, an error when it is only partly configured"
+  lane :check_browserstack do
+    username = ENV["BROWSERSTACK_USERNAME"].to_s.strip
+    accessKey = ENV["BROWSERSTACK_ACCESS_KEY"].to_s.strip
+    if username.empty? && accessKey.empty?
+      false
+    else
+      missing = []
+      missing << "BROWSERSTACK_USERNAME" if username.empty?
+      missing << "BROWSERSTACK_ACCESS_KEY" if accessKey.empty?
+      missing << "BROWSERSTACK_CUSTOM_ID" if ENV["BROWSERSTACK_CUSTOM_ID"].to_s.strip.empty?
+      unless ["true", "false"].include?(ENV["BROWSERSTACK_IOS_KEYCHAIN_SUPPORT"].to_s.strip.downcase)
+        missing << "BROWSERSTACK_IOS_KEYCHAIN_SUPPORT (true or false)"
+      end
+      unless missing.empty?
+        UI.user_error!("The BrowserStack upload is only partly configured. Set #{missing.join(", ")}, or leave BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY empty to skip it.")
+      end
+      true
+    end
+  end
+
   desc "Upload IPA to BrowserStack App Automate"
   lane :upload_browserstack do |values|
+    unless check_browserstack
+      UI.user_error!("Set BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY, BROWSERSTACK_CUSTOM_ID and BROWSERSTACK_IOS_KEYCHAIN_SUPPORT to upload to BrowserStack.")
+    end
     filePath = values[:filePath] || ENV["APP_IPA_PATH"]
-    keychainSupport = ENV["BROWSERSTACK_IOS_KEYCHAIN_SUPPORT"].to_s.strip.downcase
     upload_to_browserstack_app_automate(
-      browserstack_username: ENV["BROWSERSTACK_USERNAME"],
-      browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
+      browserstack_username: ENV["BROWSERSTACK_USERNAME"].to_s.strip,
+      browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"].to_s.strip,
       file_path: filePath,
-      custom_id: ENV["BROWSERSTACK_CUSTOM_ID"].to_s.strip.empty? ? nil : ENV["BROWSERSTACK_CUSTOM_ID"],
-      ios_keychain_support: keychainSupport.empty? ? nil : keychainSupport
+      custom_id: ENV["BROWSERSTACK_CUSTOM_ID"].to_s.strip,
+      ios_keychain_support: ENV["BROWSERSTACK_IOS_KEYCHAIN_SUPPORT"].to_s.strip.downcase
     )
   end
 
