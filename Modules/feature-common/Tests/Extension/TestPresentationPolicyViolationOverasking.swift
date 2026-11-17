@@ -150,6 +150,48 @@ final class TestPresentationPolicyViolationOverasking: EudiTest {
 
     XCTAssertEqual(overasked, ["doc-1": [["address", "street"]]])
   }
+
+  func testOveraskedPaths_whenTheOveraskedPathIsAMemberOfAnObjectShownWhole_thenItsRowIsMarked() {
+    let documents = [sdJwtElements(docId: "doc-1", claim: leafClaim(["place_of_birth"]))]
+
+    let overasked = documents.overaskedPaths(from: [overaskedClaim(vct, ["place_of_birth", "country"])])
+
+    XCTAssertEqual(overasked, ["doc-1": [["place_of_birth"]]])
+  }
+
+  func testOveraskedPaths_whenTheOveraskedPathSelectsEveryArrayElement_thenTheArrayRowIsMarked() {
+    let documents = [sdJwtElements(docId: "doc-1", claim: leafClaim(["nationalities"]))]
+
+    let overasked = documents.overaskedPaths(
+      from: [
+        OveraskedClaim(
+          attestationType: vct,
+          path: ClaimPath([.claim(name: "nationalities"), .allArrayElements])
+        )
+      ]
+    )
+
+    XCTAssertEqual(overasked, ["doc-1": [["nationalities"]]])
+  }
+
+  func testOveraskedPaths_whenTheOveraskedPathIsASibling_thenTheRowIsNotMarked() {
+    let documents = [
+      sdJwtElements(
+        docId: "doc-1",
+        claim: DocClaim(
+          name: "address",
+          path: ["address"],
+          dataValue: .string(""),
+          stringValue: "",
+          children: [leafClaim(["address", "street"])]
+        )
+      )
+    ]
+
+    let overasked = documents.overaskedPaths(from: [overaskedClaim(vct, ["address", "locality"])])
+
+    XCTAssertTrue(overasked.isEmpty)
+  }
 }
 
 private extension TestPresentationPolicyViolationOverasking {
@@ -170,6 +212,15 @@ private extension TestPresentationPolicyViolationOverasking {
 
   func claimPath(_ path: [String]) -> ClaimPath {
     ClaimPath(path.map { .claim(name: $0) })
+  }
+
+  func leafClaim(_ path: [String]) -> DocClaim {
+    DocClaim(
+      name: path.last ?? "",
+      path: path,
+      dataValue: .string(path.joined(separator: ".")),
+      stringValue: path.joined(separator: ".")
+    )
   }
 
   func mdocElements(docId: String, claims: [String]) -> DocElements {

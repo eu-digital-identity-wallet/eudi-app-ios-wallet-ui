@@ -40,6 +40,9 @@ public extension Array where Element == PresentationPolicyViolation {
 
 public extension Array where Element == DocElements {
 
+  /// The paths of the rows that show an over-asked claim, by document id. A row is marked when its path and an
+  /// over-asked path share a prefix in either direction, as the Android wallet does: an over-asked object marks the
+  /// rows below it, and an over-asked member or array element marks the row that shows its object or array whole.
   func overaskedPaths(from overaskedClaims: [OveraskedClaim]) -> [String: Set<[String]>] {
 
     guard !overaskedClaims.isEmpty else { return [:] }
@@ -69,7 +72,10 @@ public extension Array where Element == DocElements {
         Set(
           leafPaths.filter { leafPath in
             let claimPath = ClaimPath(leafPath.map { .claim(name: $0) })
-            return applicable.contains { $0.path?.contains2(claimPath) == true }
+            return applicable.contains { overasked in
+              guard let path = overasked.path else { return false }
+              return path.contains2(claimPath) || claimPath.contains2(path)
+            }
           }
         )
       }
