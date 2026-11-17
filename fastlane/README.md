@@ -63,6 +63,14 @@ Upload tag to remote repo
 
 Upload IPA to TestFlight
 
+### ios upload_browserstack
+
+```sh
+[bundle exec] fastlane ios upload_browserstack
+```
+
+Upload IPA to BrowserStack App Automate
+
 ### ios reset_project
 
 ```sh

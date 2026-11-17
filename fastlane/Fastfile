@@ -116,9 +116,17 @@ platform :ios do
       groups: ENV["TESTFLIGHT_GROUPS"]
     )
 
-    clean_build_artifacts
-
     reset_project
+
+    if ENV['BROWSERSTACK_USERNAME'].to_s.strip.empty? || ENV['BROWSERSTACK_ACCESS_KEY'].to_s.strip.empty?
+      UI.important("BrowserStack upload skipped: BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY are not both set.")
+    else
+      upload_browserstack(
+        filePath: ENV["APP_IPA_PATH"],
+      )
+    end
+
+    clean_build_artifacts
 
     add_git_tag(
       tag: tagVersion,
@@ -185,6 +193,19 @@ platform :ios do
       skip_submission: false,
       skip_waiting_for_build_processing: true,
       groups: groups&.split(',')&.map(&:strip)
+    )
+  end
+
+  desc "Upload IPA to BrowserStack App Automate"
+  lane :upload_browserstack do |values|
+    filePath = values[:filePath] || ENV["APP_IPA_PATH"]
+    keychainSupport = ENV["BROWSERSTACK_IOS_KEYCHAIN_SUPPORT"].to_s.strip.downcase
+    upload_to_browserstack_app_automate(
+      browserstack_username: ENV["BROWSERSTACK_USERNAME"],
+      browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
+      file_path: filePath,
+      custom_id: ENV["BROWSERSTACK_CUSTOM_ID"].to_s.strip.empty? ? nil : ENV["BROWSERSTACK_CUSTOM_ID"],
+      ios_keychain_support: keychainSupport.empty? ? nil : keychainSupport
     )
   end
 
