@@ -21,16 +21,16 @@ This guide aims to assist developers in building the application.
 
 ### EUDI iOS Wallet reference application
 
-You need [Xcode](https://developer.apple.com/xcode/) and its command-line tools installed. Use Xcode 26.0 or
-newer, which ships the iOS 26.0 SDK and Swift 6.2: the Identity Document Provider extension targets
-iOS 26.0, and the local packages declare `swift-tools-version: 6.2`. An older Xcode will not build
-the project.
+You need [Xcode](https://developer.apple.com/xcode/) and its command-line tools installed. Use Xcode 26.6 or
+newer, which ships Swift 6.3.3: the EUDI libraries the wallet uses declare
+`swift-tools-version: 6.3.3`, the Identity Document Provider extension targets iOS 26.0, and the
+local packages declare `swift-tools-version: 6.2`. An older Xcode will not build the project.
 
 The project builds against:
 
 | Component | Requirement |
 | --- | --- |
-| Swift toolchain | 6.2 |
+| Swift toolchain | 6.3.3 |
 | Swift language mode | Swift 6 for the main app and the packages; Swift 5 for the extension |
 | Main app (`EudiWallet`) deployment target | iOS 17.0 |
 | Identity Document Provider extension | iOS 26.0 |
