@@ -129,7 +129,9 @@ public protocol WalletKitController: Sendable {
   /// Whether the last revocation check could not refresh the document's status.
   func hasStatusRefreshFailure(with id: String) async -> Bool
 
-  func getDocumentStatus(for statusList: MdocDataModel18013.StatusList) async throws -> CredentialStatus
+  /// `docType` is the document's mdoc docType or SD-JWT vct; WalletKit uses it to pick the ETSI trust context the
+  /// status-list token is checked against.
+  func getDocumentStatus(for statusList: MdocDataModel18013.StatusList, docType: String) async throws -> CredentialStatus
   func isDocumentLowOnCredentials(document: (any DocClaimsDecodable)?) async -> Bool
 
   func storeFailedReIssuedDocuments(ids: [String]) async throws
@@ -1046,8 +1048,11 @@ final actor WalletKitControllerImpl: WalletKitController {
     return record.revocationStatus
   }
 
-  func getDocumentStatus(for statusList: MdocDataModel18013.StatusList) async throws -> CredentialStatus {
-    return try await wallet.getDocumentStatus(for: statusList)
+  func getDocumentStatus(
+    for statusList: MdocDataModel18013.StatusList,
+    docType: String
+  ) async throws -> CredentialStatus {
+    return try await wallet.getDocumentStatus(for: statusList, docType: docType)
   }
 
   func storeFailedReIssuedDocuments(ids: [String]) async throws {

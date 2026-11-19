@@ -6074,14 +6074,14 @@ return await cuckoo_manager.call(
         )
     }
 
-    public func getDocumentStatus(for p0: MdocDataModel18013.StatusList) async throws -> CredentialStatus {
+    public func getDocumentStatus(for p0: MdocDataModel18013.StatusList, docType p1: String) async throws -> CredentialStatus {
         return try await cuckoo_manager.callThrows(
-            "getDocumentStatus(for p0: MdocDataModel18013.StatusList) async throws -> CredentialStatus",
-            parameters: (p0),
-            escapingParameters: (p0),
+            "getDocumentStatus(for p0: MdocDataModel18013.StatusList, docType p1: String) async throws -> CredentialStatus",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
             errorType: Swift.Error.self,
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.getDocumentStatus(for: p0)
+            defaultCall: await __defaultImplStub!.getDocumentStatus(for: p0, docType: p1)
         )
     }
 
@@ -6602,10 +6602,10 @@ return await cuckoo_manager.call(
             ))
         }
         
-        func getDocumentStatus<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(MdocDataModel18013.StatusList), CredentialStatus,Swift.Error> where M1.MatchedType == MdocDataModel18013.StatusList {
-            let matchers: [Cuckoo.ParameterMatcher<(MdocDataModel18013.StatusList)>] = [wrap(matchable: p0) { $0 }]
+        func getDocumentStatus<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(for p0: M1, docType p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(MdocDataModel18013.StatusList, String), CredentialStatus,Swift.Error> where M1.MatchedType == MdocDataModel18013.StatusList, M2.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(MdocDataModel18013.StatusList, String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockWalletKitController.self,
-                method: "getDocumentStatus(for p0: MdocDataModel18013.StatusList) async throws -> CredentialStatus",
+                method: "getDocumentStatus(for p0: MdocDataModel18013.StatusList, docType p1: String) async throws -> CredentialStatus",
                 parameterMatchers: matchers
             ))
         }
@@ -7304,10 +7304,10 @@ return await cuckoo_manager.call(
         
         
         @discardableResult
-        func getDocumentStatus<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(MdocDataModel18013.StatusList), CredentialStatus> where M1.MatchedType == MdocDataModel18013.StatusList {
-            let matchers: [Cuckoo.ParameterMatcher<(MdocDataModel18013.StatusList)>] = [wrap(matchable: p0) { $0 }]
+        func getDocumentStatus<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(for p0: M1, docType p1: M2) -> Cuckoo.__DoNotUse<(MdocDataModel18013.StatusList, String), CredentialStatus> where M1.MatchedType == MdocDataModel18013.StatusList, M2.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(MdocDataModel18013.StatusList, String)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
-                "getDocumentStatus(for p0: MdocDataModel18013.StatusList) async throws -> CredentialStatus",
+                "getDocumentStatus(for p0: MdocDataModel18013.StatusList, docType p1: String) async throws -> CredentialStatus",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -7654,7 +7654,7 @@ public class WalletKitControllerStub:WalletKitController, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Bool).self)
     }
     
-    public func getDocumentStatus(for p0: MdocDataModel18013.StatusList) async throws -> CredentialStatus {
+    public func getDocumentStatus(for p0: MdocDataModel18013.StatusList, docType p1: String) async throws -> CredentialStatus {
         return DefaultValueRegistry.defaultValue(for: (CredentialStatus).self)
     }
     

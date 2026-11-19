@@ -1091,10 +1091,15 @@ var staticRootCertificates: [Data] {
   document, not the certificate that signs the issued documents, which is the `defaultPolicy` check.
   The app passes it to each issuer as `issuerMetadataPolicy`; see
   [Issuer Configuration: `issuersConfig`](#issuer-configuration-issuersconfig).
-* `statusTrustPolicy` governs the signer of each status list, validated against the
-  access-certificate list. `.enforce` fails the status check when the signer is not trusted; the app
-  then records a refresh failure and the document keeps its last known state. `.warning`, the
-  reference value, accepts the list whatever its signer.
+* `statusTrustPolicy` governs the signer of each status list. The revocation check passes the
+  document's doc type (the `vct` for an SD-JWT), and WalletKit validates the signer against the
+  status context of that type: `PIDStatus` for the PID, and likewise for the other ETSI types. The
+  context comes from each trust source's `contextTypeMappings` (the static fallback classifies the
+  mDL by default), so a doc type that neither source classifies has none and its signer cannot be
+  validated. `.enforce` fails the status check when the signer is not trusted; the app then records
+  a refresh failure and the document keeps its last known state. `.warning`, the reference value,
+  accepts the list once its signature verifies, whatever its signer. A registration certificate's
+  status list is validated against the registration-certificate status context instead.
 * `revocationPolicy` (`PkixRevocationPolicy`) on `EtsiTrustSource` and on `StaticListTrustSource` decides whether
   and how PKIX chain validation checks certificate revocation: `.disabled`, `.ocspOnly`, `.ocspPriority` (OCSP, then
   CRL), `.crlOnly` or `.crlPriority` (CRL, then OCSP). Every policy other than `.disabled` needs a positive answer:
@@ -1121,8 +1126,9 @@ Production guidance:
   it too, or record why it stays at `.warning`.
 * Confirm that every SD-JWT PID issuer sends an `x5c` chain, since only then is the signer checked
   against the trusted lists.
-* Keep `requireSignedMetadata` at `true`. Set `statusTrustPolicy` to `.enforce` once the status-list
-  signers of your issuers validate against the access-certificate list.
+* Keep `requireSignedMetadata` at `true`. Set `statusTrustPolicy` to `.enforce` once every doc type
+  that carries a status list is classified in a trust source and its status-list signers
+  validate against its status context; until then, the status check of an unclassified type fails.
 * Keep `readerTrustPolicy` at `.enforce`, so that a request whose reader authentication fails is refused: an
   OpenID4VP request whose reader access certificate chain is not trusted and a BLE reader
   whose signature or certificate chain does not validate. `.warning` lets such a signed OpenID4VP request proceed
@@ -1474,8 +1480,8 @@ creation, and the documents are loaded at the same point. Start-up loads none, a
 opened before login is kept without starting its session (see
 [Deep Links And Redirect URIs](#deep-links-and-redirect-uris)). The first revocation check
 runs 30 seconds after the workers start, and later checks follow every `revocationIntervalSeconds`.
-WalletKit keeps each status list it has verified, per address and while the app runs, until the
-list's `ttl` or `exp` ends. A check within that time reads the kept list, so a change of status shows once the list
+WalletKit keeps each status list it has verified, per address, doc type and trust configuration and while the
+app runs, until the list's `ttl` or `exp` ends. A check within that time reads the kept list, so a change of status shows once the list
 is fetched again, not at the next check. A list that cannot be fetched or verified is not kept.
 Only the factory reset calls `WalletWorkScheduler.stop()`; otherwise the workers run until the process ends. A
 failed reset starts them again at once, and after a reset they start with the dashboard, after the next login. The
