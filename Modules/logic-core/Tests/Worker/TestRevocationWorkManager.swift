@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
+import os
 import MdocDataModel18013
 @testable import logic_business
 @testable import logic_core
@@ -53,6 +54,26 @@ final class TestRevocationWorkManager: EudiTest {
 
     verify(walletKitController).storeRevokedDocuments(with: equal(to: ["a": .revoked]))
     verify(walletKitController, never()).removeRevokedDocument(with: any())
+  }
+
+  func testCheckRevocation_ThenChecksEachStatusAgainstItsDocumentsType() async throws {
+    let asked = OSAllocatedUnfairLock<[String: String]>(initialState: [:])
+    stub(walletKitController) { mock in
+      when(mock.fetchIssuedDocuments()).thenReturn([
+        StubDocument.make(id: "mdoc", docType: "eu.europa.ec.eudi.pid.1"),
+        StubDocument.make(id: "sdjwt", docType: "urn:eudi:pid:1")
+      ])
+      when(mock.fetchRevokedDocumentStatuses()).thenReturn([:])
+      when(mock.fetchStatusRefreshFailures()).thenReturn([])
+      when(mock.getDocumentStatus(for: any(), docType: any())).then { statusList, docType in
+        asked.withLock { $0[String(statusList.uri.split(separator: "/").last ?? "")] = docType }
+        return .valid
+      }
+    }
+
+    try await workManager.checkRevocation()
+
+    XCTAssertEqual(asked.withLock { $0 }, ["mdoc": "eu.europa.ec.eudi.pid.1", "sdjwt": "urn:eudi:pid:1"])
   }
 
   func testCheckRevocation_WhenRevokedDocumentIsReportedValid_ThenStaysRevoked() async throws {
@@ -203,7 +224,7 @@ final class TestRevocationWorkManager: EudiTest {
       when(mock.fetchIssuedDocuments()).thenReturn(["a", "b"].map { StubDocument.make(id: $0) })
       when(mock.fetchRevokedDocumentStatuses()).thenReturn([:])
       when(mock.fetchStatusRefreshFailures()).thenReturn([])
-      when(mock.getDocumentStatus(for: any())).then { _ in
+      when(mock.getDocumentStatus(for: any(), docType: any())).then { _, _ in
         withUnsafeCurrentTask { $0?.cancel() }
         throw CancellationError()
       }
@@ -224,7 +245,7 @@ final class TestRevocationWorkManager: EudiTest {
       when(mock.fetchIssuedDocuments()).thenReturn(["a", "b"].map { StubDocument.make(id: $0) })
       when(mock.fetchRevokedDocumentStatuses()).thenReturn([:])
       when(mock.fetchStatusRefreshFailures()).thenReturn([])
-      when(mock.getDocumentStatus(for: any())).then { statusList in
+      when(mock.getDocumentStatus(for: any(), docType: any())).then { statusList, _ in
         guard statusList.uri.hasSuffix("/a") else {
           withUnsafeCurrentTask { $0?.cancel() }
           throw CancellationError()
@@ -275,7 +296,7 @@ final class TestRevocationWorkManager: EudiTest {
     stub(walletKitController) { mock in
       when(mock.fetchIssuedDocuments()).thenReturn([StubDocument.make(id: "a")])
       when(mock.fetchRevokedDocumentStatuses()).thenThrow(RuntimeError.genericError)
-      when(mock.getDocumentStatus(for: any())).thenReturn(.suspended)
+      when(mock.getDocumentStatus(for: any(), docType: any())).thenReturn(.suspended)
     }
 
     do {
@@ -337,7 +358,7 @@ final class TestRevocationWorkManager: EudiTest {
 
     try await workManager.checkRevocation()
 
-    verify(walletKitController, never()).getDocumentStatus(for: any())
+    verify(walletKitController, never()).getDocumentStatus(for: any(), docType: any())
     verify(walletKitController, never()).removeRevokedDocument(with: any())
     verify(walletKitController, never()).storeRevokedDocuments(with: any())
   }
@@ -458,7 +479,7 @@ private extension TestRevocationWorkManager {
       when(mock.fetchIssuedDocuments()).thenReturn(ids.map { StubDocument.make(id: $0) })
       when(mock.fetchRevokedDocumentStatuses()).thenReturn(stored)
       when(mock.fetchStatusRefreshFailures()).thenReturn(previousFailures)
-      when(mock.getDocumentStatus(for: any())).then { statusList in
+      when(mock.getDocumentStatus(for: any(), docType: any())).then { statusList, _ in
         let id = String(statusList.uri.split(separator: "/").last ?? "")
         guard let status = statuses[id], !failing.contains(id) else {
           throw RuntimeError.genericError

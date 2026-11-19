@@ -131,7 +131,7 @@ final actor RevocationWorkManagerImpl: RevocationWorkManager {
 
       let status: CredentialStatus
       do {
-        status = try await walletKitController.getDocumentStatus(for: statusList)
+        status = try await walletKitController.getDocumentStatus(for: statusList, docType: document.docType)
       } catch {
         guard !Task.isCancelled else { break }
         failed.append(document.id)
