@@ -16,5 +16,3 @@ jobs:
       secrets:
        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       DOJO_TOKEN: ${{ secrets.DOJO_TOKEN }}
-       DOJO_URL: ${{ secrets.DOJO_URL }}
