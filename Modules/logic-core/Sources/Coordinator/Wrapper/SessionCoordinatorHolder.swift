@@ -30,9 +30,10 @@ final actor SessionCoordinatorHolderImpl: SessionCoordinatorHolder {
   private var activeRemoteCoordinator: RemoteSessionCoordinator?
   private var activeProximityCoordinator: ProximitySessionCoordinator?
   /// The last stopped proximity coordinator, kept until the next one starts. The transfer library's
-  /// `MdocGattServer` holds wallet-kit's Bluetooth service, which this coordinator owns, only weakly, still reads
-  /// it after `stop()` (in a task, and when the reader disconnects later) and stops the app with `fatalError`
-  /// once it is gone.
+  /// `MdocGattServer` holds wallet-kit's Bluetooth service, which this coordinator owns, only weakly and can still
+  /// call it after `stop()` (in a task, and when the reader disconnects later); keeping the coordinator keeps that
+  /// service until then. The library now skips those calls once the service is gone, where it used to stop the app
+  /// with `fatalError`.
   private var stoppedProximityCoordinator: ProximitySessionCoordinator?
 
   init() {}
