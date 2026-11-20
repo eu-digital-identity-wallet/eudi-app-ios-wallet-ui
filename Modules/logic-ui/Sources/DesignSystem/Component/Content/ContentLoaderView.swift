@@ -37,12 +37,11 @@ public struct ContentLoaderView: View {
 
   @ViewBuilder
   public var body: some View {
-    ActivityIndicatorView(
-      isVisible: $showLoader,
-      type: .default(count: 8)
-    )
-    .frame(width: width, height: height)
-    .foregroundColor(Theme.shared.color.accent)
+    if showLoader {
+      ActivityIndicatorView(type: .default(count: 8))
+        .frame(width: width, height: height)
+        .foregroundColor(Theme.shared.color.accent)
+    }
   }
 }
 

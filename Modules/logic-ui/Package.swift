@@ -35,7 +35,7 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/exyte/ActivityIndicatorView.git",
-      from: "1.1.1"
+      from: "2.0.2"
     ),
     .package(
       url: "https://github.com/elai950/AlertToast.git",
