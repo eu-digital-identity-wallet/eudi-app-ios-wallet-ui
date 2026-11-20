@@ -76,10 +76,11 @@ To support development and testing, one can access a test/demo service for remot
 
   - [Verifier restful backend service source](https://github.com/eu-digital-identity-wallet/eudi-srv-web-verifier-endpoint-23220-4-kt)
  
-To support proximity, the EUDI Verifier App is available [here](https://github.com/eu-digital-identity-wallet/eudi-app-multiplatform-verifier-ui) and can request PID and mDL, with reader authentication enabled.
+To support proximity, the EUDI Verifier App is available [here](https://github.com/eu-digital-identity-wallet/eudi-app-multiplatform-verifier-ui) and can request PID and mDL. It sends no reader authentication, so the wallet shows the warning that the requester's identity could not be verified and names it "Verifier".
 
-The issuer, verifier service, and verifier app are authenticated against the EUDIW development
-trusted lists (LoTE) named in `WalletKitConfig`. The certificates in
+The issuer and the verifier service are authenticated against the EUDIW development trusted lists
+(LoTE) named in `WalletKitConfig`, as is a proximity reader that sends reader authentication. The
+certificates in
 [`Wallet/Certificate`](Wallet/Certificate) are a fallback for issuer trust only (see
 [wiki/CONFIGURATION.md](wiki/CONFIGURATION.md)).
 
