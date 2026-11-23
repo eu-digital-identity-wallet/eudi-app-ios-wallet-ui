@@ -1,5 +1,5 @@
 {
-  "originHash" : "7100493a3d5c1da48c490bbb74b4784d7f533fb6ef46a0eeef0222f267f98624",
+  "originHash" : "90ac6c91c655f894b78417c1326d86a6b168b12c52a4b2cf862a8d6cd4ee9cdd",
   "pins" : [
     {
       "identity" : "activityindicatorview",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/av-lib-ios-w3c-dc-api.git",
       "state" : {
-        "revision" : "3644a4b09ad22934d0c41223365961b70cd79860",
-        "version" : "0.31.0"
+        "revision" : "68667b49de76163ea88d5e9c4a14b419daf10c05",
+        "version" : "0.32.0"
       }
     },
     {
@@ -122,14 +122,14 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-transfer.git",
       "state" : {
-        "revision" : "b7e603409c9d1d5262c020ecff53bc10d27867e6",
-        "version" : "0.32.0"
+        "revision" : "c2d46bcbe234903555b071d974975f5a9b51c9d5",
+        "version" : "0.32.1"
       }
     },
     {
       "identity" : "eudi-lib-ios-iso18013-security",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security",
+      "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-security.git",
       "state" : {
         "revision" : "054ddf87dfa5b2119f9b81702cac64072e9288d8",
         "version" : "0.32.0"
@@ -194,8 +194,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-wallet-kit.git",
       "state" : {
-        "revision" : "f2a3656d1c7cb61d4ae4537169ab0a2bdb8a32df",
-        "version" : "0.64.0"
+        "revision" : "e7f27891105ee681c8f77f44622027606bc4f7a4",
+        "version" : "0.65.0"
       }
     },
     {
@@ -228,7 +228,7 @@
     {
       "identity" : "filekit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nvzqz/FileKit",
+      "location" : "https://github.com/nvzqz/FileKit.git",
       "state" : {
         "revision" : "9006d2888025fbe893c3c396327b2fe45a8c177b",
         "version" : "6.1.0"
@@ -345,7 +345,7 @@
     {
       "identity" : "stencil",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kylef/Stencil",
+      "location" : "https://github.com/kylef/Stencil.git",
       "state" : {
         "revision" : "4f222ac85d673f35df29962fc4c36ccfdaf9da5b",
         "version" : "0.15.1"
@@ -471,7 +471,7 @@
     {
       "identity" : "tomlkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/LebJe/TOMLKit",
+      "location" : "https://github.com/LebJe/TOMLKit.git",
       "state" : {
         "revision" : "ec6198d37d495efc6acd4dffbd262cdca7ff9b3f",
         "version" : "0.6.0"

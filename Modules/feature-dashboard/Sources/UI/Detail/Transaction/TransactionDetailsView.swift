@@ -223,8 +223,7 @@ private struct TransactionDetailsViewContainer: View {
 
             Theme.shared.image.chevronRight
               .renderingMode(.template)
-              .resizable()
-              .aspectRatio(contentMode: .fit)
+              .resizable().scaledToFit()
               .frame(width: 16, height: 16)
               .foregroundStyle(Theme.shared.color.accent)
           }

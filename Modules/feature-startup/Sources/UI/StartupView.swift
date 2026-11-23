@@ -64,8 +64,7 @@ private struct StartupViewContainer: View {
   private func content() -> some View {
     ZStack {
       Theme.shared.image.logo
-        .resizable()
-        .aspectRatio(contentMode: .fit)
+        .resizable().scaledToFit()
         .frame(width: screenWidth / 2.5)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)

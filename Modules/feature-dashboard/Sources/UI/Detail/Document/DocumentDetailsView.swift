@@ -167,8 +167,7 @@ private struct DocumentDetailsViewContainer: View {
               toggleIsVisible()
             } label: {
               (isVisible ? Theme.shared.image.eyeSlash : Theme.shared.image.eye)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+                .resizable().scaledToFit()
                 .frame(width: 24, height: 24)
                 .foregroundStyle(Theme.shared.color.accent)
                 .shimmer(isLoading: viewState.isLoading)

@@ -25,8 +25,7 @@ struct ScreenCaptureCoverView: View {
   var body: some View {
     VStack(spacing: SPACING_LARGE) {
       Theme.shared.image.logo
-        .resizable()
-        .aspectRatio(contentMode: .fit)
+        .resizable().scaledToFit()
         .frame(width: getScreenRect().width / 2.5)
         .accessibilityHidden(true)
 

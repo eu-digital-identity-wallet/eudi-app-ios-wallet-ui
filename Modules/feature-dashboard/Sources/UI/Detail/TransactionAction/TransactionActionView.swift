@@ -189,8 +189,7 @@ private struct TransactionActionViewContainer: View {
       HStack(spacing: SPACING_MEDIUM) {
         contact.channel.icon
           .renderingMode(.template)
-          .resizable()
-          .aspectRatio(contentMode: .fit)
+          .resizable().scaledToFit()
           .frame(width: 20, height: 20)
           .foregroundStyle(Theme.shared.color.primaryLabel)
 
@@ -208,8 +207,7 @@ private struct TransactionActionViewContainer: View {
 
         Theme.shared.image.chevronRight
           .renderingMode(.template)
-          .resizable()
-          .aspectRatio(contentMode: .fit)
+          .resizable().scaledToFit()
           .frame(width: 16, height: 16)
           .foregroundStyle(Theme.shared.color.accent)
       }
