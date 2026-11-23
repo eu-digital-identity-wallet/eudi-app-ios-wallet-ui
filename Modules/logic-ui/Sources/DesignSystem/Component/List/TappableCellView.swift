@@ -49,8 +49,7 @@ public struct TappableCellView: View {
       HStack(alignment: .center, spacing: SPACING_MEDIUM) {
         if let icon {
           icon
-            .resizable()
-            .aspectRatio(contentMode: .fit)
+            .resizable().scaledToFit()
             .frame(width: 24, height: 24)
             .foregroundStyle(Theme.shared.color.accent)
         }

@@ -76,8 +76,7 @@ public struct WrapListItemView: View {
             }
           } else if let image {
             image
-              .resizable()
-              .aspectRatio(contentMode: .fit)
+              .resizable().scaledToFit()
               .frame(
                 width: Theme.shared.dimension.remoteImageIconSize,
                 height: Theme.shared.dimension.remoteImageIconSize
@@ -119,8 +118,7 @@ public struct WrapListItemView: View {
               }
           case .image(let image):
             image
-              .resizable()
-              .aspectRatio(contentMode: .fit)
+              .resizable().scaledToFit()
               .frame(height: Theme.shared.dimension.remoteImageIconSize)
               .if(listItem.isBlur) {
                 $0.blur(radius: 4, opaque: false)
@@ -142,8 +140,7 @@ public struct WrapListItemView: View {
                   .gone(if: text.toString.isEmpty)
                 image
                   .renderingMode(.template)
-                  .resizable()
-                  .aspectRatio(contentMode: .fit)
+                  .resizable().scaledToFit()
                   .frame(width: 16, height: 16)
                   .foregroundColor(color)
               }
@@ -172,8 +169,7 @@ public struct WrapListItemView: View {
         case .icon(let image, let color):
           image
             .renderingMode(.template)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
+            .resizable().scaledToFit()
             .frame(width: 16, height: 16)
             .foregroundColor(color)
         case .checkbox(let enabled, let isChecked, let onToggle):

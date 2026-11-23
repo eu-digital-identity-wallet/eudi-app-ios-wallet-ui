@@ -126,8 +126,7 @@ public struct ContentHeaderView: View {
           )
         case .image(let image):
           image
-            .resizable()
-            .aspectRatio(contentMode: .fit)
+            .resizable().scaledToFit()
             .frame(height: Theme.shared.dimension.remoteImageIconSize)
       }
 

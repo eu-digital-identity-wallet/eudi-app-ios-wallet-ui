@@ -62,8 +62,7 @@ public struct CardViewWithLogoView: View {
         case .image(let image):
           HStack {
             image
-              .resizable()
-              .aspectRatio(contentMode: .fit)
+              .resizable().scaledToFit()
               .frame(height: Theme.shared.dimension.remoteImageIconSize)
             Spacer()
           }
