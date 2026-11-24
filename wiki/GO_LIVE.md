@@ -624,7 +624,7 @@ Production meaning:
 | `trustConfig` | Trust configuration (`TrustConfiguration`) for reader / issuer validation: ETSI LoTE trust sources, verification-context mappings, static fallback anchors, and trust policies. Passed as a separate `EudiWallet` argument, not inside `EudiWalletConfiguration`. | Replace demo LoTE endpoints and fallback anchors with production trust anchors, and review `defaultPolicy` / `statusTrustPolicy` before go-live. |
 | `deviceAuthMethod` | Device authentication method used by WalletKit. | Current value is `.deviceSignature`; confirm with WalletKit and assurance policy. |
 | `uiCulture` | Locale passed to WalletKit. | Confirm supported locales and fallback behavior. |
-| `logFileName` | WalletKit log file name; `nil` outside debug builds (`WalletKitConfigImpl.logFileName(for:)`), so release builds write no file, delete one an earlier build left, and Settings offers no "Retrieve logs". wallet-kit logs authorization codes, access tokens and issued credentials to the file at `.info`. | Keep it off in production unless support policy requires a controlled log export, as on Android. |
+| `logFileName` | WalletKit log file name; `nil` outside debug builds (`WalletKitConfigImpl.logFileName(for:)`), so release builds write no file, delete one an earlier build left, and Settings offers no "Retrieve logs". wallet-kit logs issuance and presentation details to the file at `.info`: authorization request URLs, deferred-issuance transaction identifiers, each presentation's session transcript and nonce, and the proximity QR payload. | Keep it off in production unless support policy requires a controlled log export, as on Android. |
 
 ### User Authentication For WalletKit Storage
 
@@ -2114,8 +2114,8 @@ Data already shared with relying parties is outside the wallet.
 
 Logging appears in several areas:
 
-* WalletKit log file through `logFileName`, written by debug builds only; it holds authorization codes, access
-  tokens and issued credentials.
+* WalletKit log file through `logFileName`, written by debug builds only; it holds issuance and presentation
+  details, such as authorization request URLs, transaction identifiers, session transcripts and nonces.
 * Transaction logging through `TransactionLogger`.
 * Each presentation's history entry keeps the outcome of the relying party's registration check
   (`RecordedRegistrationCheck`, stored beside the entry). Unless the registration was verified (it was not verified,
