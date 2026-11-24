@@ -20,11 +20,14 @@ import XCTest
 final class TestProximitySessionCoordinatorError: EudiTest {
 
   func testUiError_WhenTheReaderAuthenticationIsRefused_ThenTheStateSaysThePresentationIsBlocked() {
+    // Given
     let session = PresentationSession.stoppableFixture(onStop: nil)
     let coordinator = ProximitySessionCoordinatorImpl(session: session)
 
+    // When
     session.uiError = WalletError(description: "Reader auth signature validation failed", code: .notSecuredRequest)
 
+    // Then
     guard case .error(let error) = coordinator.sendableCurrentValueSubject.getValue() else {
       return XCTFail("Expected an error state")
     }
@@ -32,11 +35,16 @@ final class TestProximitySessionCoordinatorError: EudiTest {
   }
 
   func testUiError_WhenAnotherErrorIsReported_ThenTheStateIsLeftAlone() {
+    // Given
     let session = PresentationSession.stoppableFixture(onStop: nil)
     let coordinator = ProximitySessionCoordinatorImpl(session: session)
 
+    // When
     session.uiError = WalletError(description: "Other", code: .internalError)
 
-    XCTAssertEqual(coordinator.sendableCurrentValueSubject.getValue(), .loading)
+    let state = coordinator.sendableCurrentValueSubject.getValue()
+
+    // Then
+    XCTAssertEqual(state, .loading)
   }
 }

@@ -21,23 +21,34 @@ import Cuckoo
 final class TestPrefsControllerWalletReset: EudiTest {
 
   func testTakeNewWalletReset_WhenAResetHappenedSinceTheLastLook_ThenReportsItOnce() {
+    // Given
     let defaults = UserDefaults(suiteName: UUID().uuidString)!
     let prefsController = MockPrefsController()
     stub(prefsController) { mock in
       when(mock.getInt(forKey: any())).thenReturn(3)
     }
 
-    XCTAssertTrue(prefsController.recordWalletResetSeen(in: defaults))
-    XCTAssertFalse(prefsController.recordWalletResetSeen(in: defaults))
+    // When
+    let first = prefsController.recordWalletResetSeen(in: defaults)
+    let second = prefsController.recordWalletResetSeen(in: defaults)
+
+    // Then
+    XCTAssertTrue(first)
+    XCTAssertFalse(second)
   }
 
   func testTakeNewWalletReset_WhenNoResetEverHappened_ThenReportsNothing() {
+    // Given
     let defaults = UserDefaults(suiteName: UUID().uuidString)!
     let prefsController = MockPrefsController()
     stub(prefsController) { mock in
       when(mock.getInt(forKey: any())).thenReturn(0)
     }
 
-    XCTAssertFalse(prefsController.recordWalletResetSeen(in: defaults))
+    // When
+    let reported = prefsController.recordWalletResetSeen(in: defaults)
+
+    // Then
+    XCTAssertFalse(reported)
   }
 }

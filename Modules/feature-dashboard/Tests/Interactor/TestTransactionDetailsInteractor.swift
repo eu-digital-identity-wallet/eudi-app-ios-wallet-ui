@@ -339,17 +339,20 @@ extension TestTransactionDetailsInteractor {
   }
 
   func testRecordDataProtectionAction_WhenTheHandOffSucceeded_ThenRecordsTheDeletionRequest() async {
+    // Given
     stubFetchPresentationWithContacts()
     stub(walletKitController) { stub in
       when(stub.recordDataDeletionRequest(for: any(), contactUrl: any())).thenDoNothing()
     }
 
+    // When
     let result = await interactor.recordDataProtectionAction(
       transactionId: "tx-contacts",
       action: .requestDataDeletion,
       contactUrl: URL(string: "mailto:support@verifier.example")!
     )
 
+    // Then
     guard case .success = result else {
       return XCTFail("Expected recorded, but got \(result).")
     }
@@ -360,17 +363,20 @@ extension TestTransactionDetailsInteractor {
   }
 
   func testRecordDataProtectionAction_WhenTheHandOffSucceeded_ThenRecordsTheReport() async {
+    // Given
     stubFetchPresentationWithContacts()
     stub(walletKitController) { stub in
       when(stub.recordDpaReport(for: any(), contactUrl: any())).thenDoNothing()
     }
 
+    // When
     let result = await interactor.recordDataProtectionAction(
       transactionId: "tx-contacts",
       action: .reportSuspiciousTransaction,
       contactUrl: URL(string: "https://dpa.example/report")!
     )
 
+    // Then
     guard case .success = result else {
       return XCTFail("Expected recorded, but got \(result).")
     }
@@ -378,14 +384,17 @@ extension TestTransactionDetailsInteractor {
   }
 
   func testRecordDataProtectionAction_WhenTheContactIsNotTheTransactions_ThenRecordsNothing() async {
+    // Given
     stubFetchPresentationWithContacts()
 
+    // When
     let result = await interactor.recordDataProtectionAction(
       transactionId: "tx-contacts",
       action: .requestDataDeletion,
       contactUrl: URL(string: "mailto:someone@else.example")!
     )
 
+    // Then
     guard case .unavailable = result else {
       return XCTFail("Expected unavailable, but got \(result).")
     }
@@ -393,17 +402,20 @@ extension TestTransactionDetailsInteractor {
   }
 
   func testRecordDataProtectionAction_WhenRecordingFails_ThenReturnsFailure() async {
+    // Given
     stubFetchPresentationWithContacts()
     stub(walletKitController) { stub in
       when(stub.recordDataDeletionRequest(for: any(), contactUrl: any())).thenThrow(WalletCoreError.unableToRecordTransactionAction)
     }
 
+    // When
     let result = await interactor.recordDataProtectionAction(
       transactionId: "tx-contacts",
       action: .requestDataDeletion,
       contactUrl: URL(string: "mailto:support@verifier.example")!
     )
 
+    // Then
     guard case .failure(let error) = result else {
       return XCTFail("Expected failure, but got \(result).")
     }

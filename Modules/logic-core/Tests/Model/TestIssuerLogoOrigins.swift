@@ -27,27 +27,55 @@ final class TestIssuerLogoOrigins: EudiTest {
   )
 
   func testOriginsOfIssuer_WhenConfigured_ThenAreItsOwnAndItsLogoOrigins() {
-    XCTAssertEqual(origins.origins(ofIssuer: "https://issuer.example"), ["https://issuer.example", "https://eudiw.dev"])
+    // When
+    let issuerOrigins = origins.origins(ofIssuer: "https://issuer.example")
+
+    // Then
+    XCTAssertEqual(issuerOrigins, ["https://issuer.example", "https://eudiw.dev"])
   }
 
   func testOriginsOfIssuer_WhenAnotherIssuerServesTheLogo_ThenItsOriginIsNotAllowed() {
+    // Given
     let logo = URL(string: "https://other-logos.example/logo.png")!
-    XCTAssertNil(logo.allowedIssuerLogo(allowedOrigins: origins.origins(ofIssuer: "https://issuer.example")))
-    XCTAssertEqual(logo.allowedIssuerLogo(allowedOrigins: origins.origins(ofIssuer: "https://other.example")), logo)
+
+    // When
+    let allowedForIssuer = logo.allowedIssuerLogo(allowedOrigins: origins.origins(ofIssuer: "https://issuer.example"))
+    let allowedForOther = logo.allowedIssuerLogo(allowedOrigins: origins.origins(ofIssuer: "https://other.example"))
+
+    // Then
+    XCTAssertNil(allowedForIssuer)
+    XCTAssertEqual(allowedForOther, logo)
   }
 
   func testOriginsOfIssuer_WhenNotConfigured_ThenOnlyItsOwnOrigin() {
-    XCTAssertEqual(origins.origins(ofIssuer: "https://unknown.example"), ["https://unknown.example"])
-    XCTAssertEqual(origins.origins(ofIssuer: nil), [])
+    // When
+    let unknownIssuer = origins.origins(ofIssuer: "https://unknown.example")
+    let noIssuer = origins.origins(ofIssuer: nil)
+
+    // Then
+    XCTAssertEqual(unknownIssuer, ["https://unknown.example"])
+    XCTAssertEqual(noIssuer, [])
   }
 
   func testOriginsOfOffer_WhenTheIssuerIsConfigured_ThenAreThatIssuers() {
+    // Given
     let byReference = "openid-credential-offer://?credential_offer_uri=https%3A%2F%2Fother.example%2Foffer%2F1"
-    XCTAssertEqual(origins.origins(ofOffer: byReference), ["https://other.example", "https://other-logos.example"])
+
+    // When
+    let offerOrigins = origins.origins(ofOffer: byReference)
+
+    // Then
+    XCTAssertEqual(offerOrigins, ["https://other.example", "https://other-logos.example"])
   }
 
   func testOriginsOfOffer_WhenTheIssuerIsNotConfigured_ThenNone() {
+    // Given
     let byReference = "openid-credential-offer://?credential_offer_uri=https%3A%2F%2Funknown.example%2Foffer%2F1"
-    XCTAssertEqual(origins.origins(ofOffer: byReference), [])
+
+    // When
+    let offerOrigins = origins.origins(ofOffer: byReference)
+
+    // Then
+    XCTAssertEqual(offerOrigins, [])
   }
 }

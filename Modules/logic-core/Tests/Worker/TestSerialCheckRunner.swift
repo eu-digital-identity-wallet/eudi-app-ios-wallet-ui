@@ -20,6 +20,7 @@ import XCTest
 final class TestSerialCheckRunner: EudiTest {
 
   func testRun_WhenCalledDuringACheck_ThenTheCheckRunsOnceMoreAndNeverTwiceAtOnce() async {
+    // Given
     let runner = SerialCheckRunner()
     let log = RecordingCheckLog()
     let firstStarted = expectation(description: "first check started")
@@ -37,10 +38,12 @@ final class TestSerialCheckRunner: EudiTest {
     }
     await fulfillment(of: [firstStarted], timeout: 5)
 
+    // When
     await runner.run { XCTFail("a second check must not start beside the first") }
     await gate.open()
     await first.value
 
+    // Then
     let runs = await log.runs
     let maxAtOnce = await log.maxAtOnce
     XCTAssertEqual(runs, 2)
@@ -48,19 +51,23 @@ final class TestSerialCheckRunner: EudiTest {
   }
 
   func testRun_WhenNothingRuns_ThenTheCheckRunsOnce() async {
+    // Given
     let runner = SerialCheckRunner()
     let log = RecordingCheckLog()
 
+    // When
     await runner.run {
       _ = await log.begin()
       await log.end()
     }
 
+    // Then
     let runs = await log.runs
     XCTAssertEqual(runs, 1)
   }
 
   func testWaitUntilIdle_WhenACheckRuns_ThenReturnsOnceItEnds() async {
+    // Given
     let runner = SerialCheckRunner()
     let gate = AsyncGate()
     let log = RecordingCheckLog()
@@ -75,6 +82,8 @@ final class TestSerialCheckRunner: EudiTest {
       }
     }
     await fulfillment(of: [started], timeout: 5)
+
+    // When
     let idle = expectation(description: "idle")
     let returnedEarly = expectation(description: "returned before the check ended")
     returnedEarly.isInverted = true
@@ -86,12 +95,14 @@ final class TestSerialCheckRunner: EudiTest {
     await fulfillment(of: [returnedEarly], timeout: 0.3)
     await gate.open()
 
+    // Then
     await fulfillment(of: [idle], timeout: 5)
     let runs = await log.runs
     XCTAssertEqual(runs, 1)
   }
 
   func testWaitUntilIdle_WhenNothingRuns_ThenReturnsAtOnce() async {
+    // Then
     await SerialCheckRunner().waitUntilIdle()
   }
 }

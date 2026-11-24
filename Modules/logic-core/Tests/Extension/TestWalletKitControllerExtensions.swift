@@ -23,13 +23,17 @@ final class TestWalletKitControllerExtensions: EudiTest {
 
   func testRefuseReIssueIfBlocked_WhenTheDocumentIsRevokedOrSuspended_ThenThrowsDocumentBlocked() async {
     for status in [DocumentRevocationStatus.revoked, .suspended, .unrecognised] {
+      // Given
       let controller = MockWalletKitController()
       stub(controller) { mock in
         when(mock.fetchRevokedDocumentStatuses()).thenReturn(["pid": status])
       }
 
+      // When
       do {
         try await controller.refuseReIssueIfBlocked("pid")
+
+        // Then
         XCTFail("Expected a refusal for \(status)")
       } catch {
         XCTAssertEqual(error as? WalletCoreError, .documentBlocked)
@@ -38,22 +42,29 @@ final class TestWalletKitControllerExtensions: EudiTest {
   }
 
   func testRefuseReIssueIfBlocked_WhenOnlyAnotherDocumentIsBlocked_ThenDoesNotThrow() async throws {
+    // Given
     let controller = MockWalletKitController()
     stub(controller) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenReturn(["other": .revoked])
     }
 
+
+    // Then
     try await controller.refuseReIssueIfBlocked("pid")
   }
 
   func testRefuseReIssueIfBlocked_WhenTheRecordsCannotBeRead_ThenThrowsTheReadError() async {
+    // Given
     let controller = MockWalletKitController()
     stub(controller) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenThrow(WalletCoreError.unableFetchDocuments)
     }
 
+    // When
     do {
       try await controller.refuseReIssueIfBlocked("pid")
+
+      // Then
       XCTFail("Expected the read error")
     } catch {
       XCTAssertEqual(error as? WalletCoreError, .unableFetchDocuments)

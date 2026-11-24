@@ -62,22 +62,28 @@ final class TestBiometryInteractor: EudiTest {
   }
 
   func testUnlockSession_WhenLoginSucceeded_ThenUnlocksThroughThePinInteractor() async {
+    // Given
     stub(quickPinInteractor) { mock in
       when(mock.unlockSession()).thenDoNothing()
     }
 
+    // When
     await interactor.unlockSession()
 
+    // Then
     verify(quickPinInteractor).unlockSession()
   }
 
   func testGetDeviceLockState_WhenThePasscodeIsRequiredAndMissing_ThenReturnsTheStateSetupUses() async {
+    // Given
     stub(quickPinInteractor) { mock in
       when(mock.getDeviceLockState()).thenReturn(.required)
     }
 
+    // When
     let state = await interactor.getDeviceLockState()
 
+    // Then
     XCTAssertEqual(state, .required)
     verify(quickPinInteractor).getDeviceLockState()
   }
@@ -89,8 +95,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(prefsController) { mock in
       when(mock.getBool(forKey: Prefs.Key.biometryEnabled)).thenReturn(true)
     }
+
     // When
     let isEnabled = await interactor.isBiometryEnabled()
+
     // Then
     XCTAssertTrue(isEnabled)
   }
@@ -100,8 +108,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(prefsController) { mock in
       when(mock.getBool(forKey: Prefs.Key.biometryEnabled)).thenReturn(false)
     }
+
     // When
     let isEnabled = await interactor.isBiometryEnabled()
+
     // Then
     XCTAssertFalse(isEnabled)
   }
@@ -114,8 +124,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(quickPinInteractor) { mock in
       when(mock.isPinValid(pin: pin)).thenReturn(.success)
     }
+
     // When
     let state = await interactor.isPinValid(with: pin)
+
     // Then
     switch state {
     case .success:
@@ -132,8 +144,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(quickPinInteractor) { mock in
       when(mock.isPinValid(pin: pin)).thenReturn(.failure(mockedError))
     }
+
     // When
     let state = await interactor.isPinValid(with: pin)
+
     // Then
     switch state {
     case .failure(let error):
@@ -146,51 +160,63 @@ final class TestBiometryInteractor: EudiTest {
   // MARK: - setBiometrySelection
   
   func testSetBiometrySelection_WhenTurnedOnAndTheCheckPasses_ThenBindsAndStoresTheChoice() async {
+    // Given
     stubBiometricUnlock(isEnabled: false, isBound: false)
     stub(systemBiometricController) { mock in
       when(mock.enableBiometricUnlock()).thenDoNothing()
     }
 
+    // When
     let state = await interactor.setBiometrySelection(isEnabled: true)
 
+    // Then
     XCTAssertEqual(state, .authenticated)
     verify(prefsController).setValue(storedBool(true), forKey: Prefs.Key.biometricUnlockBound)
     verify(prefsController).setValue(storedBool(true), forKey: Prefs.Key.biometryEnabled)
   }
 
   func testSetBiometrySelection_WhenTurnedOnAndTheCheckFails_ThenTheChoiceIsNotStored() async {
+    // Given
     stubBiometricUnlock(isEnabled: false, isBound: false)
     stub(systemBiometricController) { mock in
       when(mock.enableBiometricUnlock()).thenThrow(SystemBiometryError.biometricError)
     }
 
+    // When
     let state = await interactor.setBiometrySelection(isEnabled: true)
 
+    // Then
     XCTAssertEqual(state, .failure(.biometricError))
     verify(prefsController, never()).setValue(any(), forKey: any())
   }
 
   func testSetBiometrySelection_WhenTurnedOff_ThenUnbindsAndStoresTheChoice() async {
+    // Given
     stubBiometricUnlock(isEnabled: true, isBound: true)
     stub(systemBiometricController) { mock in
       when(mock.disableBiometricUnlock()).thenDoNothing()
     }
 
+    // When
     let state = await interactor.setBiometrySelection(isEnabled: false)
 
+    // Then
     XCTAssertEqual(state, .authenticated)
     verify(prefsController).setValue(storedBool(false), forKey: Prefs.Key.biometricUnlockBound)
     verify(prefsController).setValue(storedBool(false), forKey: Prefs.Key.biometryEnabled)
   }
 
   func testAuthenticate_WhenOnButNotYetBound_ThenTheFirstBiometricLoginBindsIt() async {
+    // Given
     stubBiometricUnlock(isEnabled: true, isBound: false)
     stub(systemBiometricController) { mock in
       when(mock.enableBiometricUnlock()).thenDoNothing()
     }
 
+    // When
     let state = await interactor.authenticate()
 
+    // Then
     XCTAssertEqual(state, .authenticated)
     verify(systemBiometricController).enableBiometricUnlock()
     verify(systemBiometricController, never()).requestBiometricUnlock()
@@ -198,13 +224,16 @@ final class TestBiometryInteractor: EudiTest {
   }
 
   func testAuthenticate_WhenBound_ThenTheProbeIsReadAndNotRewritten() async {
+    // Given
     stubBiometricUnlock(isEnabled: true, isBound: true)
     stub(systemBiometricController) { mock in
       when(mock.requestBiometricUnlock()).thenThrow(SystemBiometryError.biometricError)
     }
 
+    // When
     let state = await interactor.authenticate()
 
+    // Then
     XCTAssertEqual(state, .failure(.biometricError))
     verify(systemBiometricController, never()).enableBiometricUnlock()
   }
@@ -216,8 +245,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(systemBiometricController) { mock in
       when(mock.getBiometryType()).thenReturn(.faceID)
     }
+
     // When
     let biometryImage = await interactor.getBiometricsImage()
+
     // Then
     XCTAssertEqual(biometryImage, Theme.shared.image.faceId)
   }
@@ -227,8 +258,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(systemBiometricController) { mock in
       when(mock.getBiometryType()).thenReturn(.touchID)
     }
+
     // When
     let biometryImage = await interactor.getBiometricsImage()
+
     // Then
     XCTAssertEqual(biometryImage, Theme.shared.image.touchId)
   }
@@ -238,8 +271,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(systemBiometricController) { mock in
       when(mock.getBiometryType()).thenReturn(.none)
     }
+
     // When
     let biometryImage = await interactor.getBiometricsImage()
+
     // Then
     XCTAssertNil(biometryImage)
   }
@@ -251,8 +286,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(systemBiometricController) { mock in
       when(mock.getBiometryType()).thenReturn(.faceID)
     }
+
     // When
     let biometryType = await interactor.getBiometryType()
+
     // Then
     XCTAssertEqual(biometryType, .faceID)
   }
@@ -262,8 +299,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(systemBiometricController) { mock in
       when(mock.getBiometryType()).thenReturn(.touchID)
     }
+
     // When
     let biometryType = await interactor.getBiometryType()
+
     // Then
     XCTAssertEqual(biometryType, .touchID)
   }
@@ -275,8 +314,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(systemBiometricController) { mock in
       when(mock.getBiometryType()).thenReturn(.faceID)
     }
+
     // When
     let method = await interactor.getBiometricsMethod()
+
     // Then
     XCTAssertEqual(method, "Face ID")
   }
@@ -286,8 +327,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(systemBiometricController) { mock in
       when(mock.getBiometryType()).thenReturn(.touchID)
     }
+
     // When
     let method = await interactor.getBiometricsMethod()
+
     // Then
     XCTAssertEqual(method, "Touch ID")
   }
@@ -297,8 +340,10 @@ final class TestBiometryInteractor: EudiTest {
     stub(systemBiometricController) { mock in
       when(mock.getBiometryType()).thenReturn(.none)
     }
+
     // When
     let method = await interactor.getBiometricsMethod()
+
     // Then
     XCTAssertEqual(method, "")
   }
@@ -339,8 +384,9 @@ final class TestBiometryInteractor: EudiTest {
     }
   }
 
+  /// A non-SystemBiometryError reaches the generic catch branch
   func testAuthenticate_WhenRequestThrowsGenericError_ThenEmitsBiometricErrorFailure() async {
-    // Given: a non-SystemBiometryError reaches the generic catch branch
+    // Given
     stubBiometricUnlock(isEnabled: true, isBound: true)
     struct UnknownError: Error {}
     stub(systemBiometricController) { mock in
@@ -377,7 +423,11 @@ final class TestBiometryInteractor: EudiTest {
   // MARK: - maxFailedPinAttempts
 
   func testMaxFailedPinAttempts_WhenConfigured_ThenReflectsAuthenticationConfig() async {
-    XCTAssertEqual(interactor.maxFailedPinAttempts, 3)
+    // When
+    let result = interactor.maxFailedPinAttempts
+
+    // Then
+    XCTAssertEqual(result, 3)
   }
 
   // MARK: - PIN throttle delegation

@@ -22,28 +22,37 @@ import logic_storage
 final class TestBookmarkStorageControllerExtensions: EudiTest {
 
   func testCarryBookmark_WhenTheOriginalWasBookmarked_ThenEveryRenewedDocumentIsBookmarked() async {
+    // Given
     let storage = RecordingBookmarkStorageController()
 
+    // When
     await storage.carryBookmark(wasBookmarked: true, to: ["new1", "new2"])
 
+    // Then
     let stored = await storage.storedIdentifiers
     XCTAssertEqual(stored, ["new1", "new2"])
   }
 
   func testCarryBookmark_WhenTheOriginalWasNotBookmarked_ThenNothingIsBookmarked() async {
+    // Given
     let storage = RecordingBookmarkStorageController()
 
+    // When
     await storage.carryBookmark(wasBookmarked: false, to: ["new1"])
 
+    // Then
     let stored = await storage.storedIdentifiers
     XCTAssertEqual(stored, [])
   }
 
   func testCarryBookmark_WhenOneBookmarkCannotBeStored_ThenTheOthersAreStillStored() async {
+    // Given
     let storage = RecordingBookmarkStorageController(failingIdentifier: "new1")
 
+    // When
     await storage.carryBookmark(wasBookmarked: true, to: ["new1", "new2"])
 
+    // Then
     let stored = await storage.storedIdentifiers
     XCTAssertEqual(stored, ["new2"])
   }

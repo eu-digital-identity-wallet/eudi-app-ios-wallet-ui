@@ -162,8 +162,9 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
 
+  /// A mix of a generic and a trust failure, the trust failure wins.
   func testFetchScopedDocuments_WhenAllIssuersFailAndOneIsUntrusted_ThenReturnsIssuerNotTrusted() async {
-    // Given a mix of a generic and a trust failure, the trust failure wins.
+    // Given
     stubGetScopedDocuments(
       documents: [],
       errors: [
@@ -250,6 +251,7 @@ final class TestAddDocumentInteractor: EudiTest {
   }
   
   func testIssueDocument_WhenOneOfTheRequestedFormatsIsNotIssued_ThenNamesIt() async {
+    // Given
     let metadata = DocMetadata(
       credentialIssuerIdentifier: "https://issuer.dev",
       configurationIdentifier: "pid_mdoc",
@@ -293,12 +295,14 @@ final class TestAddDocumentInteractor: EudiTest {
       )
     }
 
+    // When
     let result = await interactor.issueDocument(
       issuerId: "issuer.dev",
       configIds: ["pid_mdoc", "pid_sdjwt"],
       docTypeIdentifier: .mDocPid
     )
 
+    // Then
     guard case .success(let ids, let notIssuedDocumentNames) = result else {
       return XCTFail("Expected a success, got \(result)")
     }
@@ -307,19 +311,28 @@ final class TestAddDocumentInteractor: EudiTest {
   }
 
   func testNotIssuedConfigIds_WhenEveryReturnedDocumentNamesItsConfiguration_ThenListsTheMissingOnes() {
+    // When
+    let missingIds = AddDocumentInteractorImpl.notIssuedConfigIds(requested: ["mdoc", "sdjwt"], returned: ["mdoc"])
+    let noMissingIds = AddDocumentInteractorImpl.notIssuedConfigIds(requested: ["mdoc", "sdjwt"], returned: ["sdjwt", "mdoc"])
+
+    // Then
     XCTAssertEqual(
-      AddDocumentInteractorImpl.notIssuedConfigIds(requested: ["mdoc", "sdjwt"], returned: ["mdoc"]),
+      missingIds,
       ["sdjwt"]
     )
     XCTAssertEqual(
-      AddDocumentInteractorImpl.notIssuedConfigIds(requested: ["mdoc", "sdjwt"], returned: ["sdjwt", "mdoc"]),
+      noMissingIds,
       []
     )
   }
 
   func testNotIssuedConfigIds_WhenAReturnedDocumentDoesNotNameItsConfiguration_ThenNamesNothing() {
+    // When
+    let missingIds = AddDocumentInteractorImpl.notIssuedConfigIds(requested: ["mdoc", "sdjwt"], returned: [nil])
+
+    // Then
     XCTAssertEqual(
-      AddDocumentInteractorImpl.notIssuedConfigIds(requested: ["mdoc", "sdjwt"], returned: [nil]),
+      missingIds,
       []
     )
   }
@@ -628,9 +641,11 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
   
+  /// extraDocument(filterType: .mDocPid) keeps only documents whose
+  /// docTypeIdentifier matches; everything else hits the `continue` on line 64.
+  /// the .mDL doc was skipped; only PID-bucket remains
   func testFetchScopedDocuments_WhenExtraDocumentFilterTypeIsSet_ThenNonMatchingDocsFilteredOut() async {
-    // Given: extraDocument(filterType: .mDocPid) keeps only documents whose
-    // docTypeIdentifier matches; everything else hits the `continue` on line 64.
+    // Given
     let pidDoc = ScopedDocument(
       name: "PID Doc", issuer: "issuer.dev", order: 0, configId: "pid",
       isPid: true, docTypeIdentifier: .mDocPid
@@ -644,7 +659,7 @@ final class TestAddDocumentInteractor: EudiTest {
     // When
     let result = await interactor.fetchScopedDocuments(with: .extraDocument(filterType: .mDocPid))
 
-    // Then: the .mDL doc was skipped; only PID-bucket remains
+    // Then
     switch result {
     case .success(let documents):
       let allModels = documents.values.flatMap { $0 }
@@ -654,9 +669,10 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
 
+  /// walletController.issueDocuments returns an empty array, hitting
+  /// the `guard !docs.isEmpty` failure branch (lines 155-157).
   func testIssueDocument_WhenWalletReturnsEmptyDocs_ThenReturnsFailure() async {
-    // Given: walletController.issueDocuments returns an empty array, hitting
-    // the `guard !docs.isEmpty` failure branch (lines 155-157).
+    // Given
     let issuerId = "issuer.dev"
     let configIds = ["empty"]
     let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
@@ -682,10 +698,11 @@ final class TestAddDocumentInteractor: EudiTest {
     }
   }
 
+  /// A deferred doc with metadata: nil so `DocMetadata(from: doc.metadata)?
+  /// .configurationIdentifier` evaluates to nil, the guard on lines 166-168 fails,
+  /// and `error = .unableToIssueAndStore` is set before the loop continues.
   func testIssueDocument_WhenDeferredDocHasNilMetadata_ThenReturnsFailure() async {
-    // Given: a deferred doc with metadata: nil so `DocMetadata(from: doc.metadata)?
-    // .configurationIdentifier` evaluates to nil, the guard on lines 166-168 fails,
-    // and `error = .unableToIssueAndStore` is set before the loop continues.
+    // Given
     let issuerId = "issuer.dev"
     let configIds = ["deferred-orphan"]
     let identifier = DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
@@ -817,16 +834,19 @@ final class TestAddDocumentInteractor: EudiTest {
   }
 
   func testIssueDocument_WhenTheRegistrationLookupFails_ThenIssuanceNeverStartsAndFails() async {
+    // Given
     stub(walletKitController) { stub in
       when(stub.getIssuerRegistration(issuerId: any(), configIds: any())).thenThrow(WalletCoreError.unableFetchDocument)
     }
 
+    // When
     let result = await interactor.issueDocument(
       issuerId: "issuer.dev",
       configIds: ["doc"],
       docTypeIdentifier: DocumentTypeIdentifier(rawValue: "eu.europa.ec.eudi.pid.1")
     )
 
+    // Then
     guard case .failure = result else {
       return XCTFail("Expected .failure, got \(result)")
     }

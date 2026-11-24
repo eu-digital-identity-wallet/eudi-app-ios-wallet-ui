@@ -21,44 +21,84 @@ import MdocDataModel18013
 final class TestTrustMarkResourceExtensions: EudiTest {
 
   func testGetLocalizedText_WhenRequestedLanguageIsAvailableAfterAnother_ThenReturnIt() {
+    // Given
     let text = text(["en": "English", "fr": "Français"])
-    XCTAssertEqual(text.getLocalizedText(userLanguageCode: "fr"), "Français")
+
+    // When
+    let result = text.getLocalizedText(userLanguageCode: "fr")
+
+    // Then
+    XCTAssertEqual(result, "Français")
   }
 
   func testGetLocalizedText_WhenMatchingTagHasMixedCaseAndUnderscore_ThenReturnIt() {
+    // Given
     let text = text(["en": "English", "EL_gr": "Ελληνικά"])
-    XCTAssertEqual(text.getLocalizedText(userLanguageCode: "el"), "Ελληνικά")
+
+    // When
+    let result = text.getLocalizedText(userLanguageCode: "el")
+
+    // Then
+    XCTAssertEqual(result, "Ελληνικά")
   }
 
   func testGetLocalizedText_WhenRegionalTranslationMatchesUserLanguage_ThenReturnIt() {
+    // Given
     let text = text(["fr": "Français", "el-GR": "Ελληνικά"])
-    XCTAssertEqual(text.getLocalizedText(userLanguageCode: "el"), "Ελληνικά")
+
+    // When
+    let result = text.getLocalizedText(userLanguageCode: "el")
+
+    // Then
+    XCTAssertEqual(result, "Ελληνικά")
   }
 
   func testGetLocalizedText_WhenMatchingTranslationIsBlank_ThenReturnNonBlankMatch() {
+    // Given
     let text = text(["el": "   ", "el-GR": "Ελληνικά", "en": "English"])
-    XCTAssertEqual(text.getLocalizedText(userLanguageCode: "el"), "Ελληνικά")
+
+    // When
+    let result = text.getLocalizedText(userLanguageCode: "el")
+
+    // Then
+    XCTAssertEqual(result, "Ελληνικά")
   }
 
   func testGetLocalizedText_WhenRequestedLanguageIsAbsent_ThenReturnFirstNonBlankTranslation() {
+    // Given
     let text = text(["de": "", "fr": "Français", "it": "Italiano"])
-    XCTAssertEqual(text.getLocalizedText(userLanguageCode: "el"), "Français")
+
+    // When
+    let result = text.getLocalizedText(userLanguageCode: "el")
+
+    // Then
+    XCTAssertEqual(result, "Français")
   }
 
   func testGetLocalizedText_WhenTranslationsAreEmptyOrBlank_ThenReturnNil() {
+    // Then
     XCTAssertNil(text([:]).getLocalizedText(userLanguageCode: "en"))
     XCTAssertNil(text(["en": " ", "fr": "\n"]).getLocalizedText(userLanguageCode: "en"))
   }
 
   func testGetLocalizedText_WhenKeysIncludeRegionsScriptsAndVariants_ThenMatchOnLanguage() {
+    // Given
     let text = text(["zh-Hant-TW": "繁體中文", "sr-Latn-RS": "Srpski"])
+
+    // Then
     XCTAssertEqual(text.getLocalizedText(userLanguageCode: "sr"), "Srpski")
     XCTAssertEqual(text.getLocalizedText(userLanguageCode: "zh"), "繁體中文")
   }
 
   func testGetLocalizedText_WhenUserLanguageIsMissing_ThenReturnFirstNonBlankTranslation() {
+    // Given
     let text = text(["fr": "Français", "en": "English"])
-    XCTAssertEqual(text.getLocalizedText(userLanguageCode: nil), "English")
+
+    // When
+    let result = text.getLocalizedText(userLanguageCode: nil)
+
+    // Then
+    XCTAssertEqual(result, "English")
   }
 }
 

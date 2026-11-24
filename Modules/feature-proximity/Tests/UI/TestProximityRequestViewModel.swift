@@ -25,24 +25,31 @@ final class TestProximityRequestViewModel: EudiTest {
 
   @MainActor
   func testDoWork_WhenTheReaderDidNotAuthenticate_ThenWarnsAboutItsAccessCertificate() async {
+    // Given
     let viewModel = makeViewModel(isTrusted: false)
 
+    // When
     await viewModel.doWork()
 
+    // Then
     XCTAssertEqual(viewModel.viewState.registrationWarning, .accessCertificateNotTrusted)
   }
 
   @MainActor
   func testDoWork_WhenTheReaderAuthenticated_ThenShowsNoWarning() async {
+    // Given
     let viewModel = makeViewModel(isTrusted: true)
 
+    // When
     await viewModel.doWork()
 
+    // Then
     XCTAssertNil(viewModel.viewState.registrationWarning)
   }
 
   @MainActor
   func testDoWork_WhenTheReaderLeavesBeforeTheUserAnswers_ThenThePresentationEndsAndTheScreenGoesBack() async {
+    // Given
     let router = MockRouterHost()
     let wentBack = expectation(description: "went back")
     let stopped = expectation(description: "presentation stopped")
@@ -56,23 +63,29 @@ final class TestProximityRequestViewModel: EudiTest {
       onStop: { stopped.fulfill() }
     )
 
+    // When
     await viewModel.doWork()
 
+    // Then
     await fulfillment(of: [stopped, wentBack], timeout: 5, enforceOrder: true)
   }
 
   @MainActor
   func testDeclineRequest_WhenTheUserGoesBack_ThenThePresentationEnds() async {
+    // Given
     let stopped = expectation(description: "presentation stopped")
     let viewModel = makeViewModel(isTrusted: true, onStop: { stopped.fulfill() })
 
+    // When
     await viewModel.declineRequest()
 
+    // Then
     await fulfillment(of: [stopped], timeout: 5)
   }
 
   @MainActor
   func testOnShare_WhenTheReaderLeavesAfterTheShare_ThenTheScreenDoesNotGoBack() async {
+    // Given
     let router = MockRouterHost()
     let wentBack = expectation(description: "went back")
     wentBack.isInverted = true
@@ -82,14 +95,17 @@ final class TestProximityRequestViewModel: EudiTest {
     }
     let viewModel = makeViewModel(isTrusted: true, router: router, readerLeaves: true)
 
+    // When
     await viewModel.doWork()
     viewModel.onShare()
 
+    // Then
     await fulfillment(of: [wentBack], timeout: 0.5)
   }
 
   @MainActor
   func testGetPopRoute_WhenTheScreenIsLeft_ThenALaterDisconnectDoesNotGoBack() async {
+    // Given
     let router = MockRouterHost()
     let wentBack = expectation(description: "went back")
     wentBack.isInverted = true
@@ -98,14 +114,17 @@ final class TestProximityRequestViewModel: EudiTest {
     }
     let viewModel = makeViewModel(isTrusted: true, router: router, readerLeaves: true)
 
+    // When
     await viewModel.doWork()
     _ = viewModel.getPopRoute()
 
+    // Then
     await fulfillment(of: [wentBack], timeout: 0.5)
   }
 
   @MainActor
   func testOnShare_WhenTheReaderHasLeft_ThenNothingIsShared() async throws {
+    // Given
     let router = MockRouterHost()
     let wentBack = expectation(description: "went back")
     stub(router) { mock in
@@ -120,27 +139,37 @@ final class TestProximityRequestViewModel: EudiTest {
       onPrepare: { shared.fulfill() }
     )
 
+    // When
     await viewModel.doWork()
+
+    // Then
     await fulfillment(of: [wentBack], timeout: 5)
+
+    // When
     viewModel.onShare()
 
+    // Then
     await fulfillment(of: [shared], timeout: 0.5)
   }
 
   @MainActor
   func testOnReappear_WhenTheRequestShowsAgain_ThenTheReaderIsWatchedAgain() async {
+    // Given
     let watched = expectation(description: "reader watched")
     watched.expectedFulfillmentCount = 2
     let viewModel = makeViewModel(isTrusted: true, onWatch: { watched.fulfill() })
 
+    // When
     await viewModel.doWork()
     await viewModel.onReappear()
 
+    // Then
     await fulfillment(of: [watched], timeout: 5)
   }
 
   @MainActor
   func testOnReappear_WhenTheReaderHasLeft_ThenTheReaderIsNotWatchedAgain() async {
+    // Given
     let router = MockRouterHost()
     let wentBack = expectation(description: "went back")
     stub(router) { mock in
@@ -154,15 +183,22 @@ final class TestProximityRequestViewModel: EudiTest {
       onWatch: { watchedAgain.fulfill() }
     )
 
+    // When
     await viewModel.doWork()
+
+    // Then
     await fulfillment(of: [wentBack], timeout: 5)
+
+    // When
     await viewModel.onReappear()
 
+    // Then
     await fulfillment(of: [watchedAgain], timeout: 0.5)
   }
 
   @MainActor
   func testOnReappear_WhenTheRequestShowsAnError_ThenTheReaderIsNotWatchedAgain() async {
+    // Given
     let (sessionStates, continuation) = AsyncStream.makeStream(of: PresentationState.self)
     let watchedAgain = Self.secondWatch(of: self)
     let viewModel = makeViewModel(
@@ -174,11 +210,18 @@ final class TestProximityRequestViewModel: EudiTest {
     await viewModel.doWork()
     let errorShown = expectation(description: "error shown")
     withObservationTracking { _ = viewModel.viewState } onChange: { errorShown.fulfill() }
+
+    // When
     continuation.yield(.error(RuntimeError.genericError))
+
+    // Then
     await fulfillment(of: [errorShown], timeout: 5)
+
+    // When
     await viewModel.onReappear()
     continuation.finish()
 
+    // Then
     XCTAssertNotNil(viewModel.viewState.error)
     await fulfillment(of: [watchedAgain], timeout: 0.5)
   }

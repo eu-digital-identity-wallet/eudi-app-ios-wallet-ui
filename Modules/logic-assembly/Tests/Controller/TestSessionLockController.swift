@@ -67,68 +67,87 @@ final class TestSessionLockController: EudiTest {
 
   @MainActor
   func testSceneDidEnterBackground_WhenCalled_ThenRecordsTheCoverBeforeTheBackground() {
+    // Given
     let controller = makeController(isCovered: true)
 
+    // When
     controller.sceneDidEnterBackground()
 
+    // Then
     XCTAssertEqual(calls.entries, ["setCovered(true)", "recordBackground(true)"])
   }
 
   @MainActor
   func testSceneDidEnterBackground_WhenNothingCoversAnOrdinaryScreen_ThenRecordsBoth() {
+    // Given
     stub(routerHost) { mock in
       when(mock.isInProtectedFlow()).thenReturn(false)
     }
     let controller = makeController(isCovered: false)
 
+    // When
     controller.sceneDidEnterBackground()
 
+    // Then
     XCTAssertEqual(calls.entries, ["setCovered(false)", "recordBackground(false)"])
   }
 
   @MainActor
   func testSceneDidBecomeActive_WhenCalled_ThenAppliesTheTimeoutAndSendsALockedWalletToLogin() {
+    // Given
     let controller = makeController()
 
+    // When
     controller.sceneDidBecomeActive()
 
+    // Then
     XCTAssertEqual(calls.entries, ["lockIfExpired", "requireLoginIfLocked"])
   }
 
   @MainActor
   func testWillHandleLink_WhenALinkArrives_ThenAppliesTheTimeoutFirst() {
+    // Given
     let controller = makeController()
 
+    // When
     controller.willHandleLink()
 
+    // Then
     XCTAssertEqual(calls.entries, ["lockIfExpired", "requireLoginIfLocked"])
   }
 
   @MainActor
   func testCheckIdle_WhenRun_ThenRefreshesTheCoverAndAppliesTheTimeout() {
+    // Given
     let controller = makeController(isCovered: false)
 
+    // When
     controller.checkIdle()
 
+    // Then
     XCTAssertEqual(calls.entries, ["setCovered(false)", "lockIfExpired", "requireLoginIfLocked"])
   }
 
   @MainActor
   func testStart_WhenTheUserInteracts_ThenRecordsInteraction() {
+    // Given
     var onInteraction: (@MainActor () -> Void)?
     stub(userInteractionController) { mock in
       when(mock.start(onInteraction: any())).then { onInteraction = $0 }
     }
     let controller = makeController()
 
+    // When
     controller.start()
     onInteraction?()
 
+    // Then
     XCTAssertEqual(calls.entries, ["recordInteraction"])
   }
 
   @MainActor
   func testStart_WhenTheAppIsInFront_ThenChecksTheIdleLimitRegularly() async {
+    // Given
     let checked = expectation(description: "idle check")
     checked.assertForOverFulfill = false
     stub(sessionController) { mock in
@@ -136,14 +155,17 @@ final class TestSessionLockController: EudiTest {
     }
     let controller = makeController(idleCheckInterval: 0.02)
 
+    // When
     controller.start()
 
+    // Then
     await fulfillment(of: [checked], timeout: 2)
     withExtendedLifetime(controller) {}
   }
 
   @MainActor
   func testSceneDidBecomeActive_WhenTheAppReturns_ThenTheIdleCheckRestarts() async {
+    // Given
     let controller = makeController(idleCheckInterval: 0.02)
     controller.start()
     controller.sceneDidEnterBackground()
@@ -154,20 +176,25 @@ final class TestSessionLockController: EudiTest {
       when(mock.lockIfExpired()).then { checked.fulfill(); return false }
     }
 
+    // When
     controller.sceneDidBecomeActive()
 
+    // Then
     await fulfillment(of: [checked], timeout: 2)
     withExtendedLifetime(controller) {}
   }
 
   @MainActor
   func testSceneDidEnterBackground_WhenTheIdleCheckRuns_ThenItStopsBeforeTheBackgroundIsRecorded() async throws {
+    // Given
     let controller = makeController(idleCheckInterval: 0.02)
     controller.start()
 
+    // When
     controller.sceneDidEnterBackground()
     try await Task.sleep(seconds: 0.2)
 
+    // Then
     XCTAssertEqual(calls.entries.last, "recordBackground(true)")
     XCTAssertFalse(calls.entries.contains("lockIfExpired"))
     withExtendedLifetime(controller) {}
@@ -175,20 +202,24 @@ final class TestSessionLockController: EudiTest {
 
   @MainActor
   func testSceneDidEnterBackground_WhenAnIdleCheckIsAlreadyDue_ThenItDoesNotRunAfterTheBackground() async throws {
+    // Given
     let controller = makeController(idleCheckInterval: 0.02)
     controller.start()
     await Task.yield()
     blockMainActor(for: 0.2)
 
+    // When
     controller.sceneDidEnterBackground()
     try await Task.sleep(seconds: 0.2)
 
+    // Then
     XCTAssertEqual(calls.entries.last, "recordBackground(true)")
     withExtendedLifetime(controller) {}
   }
 
   @MainActor
   func testCheckIdle_WhenTheWalletWasUnlockedAndIsNowLocked_ThenTheRunningPresentationIsStopped() async {
+    // Given
     let stopped = expectation(description: "presentation stopped")
     stub(walletKitController) { mock in
       when(mock.stopPresentation()).then { stopped.fulfill() }
@@ -202,13 +233,16 @@ final class TestSessionLockController: EudiTest {
       when(mock.isUnlocked.get).thenReturn(false)
     }
 
+    // When
     controller.checkIdle()
 
+    // Then
     await fulfillment(of: [stopped], timeout: 5)
   }
 
   @MainActor
   func testCheckIdle_WhenTheWalletStaysUnlocked_ThenNoPresentationIsStopped() async {
+    // Given
     let stopped = expectation(description: "presentation stopped")
     stopped.isInverted = true
     stub(walletKitController) { mock in
@@ -219,14 +253,17 @@ final class TestSessionLockController: EudiTest {
     }
     let controller = makeController()
 
+    // When
     controller.checkIdle()
     controller.checkIdle()
 
+    // Then
     await fulfillment(of: [stopped], timeout: 0.5)
   }
 
   @MainActor
   func testCheckIdle_WhenTheWalletWasNeverUnlocked_ThenNoPresentationIsStopped() async {
+    // Given
     let stopped = expectation(description: "presentation stopped")
     stopped.isInverted = true
     stub(walletKitController) { mock in
@@ -234,9 +271,11 @@ final class TestSessionLockController: EudiTest {
     }
     let controller = makeController()
 
+    // When
     controller.checkIdle()
     controller.checkIdle()
 
+    // Then
     await fulfillment(of: [stopped], timeout: 0.5)
   }
 }

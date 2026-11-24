@@ -20,24 +20,30 @@ import XCTest
 final class TestFileManagerExtensions: EudiTest {
 
   func testRemoveContents_WhenADirectoryHoldsFilesAndFolders_ThenEmptiesItAndKeepsIt() throws {
+    // Given
     let fileManager = FileManager.default
     let directory = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
     try Data("log".utf8).write(to: directory.appendingPathComponent("wallet.log"))
     try fileManager.createDirectory(at: directory.appendingPathComponent("images"), withIntermediateDirectories: true)
 
+    // When
     fileManager.removeContents(of: [directory])
 
+    // Then
     XCTAssertTrue(fileManager.fileExists(atPath: directory.path))
     XCTAssertEqual(try fileManager.contentsOfDirectory(atPath: directory.path), [])
     try fileManager.removeItem(at: directory)
   }
 
   func testRemoveContents_WhenADirectoryIsMissing_ThenDoesNothing() {
+    // Given
     let missing = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
 
+    // When
     FileManager.default.removeContents(of: [missing])
 
+    // Then
     XCTAssertFalse(FileManager.default.fileExists(atPath: missing.path))
   }
 }

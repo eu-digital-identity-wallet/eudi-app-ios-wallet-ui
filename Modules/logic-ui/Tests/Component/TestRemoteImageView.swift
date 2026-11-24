@@ -24,7 +24,10 @@ final class TestRemoteImageView: EudiTest {
 
   @MainActor
   func testLoadingContext_WhenTheImageIsHttps_ThenLoadsThroughTheBoundedOperation() {
+    // When
     let context = RemoteImageView.loadingContext(for: logo)
+
+    // Then
     let downloader = context?[.imageLoader] as? SDWebImageDownloader
     XCTAssertTrue(downloader?.config.operationClass == RemoteImageDownloadOperation.self)
     XCTAssertEqual(context?[.imageScaleDownLimitBytes] as? UInt, RemoteImagePolicy.maxDecodedByteCount)
@@ -32,6 +35,10 @@ final class TestRemoteImageView: EudiTest {
 
   @MainActor
   func testLoadingContext_WhenTheImageIsNotHttps_ThenIsNil() {
-    XCTAssertNil(RemoteImageView.loadingContext(for: URL(string: "http://issuer.example/logo.png")))
+    // When
+    let result = RemoteImageView.loadingContext(for: URL(string: "http://issuer.example/logo.png"))
+
+    // Then
+    XCTAssertNil(result)
   }
 }

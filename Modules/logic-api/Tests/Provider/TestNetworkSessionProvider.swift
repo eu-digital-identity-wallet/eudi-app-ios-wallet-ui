@@ -20,8 +20,10 @@ import XCTest
 final class TestNetworkSessionProvider: EudiTest {
 
   func testUrlSession_WhenCreated_ThenKeepsNoCookiesAndNoCache() {
+    // When
     let configuration = NetworkSessionProviderImpl().urlSession.configuration
 
+    // Then
     XCTAssertNil(configuration.httpCookieStorage)
     XCTAssertEqual(configuration.httpCookieAcceptPolicy, .never)
     XCTAssertFalse(configuration.httpShouldSetCookies)
@@ -29,6 +31,10 @@ final class TestNetworkSessionProvider: EudiTest {
   }
 
   func testUrlSession_WhenCreated_ThenIsNotTheSharedSession() {
-    XCTAssertFalse(NetworkSessionProviderImpl().urlSession === URLSession.shared)
+    // When
+    let session = NetworkSessionProviderImpl().urlSession
+
+    // Then
+    XCTAssertFalse(session === URLSession.shared)
   }
 }

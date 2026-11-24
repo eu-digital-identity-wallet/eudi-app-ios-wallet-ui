@@ -754,6 +754,7 @@ final class TestDocumentOfferInteractor: EudiTest {
   }
   
   func testOfferedIssuance_WhenModelTransforms_ThenToDocumentOfferUIModel() {
+    // Given
     let docModel = OfferedDocModel(
       credentialConfigurationIdentifier: "id",
       docType: "type",
@@ -776,8 +777,10 @@ final class TestDocumentOfferInteractor: EudiTest {
       txCodeSpec: TxCode(inputMode: .text, length: 6, description: "description")
     )
     
+    // When
     let offerUI = issuanceModel.transformToDocumentOfferUi(allowedLogoOrigins: ["https://logo.com"])
     
+    // Then
     XCTAssertEqual(offerUI.issuerName, "Issuer")
     XCTAssertEqual(offerUI.issuerLogo?.absoluteString, "https://logo.com/logo.png")
     XCTAssertNil(issuanceModel.transformToDocumentOfferUi(allowedLogoOrigins: ["https://issuer.example"]).issuerLogo)
@@ -787,11 +790,11 @@ final class TestDocumentOfferInteractor: EudiTest {
     XCTAssertEqual(offerUI.txCode?.codeLenght, 6)
   }
   
-  func testDocumentOffer_MockUIModel() {
-    // Given
+  func testDocumentOffer_WhenTheMockUIModelIsCreated_ThenItHoldsThePlaceholderOffers() {
+    // When
     let mock = DocumentOfferUIModel.mock()
-    
-    // When / Then
+
+    // Then
     XCTAssertEqual(mock.issuerName, LocalizableStringKey.unknownIssuer.toString)
     XCTAssertNil(mock.issuerLogo)
     XCTAssertNil(mock.txCode)
@@ -856,9 +859,10 @@ final class TestDocumentOfferInteractor: EudiTest {
     }
   }
 
+  /// An offer with txCodeSpec.length outside the 4...6 range hits the
+  /// failure branch in processOfferRequest (lines 59-63).
   func testProcessOfferRequest_WhenTxCodeLengthOutOfRange_ThenReturnsTransactionCodeFormatFailure() async {
-    // Given: an offer with txCodeSpec.length outside the 4...6 range hits the
-    // failure branch in processOfferRequest (lines 59-63).
+    // Given
     let uri = "uri"
     let offer = OfferedIssuanceModel(
       issuerName: "issuerName",
@@ -888,6 +892,7 @@ final class TestDocumentOfferInteractor: EudiTest {
   }
 
   func testProcessOfferRequest_WhenTxCodeHasNoLength_ThenReturnsTransactionCodeFormatFailure() async {
+    // Given
     let uri = "uri"
     let offer = OfferedIssuanceModel(
       issuerName: "issuerName",
@@ -900,14 +905,17 @@ final class TestDocumentOfferInteractor: EudiTest {
       mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
     }
 
+    // When
     let result = await interactor.processOfferRequest(with: uri)
 
+    // Then
     guard case .failure(let error) = result, case .transactionCodeFormat = error as? WalletCoreError else {
       return XCTFail("Expected .transactionCodeFormat, got \(result)")
     }
   }
 
   func testProcessOfferRequest_WhenTxCodeIsLongerThanSix_ThenReturnsTransactionCodeFormatFailure() async {
+    // Given
     let uri = "uri"
     let offer = OfferedIssuanceModel(
       issuerName: "issuerName",
@@ -920,14 +928,17 @@ final class TestDocumentOfferInteractor: EudiTest {
       mock.fetchIssuedDocuments(with: any()).thenReturn([Constants.createEuPidModel()])
     }
 
+    // When
     let result = await interactor.processOfferRequest(with: uri)
 
+    // Then
     guard case .failure(let error) = result, case .transactionCodeFormat = error as? WalletCoreError else {
       return XCTFail("Expected .transactionCodeFormat, got \(result)")
     }
   }
 
   func testProcessOfferRequest_WhenTxCodeHasSixDigits_ThenIsNotRefusedForTheCode() async {
+    // Given
     let uri = "uri"
     let offer = OfferedIssuanceModel(
       issuerName: "issuerName",
@@ -941,14 +952,17 @@ final class TestDocumentOfferInteractor: EudiTest {
       mock.getIssuerRegistration(for: any()).thenReturn(nil)
     }
 
+    // When
     let result = await interactor.processOfferRequest(with: uri)
 
+    // Then
     if case .failure(let error) = result, case .transactionCodeFormat = error as? WalletCoreError {
       XCTFail("A six-digit numeric code must be accepted")
     }
   }
 
   func testProcessOfferRequest_WhenTxCodeHasAValidLength_ThenIsNotRefusedForTheCode() async {
+    // Given
     let uri = "uri"
     let offer = OfferedIssuanceModel(
       issuerName: "issuerName",
@@ -962,15 +976,18 @@ final class TestDocumentOfferInteractor: EudiTest {
       mock.getIssuerRegistration(for: any()).thenReturn(nil)
     }
 
+    // When
     let result = await interactor.processOfferRequest(with: uri)
 
+    // Then
     if case .failure(let error) = result, case .transactionCodeFormat = error as? WalletCoreError {
       XCTFail("A four-digit numeric code must be accepted")
     }
   }
 
+  /// inputMode == .text also trips the txCode guard regardless of length.
   func testProcessOfferRequest_WhenTxCodeInputModeIsText_ThenReturnsTransactionCodeFormatFailure() async {
-    // Given: inputMode == .text also trips the txCode guard regardless of length.
+    // Given
     let uri = "uri"
     let offer = OfferedIssuanceModel(
       issuerName: "issuerName",
@@ -999,10 +1016,11 @@ final class TestDocumentOfferInteractor: EudiTest {
     }
   }
 
+  /// forcePidActivation is true (default stub), no PID is stored,
+  /// and the offer contains no PID document types. Hits the missingPid
+  /// failure branch (lines 78-80).
   func testProcessOfferRequest_WhenForcePidActivationButNoPidStoredOrOffered_ThenMissingPidFailure() async {
-    // Given: forcePidActivation is true (default stub), no PID is stored,
-    // and the offer contains no PID document types. Hits the missingPid
-    // failure branch (lines 78-80).
+    // Given
     let uri = "uri"
     let nonPidOffer = OfferedDocModel(
       credentialConfigurationIdentifier: "non-pid-id",
@@ -1038,9 +1056,11 @@ final class TestDocumentOfferInteractor: EudiTest {
     }
   }
 
+  /// The offer resolves, but the issuer never established a registration — the case of an
+  /// issuer that publishes no registration certificate at all.
+  /// the flow stops before the offer screen is built, rather than issuing and undoing it.
   func testProcessOfferRequest_WhenIssuerRegistrationIsBlocked_ThenReturnRegistrationBlocked() async {
-    // Given: the offer resolves, but the issuer never established a registration — the case of an
-    // issuer that publishes no registration certificate at all.
+    // Given
     let uri = "uri"
     let offer = OfferedIssuanceModel(
       issuerName: "issuerName",
@@ -1059,7 +1079,7 @@ final class TestDocumentOfferInteractor: EudiTest {
     // When
     let result = await interactor.processOfferRequest(with: uri)
 
-    // Then: the flow stops before the offer screen is built, rather than issuing and undoing it.
+    // Then
     switch result {
     case .registrationBlocked(let reason):
       XCTAssertEqual(reason, .notRegisteredAsProvider)
@@ -1121,6 +1141,7 @@ final class TestDocumentOfferInteractor: EudiTest {
   }
 
   func testIssueDocuments_WhenOneOfTwoOfferedDocumentsIsIssued_ThenTheSuccessScreenNamesTheOther() async {
+    // Given
     let document = Document(
       id: "doc-id",
       docType: "type",
@@ -1138,6 +1159,7 @@ final class TestDocumentOfferInteractor: EudiTest {
       when(mock.fetchDocuments(with: any())).thenReturn([Constants.createEuPidModel()])
     }
 
+    // When
     let result = await interactor.issueDocuments(
       with: "uri",
       issuerName: "issuerName",
@@ -1149,40 +1171,48 @@ final class TestDocumentOfferInteractor: EudiTest {
       txCodeValue: nil
     )
 
+    // Then
     guard
       case .partialSuccess(let route) = result,
       case .featureIssuanceModule(.issuanceSuccess(let config, _)) = route
     else {
       return XCTFail("Expected a partial success, got \(result)")
     }
+
     XCTAssertEqual((config as? DocumentSuccessUIConfig)?.notIssuedDocumentNames, ["Other Document"])
   }
 
   func testNotIssuedDocumentNames_WhenOneOfTwoOfferedDocumentsIsIssued_ThenNamesTheOther() {
+    // Given
     let offered = [
       offeredDocument(docType: "eu.europa.ec.eudi.pid.1", name: "PID"),
       offeredDocument(docType: "org.iso.18013.5.1.mDL", name: "Driving Licence")
     ]
 
+    // When
     let names = DocumentOfferInteractorImpl.notIssuedDocumentNames(
       offered: offered,
       issuedDocTypes: ["eu.europa.ec.eudi.pid.1"]
     )
 
+    // Then
     XCTAssertEqual(names, ["Driving Licence"])
   }
 
   func testNotIssuedDocumentNames_WhenTwoOfTheSameTypeAreOfferedAndOneIsIssued_ThenNamesOne() {
+    // Given
     let offered = [
       offeredDocument(docType: "eu.europa.ec.eudi.pid.1", name: "PID"),
       offeredDocument(docType: "eu.europa.ec.eudi.pid.1", name: "PID (second)")
     ]
 
+    // When
     let names = DocumentOfferInteractorImpl.notIssuedDocumentNames(
       offered: offered,
       issuedDocTypes: ["eu.europa.ec.eudi.pid.1"]
     )
 
+    // Then
     XCTAssertEqual(names, ["PID (second)"])
   }
 

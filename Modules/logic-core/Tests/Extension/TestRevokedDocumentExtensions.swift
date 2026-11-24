@@ -21,29 +21,47 @@ import logic_storage
 final class TestRevokedDocumentExtensions: EudiTest {
 
   func testRevocationStatus_WhenStatusIsMissingOrUnknown_ThenIsUnrecognised() {
-    XCTAssertEqual(RevokedDocument(identifier: "a").revocationStatus, .unrecognised)
-    XCTAssertEqual(RevokedDocument(identifier: "a", status: "unknown").revocationStatus, .unrecognised)
+    // When
+    let missing = RevokedDocument(identifier: "a").revocationStatus
+    let unknown = RevokedDocument(identifier: "a", status: "unknown").revocationStatus
+
+    // Then
+    XCTAssertEqual(missing, .unrecognised)
+    XCTAssertEqual(unknown, .unrecognised)
   }
 
   func testRevocationStatus_WhenStatusIsStored_ThenMapsIt() {
-    XCTAssertEqual(RevokedDocument(identifier: "a", status: "suspended").revocationStatus, .suspended)
-    XCTAssertEqual(RevokedDocument(identifier: "a", status: "revoked").revocationStatus, .revoked)
-    XCTAssertEqual(RevokedDocument(identifier: "a", status: "unrecognised").revocationStatus, .unrecognised)
+    // When
+    let suspended = RevokedDocument(identifier: "a", status: "suspended").revocationStatus
+    let revoked = RevokedDocument(identifier: "a", status: "revoked").revocationStatus
+    let unrecognised = RevokedDocument(identifier: "a", status: "unrecognised").revocationStatus
+
+    // Then
+    XCTAssertEqual(suspended, .suspended)
+    XCTAssertEqual(revoked, .revoked)
+    XCTAssertEqual(unrecognised, .unrecognised)
   }
 
   func testRetrieveRevocationStatuses_WhenStoreIsEmpty_ThenIsEmpty() async throws {
+    // Given
     let storage = StubRevokedDocumentStorageController(failure: logic_storage.StorageError.itemsNotFound)
 
+    // When
     let statuses = try await storage.retrieveRevocationStatuses()
 
+    // Then
     XCTAssertEqual(statuses, [:])
   }
 
   func testRetrieveRevocationStatuses_WhenReadFails_ThenThrows() async {
+    // Given
     let storage = StubRevokedDocumentStorageController(failure: logic_storage.StorageError.itemNotFound)
 
+    // When
     do {
       _ = try await storage.retrieveRevocationStatuses()
+
+      // Then
       XCTFail("Expected the read error")
     } catch {
       XCTAssertNotNil(error as? logic_storage.StorageError)
@@ -51,14 +69,17 @@ final class TestRevokedDocumentExtensions: EudiTest {
   }
 
   func testRetrieveRevocationStatuses_WhenRecordsMixStatuses_ThenMapsEachAndKeepsTheFirstDuplicate() async throws {
+    // Given
     let storage = StubRevokedDocumentStorageController(records: [
       RevokedDocument(identifier: "a"),
       RevokedDocument(identifier: "b", status: "suspended"),
       RevokedDocument(identifier: "b", status: "revoked")
     ])
 
+    // When
     let statuses = try await storage.retrieveRevocationStatuses()
 
+    // Then
     XCTAssertEqual(statuses, ["a": .unrecognised, "b": .suspended])
   }
 }

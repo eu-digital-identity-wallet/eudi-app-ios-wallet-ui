@@ -23,7 +23,7 @@ import logic_resources
 final class TestBaseRequestViewModel: EudiTest {
 
   @MainActor
-  func testInitialState_whenCreated_thenTheContentIsNotTrustBlocked() {
+  func testInitialState_WhenCreated_ThenTheContentIsNotTrustBlocked() {
     // When
     let viewModel = makeViewModel()
 
@@ -33,7 +33,7 @@ final class TestBaseRequestViewModel: EudiTest {
   }
 
   @MainActor
-  func testOnTrustBlocked_whenTheRequestIsBlocked_thenOnlyTheAlertIsShown() {
+  func testOnTrustBlocked_WhenTheRequestIsBlocked_ThenOnlyTheAlertIsShown() {
     // Given
     let viewModel = makeViewModel()
 

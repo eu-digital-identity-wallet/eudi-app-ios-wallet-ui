@@ -25,34 +25,53 @@ final class TestPolicyPurposeLocalized: EudiTest {
     Locale.current.systemLanguageCode ?? "en"
   }
 
-  func testLocalizedValue_whenEmpty_thenReturnsNil() {
-    XCTAssertNil([PolicyPurpose]().localizedValue)
+  func testLocalizedValue_WhenEmpty_ThenReturnsNil() {
+    // When
+    let result = [PolicyPurpose]().localizedValue
+
+    // Then
+    XCTAssertNil(result)
   }
 
-  func testLocalizedValue_whenDeviceLanguageIsCarried_thenPrefersIt() {
+  func testLocalizedValue_WhenDeviceLanguageIsCarried_ThenPrefersIt() {
+    // Given
     let purposes = [
       PolicyPurpose(lang: "zz", value: "Wrong language"),
       PolicyPurpose(lang: deviceLanguage, value: "Name verification")
     ]
 
-    XCTAssertEqual(purposes.localizedValue, "Name verification")
+    // When
+    let result = purposes.localizedValue
+
+    // Then
+    XCTAssertEqual(result, "Name verification")
   }
 
-  func testLocalizedValue_whenNoEntryMatches_thenFallsBackToTheFirst() {
+  func testLocalizedValue_WhenNoEntryMatches_ThenFallsBackToTheFirst() {
+    // Given
     let purposes = [
       PolicyPurpose(lang: "zz", value: "First written"),
       PolicyPurpose(lang: "yy", value: "Second written")
     ]
 
-    XCTAssertEqual(purposes.localizedValue, "First written")
+    // When
+    let result = purposes.localizedValue
+
+    // Then
+    XCTAssertEqual(result, "First written")
   }
 
-  func testLocalizedValue_whenTagCarriesRegionOrCasing_thenStillMatches() {
+  func testLocalizedValue_WhenTagCarriesRegionOrCasing_ThenStillMatches() {
+    // Given
     let purposes = [
       PolicyPurpose(lang: "zz", value: "Wrong language"),
       PolicyPurpose(lang: "\(deviceLanguage.uppercased())-GB", value: "Name verification")
     ]
 
-    XCTAssertEqual(purposes.localizedValue, "Name verification")
+    // When
+    let result = purposes.localizedValue
+
+    // Then
+    XCTAssertEqual(result, "Name verification")
   }
 }

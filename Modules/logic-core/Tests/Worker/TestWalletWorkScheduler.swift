@@ -50,13 +50,16 @@ final class TestWalletWorkScheduler: EudiTest {
   }
 
   func testSchedule_WhenCalled_ThenStartsBothChecks() async {
+    // When
     await scheduler.schedule()
 
+    // Then
     verify(revocationWorkManager).start()
     verify(reIssuanceWorkManager).start()
   }
 
   func testSchedule_WhenAResetRuns_ThenStartsNothing() async {
+    // Given
     let resetStatusProvider = WalletResetStatusProviderImpl()
     resetStatusProvider.setResetting(true)
     let resettingScheduler = WalletWorkSchedulerImpl(
@@ -66,21 +69,26 @@ final class TestWalletWorkScheduler: EudiTest {
       resetStatusProvider: resetStatusProvider
     )
 
+    // When
     await resettingScheduler.schedule()
 
+    // Then
     verify(revocationWorkManager, never()).start()
     verify(reIssuanceWorkManager, never()).start()
   }
 
   func testStop_WhenCalled_ThenStopsBothChecks() async {
+    // When
     let stopped = await scheduler.stop()
 
+    // Then
     XCTAssertTrue(stopped)
     verify(revocationWorkManager).stop()
     verify(reIssuanceWorkManager).stop()
   }
 
   func testStop_WhenACheckOutlastsTheTimeout_ThenReportsItStillRunning() async {
+    // Given
     let gate = AsyncGate()
     let blockedScheduler = WalletWorkSchedulerImpl(
       revocationWorkManager: revocationWorkManager,
@@ -89,13 +97,16 @@ final class TestWalletWorkScheduler: EudiTest {
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
 
+    // When
     let stopped = await blockedScheduler.stop()
     await gate.open()
 
+    // Then
     XCTAssertFalse(stopped)
   }
 
   func testScheduleRevocationCheck_WhenTheCheckIsStillRunning_ThenReturnsAndTheCheckFinishesLater() async {
+    // Given
     let gate = AsyncGate()
     let finished = expectation(description: "revocation check finished")
     let revocationWorkManager = RecordingRevocationWorkManager(gate: gate, finished: finished)
@@ -107,6 +118,7 @@ final class TestWalletWorkScheduler: EudiTest {
     )
     let returned = expectation(description: "scheduling returned")
 
+    // When
     Task {
       await gatedScheduler.scheduleRevocationCheck(afterReIssueOf: "original")
       returned.fulfill()
@@ -114,12 +126,14 @@ final class TestWalletWorkScheduler: EudiTest {
     await fulfillment(of: [returned], timeout: 2)
     await gate.open()
 
+    // Then
     await fulfillment(of: [finished], timeout: 5)
     let checkedIds = await revocationWorkManager.checkedIds
     XCTAssertEqual(checkedIds, ["original"])
   }
 
   func testStop_WhenAScheduleIsStartingTheChecks_ThenTheReIssuanceStopsAfterItStarts() async {
+    // Given
     let gate = AsyncGate()
     let entered = expectation(description: "the revocation start began")
     let reIssuance = RecordingReIssuanceWorkManager()
@@ -130,6 +144,7 @@ final class TestWalletWorkScheduler: EudiTest {
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
 
+    // When
     let scheduling = Task { await startingScheduler.schedule() }
     await fulfillment(of: [entered], timeout: 2)
     let stopping = Task { await startingScheduler.stop() }
@@ -138,12 +153,14 @@ final class TestWalletWorkScheduler: EudiTest {
     await scheduling.value
     let stopped = await stopping.value
 
+    // Then
     XCTAssertTrue(stopped)
     let events = await reIssuance.events
     XCTAssertEqual(events, ["start", "stop"])
   }
 
   func testStop_WhenTwoSchedulesAreStartingTheChecks_ThenTheReIssuanceStopsAfterBoth() async {
+    // Given
     let first = AsyncGate()
     let second = AsyncGate()
     let entered = expectation(description: "the first revocation start began")
@@ -155,6 +172,7 @@ final class TestWalletWorkScheduler: EudiTest {
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
 
+    // When
     let firstScheduling = Task { await startingScheduler.schedule() }
     await fulfillment(of: [entered], timeout: 2)
     let secondScheduling = Task { await startingScheduler.schedule() }
@@ -168,12 +186,14 @@ final class TestWalletWorkScheduler: EudiTest {
     await secondScheduling.value
     let stopped = await stopping.value
 
+    // Then
     XCTAssertTrue(stopped)
     let events = await reIssuance.events
     XCTAssertEqual(events, ["start", "start", "stop"])
   }
 
   func testScheduleRevocationCheck_WhenTheChecksAreStopped_ThenNoCheckRuns() async {
+    // Given
     let gate = AsyncGate()
     await gate.open()
     let checked = expectation(description: "revocation check ran")
@@ -187,14 +207,17 @@ final class TestWalletWorkScheduler: EudiTest {
     )
     _ = await stoppedScheduler.stop()
 
+    // When
     await stoppedScheduler.scheduleRevocationCheck(afterReIssueOf: "original")
 
+    // Then
     await fulfillment(of: [checked], timeout: 0.5)
     let checkedIds = await recorder.checkedIds
     XCTAssertEqual(checkedIds, [])
   }
 
   func testScheduleRevocationCheck_WhenScheduledAgainAfterAStop_ThenTheCheckRuns() async {
+    // Given
     let gate = AsyncGate()
     await gate.open()
     let checked = expectation(description: "revocation check ran")
@@ -207,8 +230,10 @@ final class TestWalletWorkScheduler: EudiTest {
     _ = await gatedScheduler.stop()
     await gatedScheduler.schedule()
 
+    // When
     await gatedScheduler.scheduleRevocationCheck(afterReIssueOf: "original")
 
+    // Then
     await fulfillment(of: [checked], timeout: 2)
   }
 }

@@ -49,8 +49,10 @@ final class TestTrustMarkInteractor: EudiTest {
   func testGetTrustMark_WhenDomainHasTextAndAbsoluteWebUrls_ThenReturnDisplayDataWithoutCompletingIntroduction() async {
     // Given
     stubGetTrustMark(with: domain())
+
     // When
     let state = await interactor.getTrustMark()
+
     // Then
     XCTAssertEqual(
       state,
@@ -69,8 +71,10 @@ final class TestTrustMarkInteractor: EudiTest {
   func testGetTrustMark_WhenDomainHasNoText_ThenOmitTextAndKeepImageAndLinks() async throws {
     // Given
     stubGetTrustMark(with: domain(localisedText: nil))
+
     // When
     let state = await interactor.getTrustMark()
+
     // Then
     let trustMark = try XCTUnwrap(successModel(from: state))
     XCTAssertNil(trustMark.text)
@@ -88,8 +92,10 @@ final class TestTrustMarkInteractor: EudiTest {
         imageUrl: "../assets/logo.svg"
       )
     )
+
     // When
     let state = await interactor.getTrustMark()
+
     // Then
     let trustMark = try XCTUnwrap(successModel(from: state))
     XCTAssertEqual(trustMark.imageUrl, URL(string: "https://example.com/trustmark/assets/logo.svg"))
@@ -99,8 +105,10 @@ final class TestTrustMarkInteractor: EudiTest {
     for imageUrl in ["", "   ", "http://", "ftp://example.com/logo.svg", "file:///tmp/logo.svg"] {
       // Given
       stubGetTrustMark(with: domain(resourceUrl: "", imageUrl: imageUrl))
+
       // When
       let state = await interactor.getTrustMark()
+
       // Then
       let trustMark = try XCTUnwrap(successModel(from: state), "imageUrl: \(imageUrl)")
       XCTAssertNil(trustMark.imageUrl, "imageUrl: \(imageUrl)")
@@ -113,8 +121,10 @@ final class TestTrustMarkInteractor: EudiTest {
     for target in ["/certified", "not a url", "mailto:info@example.com", "https://user:pass@example.com/certified"] {
       // Given
       stubGetTrustMark(with: domain(certifiedWalletsUrl: target, walletSolutionUrl: target))
+
       // When
       let state = await interactor.getTrustMark()
+
       // Then
       let trustMark = try XCTUnwrap(successModel(from: state), "target: \(target)")
       XCTAssertNil(trustMark.certifiedWalletsUrl, "target: \(target)")
@@ -127,8 +137,10 @@ final class TestTrustMarkInteractor: EudiTest {
   func testGetTrustMark_WhenTrustMarkManagerIsMissing_ThenReturnLoadErrorWithoutCompletingIntroduction() async {
     // Given
     stubGetTrustMark(throwing: WalletCoreError.unableToFetchTrustMark)
+
     // When
     let state = await interactor.getTrustMark()
+
     // Then
     XCTAssertEqual(state, .failure(LocalizableStringKey.trustMarkLoadError.toString))
     verify(prefsController, never()).setValue(any(), forKey: any())
@@ -138,8 +150,10 @@ final class TestTrustMarkInteractor: EudiTest {
     for error in [URLError(.badServerResponse), DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: ""))] as [Error] {
       // Given
       stubGetTrustMark(throwing: error)
+
       // When
       let state = await interactor.getTrustMark()
+
       // Then
       XCTAssertEqual(state, .failure(LocalizableStringKey.trustMarkLoadError.toString))
     }
@@ -149,8 +163,10 @@ final class TestTrustMarkInteractor: EudiTest {
   func testGetTrustMark_WhenLoaded_ThenLinkedParagraphsMarkOnlyTheNamedPhrase() async throws {
     // Given
     stubGetTrustMark(with: domain())
+
     // When
     let state = await interactor.getTrustMark()
+
     // Then
     let trustMark = try XCTUnwrap(successModel(from: state))
     for (paragraph, link) in [
@@ -167,8 +183,10 @@ final class TestTrustMarkInteractor: EudiTest {
     // Given
     stubGetTrustMark(throwing: URLError(.notConnectedToInternet))
     _ = await interactor.getTrustMark()
+
     // When
     await interactor.completeIntroduction()
+
     // Then
     verify(prefsController, times(1)).setValue(any(), forKey: Prefs.Key.trustMarkIntroductionCompleted)
   }

@@ -64,12 +64,15 @@ final class TestQuickPinInteractor: EudiTest {
   }
 
   func testUnlockSession_WhenCalled_ThenUnlocksTheSession() async {
+    // Given
     stub(sessionController) { mock in
       when(mock.unlock()).thenDoNothing()
     }
 
+    // When
     await interactor.unlockSession()
 
+    // Then
     verify(sessionController).unlock()
   }
   
@@ -92,12 +95,15 @@ final class TestQuickPinInteractor: EudiTest {
   }
 
   func testSetPin_WhenStorageWriteFails_ThenReturnPartialStateFailure() async {
+    // Given
     stub(pinStorageController) { mock in
       when(mock.setPin(with: any())).thenThrow(KeyChainError.writeFailed(status: errSecNotAvailable))
     }
 
+    // When
     let state = await interactor.setPin(newPin: "1357")
 
+    // Then
     guard case .failure(let error) = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -105,13 +111,16 @@ final class TestQuickPinInteractor: EudiTest {
   }
 
   func testChangePin_WhenStorageWriteFails_ThenReturnPartialStateFailure() async {
+    // Given
     stub(pinStorageController) { mock in
       when(mock.isPinValid(with: any())).thenReturn(true)
       when(mock.setPin(with: any())).thenThrow(KeyChainError.writeFailed(status: errSecNotAvailable))
     }
 
+    // When
     let state = await interactor.changePin(currentPin: "1234", newPin: "2468")
 
+    // Then
     guard case .failure(let error) = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -119,10 +128,12 @@ final class TestQuickPinInteractor: EudiTest {
   }
 
   func testHasPin_WhenStorageReadFails_ThenThrowsTheStorageError() async {
+    // Given
     stub(pinStorageController) { mock in
       when(mock.hasPin()).thenThrow(KeyChainError.readFailed(status: errSecInteractionNotAllowed))
     }
 
+    // Then
     do {
       _ = try await interactor.hasPin()
       XCTFail("Expected hasPin to throw")
@@ -308,6 +319,7 @@ final class TestQuickPinInteractor: EudiTest {
   }
 
   func testSetPin_WhenThePinIsEasyToGuess_ThenRefusesItWithoutStoringIt() async {
+    // Then
     for pin in ["1111", "1234", "9876", "2580"] {
       let state = await interactor.setPin(newPin: pin)
 
@@ -320,7 +332,11 @@ final class TestQuickPinInteractor: EudiTest {
   }
 
   func testCheckNewPin_WhenThePinIsEasyToGuess_ThenFailsAndOtherwiseSucceeds() async {
-    guard case .failure = await interactor.checkNewPin("0000") else {
+    // When
+    let result = await interactor.checkNewPin("0000")
+
+    // Then
+    guard case .failure = result else {
       return XCTFail("0000 was accepted")
     }
     guard case .success = await interactor.checkNewPin("1357") else {
@@ -329,34 +345,46 @@ final class TestQuickPinInteractor: EudiTest {
   }
 
   func testGetDeviceLockState_WhenAPasscodeIsSet_ThenIsSecure() async {
+    // Given
     stubDeviceLock(isSecure: true, isRequired: true)
 
+    // When
     let state = await interactor.getDeviceLockState()
 
+    // Then
     XCTAssertEqual(state, .secure)
   }
 
   func testGetDeviceLockState_WhenNoPasscodeIsSet_ThenIsMissing() async {
+    // Given
     stubDeviceLock(isSecure: false, isRequired: false)
 
+    // When
     let state = await interactor.getDeviceLockState()
 
+    // Then
     XCTAssertEqual(state, .missing)
   }
 
   func testGetDeviceLockState_WhenNoPasscodeIsSetAndOneIsRequired_ThenIsRequired() async {
+    // Given
     stubDeviceLock(isSecure: false, isRequired: true)
 
+    // When
     let state = await interactor.getDeviceLockState()
 
+    // Then
     XCTAssertEqual(state, .required)
   }
 
   func testSetPin_WhenAPasscodeIsRequiredAndMissing_ThenRefusesIt() async {
+    // Given
     stubDeviceLock(isSecure: false, isRequired: true)
 
+    // When
     let state = await interactor.setPin(newPin: "1357")
 
+    // Then
     guard case .failure(let error) = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -365,27 +393,33 @@ final class TestQuickPinInteractor: EudiTest {
   }
 
   func testChangePin_WhenAPasscodeIsRequiredAndMissing_ThenStillChangesIt() async {
+    // Given
     stubDeviceLock(isSecure: false, isRequired: true)
     stub(pinStorageController) { mock in
       when(mock.isPinValid(with: any())).thenReturn(true)
       when(mock.setPin(with: any())).thenDoNothing()
     }
 
+    // When
     let state = await interactor.changePin(currentPin: "1357", newPin: "2468")
 
+    // Then
     guard case .success = state else {
       return XCTFail("Wrong state \(state)")
     }
   }
 
   func testUpdatePin_WhenAPasscodeIsRequiredAndMissing_ThenStillStoresTheNewPin() async {
+    // Given
     stubDeviceLock(isSecure: false, isRequired: true)
     stub(pinStorageController) { mock in
       when(mock.setPin(with: any())).thenDoNothing()
     }
 
+    // When
     let state = await interactor.updatePin(newPin: "2468")
 
+    // Then
     guard case .success = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -393,12 +427,15 @@ final class TestQuickPinInteractor: EudiTest {
   }
 
   func testUpdatePin_WhenTheNewPinIsEasyToGuess_ThenRefusesIt() async {
+    // Given
     stub(pinStorageController) { mock in
       when(mock.setPin(with: any())).thenDoNothing()
     }
 
+    // When
     let state = await interactor.updatePin(newPin: "111111")
 
+    // Then
     guard case .failure(let error) = state else {
       return XCTFail("Wrong state \(state)")
     }

@@ -22,11 +22,14 @@ final class TestUserInteractionController: EudiTest {
 
   @MainActor
   func testInteractionGestureRecognizer_WhenATouchBegins_ThenReportsItWithoutHoldingTouchesBack() {
+    // Given
     var touches = 0
     let recognizer = InteractionGestureRecognizer { touches += 1 }
 
+    // When
     recognizer.touchesBegan([], with: UIEvent())
 
+    // Then
     XCTAssertEqual(touches, 1)
     XCTAssertFalse(recognizer.cancelsTouchesInView)
     XCTAssertFalse(recognizer.delaysTouchesBegan)
@@ -38,28 +41,35 @@ final class TestUserInteractionController: EudiTest {
 
   @MainActor
   func testStart_WhenTextChanges_ThenReportsInteraction() async {
+    // Given
     let reported = expectation(description: "interaction")
     let controller = UserInteractionControllerImpl()
     controller.start { reported.fulfill() }
 
+    // When
     NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: nil)
 
+    // Then
     await fulfillment(of: [reported], timeout: 2)
   }
 
   @MainActor
   func testStart_WhenVoiceOverFocusMoves_ThenReportsInteraction() async {
+    // Given
     let reported = expectation(description: "interaction")
     let controller = UserInteractionControllerImpl()
     controller.start { reported.fulfill() }
 
+    // When
     NotificationCenter.default.post(name: UIAccessibility.elementFocusedNotification, object: nil)
 
+    // Then
     await fulfillment(of: [reported], timeout: 2)
   }
 
   @MainActor
   func testStart_WhenCalledTwice_ThenKeepsTheFirstObserver() async {
+    // Given
     let first = expectation(description: "first observer")
     let second = expectation(description: "second observer")
     second.isInverted = true
@@ -67,8 +77,10 @@ final class TestUserInteractionController: EudiTest {
     controller.start { first.fulfill() }
     controller.start { second.fulfill() }
 
+    // When
     NotificationCenter.default.post(name: UITextView.textDidChangeNotification, object: nil)
 
+    // Then
     await fulfillment(of: [first, second], timeout: 1)
   }
 }

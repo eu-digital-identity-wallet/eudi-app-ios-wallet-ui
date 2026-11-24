@@ -25,10 +25,13 @@ final class TestWalletResetViewModel: EudiTest {
 
   @MainActor
   func testReset_WhenTheResetSucceeds_ThenForgetsTheKeptLinkAndReturnsToStartUp() async {
+    // Given
     let fixture = makeFixture(outcome: .success)
 
+    // When
     await fixture.viewModel.reset()
 
+    // Then
     verify(fixture.deepLinkController).removeCachedDeepLinkURL()
     verify(fixture.router).restartAtStartup()
     XCTAssertNil(fixture.viewModel.viewState.error)
@@ -36,21 +39,29 @@ final class TestWalletResetViewModel: EudiTest {
 
   @MainActor
   func testReset_WhenTheResetFails_ThenOffersToTryAgainAndToGoBack() async {
+    // Given
     let fixture = makeFixture(outcome: .failure(WalletCoreError.unableToIssueAndStore))
 
+    // When
     await fixture.viewModel.reset()
 
+    // Then
     let error = fixture.viewModel.viewState.error
     XCTAssertNotNil(error?.action)
     XCTAssertFalse(fixture.viewModel.viewState.isLoading)
     verify(fixture.deepLinkController).removeCachedDeepLinkURL()
     verify(fixture.router, never()).restartAtStartup()
+
+    // When
     error?.cancelAction()
+
+    // Then
     verify(fixture.router).popTo(with: any())
   }
 
   @MainActor
   func testOnResetConfirmed_WhenTheUserConfirms_ThenAsksForTheirIdentityBeforeTheReset() {
+    // Given
     let router = MockRouterHost()
     stub(router) { mock in
       when(mock.push(with: any())).thenDoNothing()
@@ -62,8 +73,10 @@ final class TestWalletResetViewModel: EudiTest {
     )
     viewModel.isResetConfirmationShowing = true
 
+    // When
     viewModel.onResetConfirmed()
 
+    // Then
     XCTAssertFalse(viewModel.isResetConfirmationShowing)
     verify(router).push(with: any())
   }

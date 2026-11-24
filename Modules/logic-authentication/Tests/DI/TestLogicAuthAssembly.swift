@@ -21,11 +21,14 @@ import Swinject
 final class TestLogicAuthAssembly: EudiTest {
 
   func testAssemble_WhenTheSessionControllerIsResolvedTwice_ThenItIsTheSameInstance() {
+    // Given
     let container = Container()
     LogicAuthAssembly().assemble(container: container)
 
+    // When
     let session = container.resolve(SessionController.self) as AnyObject?
 
+    // Then
     XCTAssertNotNil(session)
     XCTAssertTrue(session === container.resolve(SessionController.self) as AnyObject?)
   }

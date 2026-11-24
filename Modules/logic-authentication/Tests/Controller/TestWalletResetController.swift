@@ -58,8 +58,10 @@ final class TestWalletResetController: EudiTest {
   }
 
   func testResetWallet_WhenEveryStepSucceeds_ThenRunsThemInOrderAndLocksTheSession() async throws {
+    // When
     try await controller.resetWallet()
 
+    // Then
     XCTAssertEqual(
       calls.entries,
       ["stop", "documents", "records", "keychain", "preferences", "files", "generation", "lock"]
@@ -69,41 +71,51 @@ final class TestWalletResetController: EudiTest {
   }
 
   func testResetWallet_WhenACheckIsStillRunning_ThenDeletesNothingAndRestartsTheChecks() async {
+    // Given
     stub(walletWorkScheduler) { mock in
       when(mock.stop()).thenReturn(false)
     }
 
+    // When
     await assertResetFails()
 
+    // Then
     verify(walletKitController, never()).clearAllDocuments()
     verify(keyChainController, never()).clear()
     verify(walletWorkScheduler).schedule()
   }
 
   func testResetWallet_WhenAStepFails_ThenStopsThereAndRestartsTheChecks() async {
+    // Given
     stub(walletKitController) { mock in
       when(mock.deleteAllRecords()).thenThrow(WalletCoreError.unableToIssueAndStore)
     }
 
+    // When
     await assertResetFails()
 
+    // Then
     verify(keyChainController, never()).clear()
     verify(walletWorkScheduler).schedule()
     XCTAssertFalse(resetStatusProvider.isResetting)
   }
 
   func testResetWallet_WhenDocumentsRemainAfterEveryPass_ThenFailsBeforeTheRecords() async {
+    // Given
     stub(walletKitController) { mock in
       when(mock.hasStoredDocuments()).thenReturn(true)
     }
 
+    // When
     await assertResetFails()
 
+    // Then
     verify(walletKitController, times(2)).clearAllDocuments()
     verify(walletKitController, never()).deleteAllRecords()
   }
 
   func testResetWallet_WhenItRuns_ThenReportsItIsResetting() async throws {
+    // Given
     let wasResetting = OSAllocatedUnfairLock(initialState: false)
     stub(walletKitController) { mock in
       when(mock.clearAllDocuments()).then { [resetStatusProvider] in
@@ -111,17 +123,22 @@ final class TestWalletResetController: EudiTest {
       }
     }
 
+    // When
     try await controller.resetWallet()
 
+    // Then
     XCTAssertTrue(wasResetting.withLock { $0 })
     XCTAssertFalse(resetStatusProvider.isResetting)
   }
 
   func testResetWallet_WhenItRuns_ThenRemovesEveryPreferenceButTheLanguageAndTheCounters() async throws {
+    // Given
     let kept: Set<Prefs.Key> = [.language, .transactionLogRevision, .walletResetGeneration]
 
+    // When
     try await controller.resetWallet()
 
+    // Then
     for key in Prefs.Key.allCases {
       if kept.contains(key) {
         verify(prefsController, never()).remove(forKey: equal(to: key))
@@ -132,6 +149,7 @@ final class TestWalletResetController: EudiTest {
   }
 
   func testResetWallet_WhenAStepFails_ThenClearsTheResettingFlagBeforeRestartingTheChecks() async {
+    // Given
     let wasResettingAtRestart = OSAllocatedUnfairLock(initialState: true)
     stub(walletKitController) { mock in
       when(mock.deleteAllRecords()).thenThrow(WalletCoreError.unableToIssueAndStore)
@@ -142,24 +160,30 @@ final class TestWalletResetController: EudiTest {
       }
     }
 
+    // When
     await assertResetFails()
 
+    // Then
     XCTAssertFalse(wasResettingAtRestart.withLock { $0 })
   }
 
   func testResetWallet_WhenTheCallerIsCancelled_ThenTheResetRunsToTheEnd() async throws {
+    // Given
     let ranCancelled = OSAllocatedUnfairLock(initialState: false)
     controller = makeController(clearCachedData: { ranCancelled.withLock { $0 = Task.isCancelled } })
 
+    // When
     let caller = Task { [controller] in try await controller?.resetWallet() }
     caller.cancel()
     try await caller.value
 
+    // Then
     XCTAssertFalse(ranCancelled.withLock { $0 })
     verify(sessionController).lock()
   }
 
   func testResetWallet_WhenCalledWhileOneRuns_ThenJoinsIt() async throws {
+    // Given
     let gate = AsyncGate()
     let scheduler = RecordingWalletWorkScheduler(gate: gate)
     controller = makeController(walletWorkScheduler: scheduler)
@@ -168,6 +192,8 @@ final class TestWalletResetController: EudiTest {
 
     let secondEnded = expectation(description: "second call ended before the first")
     secondEnded.isInverted = true
+
+    // When
     let second = Task { [controller] in
       try await controller?.resetWallet()
       secondEnded.fulfill()
@@ -177,11 +203,13 @@ final class TestWalletResetController: EudiTest {
     try await first.value
     try await second.value
 
+    // Then
     let stops = await scheduler.stops
     XCTAssertEqual(stops, 1)
   }
 
   func testRemoveCachedData_WhenRun_ThenTheCachedFilesCookiesAndResponsesAreGone() throws {
+    // Given
     let fileManager = FileManager.default
     let files = fileManager.cachesAndTemporaryDirectories.map { $0.appendingPathComponent("reset-test") }
     try files.forEach { try Data("cached".utf8).write(to: $0) }
@@ -196,8 +224,10 @@ final class TestWalletResetController: EudiTest {
     XCTAssertEqual(HTTPCookieStorage.shared.cookies(for: site), [cookie])
     XCTAssertNotNil(URLCache.shared.cachedResponse(for: request))
 
+    // When
     WalletResetControllerImpl.removeCachedData()
 
+    // Then
     XCTAssertTrue(files.allSatisfy { !fileManager.fileExists(atPath: $0.path) })
     XCTAssertEqual(HTTPCookieStorage.shared.cookies(for: site) ?? [], [])
     XCTAssertNil(URLCache.shared.cachedResponse(for: request))

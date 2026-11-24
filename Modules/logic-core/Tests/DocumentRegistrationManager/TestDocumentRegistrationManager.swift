@@ -22,13 +22,25 @@ final class TestDocumentRegistrationManager: EudiTest {
 
   func testMayRegister_WhenIosHasNotDeterminedTheAuthorisation_ThenRegistersSoThatItIsAuthorised() throws {
     guard #available(iOS 26.0, *) else { throw XCTSkip("IdentityDocumentServices needs iOS 26") }
-    XCTAssertTrue(DocumentRegistrationManagerImpl.mayRegister(with: .notDetermined))
-    XCTAssertTrue(DocumentRegistrationManagerImpl.mayRegister(with: .authorized))
+
+    // When
+    let notDetermined = DocumentRegistrationManagerImpl.mayRegister(with: .notDetermined)
+    let authorized = DocumentRegistrationManagerImpl.mayRegister(with: .authorized)
+
+    // Then
+    XCTAssertTrue(notDetermined)
+    XCTAssertTrue(authorized)
   }
 
   func testMayRegister_WhenTheUserTurnedTheProviderOffOrTheDeviceCannotProvide_ThenDoesNotRegister() throws {
     guard #available(iOS 26.0, *) else { throw XCTSkip("IdentityDocumentServices needs iOS 26") }
-    XCTAssertFalse(DocumentRegistrationManagerImpl.mayRegister(with: .notAuthorized))
-    XCTAssertFalse(DocumentRegistrationManagerImpl.mayRegister(with: .notSupported))
+
+    // When
+    let notAuthorized = DocumentRegistrationManagerImpl.mayRegister(with: .notAuthorized)
+    let notSupported = DocumentRegistrationManagerImpl.mayRegister(with: .notSupported)
+
+    // Then
+    XCTAssertFalse(notAuthorized)
+    XCTAssertFalse(notSupported)
   }
 }

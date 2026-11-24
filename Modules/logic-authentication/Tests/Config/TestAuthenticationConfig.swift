@@ -22,28 +22,33 @@ final class TestAuthenticationConfig: EudiTest {
   private let config = AuthenticationConfigImpl()
 
   func testIsWeakPin_WhenOneDigitIsRepeated_ThenIsWeak() {
+    // Then
     XCTAssertTrue(config.isWeakPin("000000"))
     XCTAssertTrue(config.isWeakPin("777777"))
   }
 
   func testIsWeakPin_WhenTheDigitsRunUpOrDown_ThenIsWeak() {
+    // Then
     XCTAssertTrue(config.isWeakPin("123456"))
     XCTAssertTrue(config.isWeakPin("456789"))
     XCTAssertTrue(config.isWeakPin("987654"))
   }
 
   func testIsWeakPin_WhenThePinIsCommon_ThenIsWeak() {
+    // Then
     XCTAssertTrue(config.isWeakPin("123123"))
     XCTAssertTrue(config.isWeakPin("000123"))
   }
 
   func testIsWeakPin_WhenThePinHasNoPattern_ThenIsNotWeak() {
+    // Then
     XCTAssertFalse(config.isWeakPin("135792"))
     XCTAssertFalse(config.isWeakPin("246813"))
     XCTAssertFalse(config.isWeakPin("901234"))
   }
 
   func testDefaults_WhenNotChanged_ThenRequireNoPasscodeAndListAndroidsTenCommonPins() {
+    // Then
     XCTAssertFalse(config.requireDeviceSecure)
     XCTAssertEqual(config.commonPins.count, 10)
   }

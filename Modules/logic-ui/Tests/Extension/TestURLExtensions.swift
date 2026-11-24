@@ -20,11 +20,21 @@ import XCTest
 final class TestURLExtensions: EudiTest {
 
   func testIsHttpsWebLink_WhenTheLinkIsHttpsWithAHost_ThenIsTrue() throws {
-    XCTAssertTrue(try XCTUnwrap(URL(string: "https://verifier.example/done?state=1")).isHttpsWebLink)
-    XCTAssertTrue(try XCTUnwrap(URL(string: "HTTPS://verifier.example")).isHttpsWebLink)
+    // When
+    let result = try XCTUnwrap(URL(string: "https://verifier.example/done?state=1")).isHttpsWebLink
+
+    // Then
+    XCTAssertTrue(result)
+
+    // When
+    let result2 = try XCTUnwrap(URL(string: "HTTPS://verifier.example")).isHttpsWebLink
+
+    // Then
+    XCTAssertTrue(result2)
   }
 
   func testIsHttpsWebLink_WhenTheLinkIsAWalletOrAnotherScheme_ThenIsFalse() throws {
+    // Given
     let links = [
       "openid-credential-offer://?credential_offer_uri=https://issuer.example",
       "eudi-openid4vp://?request_uri=https://verifier.example",
@@ -35,6 +45,7 @@ final class TestURLExtensions: EudiTest {
       "https:///no-host"
     ]
 
+    // Then
     for link in links {
       XCTAssertFalse(try XCTUnwrap(URL(string: link)).isHttpsWebLink, link)
     }
@@ -42,21 +53,27 @@ final class TestURLExtensions: EudiTest {
 
   @MainActor
   func testOpenInBrowser_WhenTheLinkIsHttpsWithAHost_ThenOpensIt() throws {
+    // Given
     let url = try XCTUnwrap(URL(string: "https://verifier.example/done"))
     var opened: [URL] = []
 
+    // When
     url.openInBrowser { opened.append($0) }
 
+    // Then
     XCTAssertEqual(opened, [url])
   }
 
   @MainActor
   func testOpenInBrowser_WhenTheLinkIsAWalletLink_ThenOpensNothing() throws {
+    // Given
     let url = try XCTUnwrap(URL(string: "openid-credential-offer://?credential_offer_uri=https://issuer.example"))
     var opened: [URL] = []
 
+    // When
     url.openInBrowser { opened.append($0) }
 
+    // Then
     XCTAssertTrue(opened.isEmpty)
   }
 }

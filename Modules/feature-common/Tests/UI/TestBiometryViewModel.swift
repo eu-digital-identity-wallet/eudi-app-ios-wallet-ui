@@ -46,28 +46,37 @@ final class TestBiometryViewModel: EudiTest {
 
   @MainActor
   func testPinEntry_WhenLoginSucceeds_ThenUnlocksTheSessionBeforeTheWalletOpens() async {
+    // Given
     let order = expectUnlockBeforeNavigation()
     let viewModel = makeViewModel(isPreAuthorization: true)
 
+    // When
     viewModel.uiPinInputField = "135792"
 
     await fulfillment(of: [order], timeout: 2)
+
+    // Then
     verify(interactor).unlockSession()
   }
 
   @MainActor
   func testOnBiometry_WhenLoginSucceeds_ThenUnlocksTheSessionBeforeTheWalletOpens() async {
+    // Given
     let order = expectUnlockBeforeNavigation()
     let viewModel = makeViewModel(isPreAuthorization: true)
 
+    // When
     viewModel.onBiometry()
 
     await fulfillment(of: [order], timeout: 2)
+
+    // Then
     verify(interactor).unlockSession()
   }
 
   @MainActor
   func testPinEntry_WhenAPresentationIsConfirmed_ThenDoesNotUnlockTheSession() async {
+    // Given
     let continued = expectation(description: "presentation continued")
     stub(interactor) { mock in
       when(mock.unlockSession()).thenDoNothing()
@@ -77,21 +86,27 @@ final class TestBiometryViewModel: EudiTest {
     }
     let viewModel = makeViewModel(isPreAuthorization: false)
 
+    // When
     viewModel.uiPinInputField = "135792"
 
     await fulfillment(of: [continued], timeout: 2)
+
+    // Then
     verify(interactor, never()).unlockSession()
   }
 
   @MainActor
   func testInitialize_WhenALoginDeviceHasNoPasscode_ThenWarnsAndThePinStillLogsIn() async {
+    // Given
     let order = expectUnlockBeforeNavigation()
     stubDeviceLockState(.missing)
     let viewModel = makeViewModel(isPreAuthorization: true)
 
+    // When
     await viewModel.initialize()
     viewModel.uiPinInputField = "135792"
 
+    // Then
     XCTAssertEqual(viewModel.viewState.deviceLockNotice, .quickPinDeviceLockMissingWarning)
     XCTAssertFalse(viewModel.viewState.isDeviceLockRequired)
     await fulfillment(of: [order], timeout: 5)
@@ -99,6 +114,7 @@ final class TestBiometryViewModel: EudiTest {
 
   @MainActor
   func testInitialize_WhenALoginRequiresAPasscodeAndThereIsNone_ThenRefusesThePinAndBiometrics() async {
+    // Given
     let opened = expectation(description: "wallet opened")
     opened.isInverted = true
     stub(router) { mock in
@@ -107,10 +123,12 @@ final class TestBiometryViewModel: EudiTest {
     stubDeviceLockState(.required)
     let viewModel = makeViewModel(isPreAuthorization: true, shouldInitializeBiometricOnCreate: true)
 
+    // When
     await viewModel.initialize()
     viewModel.uiPinInputField = "135792"
     viewModel.onBiometry()
 
+    // Then
     XCTAssertEqual(viewModel.viewState.deviceLockNotice, .quickPinDeviceLockRequiredWarning)
     XCTAssertTrue(viewModel.viewState.isDeviceLockRequired)
     XCTAssertFalse(viewModel.viewState.autoBiometryInitiated)
@@ -121,21 +139,25 @@ final class TestBiometryViewModel: EudiTest {
 
   @MainActor
   func testSetPhase_WhenTheUserReturnsWithAPasscodeSet_ThenTheLoginOpens() async {
+    // Given
     let order = expectUnlockBeforeNavigation()
     stubDeviceLockState(.required)
     let viewModel = makeViewModel(isPreAuthorization: true)
     await viewModel.initialize()
 
+    // When
     stubDeviceLockState(.secure)
     await viewModel.setPhase(with: .active)
     viewModel.uiPinInputField = "135792"
 
+    // Then
     XCTAssertNil(viewModel.viewState.deviceLockNotice)
     await fulfillment(of: [order], timeout: 5)
   }
 
   @MainActor
   func testInitialize_WhenAConfirmationRuns_ThenThePasscodeIsNotChecked() async {
+    // Given
     let continued = expectation(description: "presentation continued")
     stub(router) { mock in
       when(mock.push(with: any())).then { _ in continued.fulfill() }
@@ -143,17 +165,21 @@ final class TestBiometryViewModel: EudiTest {
     stubDeviceLockState(.required)
     let viewModel = makeViewModel(isPreAuthorization: false)
 
+    // When
     await viewModel.initialize()
     await viewModel.setPhase(with: .active)
     viewModel.uiPinInputField = "135792"
 
     await fulfillment(of: [continued], timeout: 5)
+
+    // Then
     XCTAssertNil(viewModel.viewState.deviceLockNotice)
     verify(interactor, never()).getDeviceLockState()
   }
 
   @MainActor
   func testOnPop_WhenTheUserLeavesBeforeASuccessLands_ThenTheSuccessDoesNothing() async {
+    // Given
     let continued = expectation(description: "flow continued")
     continued.isInverted = true
     stub(router) { mock in
@@ -162,15 +188,19 @@ final class TestBiometryViewModel: EudiTest {
     }
     let viewModel = makeViewModel(isPreAuthorization: false, navigationBackType: .pop)
 
+    // When
     viewModel.onPop()
     viewModel.uiPinInputField = "135792"
 
     await fulfillment(of: [continued], timeout: 1)
+
+    // Then
     verify(router).pop()
   }
 
   @MainActor
   func testPinEntry_WhenABiometricAlsoSucceedsOnAScreenWithBack_ThenTheFlowContinuesOnce() async {
+    // Given
     let continued = expectation(description: "flow continued")
     continued.assertForOverFulfill = false
     let continuedAgain = expectation(description: "flow continued again")
@@ -184,15 +214,18 @@ final class TestBiometryViewModel: EudiTest {
     }
     let viewModel = makeViewModel(isPreAuthorization: false, navigationBackType: .pop)
 
+    // When
     viewModel.uiPinInputField = "135792"
     viewModel.onBiometry()
 
+    // Then
     await fulfillment(of: [continued], timeout: 5)
     await fulfillment(of: [continuedAgain], timeout: 0.5)
   }
 
   @MainActor
   func testOnPop_WhenASuccessHasEndedTheScreen_ThenBackDoesNothing() async {
+    // Given
     let continued = expectation(description: "flow continued")
     stub(router) { mock in
       when(mock.pop()).thenDoNothing()
@@ -200,15 +233,18 @@ final class TestBiometryViewModel: EudiTest {
     }
     let viewModel = makeViewModel(isPreAuthorization: false, navigationBackType: .pop)
 
+    // When
     viewModel.uiPinInputField = "135792"
     await fulfillment(of: [continued], timeout: 5)
     viewModel.onPop()
 
+    // Then
     verify(router, never()).pop()
   }
 
   @MainActor
   func testOnBiometry_WhenALoginSucceedsAgain_ThenTheWalletOpensAgain() async {
+    // Given
     let opened = expectation(description: "wallet opened twice")
     opened.expectedFulfillmentCount = 2
     stub(interactor) { mock in
@@ -219,14 +255,17 @@ final class TestBiometryViewModel: EudiTest {
     }
     let viewModel = makeViewModel(isPreAuthorization: true)
 
+    // When
     viewModel.onBiometry()
     viewModel.onBiometry()
 
+    // Then
     await fulfillment(of: [opened], timeout: 5)
   }
 
   @MainActor
   func testSetPhase_WhenASuccessLandedWhileInactive_ThenItsNavigationRunsOnceOnReturn() async {
+    // Given
     let continued = expectation(description: "flow continued")
     continued.assertForOverFulfill = false
     let continuedAgain = expectation(description: "flow continued again")
@@ -241,10 +280,13 @@ final class TestBiometryViewModel: EudiTest {
     let viewModel = makeViewModel(isPreAuthorization: false)
     await viewModel.setPhase(with: .inactive)
 
+    // When
     viewModel.onBiometry()
     let held = expectation(description: "navigation held")
     withObservationTracking { _ = viewModel.viewState.pendingNavigation } onChange: { held.fulfill() }
     await fulfillment(of: [held], timeout: 5)
+
+    // Then
     verify(router, never()).push(with: any())
     await viewModel.setPhase(with: .active)
     await viewModel.setPhase(with: .active)

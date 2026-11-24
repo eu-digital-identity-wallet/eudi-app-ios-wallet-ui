@@ -24,27 +24,38 @@ final class TestRecordedRegistrationCheck: EudiTest {
   )
 
   func testInit_WhenTheRegistrationWasChecked_ThenRecordsItsOutcome() {
-    XCTAssertEqual(Self.check(.verified(details: details, overaskedClaims: [])), .verified)
-    XCTAssertEqual(Self.check(.notVerified(details: nil)), .notVerified)
-    XCTAssertEqual(Self.check(.notVerified(details: details), isNotBoundToRequester: true), .notBoundToRequester)
-    XCTAssertEqual(Self.check(.notSupported), .notEvaluated)
+    // When
+    let verified = Self.check(.verified(details: details, overaskedClaims: []))
+    let notVerified = Self.check(.notVerified(details: nil))
+    let notBound = Self.check(.notVerified(details: details), isNotBoundToRequester: true)
+    let notSupported = Self.check(.notSupported)
+
+    // Then
+    XCTAssertEqual(verified, .verified)
+    XCTAssertEqual(notVerified, .notVerified)
+    XCTAssertEqual(notBound, .notBoundToRequester)
+    XCTAssertEqual(notSupported, .notEvaluated)
   }
 
   func testInit_WhenTheRequesterDidNotAuthenticate_ThenAVerifiedRegistrationIsNotRecordedAsVerified() {
-    XCTAssertEqual(
-      Self.check(.verified(details: details, overaskedClaims: []), isRequesterAuthenticated: false),
-      .notVerified
-    )
+    // When
+    let recorded = Self.check(.verified(details: details, overaskedClaims: []), isRequesterAuthenticated: false)
+
+    // Then
+    XCTAssertEqual(recorded, .notVerified)
   }
 
   func testProvider_WhenTheOutcomeIsRemoved_ThenOnlyItsOwnPresentationGetsIt() async {
+    // Given
     let provider = RegistrationCheckProviderImpl()
     await provider.record(.notBoundToRequester, for: "presentation-a")
 
+    // When
     let other = await provider.removeCheck(for: "presentation-b")
     let own = await provider.removeCheck(for: "presentation-a")
     let again = await provider.removeCheck(for: "presentation-a")
 
+    // Then
     XCTAssertNil(other)
     XCTAssertEqual(own, .notBoundToRequester)
     XCTAssertNil(again)

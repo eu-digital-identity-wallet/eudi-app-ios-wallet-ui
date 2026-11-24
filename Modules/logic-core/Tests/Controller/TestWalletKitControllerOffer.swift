@@ -33,19 +33,25 @@ final class TestWalletKitControllerOffer: EudiTest {
   }
 
   func testResolveOfferUrlDocTypes_WhenTheFetchedOfferNamesAnotherIssuer_ThenRefusesItWithoutContactingThatIssuer() async {
+    // Given
     RecordingURLProtocol.serve(offer(issuer: "https://attacker.example"), at: offerAddress)
 
+    // When
     let error = await resolutionError(offerUri: byReference(offerAddress.absoluteString), controller: makeController())
 
+    // Then
     XCTAssertEqual(error as? WalletCoreError, .issuerNotConfigured)
     XCTAssertEqual(RecordingURLProtocol.requested, [offerAddress])
   }
 
   func testResolveOfferUrlDocTypes_WhenTheFetchedOfferNamesAConfiguredIssuer_ThenWalletKitGetsItWithoutFetchingItAgain() async {
+    // Given
     RecordingURLProtocol.serve(offer(issuer: issuer), at: offerAddress)
 
+    // When
     let error = await resolutionError(offerUri: byReference(offerAddress.absoluteString), controller: makeController())
 
+    // Then
     XCTAssertNotEqual(error as? WalletCoreError, .issuerNotConfigured)
     let requested = RecordingURLProtocol.requested
     XCTAssertEqual(requested.filter { $0 == offerAddress }.count, 1)
@@ -54,34 +60,42 @@ final class TestWalletKitControllerOffer: EudiTest {
   }
 
   func testResolveOfferUrlDocTypes_WhenTheOfferAddressIsNotOnAConfiguredIssuersOrigin_ThenNothingIsFetched() async {
+    // When
     let error = await resolutionError(
       offerUri: byReference("https://attacker.example/offers/1"),
       controller: makeController()
     )
 
+    // Then
     XCTAssertEqual(error as? WalletCoreError, .issuerNotConfigured)
     XCTAssertTrue(RecordingURLProtocol.requested.isEmpty)
   }
 
   func testResolveOfferUrlDocTypes_WhenTheOfferCannotBeFetched_ThenFailsAsWalletKitDoes() async {
+    // When
     let error = await resolutionError(offerUri: byReference(offerAddress.absoluteString), controller: makeController())
 
+    // Then
     XCTAssertEqual((error as? WalletError)?.code, .offerResolutionFailed)
     XCTAssertEqual(RecordingURLProtocol.requested, [offerAddress])
   }
 
   func testIssueDocumentsByOfferUrl_WhenTheOfferWasResolved_ThenItIsNotFetchedAgain() async {
+    // Given
     RecordingURLProtocol.serve(offer(issuer: issuer), at: offerAddress)
     let controller = makeController()
     let offerUri = byReference(offerAddress.absoluteString)
     _ = await resolutionError(offerUri: offerUri, controller: controller)
 
+    // When
     _ = try? await controller.issueDocumentsByOfferUrl(offerUri: offerUri, docTypes: [], txCodeValue: nil)
 
+    // Then
     XCTAssertEqual(RecordingURLProtocol.requested.filter { $0 == offerAddress }.count, 1)
   }
 
   func testIssueDocumentsByOfferUrl_WhenAnotherOfferWasResolvedSince_ThenTheFirstIsNotFetchedAgain() async {
+    // Given
     let otherAddress = URL(string: "https://issuer.example/offers/2")!
     RecordingURLProtocol.serve(offer(issuer: issuer), at: offerAddress)
     RecordingURLProtocol.serve(offer(issuer: issuer), at: otherAddress)
@@ -90,29 +104,38 @@ final class TestWalletKitControllerOffer: EudiTest {
     _ = await resolutionError(offerUri: offerUri, controller: controller)
     _ = await resolutionError(offerUri: byReference(otherAddress.absoluteString), controller: controller)
 
+    // When
     _ = try? await controller.issueDocumentsByOfferUrl(offerUri: offerUri, docTypes: [], txCodeValue: nil)
 
+    // Then
     XCTAssertEqual(RecordingURLProtocol.requested.filter { $0 == offerAddress }.count, 1)
   }
 
   func testResolveOfferUrlDocTypes_WhenTheFetchedOfferCannotBeRead_ThenFailsAsWalletKitDoes() async {
+    // Given
     RecordingURLProtocol.serve("<html></html>", at: offerAddress)
 
+    // When
     let error = await resolutionError(offerUri: byReference(offerAddress.absoluteString), controller: makeController())
 
+    // Then
     XCTAssertEqual((error as? WalletError)?.code, .offerResolutionFailed)
     XCTAssertEqual(RecordingURLProtocol.requested, [offerAddress])
   }
 
   func testIssueDocumentsByOfferUrl_WhenAnUnresolvedOfferNamesAnotherIssuer_ThenRefusesIt() async {
+    // Given
     RecordingURLProtocol.serve(offer(issuer: "https://attacker.example"), at: offerAddress)
 
+    // When
     do {
       _ = try await makeController().issueDocumentsByOfferUrl(
         offerUri: byReference(offerAddress.absoluteString),
         docTypes: [],
         txCodeValue: nil
       )
+
+      // Then
       XCTFail("Expected the offer to be refused")
     } catch {
       XCTAssertEqual(error as? WalletCoreError, .issuerNotConfigured)

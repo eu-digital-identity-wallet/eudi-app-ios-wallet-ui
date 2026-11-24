@@ -22,27 +22,73 @@ final class TestUIApplicationExtensions: EudiTest {
 
   @MainActor
   func testIsCovered_WhenAControllerOfACoveringModuleIsPresented_ThenIsTrue() {
+    // Given
     let root = StubPresentingController(presenting: StubPresentingController(presenting: nil))
 
-    XCTAssertTrue(UIApplication.isCovered(presentedFrom: root, byModules: ["logic_ui_tests"]))
+    // When
+    let result = UIApplication.isCovered(presentedFrom: root, byModules: ["logic_ui_tests"])
+
+    // Then
+    XCTAssertTrue(result)
   }
 
   @MainActor
   func testIsCovered_WhenTheCoveringControllerIsPresentedOverAnother_ThenIsTrue() {
+    // Given
     let covering = CoveringScreens.StubController(presenting: nil)
     let root = StubPresentingController(presenting: StubPresentingController(presenting: covering))
 
-    XCTAssertTrue(UIApplication.isCovered(presentedFrom: root, byModules: ["logic_ui_tests.CoveringScreens"]))
-    XCTAssertFalse(UIApplication.isCovered(presentedFrom: root, byModules: ["logic_ui_tests.OtherScreens"]))
+    // When
+    let result = UIApplication.isCovered(presentedFrom: root, byModules: ["logic_ui_tests.CoveringScreens"])
+
+    // Then
+    XCTAssertTrue(result)
+
+    // When
+    let result2 = UIApplication.isCovered(presentedFrom: root, byModules: ["logic_ui_tests.OtherScreens"])
+
+    // Then
+    XCTAssertFalse(result2)
   }
 
   @MainActor
   func testIsCovered_WhenNothingIsPresentedOrOnlyOtherModules_ThenIsFalse() {
+    // Given
     let root = StubPresentingController(presenting: UIViewController())
 
-    XCTAssertFalse(UIApplication.isCovered(presentedFrom: root, byModules: ["EudiRQESUi"]))
-    XCTAssertFalse(UIApplication.isCovered(presentedFrom: StubPresentingController(presenting: nil), byModules: ["EudiRQESUi"]))
-    XCTAssertFalse(UIApplication.isCovered(presentedFrom: nil, byModules: ["EudiRQESUi"]))
+    // When
+    let result = UIApplication.isCovered(presentedFrom: root, byModules: ["EudiRQESUi"])
+
+    // Then
+    XCTAssertFalse(result)
+
+    // When
+    let result2 = UIApplication.isCovered(presentedFrom: StubPresentingController(presenting: nil), byModules: ["EudiRQESUi"])
+
+    // Then
+    XCTAssertFalse(result2)
+
+    // When
+    let result3 = UIApplication.isCovered(presentedFrom: nil, byModules: ["EudiRQESUi"])
+
+    // Then
+    XCTAssertFalse(result3)
+  }
+
+  @MainActor
+  func testKeepRunningInBackground_WhenTheOperationEnds_ThenReturnsItsValue() async {
+    // Given
+    var ran = false
+
+    // When
+    let value = await UIApplication.shared.keepRunningInBackground(named: "test") { () async -> Int in
+      ran = true
+      return 42
+    }
+
+    // Then
+    XCTAssertTrue(ran)
+    XCTAssertEqual(value, 42)
   }
 }
 
@@ -65,18 +111,5 @@ class StubPresentingController: UIViewController {
 
   override var presentedViewController: UIViewController? {
     presented
-  }
-
-  @MainActor
-  func testKeepRunningInBackground_WhenTheOperationEnds_ThenReturnsItsValue() async {
-    var ran = false
-
-    let value = await UIApplication.shared.keepRunningInBackground(named: "test") { () async -> Int in
-      ran = true
-      return 42
-    }
-
-    XCTAssertTrue(ran)
-    XCTAssertEqual(value, 42)
   }
 }

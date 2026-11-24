@@ -25,6 +25,7 @@ final class TestProximityConnectionViewModel: EudiTest {
 
   @MainActor
   func testSetPhase_WhenTheAppGoesToTheBackgroundWithTheQrShown_ThenTheSessionStopsAndTheScreenCloses() async {
+    // Given
     let stopped = expectation(description: "session stopped")
     let closed = expectation(description: "screen closed")
     let session = makeSession(
@@ -32,15 +33,18 @@ final class TestProximityConnectionViewModel: EudiTest {
       onStop: { stopped.fulfill() }
     )
 
+    // When
     await session.showQr(in: self)
     session.viewModel.setPhase(with: .background)
 
+    // Then
     await fulfillment(of: [stopped, closed], timeout: 5)
     session.finish()
   }
 
   @MainActor
   func testSetPhase_WhenTheAppIsOnlyInactive_ThenTheSessionKeepsRunning() async {
+    // Given
     let stopped = invertedExpectation(description: "session stopped")
     let closed = invertedExpectation(description: "screen closed")
     let session = makeSession(
@@ -48,16 +52,19 @@ final class TestProximityConnectionViewModel: EudiTest {
       onStop: { stopped.fulfill() }
     )
 
+    // When
     await session.showQr(in: self)
     session.viewModel.setPhase(with: .inactive)
     session.viewModel.setPhase(with: .active)
 
+    // Then
     await fulfillment(of: [stopped, closed], timeout: 0.5)
     session.finish()
   }
 
   @MainActor
   func testSetPhase_WhenAReaderHasConnected_ThenTheSessionIsLeftToTheRequestScreen() async {
+    // Given
     let handedOver = expectation(description: "request screen opened")
     let stopped = invertedExpectation(description: "session stopped")
     let session = makeSession(
@@ -65,17 +72,24 @@ final class TestProximityConnectionViewModel: EudiTest {
       onStop: { stopped.fulfill() }
     )
 
+    // When
     await session.showQr(in: self)
     session.states.yield(.requestReceived(Constants.mockPresentationRequest))
+
+    // Then
     await fulfillment(of: [handedOver], timeout: 5)
+
+    // When
     session.viewModel.setPhase(with: .background)
 
+    // Then
     await fulfillment(of: [stopped], timeout: 0.5)
     session.finish()
   }
 
   @MainActor
   func testSetPhase_WhenAnotherScreenIsInFront_ThenTheSessionStopsAndNothingCloses() async {
+    // Given
     let stopped = expectation(description: "session stopped")
     let closed = invertedExpectation(description: "screen closed")
     let session = makeSession(
@@ -83,9 +97,11 @@ final class TestProximityConnectionViewModel: EudiTest {
       onStop: { stopped.fulfill() }
     )
 
+    // When
     await session.showQr(in: self)
     session.viewModel.setPhase(with: .background)
 
+    // Then
     await fulfillment(of: [stopped], timeout: 5)
     await fulfillment(of: [closed], timeout: 0.5)
     session.finish()
@@ -93,6 +109,7 @@ final class TestProximityConnectionViewModel: EudiTest {
 
   @MainActor
   func testSetPhase_WhenNoScreenIsInFront_ThenTheSessionStopsAndNothingCloses() async {
+    // Given
     let stopped = expectation(description: "session stopped")
     let closed = invertedExpectation(description: "screen closed")
     let session = makeSession(
@@ -100,9 +117,11 @@ final class TestProximityConnectionViewModel: EudiTest {
       onStop: { stopped.fulfill() }
     )
 
+    // When
     await session.showQr(in: self)
     session.viewModel.setPhase(with: .background)
 
+    // Then
     await fulfillment(of: [stopped], timeout: 5)
     await fulfillment(of: [closed], timeout: 0.5)
     session.finish()
@@ -110,6 +129,7 @@ final class TestProximityConnectionViewModel: EudiTest {
 
   @MainActor
   func testSetPhase_WhenTheAppGoesToTheBackgroundAgain_ThenTheSessionStopsOnce() async {
+    // Given
     let stopped = expectation(description: "session stopped")
     stopped.assertForOverFulfill = false
     let stoppedAgain = invertedExpectation(description: "session stopped again")
@@ -122,11 +142,13 @@ final class TestProximityConnectionViewModel: EudiTest {
       }
     )
 
+    // When
     await session.showQr(in: self)
     session.viewModel.setPhase(with: .background)
     session.viewModel.setPhase(with: .active)
     session.viewModel.setPhase(with: .background)
 
+    // Then
     await fulfillment(of: [stopped], timeout: 5)
     await fulfillment(of: [stoppedAgain], timeout: 0.5)
     session.finish()
@@ -134,6 +156,7 @@ final class TestProximityConnectionViewModel: EudiTest {
 
   @MainActor
   func testSetPhase_WhenEngagementReturnedButNoQrIsReady_ThenThereIsNothingToStop() async {
+    // Given
     let stopped = invertedExpectation(description: "session stopped")
     let closed = invertedExpectation(description: "screen closed")
     let session = makeSession(
@@ -141,15 +164,18 @@ final class TestProximityConnectionViewModel: EudiTest {
       onStop: { stopped.fulfill() }
     )
 
+    // When
     await session.viewModel.initialize()
     session.viewModel.setPhase(with: .background)
 
+    // Then
     await fulfillment(of: [stopped, closed], timeout: 0.5)
     session.finish()
   }
 
   @MainActor
   func testOnEngagementReady_WhenTheUserHadAlreadyLeft_ThenTheSessionStopsAndNoQrIsMade() async {
+    // Given
     let stopped = expectation(description: "session stopped")
     let closed = expectation(description: "screen closed")
     let qrMade = invertedExpectation(description: "QR code made")
@@ -159,10 +185,12 @@ final class TestProximityConnectionViewModel: EudiTest {
       onStop: { stopped.fulfill() }
     )
 
+    // When
     session.viewModel.setPhase(with: .background)
     session.start()
     session.states.yield(.prepareQr)
 
+    // Then
     await fulfillment(of: [stopped, closed], timeout: 5)
     await fulfillment(of: [qrMade], timeout: 0.5)
     session.finish()
@@ -170,6 +198,7 @@ final class TestProximityConnectionViewModel: EudiTest {
 
   @MainActor
   func testOnConnectionSuccess_WhenTheSessionWasStopped_ThenNoRequestScreenOpens() async {
+    // Given
     let stopped = expectation(description: "session stopped")
     let handedOver = invertedExpectation(description: "request screen opened")
     let session = makeSession(
@@ -177,10 +206,12 @@ final class TestProximityConnectionViewModel: EudiTest {
       onStop: { stopped.fulfill() }
     )
 
+    // When
     await session.showQr(in: self)
     session.states.yield(.requestReceived(Constants.mockPresentationRequest))
     session.viewModel.setPhase(with: .background)
 
+    // Then
     await fulfillment(of: [stopped], timeout: 5)
     await fulfillment(of: [handedOver], timeout: 0.5)
     session.finish()
