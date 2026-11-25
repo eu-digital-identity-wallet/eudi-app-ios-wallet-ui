@@ -60,38 +60,66 @@ final class TestKeychainPinThrottleProvider: EudiTest {
   }
 
   func testGetState_WhenNothingPersisted_ThenIdle() {
-    XCTAssertEqual(provider.getState(), .idle)
+    // When
+    let result = provider.getState()
+
+    // Then
+    XCTAssertEqual(result, .idle)
   }
 
   func testGetState_WhenTheLockoutRuns_ThenCountsDownOnTheMonotonicClock() {
+    // Given
     for _ in 0..<3 { _ = provider.recordFailure() }
 
+    // When
     advance(by: 5)
+
+    // Then
     XCTAssertEqual(provider.getState(), .active(remaining: 25, total: 30))
 
+    // When
     advance(by: 26)
+
+    // Then
     XCTAssertEqual(provider.getState(), .idle)
   }
 
   /// The clock stays past the lockout's start, so that only the change of boot can restart it.
   func testGetState_WhenTheDeviceRestartedDuringALockout_ThenTheLockoutBeginsAgainInFull() {
+    // Given
     for _ in 0..<3 { _ = provider.recordFailure() }
     advance(by: 20)
     bootSession.withLock { $0 = "boot-2" }
 
-    XCTAssertEqual(provider.getState(), .active(remaining: 30, total: 30))
+    // When
+    let result = provider.getState()
+
+    // Then
+    XCTAssertEqual(result, .active(remaining: 30, total: 30))
+
+    // When
     advance(by: 10)
+
+    // Then
     XCTAssertEqual(provider.getState(), .active(remaining: 20, total: 30))
   }
 
   func testGetState_WhenTheDeviceRestartsAfterTheLockoutRanItsCourse_ThenNoLockoutBegins() {
+    // Given
     for _ in 0..<3 { _ = provider.recordFailure() }
     advance(by: 30)
-    XCTAssertEqual(provider.getState(), .idle)
 
+    // When
+    let result = provider.getState()
+
+    // Then
+    XCTAssertEqual(result, .idle)
+
+    // When
     bootSession.withLock { $0 = "boot-2" }
     clock.withLock { $0 = 5 }
 
+    // Then
     XCTAssertEqual(provider.getState(), .idle)
     XCTAssertEqual(storedValues[KeychainPinThrottleProvider.KeyIdentifier.pinLockoutLevel.rawValue], "1")
   }
@@ -99,51 +127,85 @@ final class TestKeychainPinThrottleProvider: EudiTest {
   /// A failure recorded while a lockout runs, such as one from the extension's PIN screen that read the state before
   /// the lockout began, keeps the lockout running.
   func testRecordFailure_WhenALockoutRuns_ThenItKeepsRunning() {
+    // Given
     for _ in 0..<3 { _ = provider.recordFailure() }
     advance(by: 10)
 
+    // When
     _ = provider.recordFailure()
 
+    // Then
     XCTAssertEqual(provider.getState(), .active(remaining: 20, total: 30))
   }
 
   /// No screen read the state after the countdown; the next wrong PIN clears it.
   func testRecordFailure_WhenALockoutEndedUnseen_ThenARestartBeginsNoLockout() {
+    // Given
     for _ in 0..<3 { _ = provider.recordFailure() }
     advance(by: 30)
 
-    XCTAssertEqual(provider.recordFailure(), .idle)
+    // When
+    let result = provider.recordFailure()
+
+    // Then
+    XCTAssertEqual(result, .idle)
+
+    // When
     bootSession.withLock { $0 = "boot-2" }
     clock.withLock { $0 = 5 }
 
+    // Then
     XCTAssertEqual(provider.getState(), .idle)
   }
 
   func testGetState_WhenTheClockIsBeforeTheLockoutStarted_ThenTheLockoutBeginsAgainInFull() {
+    // Given
     for _ in 0..<3 { _ = provider.recordFailure() }
     clock.withLock { $0 = 10 }
 
-    XCTAssertEqual(provider.getState(), .active(remaining: 30, total: 30))
+    // When
+    let result = provider.getState()
+
+    // Then
+    XCTAssertEqual(result, .active(remaining: 30, total: 30))
   }
 
   func testGetState_WhenTheKeychainCannotBeRead_ThenLocksForTheLongestDuration() {
+    // Given
     isReadFailing = true
 
-    XCTAssertEqual(provider.getState(), .active(remaining: 300, total: 300))
+    // When
+    let result = provider.getState()
+
+    // Then
+    XCTAssertEqual(result, .active(remaining: 300, total: 300))
   }
 
   func testRecordFailure_WhenTheKeychainCannotBeRead_ThenLocksForTheLongestDurationAndWritesNothing() {
+    // Given
     isReadFailing = true
 
-    XCTAssertEqual(provider.recordFailure(), .active(remaining: 300, total: 300))
+    // When
+    let result = provider.recordFailure()
+
+    // Then
+    XCTAssertEqual(result, .active(remaining: 300, total: 300))
     XCTAssertTrue(storedValues.isEmpty)
   }
 
   func testRecordFailure_WhenBelowThreshold_ThenIdleAndCounterIncremented() {
-    XCTAssertEqual(provider.recordFailure(), .idle)
+    // When
+    let result = provider.recordFailure()
+
+    // Then
+    XCTAssertEqual(result, .idle)
     XCTAssertEqual(readInt(forKey: .pinFailedAttempts), 1)
 
-    XCTAssertEqual(provider.recordFailure(), .idle)
+    // When
+    let result2 = provider.recordFailure()
+
+    // Then
+    XCTAssertEqual(result2, .idle)
     XCTAssertEqual(readInt(forKey: .pinFailedAttempts), 2)
 
     XCTAssertEqual(readInt(forKey: .pinLockoutLevel), 0)
@@ -151,10 +213,14 @@ final class TestKeychainPinThrottleProvider: EudiTest {
   }
 
   func testRecordFailure_WhenThirdFailure_ThenStartsFirstLockoutWith30s() {
+    // Given
     _ = provider.recordFailure()
     _ = provider.recordFailure()
+
+    // When
     let result = provider.recordFailure()
 
+    // Then
     XCTAssertEqual(result, .active(remaining: 30, total: 30))
     XCTAssertEqual(readInt(forKey: .pinFailedAttempts), 0)
     XCTAssertEqual(readInt(forKey: .pinLockoutLevel), 1)
@@ -164,53 +230,72 @@ final class TestKeychainPinThrottleProvider: EudiTest {
   }
 
   func testRecordFailure_WhenSecondLockoutBatch_ThenEscalatesTo90s() {
+    // Given
     for _ in 0..<3 { _ = provider.recordFailure() }
     for _ in 0..<2 { _ = provider.recordFailure() }
+
+    // When
     let result = provider.recordFailure()
 
+    // Then
     XCTAssertEqual(result, .active(remaining: 90, total: 90))
     XCTAssertEqual(readInt(forKey: .pinFailedAttempts), 0)
     XCTAssertEqual(readInt(forKey: .pinLockoutLevel), 2)
   }
 
   func testRecordFailure_WhenThirdLockoutBatch_ThenEscalatesTo300s() {
+    // Given
     var lastResult: PinLockoutState = .idle
+
+    // When
     for _ in 0..<9 {
       lastResult = provider.recordFailure()
     }
 
+    // Then
     XCTAssertEqual(lastResult, .active(remaining: 300, total: 300))
     XCTAssertEqual(readInt(forKey: .pinLockoutLevel), 3)
   }
 
   func testRecordFailure_WhenLevelExceedsDurations_ThenReusesLastDuration() {
+    // Given
     var lastResult: PinLockoutState = .idle
+
+    // When
     for _ in 0..<12 {
       lastResult = provider.recordFailure()
     }
 
+    // Then
     XCTAssertEqual(lastResult, .active(remaining: 300, total: 300))
     XCTAssertEqual(readInt(forKey: .pinLockoutLevel), 4)
   }
 
   func testRecordFailure_WhenDurationsEmpty_ThenReturnsActiveWithZeroDuration() {
+    // Given
     stubAuthenticationConfig(maxAttempts: 3, durations: [])
 
     _ = provider.recordFailure()
     _ = provider.recordFailure()
+
+    // When
     let result = provider.recordFailure()
 
+    // Then
     XCTAssertEqual(result, .active(remaining: 0, total: 0))
   }
 
-  func testRecordSuccess_ClearsAllPersistedStateAndTheWallClockValuesOfEarlierBuilds() {
+  func testRecordSuccess_WhenCalled_ThenClearsAllPersistedStateAndTheWallClockValuesOfEarlierBuilds() {
+    // Given
     storedValues[KeychainPinThrottleProvider.KeyIdentifier.pinLockoutStartedAt.rawValue] = "1700000000"
     storedValues[KeychainPinThrottleProvider.KeyIdentifier.pinLockoutEndsAt.rawValue] = "1700000030"
     for _ in 0..<5 { _ = provider.recordFailure() }
     XCTAssertGreaterThan(readInt(forKey: .pinLockoutLevel), 0)
 
+    // When
     provider.recordSuccess()
 
+    // Then
     XCTAssertEqual(readInt(forKey: .pinFailedAttempts), 0)
     XCTAssertEqual(readInt(forKey: .pinLockoutLevel), 0)
     XCTAssertEqual(readDouble(forKey: .pinLockoutStartedAtUptime), 0)
@@ -221,28 +306,42 @@ final class TestKeychainPinThrottleProvider: EudiTest {
     XCTAssertEqual(provider.getState(), .idle)
   }
 
-  func testRecordSuccess_AfterReset_NextLockoutStartsAt30sAgain() {
+  func testRecordFailure_WhenFailuresFollowASuccessReset_ThenNextLockoutStartsAt30sAgain() {
+    // Given
     for _ in 0..<3 { _ = provider.recordFailure() }
     provider.recordSuccess()
 
     for _ in 0..<2 { _ = provider.recordFailure() }
+
+    // When
     let result = provider.recordFailure()
 
+    // Then
     XCTAssertEqual(result, .active(remaining: 30, total: 30))
     XCTAssertEqual(readInt(forKey: .pinLockoutLevel), 1)
   }
 
   func testGetState_WhenStoredValuesAreNonNumeric_ThenIdle() {
+    // Given
     storedValues[KeychainPinThrottleProvider.KeyIdentifier.pinLockoutStartedAtUptime.rawValue] = "not-a-number"
     storedValues[KeychainPinThrottleProvider.KeyIdentifier.pinLockoutDuration.rawValue] = "also-bad"
 
-    XCTAssertEqual(provider.getState(), .idle)
+    // When
+    let result = provider.getState()
+
+    // Then
+    XCTAssertEqual(result, .idle)
   }
 
   func testRecordFailure_WhenStoredCounterIsNonNumeric_ThenTreatsAsZero() {
+    // Given
     storedValues[KeychainPinThrottleProvider.KeyIdentifier.pinFailedAttempts.rawValue] = "garbage"
 
-    XCTAssertEqual(provider.recordFailure(), .idle)
+    // When
+    let result = provider.recordFailure()
+
+    // Then
+    XCTAssertEqual(result, .idle)
     XCTAssertEqual(readInt(forKey: .pinFailedAttempts), 1)
   }
 }

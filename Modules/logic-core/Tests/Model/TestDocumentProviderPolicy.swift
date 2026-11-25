@@ -20,6 +20,7 @@ import XCTest
 final class TestDocumentProviderPolicy: EudiTest {
 
   func testCheckRequest_WhenTheOfferingIsOff_ThenDeclines() {
+    // Then
     XCTAssertThrowsError(
       try DocumentProviderPolicy.checkRequest(isOffering: false, requestedDocumentIds: ["a"], blockedDocumentIds: [])
     ) { error in
@@ -28,6 +29,7 @@ final class TestDocumentProviderPolicy: EudiTest {
   }
 
   func testCheckRequest_WhenARequestedDocumentIsBlocked_ThenDeclines() {
+    // Then
     XCTAssertThrowsError(
       try DocumentProviderPolicy.checkRequest(isOffering: true, requestedDocumentIds: ["a", "b"], blockedDocumentIds: ["b"])
     ) { error in
@@ -36,17 +38,25 @@ final class TestDocumentProviderPolicy: EudiTest {
   }
 
   func testCheckRequest_WhenOfferingAndNothingIsBlocked_ThenPasses() {
+    // Then
     XCTAssertNoThrow(
       try DocumentProviderPolicy.checkRequest(isOffering: true, requestedDocumentIds: ["a"], blockedDocumentIds: ["b"])
     )
   }
 
   func testRequestsUserImage_WhenAPortraitIsRequested_ThenIsTrue() {
-    XCTAssertTrue(
-      DocumentProviderPolicy.requestsUserImage(claimNames: ["family_name", "portrait"], userImageClaimKeys: ["portrait"])
+    // When
+    let withPortrait = DocumentProviderPolicy.requestsUserImage(
+      claimNames: ["family_name", "portrait"],
+      userImageClaimKeys: ["portrait"]
     )
-    XCTAssertFalse(
-      DocumentProviderPolicy.requestsUserImage(claimNames: ["family_name"], userImageClaimKeys: ["portrait"])
+    let withoutPortrait = DocumentProviderPolicy.requestsUserImage(
+      claimNames: ["family_name"],
+      userImageClaimKeys: ["portrait"]
     )
+
+    // Then
+    XCTAssertTrue(withPortrait)
+    XCTAssertFalse(withoutPortrait)
   }
 }

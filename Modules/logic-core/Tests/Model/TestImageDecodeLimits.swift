@@ -22,28 +22,47 @@ import Compression
 final class TestImageDecodeLimits: EudiTest {
 
   func testIsWithinLimit_WhenTheImageHasMoreThanFortyMegapixels_ThenIsNotDecoded() {
-    XCTAssertFalse(ImageDecodeLimits.isWithinLimit(width: 8_000, height: 6_000))
-    XCTAssertFalse(ImageDecodeLimits.isWithinLimit(width: 0, height: 10))
-    XCTAssertTrue(ImageDecodeLimits.isWithinLimit(width: 4_000, height: 3_000))
+    // When
+    let tooManyPixels = ImageDecodeLimits.isWithinLimit(width: 8_000, height: 6_000)
+    let noWidth = ImageDecodeLimits.isWithinLimit(width: 0, height: 10)
+    let withinLimit = ImageDecodeLimits.isWithinLimit(width: 4_000, height: 3_000)
+
+    // Then
+    XCTAssertFalse(tooManyPixels)
+    XCTAssertFalse(noWidth)
+    XCTAssertTrue(withinLimit)
   }
 
   func testDecode_WhenASideIsLargerThanTheLimit_ThenScalesItDown() throws {
+    // Given
     let data = try XCTUnwrap(pngData(width: 4_096, height: 16))
 
+    // When
     let image = try XCTUnwrap(ImageDecodeLimits.decode(data))
 
+    // Then
     XCTAssertLessThanOrEqual(Int(image.size.width * image.scale), ImageDecodeLimits.maxDimension)
   }
 
   func testDecode_WhenTheImageHasMoreThanFortyMegapixels_ThenDecodesNothing() throws {
+    // Given
     let data = try XCTUnwrap(blackPng(width: 6_400, height: 6_400))
 
-    XCTAssertNil(ImageDecodeLimits.decode(data))
-    XCTAssertNotNil(ImageDecodeLimits.decode(try XCTUnwrap(blackPng(width: 6_000, height: 6_000))))
+    // When
+    let tooLarge = ImageDecodeLimits.decode(data)
+    let withinLimit = ImageDecodeLimits.decode(try XCTUnwrap(blackPng(width: 6_000, height: 6_000)))
+
+    // Then
+    XCTAssertNil(tooLarge)
+    XCTAssertNotNil(withinLimit)
   }
 
   func testDecode_WhenTheDataIsNotAnImage_ThenDecodesNothing() {
-    XCTAssertNil(ImageDecodeLimits.decode(Data([0x00, 0x01, 0x02])))
+    // When
+    let image = ImageDecodeLimits.decode(Data([0x00, 0x01, 0x02]))
+
+    // Then
+    XCTAssertNil(image)
   }
 }
 

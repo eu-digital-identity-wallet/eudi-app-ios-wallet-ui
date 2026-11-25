@@ -20,9 +20,14 @@ import XCTest
 final class TestPrefsController: EudiTest {
 
   func testGetBool_WhenTheUserNeverChoseToOfferDocuments_ThenIsOn() {
+    // Given
     let prefsController = PrefsControllerImpl()
     prefsController.remove(forKey: .offerDocumentsToApps)
 
-    XCTAssertTrue(prefsController.getBool(forKey: .offerDocumentsToApps))
+    // When
+    let isOn = prefsController.getBool(forKey: .offerDocumentsToApps)
+
+    // Then
+    XCTAssertTrue(isOn)
   }
 }

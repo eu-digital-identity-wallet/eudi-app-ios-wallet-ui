@@ -49,8 +49,11 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
       )
     )
 
-    // When / Then
-    XCTAssertEqual(registration.toWarning(isRelyingPartyTrusted: true), .relyingPartyOverasked)
+    // When
+    let warning = registration.toWarning(isRelyingPartyTrusted: true)
+
+    // Then
+    XCTAssertEqual(warning, .relyingPartyOverasked)
   }
 
   func testToWarning_WhenNotVerified_ThenReturnsNotVerifiedWarning() {
@@ -66,6 +69,7 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
   }
 
   func testToWarning_WhenRelyingPartyIsNotTrusted_ThenReturnsTheAccessCertificateWarningForEveryRegistration() {
+    // Given
     let overasked = OveraskedClaim(
       attestationType: "eu.europa.ec.eudi.pid.1",
       path: ClaimPath([.claim(name: "namespace"), .claim(name: "age")])
@@ -77,6 +81,7 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
       .notSupported
     ]
 
+    // Then
     for status in statuses {
       XCTAssertEqual(
         relyingParty(status: status).toWarning(isRelyingPartyTrusted: false),
@@ -87,6 +92,7 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
   }
 
   func testToWarning_WhenRelyingPartyIsTrusted_ThenFollowsTheRegistration() {
+    // Then
     XCTAssertNil(relyingParty(status: .notSupported).toWarning(isRelyingPartyTrusted: true))
     XCTAssertNil(
       relyingParty(status: .verified(details: details(), overaskedClaims: [])).toWarning(isRelyingPartyTrusted: true)
@@ -97,9 +103,9 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
     )
   }
 
+  /// Given a transport without registration certificates, the requester is still identified and
+  /// the badge falls back to access-certificate trust; only the certificate's sections are absent
   func testToRegistrationData_WhenNotSupported_ThenStillNamesTheRequester() {
-    // Given a transport without registration certificates, the requester is still identified and
-    // the badge falls back to access-certificate trust; only the certificate's sections are absent
     let registration = relyingParty(status: .notSupported)
 
     // When
@@ -113,9 +119,11 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
     XCTAssertNil(registration.toWarning(isRelyingPartyTrusted: true))
   }
 
+  /// Both layers must agree: a registration cannot vouch for a party the access certificate
+  /// could not authenticate
+  /// The certificate's own sections still render; only the badge is withheld.
   func testToRegistrationData_WhenRegistrationVerifiedButAccessCertificateIsNot_ThenNoBadge() {
-    // Both layers must agree: a registration cannot vouch for a party the access certificate
-    // could not authenticate
+    // Given
     let registration = RelyingPartyRegistration(
       name: "NordicBank A/S",
       uniqueId: "rp:nordicbank:prod",
@@ -124,15 +132,17 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
       registration: .verified(details: details(), overaskedClaims: [])
     )
 
+    // When
     let data = registration.toRegistrationData(fallbackName: .unknownVerifier)
 
+    // Then
     XCTAssertFalse(registration.isFullyVerified)
     XCTAssertEqual(data.primary.isVerified, false)
-    // the certificate's own sections still render — only the badge is withheld
     XCTAssertEqual(data.intendedUse, .custom("Onboarding"))
   }
 
   func testToRegistrationData_WhenNotEvaluated_ThenAccessCertificateDecidesAlone() {
+    // Given
     let trusted = relyingParty(status: .notSupported)
     let untrusted = RelyingPartyRegistration(
       name: "NordicBank A/S",
@@ -142,31 +152,39 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
       registration: .notSupported
     )
 
+    // Then
     XCTAssertTrue(trusted.isFullyVerified)
     XCTAssertFalse(untrusted.isFullyVerified)
   }
 
+  /// The party whose registration failed is the one the user most needs identified
   func testToRegistrationData_WhenNotVerified_ThenStillNamesTheRequester() {
-    // The party whose registration failed is the one the user most needs identified
+    // Given
     let registration = relyingParty(status: .notVerified(details: details()))
 
+    // When
     let data = registration.toRegistrationData(fallbackName: .unknownVerifier)
 
+    // Then
     XCTAssertEqual(data.primary.name, .custom("NordicBank A/S"))
     XCTAssertEqual(data.primary.isVerified, false)
   }
 
   func testToRegistrationData_WhenNotVerified_ThenStillDescribesTheRequester() {
+    // Given
     let registration = relyingParty(status: .notVerified(details: details()))
 
+    // When
     let data = registration.toRegistrationData(fallbackName: .unknownVerifier)
 
+    // Then
     XCTAssertEqual(data.intendedUse, .custom("Onboarding"))
     XCTAssertEqual(data.privacyPolicyUrl, URL(string: "https://nordicbank.example/privacy"))
     XCTAssertFalse(registration.isFullyVerified)
   }
 
   func testToRegistrationData_WhenThePrivacyPolicyIsNotHttps_ThenItIsNotShown() {
+    // Then
     for address in ["http://nordicbank.example/privacy", "javascript:alert(1)", "eudi-wallet://privacy"] {
       let registration = relyingParty(status: .notVerified(details: details(privacyPolicyUrl: URL(string: address))))
 
@@ -177,8 +195,10 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
   }
 
   func testToRegistrationData_WhenTheIssuersPrivacyPolicyIsNotHttps_ThenItIsNotShown() {
+    // Given
     let registration: IssuerRegistration? = .verified(details: details(privacyPolicyUrl: URL(string: "http://issuer.example/privacy")))
 
+    // Then
     XCTAssertNil(registration.toRegistrationData(issuerName: "Issuer").privacyPolicyUrl)
     XCTAssertEqual(
       Optional(IssuerRegistration.verified(details: details())).toRegistrationData(issuerName: "Issuer").privacyPolicyUrl,
@@ -187,32 +207,40 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
   }
 
   func testToRegistrationData_WhenNotVerifiedAndUndecodable_ThenOnlyTheNameSurvives() {
+    // Given
     let registration = relyingParty(status: .notVerified(details: nil))
 
+    // When
     let data = registration.toRegistrationData(fallbackName: .unknownVerifier)
 
+    // Then
     XCTAssertEqual(data.primary.name, .custom("NordicBank A/S"))
     XCTAssertNil(data.intendedUse)
     XCTAssertNil(data.privacyPolicyUrl)
   }
 
+  /// Registrar-attested and proven bound to the signer, so it outranks the certificate subject
   func testResolveRequesterName_WhenVerified_ThenTheRegistrationNameWins() {
-    // Registrar-attested and proven bound to the signer, so it outranks the certificate subject
+    // When
     let name = RegistrationStatus.verified(details: details(), overaskedClaims: [])
       .resolveRequesterName(registrationName: "NordicBank A/S", accessCertificateName: "nordicbank.example")
 
+    // Then
     XCTAssertEqual(name, "NordicBank A/S")
   }
 
+  /// An unverified registration proves nothing, and its name is the one an impersonator picks
   func testResolveRequesterName_WhenNotVerified_ThenTheAccessCertificateNameWins() {
-    // An unverified registration proves nothing, and its name is the one an impersonator picks
+    // When
     let name = RegistrationStatus.notVerified(details: nil)
       .resolveRequesterName(registrationName: "Definitely Your Bank", accessCertificateName: "nordicbank.example")
 
+    // Then
     XCTAssertEqual(name, "nordicbank.example")
   }
 
   func testResolveRequesterName_WhenNamesAreMissing_ThenFallsBackToTheOtherLayer() {
+    // Then
     XCTAssertEqual(
       RegistrationStatus.verified(details: details(), overaskedClaims: [])
         .resolveRequesterName(registrationName: nil, accessCertificateName: "nordicbank.example"),
@@ -229,54 +257,68 @@ final class TestRelyingPartyRegistrationUiModel: EudiTest {
     )
   }
 
+  /// Nothing was checked, so an unchecked certificate's name must not be shown at all
   func testResolveRequesterName_WhenNotEvaluated_ThenTheRegistrationIsIgnored() {
-    // Nothing was checked, so an unchecked certificate's name must not be shown at all
+    // When
     let name = RegistrationStatus.notSupported
       .resolveRequesterName(registrationName: "Definitely Your Bank", accessCertificateName: "nordicbank.example")
 
+    // Then
     XCTAssertEqual(name, "nordicbank.example")
   }
 
   func testIssuerToRegistrationData_WhenCertificateHasNoLogo_ThenFallsBackToIssuerMetadata() {
+    // Given
     let metadataLogo = URL(string: "https://issuer.example/logo.png")
     let registration: IssuerRegistration? = .verified(details: details())
 
+    // When
     let data = registration.toRegistrationData(issuerName: "Aegean S.A.", issuerLogo: metadataLogo)
 
+    // Then
     XCTAssertEqual(data.primary.logoUrl, metadataLogo)
   }
 
   func testIssuerToRegistrationData_WhenCertificateCarriesALogo_ThenItWinsOverMetadata() {
+    // Given
     let certificateLogo = URL(string: "https://registry.example/certified-logo.png")
     let registration: IssuerRegistration? = .verified(details: details(logoUrl: certificateLogo))
 
+    // When
     let data = registration.toRegistrationData(
       issuerName: "Aegean S.A.",
       issuerLogo: URL(string: "https://issuer.example/logo.png")
     )
 
+    // Then
     XCTAssertEqual(data.primary.logoUrl, certificateLogo)
   }
 
+  /// The offer names the issuer, so a refused registration does not erase who made the offer
   func testIssuerToRegistrationData_WhenBlocked_ThenStillNamesTheIssuer() {
-    // The offer names the issuer, so a refused registration does not erase who made the offer
+    // Given
     let registration: IssuerRegistration? = .blocked(reason: .attestationNotRegistered)
 
+    // When
     let data = registration.toRegistrationData(issuerName: "Aegean S.A.")
 
+    // Then
     XCTAssertEqual(data.primary.name, .custom("Aegean S.A."))
     XCTAssertEqual(data.primary.isVerified, false)
     XCTAssertNil(data.primary.identifier)
     XCTAssertNil(data.intendedUse)
   }
 
+  /// Validation switched off: nothing was checked, but the offer still says who is offering
   func testIssuerToRegistrationData_WhenNotEvaluated_ThenStillNamesTheIssuer() {
-    // Validation switched off: nothing was checked, but the offer still says who is offering
+    // Given
     let registration: IssuerRegistration? = nil
     let metadataLogo = URL(string: "https://issuer.example/logo.png")
 
+    // When
     let data = registration.toRegistrationData(issuerName: "Aegean S.A.", issuerLogo: metadataLogo)
 
+    // Then
     XCTAssertEqual(data.primary.name, .custom("Aegean S.A."))
     XCTAssertEqual(data.primary.logoUrl, metadataLogo)
     XCTAssertEqual(data.primary.isVerified, false)

@@ -42,6 +42,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testPrivacyPolicyFields_WhenALinkIsNotHttps_ThenItIsShownAsTextOnly() {
+    // When
     let fields = TransactionDetailsFieldUi.privacyPolicyFields(
       .init(
         registrarUrl: nil,
@@ -51,12 +52,15 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
+    // Then
     XCTAssertEqual(fields.map(\.url), [URL(string: "https://rp.example/privacy"), nil])
   }
 
   func testTransformToTransactionUI_WhenPresentation_ThenUsesPartyNameAndType() {
+    // When
     let ui = Constants.eudiRemoteVerifierMock.transformToTransactionUI()
 
+    // Then
     XCTAssertEqual(ui?.id, "transactionId1")
     XCTAssertEqual(ui?.name, "EUDI Remote Verifier")
     XCTAssertEqual(ui?.status, .completed)
@@ -64,62 +68,91 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testTransformToTransactionUI_WhenPresentationHasNoParty_ThenFallsBackToTypeLabel() {
+    // Given
     let log = TransactionLogDomain.presentation(
       .init(id: "1", time: time, result: .notCompleted(reason: nil), party: noParty, intermediary: nil, registration: nil, claimsRequested: [], claimsPresented: [])
     )
 
+    // When
     let ui = log.transformToTransactionUI()
 
+    // Then
     XCTAssertEqual(ui?.name, TransactionType.presentation.typeTitle.toString)
     XCTAssertEqual(ui?.status, .notCompleted)
   }
 
   func testTransformToTransactionUI_WhenIssuanceHasNoIssuerName_ThenUsesCredentialIdentifier() {
+    // Given
     let log = TransactionLogDomain.credentialIssuance(
       .init(id: "2", time: time, result: .completed, details: .init(issuer: noParty, requestedCount: 1, issuedCount: 1, credentials: [.init(identifier: .sdJwtPid)], isUserTriggered: nil))
     )
 
-    XCTAssertEqual(log.transformToTransactionUI()?.name, DocumentTypeIdentifier.sdJwtPid.rawValue)
-    XCTAssertEqual(log.transformToTransactionUI()?.transactionType, .issuance)
+    // When
+    let ui = log.transformToTransactionUI()
+
+    // Then
+    XCTAssertEqual(ui?.name, DocumentTypeIdentifier.sdJwtPid.rawValue)
+    XCTAssertEqual(ui?.transactionType, .issuance)
   }
 
   func testTransformToTransactionUI_WhenReissuance_ThenTypeIsReissuance() {
+    // Given
     let log = TransactionLogDomain.credentialReissuance(
       .init(id: "3", time: time, result: .completed, details: .init(issuer: .init(name: "Issuer", identifier: nil, contacts: []), requestedCount: 1, issuedCount: 1, credentials: [], isUserTriggered: false))
     )
 
-    XCTAssertEqual(log.transformToTransactionUI()?.name, "Issuer")
-    XCTAssertEqual(log.transformToTransactionUI()?.transactionType, .reissuance)
+    // When
+    let ui = log.transformToTransactionUI()
+
+    // Then
+    XCTAssertEqual(ui?.name, "Issuer")
+    XCTAssertEqual(ui?.transactionType, .reissuance)
   }
 
   func testTransformToTransactionUI_WhenDeletion_ThenTitleIsTheIssuer() {
+    // Given
     let log = TransactionLogDomain.credentialDeletion(
       .init(id: "4", time: time, result: .completed, credential: .init(identifier: .mDocPid), issuer: .init(name: "Issuer", identifier: nil, contacts: []))
     )
 
-    XCTAssertEqual(log.transformToTransactionUI()?.name, "Issuer")
-    XCTAssertEqual(log.transformToTransactionUI()?.transactionType, .deletion)
+    // When
+    let ui = log.transformToTransactionUI()
+
+    // Then
+    XCTAssertEqual(ui?.name, "Issuer")
+    XCTAssertEqual(ui?.transactionType, .deletion)
   }
 
   func testTransformToTransactionUI_WhenDeletionHasNoIssuerName_ThenUsesTheCredential() {
+    // Given
     let log = TransactionLogDomain.credentialDeletion(
       .init(id: "4", time: time, result: .completed, credential: .init(identifier: .mDocPid), issuer: noParty)
     )
 
-    XCTAssertEqual(log.transformToTransactionUI()?.name, DocumentTypeIdentifier.mDocPid.rawValue)
-    XCTAssertEqual(log.transformToTransactionUI()?.transactionType, .deletion)
+    // When
+    let ui = log.transformToTransactionUI()
+
+    // Then
+    XCTAssertEqual(ui?.name, DocumentTypeIdentifier.mDocPid.rawValue)
+    XCTAssertEqual(ui?.transactionType, .deletion)
   }
 
   func testTransformToTransactionUI_WhenSigningHasNoServiceName_ThenUsesFileName() {
+    // Given
     let log = TransactionLogDomain.signingSealing(
       .init(id: "5", time: time, result: .completed, service: noParty, signingTransactionIdentifier: nil, certificateSerialNumber: nil, fileName: "contract.pdf", fileSizeBytes: nil, dtbsr: nil)
     )
 
-    XCTAssertEqual(log.transformToTransactionUI()?.name, "contract.pdf")
-    XCTAssertEqual(log.transformToTransactionUI()?.transactionType, .signing)
+    // When
+    let ui = log.transformToTransactionUI()
+
+    // Then
+    XCTAssertEqual(ui?.name, "contract.pdf")
+    XCTAssertEqual(ui?.transactionType, .signing)
   }
 
   func testTransformToTransactionUI_WhenPresentationAction_ThenHiddenFromList() {
+    // Given
     let request = TransactionLogDomain.dataDeletionRequest(
       .init(id: "6", time: time, result: .completed, parentPresentationId: "1", party: noParty, claims: [])
     )
@@ -127,22 +160,30 @@ final class TestTransactionLogUi: EudiTest {
       .init(id: "7", time: time, result: .completed, parentPresentationId: "1", dpaName: "DPA", dpaCountry: nil)
     )
 
-    XCTAssertNil(request.transformToTransactionUI())
-    XCTAssertNil(report.transformToTransactionUI())
+    // When
+    let requestUi = request.transformToTransactionUI()
+    let reportUi = report.transformToTransactionUI()
+
+    // Then
+    XCTAssertNil(requestUi)
+    XCTAssertNil(reportUi)
   }
 
   func testTransformToTransactionUI_WhenVisibleType_ThenCarriesTheExactInstant() {
+    // Then
     for log in allTransactionKinds where log.isVisibleInTransactionList {
       XCTAssertEqual(log.transformToTransactionUI()?.transactionDate, log.time)
     }
   }
 
   func testCategory_WhenAnyHourOfToday_ThenGroupsUnderToday() {
+    // Given
     let calendar = Calendar.current
     let startOfToday = calendar.startOfDay(for: Date())
     let startOfTomorrow = calendar.date(byAdding: .day, value: 1, to: startOfToday)!
     let lastSecondOfToday = calendar.date(byAdding: .second, value: -1, to: startOfTomorrow)!
 
+    // Then
     for instant in [startOfToday, Date(), lastSecondOfToday] {
       XCTAssertEqual(
         TransactionCategory.category(for: instant),
@@ -152,15 +193,21 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testCategory_WhenMonthsAgo_ThenLabelIsThatMonthWithoutAnyShift() {
+    // Given
     let old = Calendar.current.date(byAdding: .month, value: -3, to: Date())!
 
+    // When
+    let category = TransactionCategory.category(for: old)
+
+    // Then
     XCTAssertEqual(
-      TransactionCategory.category(for: old),
+      category,
       .month(dateTime: Date.monthYearFormatter.string(from: old).uppercased())
     )
   }
 
   func testToCardData_WhenPartyHasAType_ThenItIsShownUnderTheName() {
+    // Given
     let log = TransactionLogDomain.presentation(
       .init(
         id: "1", time: time, result: .completed,
@@ -169,21 +216,29 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
+    // When
     let card = log.toUiModel().transactionDetailsCardData
 
+    // Then
     XCTAssertEqual(card.partyName, .custom("Verifier"))
     XCTAssertEqual(card.partyType, .custom("ServiceProvider"))
   }
 
   func testToCardData_WhenPartyHasNoType_ThenTheLineIsOmitted() {
+    // Given
     let log = TransactionLogDomain.credentialDeletion(
       .init(id: "4", time: time, result: .completed, credential: .init(identifier: .mDocPid), issuer: noParty)
     )
 
-    XCTAssertNil(log.toUiModel().transactionDetailsCardData.partyType)
+    // When
+    let partyType = log.toUiModel().transactionDetailsCardData.partyType
+
+    // Then
+    XCTAssertNil(partyType)
   }
 
   func testSearchTags_WhenPresentationHasIntermediary_ThenBothNamesAreSearchable() {
+    // Given
     let log = TransactionLogDomain.presentation(
       .init(
         id: "1", time: time, result: .completed,
@@ -193,18 +248,28 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
-    XCTAssertEqual(log.searchTags, ["Verifier", "Broker"])
+    // When
+    let tags = log.searchTags
+
+    // Then
+    XCTAssertEqual(tags, ["Verifier", "Broker"])
   }
 
   func testSearchTags_WhenSigning_ThenServiceAndFileNameAreSearchable() {
+    // Given
     let log = TransactionLogDomain.signingSealing(
       .init(id: "5", time: time, result: .completed, service: .init(name: "QTSP", identifier: nil, contacts: []), signingTransactionIdentifier: nil, certificateSerialNumber: nil, fileName: "contract.pdf", fileSizeBytes: nil, dtbsr: nil)
     )
 
-    XCTAssertEqual(log.searchTags, ["QTSP", "contract.pdf"])
+    // When
+    let tags = log.searchTags
+
+    // Then
+    XCTAssertEqual(tags, ["QTSP", "contract.pdf"])
   }
 
   func testSearchTags_WhenDeletion_ThenIssuerAndAttestationTypeAreSearchable() {
+    // Given
     let log = TransactionLogDomain.credentialDeletion(
       .init(
         id: "6", time: time, result: .completed,
@@ -213,10 +278,15 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
-    XCTAssertEqual(log.searchTags, ["PID Issuer", DocumentTypeIdentifier.mDocPid.rawValue])
+    // When
+    let tags = log.searchTags
+
+    // Then
+    XCTAssertEqual(tags, ["PID Issuer", DocumentTypeIdentifier.mDocPid.rawValue])
   }
 
   func testSearchTags_WhenDeletionHasNoIssuerName_ThenAttestationTypeIsSearchable() {
+    // Given
     let log = TransactionLogDomain.credentialDeletion(
       .init(
         id: "7", time: time, result: .completed,
@@ -225,17 +295,28 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
-    XCTAssertEqual(log.searchTags, [DocumentTypeIdentifier.mDocPid.rawValue])
+    // When
+    let tags = log.searchTags
+
+    // Then
+    XCTAssertEqual(tags, [DocumentTypeIdentifier.mDocPid.rawValue])
   }
 
   func testIdentifierPath_WhenSegmentsAreMixed_ThenRendersBracketedComponents() {
+    // Given
     let claim = ClaimRefDomain(segments: [.key(name: "addresses"), .allElements, .key(name: "street"), .index(2)])
 
-    XCTAssertEqual(claim.identifierPath, .custom(#"["addresses"][*]["street"][2]"#))
-    XCTAssertEqual(ClaimRefDomain(segments: []).identifierPath, .transactionDetailsUnknownClaim)
+    // When
+    let path = claim.identifierPath
+    let emptyPath = ClaimRefDomain(segments: []).identifierPath
+
+    // Then
+    XCTAssertEqual(path, .custom(#"["addresses"][*]["street"][2]"#))
+    XCTAssertEqual(emptyPath, .transactionDetailsUnknownClaim)
   }
 
   func testToUiModel_WhenIssuance_ThenShowsCountsContactsAndIssuedCredentials() {
+    // Given
     let log = TransactionLogDomain.credentialIssuance(
       .init(
         id: "2", time: time, result: .notCompleted(reason: "Not all requested credentials were issued"),
@@ -247,8 +328,10 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
+    // When
     let ui = log.toUiModel()
 
+    // Then
     XCTAssertEqual(ui.sections.map(\.id), ["credentials"])
     XCTAssertEqual(ui.sections[0].title, .transactionDetailsCredentialsIssuedSection)
     XCTAssertEqual(ui.transactionDetailsCardData.partyName, .custom("PID Provider"))
@@ -265,6 +348,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testToUiModel_WhenReissuance_ThenCountsComeBeforeTriggerAndContacts() {
+    // Given
     let log = TransactionLogDomain.credentialReissuance(
       .init(
         id: "3", time: time, result: .completed,
@@ -276,8 +360,10 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
+    // When
     let ui = log.toUiModel()
 
+    // Then
     XCTAssertTrue(ui.sections.isEmpty)
     XCTAssertEqual(
       ui.transactionDetailsCardData.details.map { $0.map(\.id) },
@@ -291,17 +377,21 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testToUiModel_WhenDeletion_ThenKeepsTheCredentialsHeading() {
+    // Given
     let log = TransactionLogDomain.credentialDeletion(
       .init(id: "4", time: time, result: .completed, credential: .init(identifier: .mDocPid), issuer: noParty)
     )
 
+    // When
     let ui = log.toUiModel()
 
+    // Then
     XCTAssertEqual(ui.sections.map(\.title), [.transactionDetailsCredentialsSection])
     XCTAssertTrue(ui.transactionDetailsCardData.details.isEmpty)
   }
 
   func testToUiModel_WhenSigning_ThenOnlyTheFilenameAndSigningIdentifierRemain() {
+    // Given
     let log = TransactionLogDomain.signingSealing(
       .init(
         id: "5", time: time, result: .completed,
@@ -311,14 +401,17 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
+    // When
     let ui = log.toUiModel()
 
+    // Then
     XCTAssertEqual(ui.sections.map(\.id), ["document"])
     XCTAssertEqual(ui.transactionDetailsCardData.details.map { $0.map(\.id) }, [["signing:identifier"]])
     XCTAssertEqual(ui.sections[0].fields.map(\.id), ["document:name"])
   }
 
   func testToUiModel_WhenPresentationRecordsTransactionData_ThenTheSigningRequestFollowsTheSharedData() {
+    // Given
     let log = TransactionLogDomain.presentation(
       .init(
         id: "1", time: time, result: .completed, party: noParty, intermediary: nil, registration: nil,
@@ -330,8 +423,10 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
+    // When
     let ui = log.toUiModel()
 
+    // Then
     XCTAssertEqual(ui.sections.map(\.id), ["requested", "shared", "transaction-data"])
     let signingRequest = ui.sections[2]
     XCTAssertEqual(signingRequest.title, .transactionDetailsSigningRequest)
@@ -350,6 +445,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testToUiModel_WhenPresentationRecordsNoTransactionData_ThenThereIsNoSigningRequest() {
+    // Given
     let log = TransactionLogDomain.presentation(
       .init(
         id: "1", time: time, result: .completed, party: noParty, intermediary: nil, registration: nil,
@@ -357,18 +453,30 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
-    XCTAssertEqual(log.toUiModel().sections.map(\.id), ["requested", "shared"])
+    // When
+    let ui = log.toUiModel()
+
+    // Then
+    XCTAssertEqual(ui.sections.map(\.id), ["requested", "shared"])
   }
 
   func testContacts_WhenTheRegistrationWasIssuedToAnotherParty_ThenOffersNoDeletionAndWarns() {
+    // Given
     let presentation = sharedPresentation(registrationCheck: .notBoundToRequester)
 
-    XCTAssertTrue(presentation.contacts(for: .requestDataDeletion).isEmpty)
-    XCTAssertFalse(presentation.contacts(for: .reportSuspiciousTransaction).isEmpty)
-    XCTAssertEqual(presentation.registrationWarning, .transactionDetailsRegistrationNotBoundWarning)
+    // When
+    let deletionContacts = presentation.contacts(for: .requestDataDeletion)
+    let reportContacts = presentation.contacts(for: .reportSuspiciousTransaction)
+    let warning = presentation.registrationWarning
+
+    // Then
+    XCTAssertTrue(deletionContacts.isEmpty)
+    XCTAssertFalse(reportContacts.isEmpty)
+    XCTAssertEqual(warning, .transactionDetailsRegistrationNotBoundWarning)
   }
 
   func testRegistrationWarning_WhenTheRegistrationWasNotVerifiedOrNotRecorded_ThenWarns() {
+    // Then
     for check in [RecordedRegistrationCheck.notVerified, .notEvaluated, nil] {
       let presentation = sharedPresentation(registrationCheck: check)
 
@@ -378,6 +486,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testRegistrationWarning_WhenOnlyAPartyIdentifierOrAnIntermediaryWasRecorded_ThenWarns() {
+    // Given
     let withIdentifier = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: "Verifier", identifier: .init(schemeUri: "scheme", value: "rp"), contacts: []),
@@ -395,16 +504,27 @@ final class TestTransactionLogUi: EudiTest {
       intermediary: nil, registration: nil, claimsRequested: [], claimsPresented: [], registrationCheck: nil
     )
 
-    XCTAssertEqual(withIdentifier.registrationWarning, LocalizableStringKey.transactionDetailsRegistrationNotVerifiedWarning)
-    XCTAssertEqual(withIntermediary.registrationWarning, LocalizableStringKey.transactionDetailsRegistrationNotVerifiedWarning)
-    XCTAssertNil(withNothing.registrationWarning)
+    // When
+    let identifierWarning = withIdentifier.registrationWarning
+    let intermediaryWarning = withIntermediary.registrationWarning
+    let nothingWarning = withNothing.registrationWarning
+
+    // Then
+    XCTAssertEqual(identifierWarning, LocalizableStringKey.transactionDetailsRegistrationNotVerifiedWarning)
+    XCTAssertEqual(intermediaryWarning, LocalizableStringKey.transactionDetailsRegistrationNotVerifiedWarning)
+    XCTAssertNil(nothingWarning)
   }
 
   func testRegistrationWarning_WhenTheRegistrationWasVerified_ThenDoesNotWarn() {
-    XCTAssertNil(sharedPresentation(registrationCheck: .verified).registrationWarning)
+    // When
+    let warning = sharedPresentation(registrationCheck: .verified).registrationWarning
+
+    // Then
+    XCTAssertNil(warning)
   }
 
   func testContacts_WhenNothingWasPresented_ThenDeletionCannotBeRequested() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .notCompleted(reason: nil),
       party: .init(name: "Verifier", identifier: nil, contacts: ["support@verifier.example", "not a contact"]),
@@ -413,14 +533,20 @@ final class TestTransactionLogUi: EudiTest {
       claimsRequested: [], claimsPresented: []
     )
 
-    XCTAssertTrue(presentation.contacts(for: .requestDataDeletion).isEmpty)
+    // When
+    let deletionContacts = presentation.contacts(for: .requestDataDeletion)
+    let reportUrls = presentation.contacts(for: .reportSuspiciousTransaction).map(\.url)
+
+    // Then
+    XCTAssertTrue(deletionContacts.isEmpty)
     XCTAssertEqual(
-      presentation.contacts(for: .reportSuspiciousTransaction).map(\.url),
+      reportUrls,
       [URL(string: "https://dpa.example")!, URL(string: "tel:+302101234567")!]
     )
   }
 
   func testToActionUiModel_WhenContactsAreMixed_ThenKindsFollowTheUrlScheme() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: "Verifier", identifier: nil, contacts: []),
@@ -429,8 +555,10 @@ final class TestTransactionLogUi: EudiTest {
       claimsRequested: [], claimsPresented: []
     )
 
+    // When
     let ui = presentation.toActionUiModel(transactionId: "1", action: .reportSuspiciousTransaction)
 
+    // Then
     guard case .contactList(let content) = ui.content else {
       return XCTFail("Expected the contact list layout for a report.")
     }
@@ -441,6 +569,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testReportScreen_WhenTheDpaHasNoName_ThenTheCardAndNamedTextsAreDropped() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: "Verifier", identifier: nil, contacts: []),
@@ -449,7 +578,11 @@ final class TestTransactionLogUi: EudiTest {
       claimsRequested: [], claimsPresented: []
     )
 
-    guard case .contactList(let content) = presentation.toActionUiModel(transactionId: "1", action: .reportSuspiciousTransaction).content else {
+    // When
+    let ui = presentation.toActionUiModel(transactionId: "1", action: .reportSuspiciousTransaction)
+
+    // Then
+    guard case .contactList(let content) = ui.content else {
       return XCTFail("Expected the contact list layout for a report.")
     }
     XCTAssertNil(content.partyName)
@@ -459,6 +592,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testReportScreen_WhenTheDpaNameIsBlank_ThenItCountsAsMissing() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: "Verifier", identifier: nil, contacts: []),
@@ -467,7 +601,11 @@ final class TestTransactionLogUi: EudiTest {
       claimsRequested: [], claimsPresented: []
     )
 
-    guard case .contactList(let content) = presentation.toActionUiModel(transactionId: "1", action: .reportSuspiciousTransaction).content else {
+    // When
+    let ui = presentation.toActionUiModel(transactionId: "1", action: .reportSuspiciousTransaction)
+
+    // Then
+    guard case .contactList(let content) = ui.content else {
       return XCTFail("Expected the contact list layout for a report.")
     }
     XCTAssertNil(content.partyName)
@@ -476,6 +614,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testDeletionScreen_WhenThePartyHasNoName_ThenTheCardAndNamedTextsAreDropped() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: nil, identifier: nil, contacts: ["https://verifier.example/erasure"]),
@@ -484,7 +623,11 @@ final class TestTransactionLogUi: EudiTest {
       claimsPresented: [.init(credential: .init(identifier: .mDocPid), claims: [])]
     )
 
-    guard case .confirmation(let content) = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion).content else {
+    // When
+    let ui = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion)
+
+    // Then
+    guard case .confirmation(let content) = ui.content else {
       return XCTFail("Expected the confirmation layout for a deletion request.")
     }
     XCTAssertNil(content.intro)
@@ -495,6 +638,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testDeletionScreen_WhenThePartyHasNoNameAndEmailIsUsed_ThenTheButtonKeepsItsTitle() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: nil, identifier: nil, contacts: ["support@verifier.example"]),
@@ -503,7 +647,11 @@ final class TestTransactionLogUi: EudiTest {
       claimsPresented: [.init(credential: .init(identifier: .mDocPid), claims: [])]
     )
 
-    guard case .confirmation(let content) = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion).content else {
+    // When
+    let ui = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion)
+
+    // Then
+    guard case .confirmation(let content) = ui.content else {
       return XCTFail("Expected the confirmation layout for a deletion request.")
     }
     XCTAssertNil(content.intro)
@@ -511,6 +659,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testDeletionScreen_WhenThereIsNoNameAndNoContact_ThenTheUnavailableNoticeStays() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: nil, identifier: nil, contacts: []),
@@ -519,7 +668,11 @@ final class TestTransactionLogUi: EudiTest {
       claimsPresented: [.init(credential: .init(identifier: .mDocPid), claims: [])]
     )
 
-    guard case .confirmation(let content) = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion).content else {
+    // When
+    let ui = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion)
+
+    // Then
+    guard case .confirmation(let content) = ui.content else {
       return XCTFail("Expected the confirmation layout for a deletion request.")
     }
     XCTAssertEqual(content.intro, .transactionDetailsActionUnavailable)
@@ -528,6 +681,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testContacts_WhenSeveralMethodsExist_ThenWebsiteComesFirstAndPhoneLast() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: "Verifier", identifier: nil, contacts: ["+30 210 1234567", "support@verifier.example", "https://verifier.example/erasure"]),
@@ -536,8 +690,10 @@ final class TestTransactionLogUi: EudiTest {
       claimsPresented: [.init(credential: .init(identifier: .mDocPid), claims: [])]
     )
 
+    // When
     let ui = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion)
 
+    // Then
     XCTAssertEqual(ui.contacts.map(\.channel), [.website, .email, .phone])
     guard case .confirmation(let content) = ui.content else {
       return XCTFail("Expected the confirmation layout for a deletion request.")
@@ -548,6 +704,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testDeletionScreen_WhenThereIsNoWebsite_ThenEmailIsPreferredOverPhone() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: "Verifier", identifier: nil, contacts: ["+30 210 1234567", "support@verifier.example"]),
@@ -556,7 +713,11 @@ final class TestTransactionLogUi: EudiTest {
       claimsPresented: [.init(credential: .init(identifier: .mDocPid), claims: [])]
     )
 
-    guard case .confirmation(let content) = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion).content else {
+    // When
+    let ui = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion)
+
+    // Then
+    guard case .confirmation(let content) = ui.content else {
       return XCTFail("Expected the confirmation layout for a deletion request.")
     }
     XCTAssertEqual(content.contact?.channel, .email)
@@ -564,6 +725,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testDeletionScreen_WhenOnlyAPhoneExists_ThenItIsUsed() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: "Verifier", identifier: nil, contacts: ["+30 210 1234567"]),
@@ -572,7 +734,11 @@ final class TestTransactionLogUi: EudiTest {
       claimsPresented: [.init(credential: .init(identifier: .mDocPid), claims: [])]
     )
 
-    guard case .confirmation(let content) = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion).content else {
+    // When
+    let ui = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion)
+
+    // Then
+    guard case .confirmation(let content) = ui.content else {
       return XCTFail("Expected the confirmation layout for a deletion request.")
     }
     XCTAssertEqual(content.contact?.channel, .phone)
@@ -581,6 +747,7 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testDeletionScreen_WhenNoContactIsRecorded_ThenTheButtonIsDisabled() {
+    // Given
     let presentation = TransactionLogDomain.Presentation(
       id: "1", time: time, result: .completed,
       party: .init(name: "Verifier", identifier: nil, contacts: []),
@@ -589,7 +756,11 @@ final class TestTransactionLogUi: EudiTest {
       claimsPresented: [.init(credential: .init(identifier: .mDocPid), claims: [])]
     )
 
-    guard case .confirmation(let content) = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion).content else {
+    // When
+    let ui = presentation.toActionUiModel(transactionId: "1", action: .requestDataDeletion)
+
+    // Then
+    guard case .confirmation(let content) = ui.content else {
       return XCTFail("Expected the confirmation layout for a deletion request.")
     }
     XCTAssertNil(content.contact)
@@ -599,16 +770,20 @@ final class TestTransactionLogUi: EudiTest {
   }
 
   func testWithMailContent_WhenMailto_ThenSubjectAndBodyAreEncoded() {
+    // When
     let url = URL(string: "mailto:support@verifier.example")!.withMailContent(subject: "Request — A+B", body: "Line 1\nLine 2")
+    let unchanged = URL(string: "https://dpa.example")!.withMailContent(subject: "s", body: "b")
 
+    // Then
     XCTAssertEqual(url.scheme, "mailto")
     XCTAssertTrue(url.absoluteString.hasPrefix("mailto:support@verifier.example?subject="))
     XCTAssertTrue(url.absoluteString.contains("A%2BB"))
     XCTAssertTrue(url.absoluteString.contains("Line%201%0ALine%202"))
-    XCTAssertEqual(URL(string: "https://dpa.example")!.withMailContent(subject: "s", body: "b"), URL(string: "https://dpa.example"))
+    XCTAssertEqual(unchanged, URL(string: "https://dpa.example"))
   }
 
   func testToUiModel_WhenPresentationHasRegistration_ThenRelyingPartyAndAuthoritySectionsAreFilled() {
+    // Given
     let log = TransactionLogDomain.presentation(
       .init(
         id: "1", time: time, result: .completed,
@@ -621,8 +796,10 @@ final class TestTransactionLogUi: EudiTest {
       )
     )
 
+    // When
     let ui = log.toUiModel()
 
+    // Then
     XCTAssertEqual(ui.sections.map(\.id), ["requested", "shared"])
     let groups = ui.transactionDetailsCardData.details
     XCTAssertEqual(

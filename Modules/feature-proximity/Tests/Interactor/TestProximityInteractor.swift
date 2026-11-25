@@ -91,8 +91,10 @@ final class TestProximityInteractor: EudiTest {
     stub(presentationSessionCoordinator) { mock in
       when(mock.initialize()).thenDoNothing()
     }
+
     // When
     let state = await interactor.onDeviceEngagement()
+
     // Then
     switch state {
     case .success:
@@ -109,12 +111,14 @@ final class TestProximityInteractor: EudiTest {
     stub(presentationSessionCoordinator) { mock in
       when(mock.initialize()).thenThrow(expectedError)
     }
+
     // When
     let state = await interactor.onDeviceEngagement()
+
     // Then
     switch state {
     case .failure(let error):
-      XCTAssertEqual(expectedError.localizedDescription, error.localizedDescription)
+      XCTAssertEqual(error.localizedDescription, expectedError.localizedDescription)
     default:
       XCTFail("Wrong state \(state)")
     }
@@ -132,8 +136,10 @@ final class TestProximityInteractor: EudiTest {
     stub(presentationSessionCoordinator) { mock in
       when(mock.getStream()).thenReturn(stream)
     }
+
     // When
     let state = await interactor.getSessionStatePublisher()
+
     // Then
     switch state {
     case .success:
@@ -146,6 +152,7 @@ final class TestProximityInteractor: EudiTest {
   func testGetCoordinator_WhenCoordinatorIsValid_ThenVerifyStateSuccess() async {
     // When
     let state = await interactor.getCoordinator()
+
     // Then
     switch state {
     case .success:
@@ -156,8 +163,10 @@ final class TestProximityInteractor: EudiTest {
   }
   
   func testGetCoordinator_WhenBuilt_ThenReturnsTheCoordinatorOfItsRoute() async {
+    // When
     let state = await interactor.getCoordinator()
 
+    // Then
     guard case .success(let coordinator) = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -170,6 +179,7 @@ final class TestProximityInteractor: EudiTest {
     stub(presentationSessionCoordinator) { mock in
       when(mock.startQrEngagement()).thenReturn(expectedImage)
     }
+
     // When
     let state = await interactor.onQRGeneration()
     
@@ -178,7 +188,7 @@ final class TestProximityInteractor: EudiTest {
     case .success(let image):
       let imageData = try XCTUnwrap(image.pngData())
       let expectedImageData = try XCTUnwrap(expectedImage.pngData())
-      XCTAssertEqual(expectedImageData.count, imageData.count)
+      XCTAssertEqual(imageData.count, expectedImageData.count)
     default:
       XCTFail("Wrong state \(state)")
     }
@@ -192,6 +202,7 @@ final class TestProximityInteractor: EudiTest {
     stub(presentationSessionCoordinator) { mock in
       when(mock.startQrEngagement()).thenThrow(expectedError)
     }
+
     // When
     let state = await interactor.onQRGeneration()
     
@@ -215,6 +226,7 @@ final class TestProximityInteractor: EudiTest {
     stub(presentationSessionCoordinator) { mock in
       when(mock.startQrEngagement()).thenThrow(expectedError)
     }
+
     // When
     let state = await interactor.onQRGeneration()
     
@@ -232,18 +244,22 @@ final class TestProximityInteractor: EudiTest {
   }
   
   func testStopPresentation_WhenInteractorMethodCalled_ThenStopsOnlyItsOwnSession() async {
+    // Given
     let ownSession = presentationSessionCoordinator!
     stub(walletKitController) { mock in
       when(mock.stopProximityPresentation(any())).thenDoNothing()
     }
 
+    // When
     await interactor.stopPresentation()
 
+    // Then
     verify(walletKitController).stopProximityPresentation(ParameterMatcher { $0 === ownSession })
     verify(walletKitController, never()).stopPresentation()
     verify(presentationSessionCoordinator).stopPresentation()
   }
   
+  /// Proximity carries no registration certificate
   func testOnRequestReceived_WhenCoordinatorRequestReceivedReturnsSuccess_ThenVerifySuccessState() async {
     
     // Given
@@ -267,7 +283,6 @@ final class TestProximityInteractor: EudiTest {
       XCTAssertEqual(relyingParty, request.relyingParty)
       XCTAssertEqual(dataRequestInfo, request.dataRequestInfo)
       XCTAssertEqual(isTrusted, request.isTrusted)
-      // proximity carries no registration certificate
       XCTAssertEqual(registration.registration, .notSupported)
     default:
       XCTFail("Wrong state \(state)")
@@ -275,6 +290,7 @@ final class TestProximityInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenThePortraitIsRequested_ThenItsRowIsMarkedAsAPictureOfTheHolder() async {
+    // Given
     let request = Constants.mockPresentationRequest
     let element: (String) -> MsoMdocElement = { name in
       .init(
@@ -310,8 +326,10 @@ final class TestProximityInteractor: EudiTest {
     }
     stubRevokedDocumentStatuses(with: [])
 
+    // When
     let state = await interactor.onRequestReceived()
 
+    // Then
     guard case .success(let combinations, _, _, _, _) = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -329,6 +347,7 @@ final class TestProximityInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenTwoDocumentSetsSatisfyTheRequest_ThenOffersBoth() async {
+    // Given
     let single = Self.mockPresentationRequest
     let request = PresentationRequest(
       itemSets: single.itemSets + single.itemSets,
@@ -348,8 +367,10 @@ final class TestProximityInteractor: EudiTest {
 
     stubRevokedDocumentStatuses(with: [])
 
+    // When
     let state = await interactor.onRequestReceived()
 
+    // Then
     switch state {
     case .success(let uimodels, let relyingParty, let dataRequestInfo, let isTrusted, let registration):
       XCTAssertEqual(uimodels, [RequestCombinationUiModel(documents: expectedUiModels), RequestCombinationUiModel(documents: expectedUiModels)])
@@ -363,6 +384,7 @@ final class TestProximityInteractor: EudiTest {
   }
   
   func testOnRequestReceived_WhenReaderIsNotAuthenticated_ThenStateIsUntrusted() async {
+    // Given
     let trusted = Self.mockPresentationRequest
     let request = PresentationRequest(
       itemSets: trusted.itemSets,
@@ -399,8 +421,10 @@ final class TestProximityInteractor: EudiTest {
     }
     stubRevokedDocumentStatuses(with: [])
 
+    // When
     let state = await interactor.onRequestReceived()
 
+    // Then
     switch state {
     case .success(_, let relyingParty, _, let isTrusted, _):
       XCTAssertEqual(relyingParty, "Self-signed reader")
@@ -503,7 +527,7 @@ final class TestProximityInteractor: EudiTest {
     }
   }
   
-  func testOnSendResponse_WhenCoordinatorPresentationStateIsResponseToSend_ThenverifySuccessState() async {
+  func testOnSendResponse_WhenCoordinatorPresentationStateIsResponseToSend_ThenVerifySuccessState() async {
     // Given
     let presetationState: PresentationState = .responseToSend(Self.mockRequestItems)
     
@@ -608,6 +632,7 @@ final class TestProximityInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenTheRevocationRecordsCannotBeRead_ThenFails() async {
+    // Given
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(Self.mockPresentationRequest)
     }
@@ -615,8 +640,10 @@ final class TestProximityInteractor: EudiTest {
       when(mock.fetchRevokedDocumentStatuses()).thenThrow(RuntimeError.genericError)
     }
 
+    // When
     let state = await interactor.onRequestReceived()
 
+    // Then
     switch state {
     case .failure:
       break
@@ -626,11 +653,13 @@ final class TestProximityInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenTheDocumentIsSuspendedOrUnrecognised_ThenItIsLeftOut() async {
+    // Given
     let docIds = Self.mockPresentationRequest.itemSets.flatMap { $0 }.map(\.docId)
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(Self.mockPresentationRequest)
     }
 
+    // Then
     for status in [DocumentRevocationStatus.suspended, .unrecognised] {
       stubRevokedDocumentStatuses(with: docIds, as: status)
 

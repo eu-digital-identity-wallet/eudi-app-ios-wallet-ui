@@ -40,20 +40,26 @@ final class TestDocumentSuccessViewModel: EudiTest {
 
   @MainActor
   func testOnDone_WhenTheVerifierRedirectsToAWebPage_ThenOpensItAndReturnsToItsScreen() throws {
+    // Given
     let redirect = try XCTUnwrap(URL(string: "https://verifier.example/done"))
 
+    // When
     makeViewModel(redirect: redirect).onDone()
 
+    // Then
     XCTAssertEqual(opened.urls, [redirect])
     verify(router).popTo(with: equal(to: AppRoute.featureDashboardModule(.dashboard)))
   }
 
   @MainActor
   func testOnDone_WhenTheVerifierRedirectsToAWalletLink_ThenOpensNothingAndReturnsToItsScreen() throws {
+    // Given
     let redirect = try XCTUnwrap(URL(string: "openid-credential-offer://?credential_offer_uri=https://issuer.example"))
 
+    // When
     makeViewModel(redirect: redirect).onDone()
 
+    // Then
     XCTAssertTrue(opened.urls.isEmpty)
     verify(router).popTo(with: equal(to: AppRoute.featureDashboardModule(.dashboard)))
     verify(router, never()).push(with: any())

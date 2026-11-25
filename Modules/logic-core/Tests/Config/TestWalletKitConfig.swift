@@ -21,10 +21,18 @@ import logic_business
 final class TestWalletKitConfig: EudiTest {
 
   func testLogFileName_WhenTheBuildIsDebug_ThenWritesTheLogFile() {
-    XCTAssertEqual(WalletKitConfigImpl.logFileName(for: .DEBUG), WalletKitConfigImpl.debugLogFileName)
+    // When
+    let fileName = WalletKitConfigImpl.logFileName(for: .DEBUG)
+
+    // Then
+    XCTAssertEqual(fileName, WalletKitConfigImpl.debugLogFileName)
   }
 
   func testLogFileName_WhenTheBuildIsRelease_ThenWritesNoLogFile() {
-    XCTAssertNil(WalletKitConfigImpl.logFileName(for: .RELEASE))
+    // When
+    let fileName = WalletKitConfigImpl.logFileName(for: .RELEASE)
+
+    // Then
+    XCTAssertNil(fileName)
   }
 }

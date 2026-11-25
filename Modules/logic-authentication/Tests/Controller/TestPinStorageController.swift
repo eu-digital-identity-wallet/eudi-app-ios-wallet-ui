@@ -39,14 +39,14 @@ final class TestPinStorageController: EudiTest {
   }
   
   func testHasPin_WhenAPinIsStored_ThenReturnsTrue() throws {
-    //Given
+    // Given
     let expected = true
     stubHasPin(expected: expected)
     
     // When
     let result = try controller.hasPin()
     
-    //Then
+    // Then
     XCTAssertEqual(result, expected, "The hasPin result should match the expected value.")
   }
   
@@ -75,20 +75,24 @@ final class TestPinStorageController: EudiTest {
   }
 
   func testHasPin_WhenProviderReadFails_ThenThrowsTheProviderError() {
+    // Given
     stub(provider) { mock in
       when(mock.hasPin()).thenThrow(KeyChainError.readFailed(status: errSecInteractionNotAllowed))
     }
 
+    // Then
     XCTAssertThrowsError(try controller.hasPin()) { error in
       XCTAssertEqual(error as? KeyChainError, .readFailed(status: errSecInteractionNotAllowed))
     }
   }
 
   func testSetPin_WhenProviderWriteFails_ThenThrowsTheProviderError() {
+    // Given
     stub(provider) { mock in
       when(mock.setPin(with: any())).thenThrow(KeyChainError.writeFailed(status: errSecNotAvailable))
     }
 
+    // Then
     XCTAssertThrowsError(try controller.setPin(with: "1111")) { error in
       XCTAssertEqual(error as? KeyChainError, .writeFailed(status: errSecNotAvailable))
     }

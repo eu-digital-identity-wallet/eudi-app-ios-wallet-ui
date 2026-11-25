@@ -151,7 +151,7 @@ final class TestPresentationTransactionDataDomain: EudiTest {
     )
   }
 
-  func testToPresentationTransactionDataDomain_whenQesApproval_thenMapsEveryField() throws {
+  func testToPresentationTransactionDataDomain_WhenQesApproval_ThenMapsEveryField() throws {
     // When
     let domain = try transaction(approvalJson).payload.toPresentationTransactionDataDomain()
 
@@ -159,7 +159,7 @@ final class TestPresentationTransactionDataDomain: EudiTest {
     XCTAssertEqual(domain, expectedApproval)
   }
 
-  func testToPresentationTransactionDataDomain_whenQesRequest_thenMapsTheReferencedDocument() throws {
+  func testToPresentationTransactionDataDomain_WhenQesRequest_ThenMapsTheReferencedDocument() throws {
     // When
     let domain = try transaction(requestJson).payload.toPresentationTransactionDataDomain()
 
@@ -167,7 +167,7 @@ final class TestPresentationTransactionDataDomain: EudiTest {
     XCTAssertEqual(domain, expectedRequest)
   }
 
-  func testToPresentationTransactionDataDomain_whenAnotherType_thenIsUnavailable() throws {
+  func testToPresentationTransactionDataDomain_WhenAnotherType_ThenIsUnavailable() throws {
     // When
     let domain = try transaction(customJson).payload.toPresentationTransactionDataDomain()
 
@@ -175,7 +175,7 @@ final class TestPresentationTransactionDataDomain: EudiTest {
     XCTAssertEqual(domain, .unavailable)
   }
 
-  func testTransactionDataDomains_whenTheSetCarriesTransactions_thenKeepsThemPerDocumentInOrder() throws {
+  func testTransactionDataDomains_WhenTheSetCarriesTransactions_ThenKeepsThemPerDocumentInOrder() throws {
     // Given
     let set = DisclosedDocumentSet(
       docElements: [],
@@ -191,7 +191,7 @@ final class TestPresentationTransactionDataDomain: EudiTest {
     XCTAssertEqual(domains, ["pid-document": [expectedApproval, expectedRequest]])
   }
 
-  func testTransactionDataDomains_whenTheSetHasNoTransactions_thenIsEmpty() {
+  func testTransactionDataDomains_WhenTheSetHasNoTransactions_ThenIsEmpty() {
     // Given
     let set = DisclosedDocumentSet(docElements: [], warnings: nil)
 
@@ -202,7 +202,7 @@ final class TestPresentationTransactionDataDomain: EudiTest {
     XCTAssertTrue(domains.isEmpty)
   }
 
-  func testToPresentationTransactionDataDomains_whenTheTypesAreSupported_thenReadsEachRecordedTransaction() throws {
+  func testToPresentationTransactionDataDomains_WhenTheTypesAreSupported_ThenReadsEachRecordedTransaction() throws {
     // Given
     let malformedApproval = """
       { "type": "https://cloudsignatureconsortium.org/2025/qes-approval", "credential_ids": ["pid"] }
@@ -216,7 +216,7 @@ final class TestPresentationTransactionDataDomain: EudiTest {
     XCTAssertEqual(domains, [expectedApproval, .unavailable, expectedRequest])
   }
 
-  func testToPresentationTransactionDataDomains_whenNoTypeIsSupported_thenEveryTransactionIsUnavailable() throws {
+  func testToPresentationTransactionDataDomains_WhenNoTypeIsSupported_ThenEveryTransactionIsUnavailable() throws {
     // Given
     let recorded = try recordedData([approvalJson, requestJson])
 
@@ -227,7 +227,7 @@ final class TestPresentationTransactionDataDomain: EudiTest {
     XCTAssertEqual(domains, [.unavailable, .unavailable])
   }
 
-  func testToTransactionLogDomain_whenThePresentationRecordsTransactionData_thenMapsIt() throws {
+  func testToTransactionLogDomain_WhenThePresentationRecordsTransactionData_ThenMapsIt() throws {
     // Given
     let entry = TransactionEntry.presentation(
       .init(
@@ -254,7 +254,7 @@ final class TestPresentationTransactionDataDomain: EudiTest {
     XCTAssertEqual(presentation.transactionData, [expectedApproval])
   }
 
-  func testToTransactionLogDomain_whenThePresentationRecordsNoTransactionData_thenHasNone() {
+  func testToTransactionLogDomain_WhenThePresentationRecordsNoTransactionData_ThenHasNone() {
     // Given
     let entry = TransactionEntry.presentation(
       .init(

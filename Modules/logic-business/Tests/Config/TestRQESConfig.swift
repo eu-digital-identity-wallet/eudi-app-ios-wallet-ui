@@ -39,8 +39,11 @@ final class TestRQESConfig: EudiTest {
     // Given
     let configLogic = ConfigLogicImpl()
 
+    // When
+    let rqesConfig = configLogic.rqesConfig
+
     // Then
-    XCTAssertNil(configLogic.rqesConfig.transactionLogger)
+    XCTAssertNil(rqesConfig.transactionLogger)
   }
 
   func testRssps_WhenBuilt_ThenSigningServiceHasAName() {

@@ -25,6 +25,7 @@ final class TestDocumentDetailsViewModel: EudiTest {
 
   @MainActor
   func testIssueNewDocument_WhenTheDocumentIsBlocked_ThenTheRefusalHasNoRetryAndClosingItReloadsTheDetails() async {
+    // Given
     let interactor = MockDocumentDetailsInteractor()
     let reloaded = expectation(description: "details reloaded")
     stub(interactor) { mock in
@@ -36,26 +37,35 @@ final class TestDocumentDetailsViewModel: EudiTest {
     }
     let viewModel = DocumentDetailsViewModel(router: MockRouterHost(), interactor: interactor, documentId: "pid")
 
+    // When
     viewModel.issueNewDocument()
     let error = await waitForError(in: viewModel)
 
+    // Then
     XCTAssertNotNil(error)
     XCTAssertNil(error?.action)
+
+    // When
     error?.cancelAction()
+
+    // Then
     await fulfillment(of: [reloaded], timeout: 5)
   }
 
   @MainActor
   func testIssueNewDocument_WhenTheReIssueFailsOtherwise_ThenTheErrorOffersARetry() async {
+    // Given
     let interactor = MockDocumentDetailsInteractor()
     stub(interactor) { mock in
       when(mock.reIssueDocument(identifier: any())).thenReturn(.failure(WalletCoreError.unableFetchDocument))
     }
     let viewModel = DocumentDetailsViewModel(router: MockRouterHost(), interactor: interactor, documentId: "pid")
 
+    // When
     viewModel.issueNewDocument()
     let error = await waitForError(in: viewModel)
 
+    // Then
     XCTAssertNotNil(error?.action)
   }
 }

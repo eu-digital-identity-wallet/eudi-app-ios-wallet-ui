@@ -21,20 +21,26 @@ import logic_resources
 final class TestPresentationRequest: EudiTest {
 
   func testRelyingPartyName_WhenTheRelyingPartyAuthenticated_ThenIsTheNameInItsCertificate() {
-    XCTAssertEqual(PresentationRequest.relyingPartyName(certificateName: "Reader CN", isTrusted: true), "Reader CN")
+    // When
+    let name = PresentationRequest.relyingPartyName(certificateName: "Reader CN", isTrusted: true)
+
+    // Then
+    XCTAssertEqual(name, "Reader CN")
   }
 
   func testRelyingPartyName_WhenTheRelyingPartyDidNotAuthenticate_ThenIsTheGenericName() {
-    XCTAssertEqual(
-      PresentationRequest.relyingPartyName(certificateName: "Reader CN", isTrusted: false),
-      LocalizableStringKey.unknownVerifier.toString
-    )
+    // When
+    let name = PresentationRequest.relyingPartyName(certificateName: "Reader CN", isTrusted: false)
+
+    // Then
+    XCTAssertEqual(name, LocalizableStringKey.unknownVerifier.toString)
   }
 
   func testRelyingPartyName_WhenTheCertificateHasNoName_ThenIsTheGenericName() {
-    XCTAssertEqual(
-      PresentationRequest.relyingPartyName(certificateName: nil, isTrusted: true),
-      LocalizableStringKey.unknownVerifier.toString
-    )
+    // When
+    let name = PresentationRequest.relyingPartyName(certificateName: nil, isTrusted: true)
+
+    // Then
+    XCTAssertEqual(name, LocalizableStringKey.unknownVerifier.toString)
   }
 }

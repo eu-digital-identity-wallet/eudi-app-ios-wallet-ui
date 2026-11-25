@@ -16,7 +16,6 @@
 import Combine
 @testable import logic_business
 @testable import logic_test
-import Testing
 
 final class TestFilterValidator: EudiTest {
   var filterValidator: FilterValidator!
@@ -31,31 +30,30 @@ final class TestFilterValidator: EudiTest {
     super.tearDown()
   }
 
-  func testInitializeValidator() async {
+  func testInitializeValidator_WhenInitialised_ThenKeepsTheAppliedFilters() async {
     // Given
     let expectedFilters = filtersWithSingleSelection
     let expectedFilterableList = filterableList
 
+    // When
     await filterValidator.initializeValidator(
       filters: expectedFilters,
       filterableList: expectedFilterableList
     )
 
-    // When
+    // Then
     guard let filterValidatorImpl = filterValidator as? FilterValidatorImpl else {
       XCTFail("FilterValidator should be of type FilterValidatorImpl")
       return
     }
     let appliedFilters = await filterValidatorImpl.appliedFiltersForTesting
-
-    // Then
     XCTAssertEqual(
       appliedFilters.filterGroups.count,
       expectedFilters.filterGroups.count
     )
   }
 
-  func testInitializeValidator_whenApplyFilters_ThenEmitsFilterApplyResult() async {
+  func testInitializeValidator_WhenApplyFilters_ThenEmitsFilterApplyResult() async {
     // Given
     let expectedFilters = filtersWithSingleSelection
     let expectedFilterableList = filterableList
@@ -73,6 +71,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -109,6 +108,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -145,6 +145,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -183,6 +184,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -220,6 +222,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -259,6 +262,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -293,6 +297,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -324,6 +329,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -337,7 +343,7 @@ final class TestFilterValidator: EudiTest {
     }
   }
 
-  func testApplySearchWhenQueryProvidedThenEmitsFilterApplyResult() async {
+  func testApplySearch_WhenQueryIsProvided_ThenEmitsFilterApplyResult() async {
     // Given
     let expectedFilters = filtersWithMultipleSelectionAllSelected
     let expectedFilterableList = filterableList
@@ -355,6 +361,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -386,6 +393,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -424,6 +432,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -462,6 +471,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -493,6 +503,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -524,6 +535,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -558,6 +570,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -595,6 +608,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(let result):
       switch result {
@@ -611,8 +625,9 @@ final class TestFilterValidator: EudiTest {
     }
   }
 
+  /// A `SingleSelectionFilterGroup` whose every filter is unselected: `applySingleSelectionFilter` falls through to return `.init(items: [])`.
   func testApplyFilters_WhenSingleSelectionGroupHasNoSelectedFilter_ThenEmitsEmptyList() async {
-    // Given: SingleSelectionFilterGroup whose every filter is unselected
+    // Given
     let unselectedFilters: [FilterItem] = [
       FilterItem(id: "1", name: "PID", selected: false,
                  filterableAction: Filter<TestAttributes>(predicate: { $0.name == $1.name })),
@@ -636,7 +651,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
-    // Then: applySingleSelectionFilter falls through to return .init(items: [])
+    // Then
     switch partial {
     case .success(.filterApplyResult(let filteredList, _, _)):
       XCTAssertTrue(filteredList.items.isEmpty)
@@ -645,9 +660,9 @@ final class TestFilterValidator: EudiTest {
     }
   }
 
+  /// A `ReversibleSingleSelectionFilterGroup` with everything unselected: `applyReversibleSingleSelectionFilter` returns the original list unchanged.
   func testApplyFilters_WhenReversibleSingleSelectionHasNoSelectedFilter_ThenReturnsOriginalList() async {
-    // Given: ReversibleSingleSelectionFilterGroup with everything unselected.
-    // applyReversibleSingleSelectionFilter should return the original list unchanged.
+    // Given
     let unselectedFilters: [FilterItem] = [
       FilterItem(id: "1", name: "PID", selected: false,
                  filterableAction: Filter<TestAttributes>(predicate: { $0.name == $1.name })),
@@ -671,7 +686,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
-    // Then: result == initial list
+    // Then
     switch partial {
     case .success(.filterApplyResult(let filteredList, _, _)):
       XCTAssertEqual(filteredList.items.count, filterableList.items.count)
@@ -680,9 +695,9 @@ final class TestFilterValidator: EudiTest {
     }
   }
 
+  /// A `ReversibleMultipleSelectionFilterGroup` with everything unselected: `applyReversibleMultipleSelectionFilter` returns the original list unchanged.
   func testApplyFilters_WhenReversibleMultipleSelectionHasNoSelectedFilter_ThenReturnsOriginalList() async {
-    // Given: ReversibleMultipleSelectionFilterGroup with everything unselected.
-    // applyReversibleMultipleSelectionFilter returns the original list unchanged.
+    // Given
     let group = ReversibleMultipleSelectionFilterGroup(
       id: "rev_multi_none",
       name: "Reversible Multi Empty",
@@ -710,10 +725,9 @@ final class TestFilterValidator: EudiTest {
     }
   }
 
+  /// The same `ReversibleSingleSelectionFilterGroup` twice exercises the `case var reversibleSingleGroup as ReversibleSingleSelectionFilterGroup` branch inside `mergeFilters`.
   func testInitializeValidator_WhenCalledTwiceWithReversibleSingle_ThenMergesSelections() async {
-    // Given: same ReversibleSingleSelectionFilterGroup twice, exercises the
-    // `case var reversibleSingleGroup as ReversibleSingleSelectionFilterGroup`
-    // branch inside mergeFilters.
+    // Given
     let filters = filtersWithReversibleSingleSelection
     var stream = filterValidator.getFilterResultStream().makeAsyncIterator()
 
@@ -726,6 +740,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(.filterApplyResult(_, let updatedFilters, _)):
       XCTAssertEqual(updatedFilters.filterGroups.count, filters.filterGroups.count)
@@ -734,10 +749,9 @@ final class TestFilterValidator: EudiTest {
     }
   }
 
+  /// The same `ReversibleMultipleSelectionFilterGroup` twice exercises the `case var reversibleMultipleGroup as ReversibleMultipleSelectionFilterGroup` branch inside `mergeFilters`.
   func testInitializeValidator_WhenCalledTwiceWithReversibleMultiple_ThenMergesSelections() async {
-    // Given: same ReversibleMultipleSelectionFilterGroup twice, exercises the
-    // `case var reversibleMultipleGroup as ReversibleMultipleSelectionFilterGroup`
-    // branch inside mergeFilters.
+    // Given
     let filters = filtersWithReversibleMultipleSelection
     var stream = filterValidator.getFilterResultStream().makeAsyncIterator()
 
@@ -750,6 +764,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(.filterApplyResult(_, let updatedFilters, _)):
       XCTAssertEqual(updatedFilters.filterGroups.count, filters.filterGroups.count)
@@ -758,10 +773,9 @@ final class TestFilterValidator: EudiTest {
     }
   }
 
+  /// A `SingleSelectionFilterGroup` containing the date-range filter id: `updateDateFilters` must set `startDate` and `endDate` on the matching filter rather than toggling its selected flag.
   func testUpdateDateFilters_WhenFilterIdMatchesTransactionDateRange_ThenStartAndEndDatesAreSet() async {
-    // Given: a SingleSelectionFilterGroup containing the date-range filter id.
-    // updateDateFilters must set startDate/endDate on the matching filter
-    // rather than toggling its selected flag.
+    // Given
     let start = Date(timeIntervalSince1970: 1_000_000)
     let end = Date(timeIntervalSince1970: 2_000_000)
     let dateRangeFilter = FilterItem(
@@ -792,6 +806,7 @@ final class TestFilterValidator: EudiTest {
       return XCTFail("Expected a .success but got no events")
     }
 
+    // Then
     switch partial {
     case .success(.filterUpdateResult(let updatedFilters)):
       let updatedFilter = updatedFilters.filterGroups.first?.filters.first {

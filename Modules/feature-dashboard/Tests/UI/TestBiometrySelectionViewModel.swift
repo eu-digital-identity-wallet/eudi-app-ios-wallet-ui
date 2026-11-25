@@ -26,10 +26,13 @@ final class TestBiometrySelectionViewModel: EudiTest {
 
   @MainActor
   func testSwitchBiometricUnlock_WhenTurningItOnAndTheBiometricPasses_ThenTurnsItOnAndReturnsToSettings() async {
+    // Given
     let fixture = makeFixture(isBiometryEnabled: false, isEnabled: true, outcome: .authenticated)
 
+    // When
     await fixture.viewModel.switchBiometricUnlock()
 
+    // Then
     verify(fixture.interactor).setBiometrySelection(isEnabled: true)
     verify(fixture.router).popTo(with: equal(to: AppRoute.featureDashboardModule(.settingsMenu)))
     XCTAssertNil(fixture.viewModel.biometryError)
@@ -37,59 +40,79 @@ final class TestBiometrySelectionViewModel: EudiTest {
 
   @MainActor
   func testSwitchBiometricUnlock_WhenTurningItOff_ThenTurnsItOffAndReturnsToSettings() async {
+    // Given
     let fixture = makeFixture(isBiometryEnabled: true, isEnabled: false, outcome: .authenticated)
 
+    // When
     await fixture.viewModel.switchBiometricUnlock()
 
+    // Then
     verify(fixture.interactor).setBiometrySelection(isEnabled: false)
     verify(fixture.router).popTo(with: equal(to: AppRoute.featureDashboardModule(.settingsMenu)))
   }
 
   @MainActor
   func testSwitchBiometricUnlock_WhenTheSettingIsAlreadyWhatWasAskedFor_ThenChangesNothing() async {
+    // Given
     let fixture = makeFixture(isBiometryEnabled: true, isEnabled: true, outcome: .authenticated)
 
+    // When
     await fixture.viewModel.switchBiometricUnlock()
 
+    // Then
     verify(fixture.interactor, never()).setBiometrySelection(isEnabled: any())
     verify(fixture.router).popTo(with: any())
   }
 
   @MainActor
   func testSwitchBiometricUnlock_WhenCalledAgain_ThenSwitchesOnce() async {
+    // Given
     let fixture = makeFixture(isBiometryEnabled: false, isEnabled: true, outcome: .authenticated)
 
+    // When
     await fixture.viewModel.switchBiometricUnlock()
     await fixture.viewModel.switchBiometricUnlock()
 
+    // Then
     verify(fixture.interactor, times(1)).setBiometrySelection(isEnabled: any())
   }
 
   @MainActor
   func testSwitchBiometricUnlock_WhenTheBiometricIsCancelledOrNotMatched_ThenReturnsWithNoError() async {
+    // Given
     let fixture = makeFixture(isBiometryEnabled: false, isEnabled: true, outcome: .failure(.biometricError))
 
+    // When
     await fixture.viewModel.switchBiometricUnlock()
 
+    // Then
     verify(fixture.router).popTo(with: any())
     XCTAssertNil(fixture.viewModel.biometryError)
   }
 
   @MainActor
   func testSwitchBiometricUnlock_WhenBiometricsCannotBeUsed_ThenShowsTheErrorUntilTheUserLeaves() async {
+    // Given
     let fixture = makeFixture(isBiometryEnabled: false, isEnabled: true, outcome: .failure(.noFaceIdEnrolled))
 
+    // When
     await fixture.viewModel.switchBiometricUnlock()
 
+    // Then
     XCTAssertEqual(fixture.viewModel.biometryError, .noFaceIdEnrolled)
     XCTAssertFalse(fixture.viewModel.viewState.isLoading)
     verify(fixture.router, never()).popTo(with: any())
+
+    // When
     fixture.viewModel.onCancel()
+
+    // Then
     verify(fixture.router).popTo(with: any())
   }
 
   @MainActor
   func testSwitchBiometricUnlock_WhenTheSettingsAreNoLongerOnTheStack_ThenClosesThisScreen() async {
+    // Given
     let fixture = makeFixture(
       isBiometryEnabled: false,
       isEnabled: true,
@@ -97,14 +120,17 @@ final class TestBiometrySelectionViewModel: EudiTest {
       isSettingsOnTheStack: false
     )
 
+    // When
     await fixture.viewModel.switchBiometricUnlock()
 
+    // Then
     verify(fixture.router, never()).popTo(with: any())
     verify(fixture.router).pop()
   }
 
   @MainActor
   func testSwitchBiometricUnlock_WhenAnotherScreenIsInFrontAndNoSettings_ThenClosesNothing() async {
+    // Given
     let fixture = makeFixture(
       isBiometryEnabled: false,
       isEnabled: true,
@@ -113,8 +139,10 @@ final class TestBiometrySelectionViewModel: EudiTest {
       isInFront: false
     )
 
+    // When
     await fixture.viewModel.switchBiometricUnlock()
 
+    // Then
     verify(fixture.router, never()).popTo(with: any())
     verify(fixture.router, never()).pop()
   }

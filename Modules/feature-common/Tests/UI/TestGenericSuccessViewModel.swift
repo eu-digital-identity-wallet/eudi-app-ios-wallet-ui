@@ -22,22 +22,28 @@ final class TestGenericSuccessViewModel: EudiTest {
 
   @MainActor
   func testOnButtonClicked_WhenTheButtonOpensAWebPage_ThenOpensItAndReturnsToItsScreen() throws {
+    // Given
     let redirect = try XCTUnwrap(URL(string: "https://verifier.example/done"))
     let fixture = makeFixture(redirect: redirect)
 
+    // When
     fixture.viewModel.onButtonClicked(with: fixture.button)
 
+    // Then
     XCTAssertEqual(fixture.opened.urls, [redirect])
     verify(fixture.router).popTo(with: equal(to: AppRoute.featureDashboardModule(.dashboard)))
   }
 
   @MainActor
   func testOnButtonClicked_WhenTheButtonOpensAWalletLink_ThenOpensNothingAndReturnsToItsScreen() throws {
+    // Given
     let redirect = try XCTUnwrap(URL(string: "rqes://callback?code=abc"))
     let fixture = makeFixture(redirect: redirect)
 
+    // When
     fixture.viewModel.onButtonClicked(with: fixture.button)
 
+    // Then
     XCTAssertTrue(fixture.opened.urls.isEmpty)
     verify(fixture.router).popTo(with: equal(to: AppRoute.featureDashboardModule(.dashboard)))
   }

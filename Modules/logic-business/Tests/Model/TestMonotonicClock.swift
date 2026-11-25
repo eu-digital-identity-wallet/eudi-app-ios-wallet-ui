@@ -20,31 +20,46 @@ import XCTest
 final class TestMonotonicClock: EudiTest {
 
   func testNow_WhenReadTwice_ThenNeverGoesBack() {
+    // When
     let first = MonotonicClock.now()
     let second = MonotonicClock.now()
 
+    // Then
     XCTAssertGreaterThan(first, 0)
     XCTAssertGreaterThanOrEqual(second, first)
   }
 
   func testBootSessionIdentifier_WhenReadTwice_ThenIsTheSameNonEmptyValue() {
-    XCTAssertFalse(MonotonicClock.bootSessionIdentifier.isEmpty)
-    XCTAssertEqual(MonotonicClock.bootSessionIdentifier, MonotonicClock.bootSessionIdentifier)
+    // When
+    let first = MonotonicClock.bootSessionIdentifier
+    let second = MonotonicClock.bootSessionIdentifier
+
+    // Then
+    XCTAssertFalse(first.isEmpty)
+    XCTAssertEqual(first, second)
   }
 
   func testNow_WhenTimePasses_ThenAdvancesInSeconds() async throws {
+    // Given
     let start = MonotonicClock.now()
 
+    // When
     try await Task.sleep(seconds: 0.05)
     let elapsed = MonotonicClock.now() - start
 
+    // Then
     XCTAssertGreaterThanOrEqual(elapsed, 0.04)
     XCTAssertLessThan(elapsed, 5)
   }
 
   func testNow_WhenRead_ThenIsTheMonotonicClockInSeconds() {
+    // Given
     let reference = TimeInterval(clock_gettime_nsec_np(CLOCK_MONOTONIC)) / 1_000_000_000
 
-    XCTAssertEqual(MonotonicClock.now(), reference, accuracy: 1)
+    // When
+    let now = MonotonicClock.now()
+
+    // Then
+    XCTAssertEqual(now, reference, accuracy: 1)
   }
 }

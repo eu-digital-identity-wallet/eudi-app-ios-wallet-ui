@@ -53,7 +53,7 @@ final class TestScannerInteractor: EudiTest {
     // When
     let result = await interactor.validateForm(form: form)
 
-    //Then
+    // Then
     XCTAssertEqual(result, expected)
     verify(formValidator).validateForm(form: any())
   }
@@ -71,7 +71,7 @@ final class TestScannerInteractor: EudiTest {
     // When
     let result = await interactor.validateForms(forms: [form])
 
-    //Then
+    // Then
     XCTAssertEqual(result, expected)
     verify(formValidator).validateForms(forms: any())
   }

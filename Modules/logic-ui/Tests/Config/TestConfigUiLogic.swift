@@ -23,6 +23,7 @@ final class TestConfigUiLogic: EudiTest {
   private let configUiLogic = ConfigUiLogicImpl(themeConfiguration: .default)
 
   func testIsProtectedFlow_WhenTheScreenBelongsToAnIssuancePresentationOrSigning_ThenIsTrue() {
+    // Given
     let remote = MockRemoteSessionCoordinator(session: PresentationSession.fixture)
     let proximity = MockProximitySessionCoordinator(session: PresentationSession.fixture)
     let dashboard = AppRoute.featureDashboardModule(.dashboard)
@@ -54,25 +55,36 @@ final class TestConfigUiLogic: EudiTest {
       .featureCommonModule(.biometry(config: NoConfig()))
     ]
 
+    // Then
     for route in routes {
       XCTAssertTrue(configUiLogic.isProtectedFlow(route), route.info.key)
     }
   }
 
   func testHideContentWhileCaptured_WhenNotConfigured_ThenIsOff() {
-    XCTAssertFalse(configUiLogic.hideContentWhileCaptured)
+    // When
+    let result = configUiLogic.hideContentWhileCaptured
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testIsProtectedFlow_WhenTheScreenIsTheProximityQrScreen_ThenIsFalse() {
+    // Given
     let proximity = MockProximitySessionCoordinator(session: PresentationSession.fixture)
     let route = AppRoute.featureProximityModule(
       .proximityConnection(presentationCoordinator: proximity, originator: .featureDashboardModule(.dashboard))
     )
 
-    XCTAssertFalse(configUiLogic.isProtectedFlow(route))
+    // When
+    let result = configUiLogic.isProtectedFlow(route)
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testIsProtectedFlow_WhenTheScreenIsOutsideSuchAFlowOrMissing_ThenIsFalse() {
+    // Given
     let routes: [AppRoute] = [
       .featureDashboardModule(.dashboard),
       .featureDashboardModule(.documentDetails(id: "id")),
@@ -81,6 +93,7 @@ final class TestConfigUiLogic: EudiTest {
       .featureCommonModule(.quickPin(config: NoConfig()))
     ]
 
+    // Then
     for route in routes {
       XCTAssertFalse(configUiLogic.isProtectedFlow(route), route.info.key)
     }
@@ -88,6 +101,7 @@ final class TestConfigUiLogic: EudiTest {
   }
 
   func testIsLoginRoute_WhenTheScreenIsStartUpLoginPinCreationOrTheTrustMark_ThenIsTrue() {
+    // Given
     let routes: [AppRoute] = [
       .featureStartupModule(.startup),
       .featureCommonModule(.biometry(config: NoConfig())),
@@ -95,12 +109,14 @@ final class TestConfigUiLogic: EudiTest {
       .featureCommonModule(.trustMark(config: NoConfig()))
     ]
 
+    // Then
     for route in routes {
       XCTAssertTrue(configUiLogic.isLoginRoute(route), route.info.key)
     }
   }
 
   func testIsLoginRoute_WhenTheScreenShowsWalletContent_ThenIsFalse() {
+    // Given
     let routes: [AppRoute] = [
       .featureDashboardModule(.dashboard),
       .featureDashboardModule(.documentDetails(id: "id")),
@@ -109,12 +125,17 @@ final class TestConfigUiLogic: EudiTest {
       .featureDashboardModule(.biometrySelection(isEnabled: true))
     ]
 
+    // Then
     for route in routes {
       XCTAssertFalse(configUiLogic.isLoginRoute(route), route.info.key)
     }
   }
 
   func testUserImageClaimKeys_WhenNotConfigured_ThenAreThePortraitAndThePicture() {
-    XCTAssertEqual(configUiLogic.userImageClaimKeys, ["portrait", "picture"])
+    // When
+    let result = configUiLogic.userImageClaimKeys
+
+    // Then
+    XCTAssertEqual(result, ["portrait", "picture"])
   }
 }

@@ -43,6 +43,7 @@ final class TestQuickPinViewModel: EudiTest {
 
   @MainActor
   func testPinCreation_WhenThePinIsSet_ThenUnlocksTheSessionBeforeTheSuccessScreen() async throws {
+    // Given
     let unlocked = RecordingFlag()
     let shown = expectation(description: "success screen after the unlock")
     stub(interactor) { mock in
@@ -56,13 +57,16 @@ final class TestQuickPinViewModel: EudiTest {
     }
     let viewModel = makeViewModel(flow: .setWithoutActivation)
 
+    // When
     try await enterTwice("135792", in: viewModel)
 
+    // Then
     await fulfillment(of: [shown], timeout: 3)
   }
 
   @MainActor
   func testPinCreation_WhenSettingThePinFails_ThenDoesNotUnlock() async throws {
+    // Given
     let pinSet = expectation(description: "PIN set")
     let unlocked = expectation(description: "session unlocked or success screen shown")
     unlocked.isInverted = true
@@ -79,14 +83,17 @@ final class TestQuickPinViewModel: EudiTest {
     }
     let viewModel = makeViewModel(flow: .setWithoutActivation)
 
+    // When
     try await enterTwice("135792", in: viewModel)
 
+    // Then
     await fulfillment(of: [pinSet], timeout: 3)
     await fulfillment(of: [unlocked], timeout: 0.5)
   }
 
   @MainActor
   func testPinChange_WhenTheNewPinIsSet_ThenStoresItWithoutThePasscodeCheckAndDoesNotUnlock() async throws {
+    // Given
     let shown = expectation(description: "success screen")
     stub(interactor) { mock in
       when(mock.isPinValid(pin: any())).thenReturn(.success)
@@ -98,10 +105,13 @@ final class TestQuickPinViewModel: EudiTest {
     }
     let viewModel = makeViewModel(flow: .update)
 
+    // When
     try await enter("135792", in: viewModel)
     try await enterTwice("246813", in: viewModel)
 
     await fulfillment(of: [shown], timeout: 3)
+
+    // Then
     verify(interactor).updatePin(newPin: "246813")
     verify(interactor, never()).setPin(newPin: any())
     verify(interactor, never()).unlockSession()
@@ -109,11 +119,16 @@ final class TestQuickPinViewModel: EudiTest {
 
   @MainActor
   func testSetPhase_WhenAPasscodeWasSetInTheDeviceSettings_ThenTheNoticeGoesAndEntryIsAllowed() async {
+    // Given
     stub(interactor) { mock in
       when(mock.getDeviceLockState()).thenReturn(.required)
     }
     let viewModel = makeViewModel(flow: .setWithoutActivation)
+
+    // When
     await viewModel.initialize()
+
+    // Then
     XCTAssertTrue(viewModel.viewState.isDeviceLockRequired)
 
     stub(interactor) { mock in
@@ -127,14 +142,17 @@ final class TestQuickPinViewModel: EudiTest {
 
   @MainActor
   func testPinCreation_WhenThePinIsEasyToGuess_ThenRefusesItAtEntry() async throws {
+    // Given
     stub(interactor) { mock in
       when(mock.getDeviceLockState()).thenReturn(.secure)
       when(mock.checkNewPin(any())).thenReturn(.failure(AuthenticationError.quickPinWeak))
     }
     let viewModel = makeViewModel(flow: .setWithoutActivation)
 
+    // When
     try await enter("123456", in: viewModel)
 
+    // Then
     XCTAssertEqual(viewModel.viewState.pinError, .custom(AuthenticationError.quickPinWeak.errorMessage))
     guard case .firstInput = viewModel.viewState.step else {
       return XCTFail("Moved past the first entry")
@@ -143,14 +161,17 @@ final class TestQuickPinViewModel: EudiTest {
 
   @MainActor
   func testPinCreation_WhenAPasscodeIsRequiredAndMissing_ThenAcceptsNoPin() async throws {
+    // Given
     stub(interactor) { mock in
       when(mock.getDeviceLockState()).thenReturn(.required)
     }
     let viewModel = makeViewModel(flow: .setWithoutActivation)
     await viewModel.initialize()
 
+    // When
     try await enter("135792", in: viewModel)
 
+    // Then
     XCTAssertEqual(viewModel.viewState.deviceLockNotice, .quickPinDeviceLockRequiredWarning)
     verify(interactor, never()).checkNewPin(any())
     guard case .firstInput = viewModel.viewState.step else {

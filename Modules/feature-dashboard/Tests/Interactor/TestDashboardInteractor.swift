@@ -43,42 +43,54 @@ final class TestDashboardInteractor: EudiTest {
   }
   
   func testLoadDocuments_WhenCalled_ThenTheWalletLoadsItsDocuments() async {
+    // Given
     stub(walletKitController) { mock in
       when(mock.loadDocuments()).thenDoNothing()
     }
 
+    // When
     await interactor.loadDocuments()
 
+    // Then
     verify(walletKitController).loadDocuments()
   }
 
   func testLoadDocuments_WhenLoadingFails_ThenSwallowsTheError() async {
+    // Given
     stub(walletKitController) { mock in
       when(mock.loadDocuments()).thenThrow(WalletCoreError.unableFetchDocument)
     }
 
+    // When
     await interactor.loadDocuments()
 
+    // Then
     verify(walletKitController).loadDocuments()
   }
 
   func testReconcileRegistrations_WhenCalled_ThenTheControllerReconcilesThem() async {
+    // Given
     stub(walletKitController) { mock in
       when(mock.reconcileRegistrations()).thenDoNothing()
     }
 
+    // When
     await interactor.reconcileRegistrations()
 
+    // Then
     verify(walletKitController).reconcileRegistrations()
   }
 
   func testStartWorkers_WhenCalled_ThenSchedulesTheBackgroundChecks() async {
+    // Given
     stub(walletWorkScheduler) { mock in
       when(mock.schedule()).thenDoNothing()
     }
 
+    // When
     await interactor.startWorkers()
 
+    // Then
     verify(walletWorkScheduler).schedule()
   }
 }

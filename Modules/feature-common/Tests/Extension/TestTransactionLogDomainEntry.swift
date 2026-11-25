@@ -35,8 +35,10 @@ final class TestTransactionLogDomainEntry: EudiTest {
   }
 
   func testToDataDeletionRequestEntry_WhenBuilt_ThenListsOnlyPresentedClaimsAndParty() throws {
+    // When
     let entry = presentation.toDataDeletionRequestEntry(id: "ddr-1", time: time)
 
+    // Then
     guard case .dataDeletionRequest(let request) = entry else {
       return XCTFail("Expected a data deletion request")
     }
@@ -51,8 +53,10 @@ final class TestTransactionLogDomainEntry: EudiTest {
   }
 
   func testToDpaReportEntry_WhenBuilt_ThenCarriesTheAuthority() throws {
+    // When
     let entry = presentation.toDpaReportEntry(id: "dpar-1", time: time)
 
+    // Then
     guard case .dpaReport(let report) = entry else {
       return XCTFail("Expected a DPA report")
     }
@@ -62,10 +66,13 @@ final class TestTransactionLogDomainEntry: EudiTest {
   }
 
   func testActionEntries_WhenStoredWithAChannel_ThenTheChannelIsReadBack() throws {
+    // Given
     let entry = presentation.toDataDeletionRequestEntry(id: "ddr-3", time: time)
 
+    // When
     let stored = try entry.toTransactionLogStorage(parentPresentationId: "tx-1", actionChannel: .email)
 
+    // Then
     XCTAssertEqual(stored.actionChannel, "email")
     guard case .dataDeletionRequest(let request)? = stored.toTransactionLogDomain() else {
       return XCTFail("Expected a data deletion request")
@@ -75,8 +82,10 @@ final class TestTransactionLogDomainEntry: EudiTest {
   }
 
   func testActionEntries_WhenStoredWithoutAChannel_ThenTheChannelIsNil() throws {
+    // When
     let stored = try presentation.toDpaReportEntry(id: "dpar-3", time: time).toTransactionLogStorage(parentPresentationId: "tx-1")
 
+    // Then
     guard case .dpaReport(let report)? = stored.toTransactionLogDomain() else {
       return XCTFail("Expected a DPA report")
     }
@@ -85,6 +94,7 @@ final class TestTransactionLogDomainEntry: EudiTest {
   }
 
   func testChannel_WhenBuiltFromAContactUrl_ThenFollowsTheScheme() throws {
+    // Then
     XCTAssertEqual(TransactionActionChannel(url: URL(string: "tel:+302101234567")!), .phone)
     XCTAssertEqual(TransactionActionChannel(url: URL(string: "mailto:a@b.com")!), .email)
     XCTAssertEqual(TransactionActionChannel(url: URL(string: "https://dpa.example")!), .website)
@@ -92,8 +102,10 @@ final class TestTransactionLogDomainEntry: EudiTest {
   }
 
   func testActionEntries_WhenStoredUnderTheParent_ThenReadBackAsActions() throws {
+    // When
     let stored = try presentation.toDataDeletionRequestEntry(id: "ddr-2", time: time).toTransactionLogStorage(parentPresentationId: "tx-1")
 
+    // Then
     guard case .dataDeletionRequest(let request)? = stored.toTransactionLogDomain() else {
       return XCTFail("Expected a data deletion request")
     }

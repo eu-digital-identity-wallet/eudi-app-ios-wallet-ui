@@ -23,34 +23,35 @@ final class TestOfferIssuer: EudiTest {
   private let configured = ["https://issuer.example", "https://backend.example:8443"]
 
   func testOf_WhenTheOfferByValueNamesAConfiguredIssuer_ThenReturnsIt() {
+    // When
     let issuer = OfferIssuer.of(offerUri: byValue(issuer: "https://issuer.example"), configuredIssuers: configured)
 
+    // Then
     XCTAssertEqual(issuer, .configured("https://issuer.example"))
   }
 
   func testOf_WhenTheOfferByValueNamesAnotherIssuer_ThenIsNotConfigured() {
-    XCTAssertEqual(
-      OfferIssuer.of(offerUri: byValue(issuer: "https://attacker.example"), configuredIssuers: configured),
-      .notConfigured
-    )
-    XCTAssertEqual(
-      OfferIssuer.of(offerUri: byValue(issuer: "https://issuer.example/"), configuredIssuers: configured),
-      .notConfigured
-    )
+    // When
+    let attacker = OfferIssuer.of(offerUri: byValue(issuer: "https://attacker.example"), configuredIssuers: configured)
+    let trailingSlash = OfferIssuer.of(offerUri: byValue(issuer: "https://issuer.example/"), configuredIssuers: configured)
+
+    // Then
+    XCTAssertEqual(attacker, .notConfigured)
+    XCTAssertEqual(trailingSlash, .notConfigured)
   }
 
   func testOf_WhenTheOfferByReferenceIsOnAConfiguredIssuersOrigin_ThenReturnsThatIssuer() {
-    XCTAssertEqual(
-      OfferIssuer.of(offerUri: byReference("https://ISSUER.example/offers/1"), configuredIssuers: configured),
-      .configured("https://issuer.example")
-    )
-    XCTAssertEqual(
-      OfferIssuer.of(offerUri: byReference("https://backend.example:8443/offer"), configuredIssuers: configured),
-      .configured("https://backend.example:8443")
-    )
+    // When
+    let mixedCaseHost = OfferIssuer.of(offerUri: byReference("https://ISSUER.example/offers/1"), configuredIssuers: configured)
+    let withPort = OfferIssuer.of(offerUri: byReference("https://backend.example:8443/offer"), configuredIssuers: configured)
+
+    // Then
+    XCTAssertEqual(mixedCaseHost, .configured("https://issuer.example"))
+    XCTAssertEqual(withPort, .configured("https://backend.example:8443"))
   }
 
   func testOf_WhenTheOfferByReferenceIsElsewhereOrNotHttps_ThenIsNotConfigured() {
+    // Then
     for address in [
       "https://attacker.example/offer",
       "http://issuer.example/offer",
@@ -66,7 +67,10 @@ final class TestOfferIssuer: EudiTest {
   }
 
   func testOf_WhenTheLinkCarriesNoOfferOrMoreThanOne_ThenIsUnreadable() {
+    // Given
     let both = byValue(issuer: "https://issuer.example") + "&credential_offer_uri=https://issuer.example/o"
+
+    // Then
     for link in ["openid-credential-offer://?foo=bar", both, byReference("https://issuer.example/a") + "&CREDENTIAL_OFFER_URI=x"] {
       XCTAssertEqual(OfferIssuer.of(offerUri: link, configuredIssuers: configured), .unreadable, link)
     }
@@ -77,8 +81,11 @@ final class TestOfferIssuer: EudiTest {
   }
 
   func testOf_WhenTheOfferParameterIsNotSpelledAsTheLibraryReadsIt_ThenIsUnreadable() {
+    // Given
     let reference = encoded("https://issuer.example/offer")
     let value = encoded(offer(issuer: "https://issuer.example"))
+
+    // Then
     for link in [
       "https://attacker.example/offer?Credential_Offer_Uri=\(reference)",
       "https://attacker.example/offer?CREDENTIAL_OFFER_URI=\(reference)",
@@ -90,6 +97,7 @@ final class TestOfferIssuer: EudiTest {
   }
 
   func testOf_WhenOnlyTheLinkItselfCouldBeFetched_ThenIsUnreadable() {
+    // Then
     for link in [
       "https://issuer.example/offer",
       "https://attacker.example/offer",
@@ -101,12 +109,18 @@ final class TestOfferIssuer: EudiTest {
   }
 
   func testOf_WhenTheOfferUriIsGivenTwice_ThenIsUnreadable() {
+    // Given
     let link = byReference("https://issuer.example/a") + "&credential_offer_uri=" + encoded("https://attacker.example/b")
 
-    XCTAssertEqual(OfferIssuer.of(offerUri: link, configuredIssuers: configured), .unreadable)
+    // When
+    let issuer = OfferIssuer.of(offerUri: link, configuredIssuers: configured)
+
+    // Then
+    XCTAssertEqual(issuer, .unreadable)
   }
 
   func testRequireConfigured_WhenTheIssuerIsNotConfigured_ThenThrowsIssuerNotConfigured() {
+    // Then
     XCTAssertThrowsError(
       try OfferIssuer.requireConfigured(offerUri: byValue(issuer: "https://attacker.example"), configuredIssuers: configured)
     ) { error in
@@ -115,18 +129,22 @@ final class TestOfferIssuer: EudiTest {
   }
 
   func testRequireConfigured_WhenTheIssuerIsConfigured_ThenPasses() {
+    // Then
     XCTAssertNoThrow(
       try OfferIssuer.requireConfigured(offerUri: byValue(issuer: "https://issuer.example"), configuredIssuers: configured)
     )
   }
 
   func testByValueLink_WhenAFetchedOfferIsPassedOn_ThenTheLibraryReadsExactlyThatOffer() throws {
+    // Given
     let fetched = "{\"credential_issuer\":\"https://issuer.example\",\"credential_configuration_ids\":[\"a&b=c+d#e%20é\"]}"
 
+    // When
     let link = try XCTUnwrap(
       OfferIssuer.byValueLink(offerUri: byReference("https://issuer.example/offers/1") + "#fragment", offer: fetched)
     )
 
+    // Then
     XCTAssertTrue(link.hasPrefix("openid-credential-offer://?credential_offer="))
     XCTAssertFalse(link.contains("#"))
     guard case .passByValue(let offer) = try CredentialOfferRequest(urlString: link) else {
@@ -136,19 +154,25 @@ final class TestOfferIssuer: EudiTest {
   }
 
   func testByValueLink_WhenTheFetchedOfferNamesAConfiguredIssuer_ThenTheLinkComesFromIt() throws {
+    // When
     let link = try XCTUnwrap(
       OfferIssuer.byValueLink(offerUri: byReference("https://issuer.example/offers/1"), offer: offer(issuer: "https://issuer.example"))
     )
+    let issuer = OfferIssuer.of(offerUri: link, configuredIssuers: configured)
 
-    XCTAssertEqual(OfferIssuer.of(offerUri: link, configuredIssuers: configured), .configured("https://issuer.example"))
+    // Then
+    XCTAssertEqual(issuer, .configured("https://issuer.example"))
   }
 
   func testByValueLink_WhenTheFetchedOfferNamesAnotherIssuer_ThenTheLinkIsNotConfigured() throws {
+    // When
     let link = try XCTUnwrap(
       OfferIssuer.byValueLink(offerUri: byReference("https://issuer.example/offers/1"), offer: offer(issuer: "https://attacker.example"))
     )
+    let issuer = OfferIssuer.of(offerUri: link, configuredIssuers: configured)
 
-    XCTAssertEqual(OfferIssuer.of(offerUri: link, configuredIssuers: configured), .notConfigured)
+    // Then
+    XCTAssertEqual(issuer, .notConfigured)
   }
 }
 

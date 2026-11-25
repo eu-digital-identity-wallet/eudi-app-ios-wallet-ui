@@ -61,7 +61,7 @@ final class TestTransactionTabInteractor: EudiTest {
   }
   
   func testFetchTransactions_WhenWalletKitControllerReturnsEmptyTransactions_ThenReturnsExpectedError() async throws {
-    //Given
+    // Given
     stubFetchTransactions(with: [])
     
     // When
@@ -77,7 +77,7 @@ final class TestTransactionTabInteractor: EudiTest {
   }
   
   func testFetchTransactions_WhenWalletKitControllerReturnsData_ThenReturnsExpectedUIModels() async throws {
-    //Given
+    // Given
     stubFetchTransactions(with: [
       Constants.eudiRemoteVerifierMock
     ])
@@ -95,33 +95,43 @@ final class TestTransactionTabInteractor: EudiTest {
   }
   
   func testFetchTransactions_WhenTheHistoryDidNotChange_ThenDoesNotReadItAgain() async throws {
+    // Given
     stubFetchTransactions(with: [Constants.eudiRemoteVerifierMock])
 
+    // When
     _ = try await interactor.fetchTransactions()
     let state = try await interactor.fetchTransactions()
 
+    // Then
     guard case .success = state else { return XCTFail("Wrong state \(state)") }
     verify(walletKitController, times(1)).fetchTransactionLogs()
   }
 
   func testFetchTransactions_WhenTheLastReadFailed_ThenReadsAgain() async throws {
+    // Given
     stubFetchTransactionsWithError()
     _ = try? await interactor.fetchTransactions()
     stubFetchTransactions(with: [Constants.eudiRemoteVerifierMock])
 
+    // When
     let state = try await interactor.fetchTransactions()
 
+    // Then
     guard case .success = state else { return XCTFail("Wrong state \(state)") }
     verify(walletKitController, times(2)).fetchTransactionLogs()
   }
 
   func testFetchTransactions_WhenTheHistoryChanged_ThenReadsItAgain() async throws {
+    // Given
     stubFetchTransactions(with: [Constants.eudiRemoteVerifierMock])
 
     _ = try await interactor.fetchTransactions()
     stubTransactionLogRevision("revision-1")
+
+    // When
     _ = try await interactor.fetchTransactions()
 
+    // Then
     verify(walletKitController, times(2)).fetchTransactionLogs()
   }
 
@@ -277,9 +287,11 @@ final class TestTransactionTabInteractor: EudiTest {
   }
 
   
+  /// The underlying FilterValidator stream completes; the interactor's
+  /// .completion handler (lines 183-185) yields .cancelled and finishes.
+  /// the first (and only) emitted value is .cancelled.
   func testOnFilterChangeState_WhenStreamYieldsCompletion_ThenForwardsCancelledAndFinishes() async {
-    // Given: the underlying FilterValidator stream completes; the interactor's
-    // .completion handler (lines 183-185) yields .cancelled and finishes.
+    // Given
     stub(filterValidator) { stub in
       when(stub.getFilterResultStream()).thenReturn(AsyncStream { continuation in
         continuation.yield(.completion)
@@ -292,7 +304,7 @@ final class TestTransactionTabInteractor: EudiTest {
     var iterator = resultStream.makeAsyncIterator()
     let first = await iterator.next()
 
-    // Then: the first (and only) emitted value is .cancelled.
+    // Then
     if case .cancelled = first {
       XCTAssertTrue(true)
     } else {
@@ -300,11 +312,12 @@ final class TestTransactionTabInteractor: EudiTest {
     }
   }
 
+  /// Transactions with two distinct relying parties and one with no
+  /// party name. addDynamicFilters → addPartyNames should
+  /// produce a FILTER_BY_PARTY_NAME group containing the "none" item
+  /// plus two named items, sorted alphabetically.
   func testInitializeFilters_WhenTransactionsHaveRelyingParty_ThenRelyingPartyGroupIsPopulated() async {
-    // Given: transactions with two distinct relying parties and one with no
-    // party name. addDynamicFilters → addPartyNames should
-    // produce a FILTER_BY_PARTY_NAME group containing the "none" item
-    // plus two named items, sorted alphabetically.
+    // Given
     let txUiA = TransactionTabUIModel(
       id: "1",
       name: "Verifier A",
@@ -376,6 +389,10 @@ final class TestTransactionTabInteractor: EudiTest {
     XCTAssertTrue(filterIds.contains("Verifier B"))
   }
 
+  /// The interactor exposes an AsyncStream(bufferingPolicy: .bufferingNewest(1)),
+  /// so emitting both events back-to-back would drop the first. Drive input via
+  /// a controllable stream and read each forwarded event before emitting the next.
+  /// Emit one event, observe one forwarded event, repeat.
   func testOnFilterChangeState_WhenStreamEmitsResults_ThenProcessesResultsAsExpected() async {
     // Given
     let filterApplyResult: FilterResult = .filterApplyResult(
@@ -393,9 +410,6 @@ final class TestTransactionTabInteractor: EudiTest {
       )
     )
 
-    // The interactor exposes an AsyncStream(bufferingPolicy: .bufferingNewest(1)),
-    // so emitting both events back-to-back would drop the first. Drive input via
-    // a controllable stream and read each forwarded event before emitting the next.
     let (inputStream, inputContinuation) = AsyncStream<FilterResultPartialState>.makeStream()
     stub(filterValidator) { stub in
       when(stub.getFilterResultStream()).thenReturn(inputStream)
@@ -404,10 +418,11 @@ final class TestTransactionTabInteractor: EudiTest {
     let resultStream = await interactor.onFilterChangeState()
     var iterator = resultStream.makeAsyncIterator()
 
-    // When / Then: emit one event, observe one forwarded event, repeat.
+    // When
     inputContinuation.yield(.success(filterApplyResult))
     let first = await iterator.next()
 
+    // Then
     if case let .filterApplyResult(transactions, sections, _) = first {
       XCTAssertTrue(transactions.isEmpty)
       XCTAssertEqual(sections.count, 0)
@@ -415,9 +430,11 @@ final class TestTransactionTabInteractor: EudiTest {
       XCTFail("Expected .filterApplyResult, but got \(String(describing: first))")
     }
 
+    // When
     inputContinuation.yield(.success(filterUpdateResult))
     let second = await iterator.next()
 
+    // Then
     if case let .filterUpdateResult(sections) = second {
       XCTAssertEqual(sections.count, 0)
     } else {

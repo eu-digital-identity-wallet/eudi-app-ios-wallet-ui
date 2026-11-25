@@ -173,6 +173,7 @@ final class TestDocumentTabInteractor: EudiTest {
   }
   
   func testFetchDocuments_WhenOneIsRevokedAndOneSuspended_ThenEachShowsItsState() async {
+    // Given
     let pid = Constants.createEuPidModel()
     let mdl = Constants.createIsoMdlModel()
     stubFetchRevokedDocumentStatuses(with: [pid.id: .suspended, mdl.id: .revoked])
@@ -184,8 +185,10 @@ final class TestDocumentTabInteractor: EudiTest {
     stubRefreshCounters()
     stubIsBatchCounterEnabled()
 
+    // When
     let state = await interactor.fetchDocuments(failedDocuments: [], shouldRefreshCounters: false)
 
+    // Then
     guard case .success(let list) = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -197,6 +200,7 @@ final class TestDocumentTabInteractor: EudiTest {
   }
 
   func testFetchDocuments_WhenTheRevocationRecordsCannotBeRead_ThenEveryDocumentShowsAsBlocked() async {
+    // Given
     let pid = Constants.createEuPidModel()
     let mdl = Constants.createIsoMdlModel()
     stub(walletKitController) { mock in
@@ -210,8 +214,10 @@ final class TestDocumentTabInteractor: EudiTest {
     stubRefreshCounters()
     stubIsBatchCounterEnabled()
 
+    // When
     let state = await interactor.fetchDocuments(failedDocuments: [], shouldRefreshCounters: false)
 
+    // Then
     guard case .success(let list) = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -330,11 +336,12 @@ final class TestDocumentTabInteractor: EudiTest {
     stubInitializeValidator()
     stubUpdateLists()
     
-    //Then
+    // When
     await interactor.updateLists(
       filterableList: Self.mockFilterablelist
     )
     
+    // Then
     verify(filterValidator).updateLists(
       sortOrder: Self.sortOrderAscending,
       filterableList: Self.mockFilterablelist
@@ -475,24 +482,30 @@ final class TestDocumentTabInteractor: EudiTest {
   }
   
   func testRequestDeferredIssuance_WhenARevokedDocumentIsGoneAfterIssuance_ThenTheRevocationCheckRuns() async {
+    // Given
     stubDeferredIssuanceOfOneDocument(revocationStatuses: ["original": .revoked])
     stub(walletKitController) { stub in
       when(stub.fetchAllDocuments()).thenReturn([Constants.createEuPidModel()])
     }
 
+    // When
     _ = await interactor.requestDeferredIssuance()
 
+    // Then
     verify(walletWorkScheduler).scheduleRevocationCheck(afterReIssueOf: equal(to: "original"))
   }
 
   func testRequestDeferredIssuance_WhenEveryRevokedDocumentRemains_ThenNoRevocationCheckIsAsked() async {
+    // Given
     stubDeferredIssuanceOfOneDocument(revocationStatuses: [Constants.euPidModelId: .revoked])
     stub(walletKitController) { stub in
       when(stub.fetchAllDocuments()).thenReturn([Constants.createEuPidModel()])
     }
 
+    // When
     _ = await interactor.requestDeferredIssuance()
 
+    // Then
     verify(walletWorkScheduler, never()).scheduleRevocationCheck(afterReIssueOf: any())
   }
 
@@ -593,9 +606,10 @@ final class TestDocumentTabInteractor: EudiTest {
     )
   }
 
+  /// The underlying FilterValidator stream completes, exercising the
+  /// .completion branch (lines 118-120) which yields .cancelled and finishes.
   func testOnFilterChangeState_WhenStreamYieldsCompletion_ThenForwardsCancelledAndFinishes() async {
-    // Given: the underlying FilterValidator stream completes, exercising the
-    // .completion branch (lines 118-120) which yields .cancelled and finishes.
+    // Given
     stub(filterValidator) { stub in
       when(stub.getFilterResultStream()).thenReturn(AsyncStream { continuation in
         continuation.yield(.completion)
@@ -616,10 +630,11 @@ final class TestDocumentTabInteractor: EudiTest {
     }
   }
 
+  /// forcePidActivation=false AND fetchAllDocuments returns [] →
+  /// the short-circuit evaluates to false so the function returns .success
+  /// rather than .noDocuments.
   func testDeleteDeferredDocument_WhenEmptyDocumentsButForcePidActivationDisabled_ThenReturnsSuccess() async {
-    // Given: forcePidActivation=false AND fetchAllDocuments returns [] →
-    // the short-circuit evaluates to false so the function returns .success
-    // rather than .noDocuments.
+    // Given
     stub(configLogic) { mock in
       when(mock.forcePidActivation.get).thenReturn(false)
     }
@@ -635,10 +650,11 @@ final class TestDocumentTabInteractor: EudiTest {
     XCTAssertEqual(result, .success)
   }
 
+  /// A FilterableList where the items have DocumentFilterableAttributes
+  /// with distinct issuers and categories. addDynamicFilters → addIssuerFilter
+  /// / addCategoriesFilter should produce non-empty filter items for each.
   func testAddDynamicFilters_WhenDocumentsHaveIssuerAndCategoryAttributes_ThenPopulatesIssuerAndCategoryGroups() async {
-    // Given: a FilterableList where the items have DocumentFilterableAttributes
-    // with distinct issuers and categories. addDynamicFilters → addIssuerFilter
-    // / addCategoriesFilter should produce non-empty filter items for each.
+    // Given
     let docA = DocumentTabUIModel(
       id: "a-ui",
       value: .init(

@@ -21,62 +21,74 @@ import EudiWalletKit
 final class TestWalletKitControllerIssuerRegistration: EudiTest {
 
   func testMakeIssuerRegistration_WhenTheCheckIsOnAndNoRegistrationWasEstablished_ThenRefuses() {
+    // When
     let registration = WalletKitControllerImpl.makeIssuerRegistration(
       policy: nil,
       warnings: ["issuer": [violation(.trustError)]],
       isRegistrationChecked: true
     )
 
+    // Then
     XCTAssertEqual(registration, .blocked(reason: .notRegisteredAsProvider))
   }
 
   func testMakeIssuerRegistration_WhenTheCheckIsOff_ThenEvaluatesNothing() {
+    // When
     let registration = WalletKitControllerImpl.makeIssuerRegistration(
       policy: nil,
       warnings: nil,
       isRegistrationChecked: false
     )
 
+    // Then
     XCTAssertNil(registration)
   }
 
   func testMakeIssuerRegistration_WhenTheCheckIsOffAndARegistrationWasEvaluated_ThenEvaluatesNothing() throws {
+    // When
     let registration = WalletKitControllerImpl.makeIssuerRegistration(
       policy: try policy(),
       warnings: ["issuer": [violation(.expired)]],
       isRegistrationChecked: false
     )
 
+    // Then
     XCTAssertNil(registration)
   }
 
   func testMakeIssuerRegistration_WhenTheRegistrationRaisesAWarning_ThenRefuses() throws {
+    // When
     let registration = WalletKitControllerImpl.makeIssuerRegistration(
       policy: try policy(),
       warnings: ["issuer": [violation(.expired)]],
       isRegistrationChecked: true
     )
 
+    // Then
     XCTAssertEqual(registration, .blocked(reason: .notRegisteredAsProvider))
   }
 
   func testMakeIssuerRegistration_WhenTheOfferIsNotCovered_ThenRefusesTheAttestation() throws {
+    // When
     let registration = WalletKitControllerImpl.makeIssuerRegistration(
       policy: try policy(),
       warnings: ["issuer": [violation(.credentialNotCovered(credentialId: "pid"))]],
       isRegistrationChecked: true
     )
 
+    // Then
     XCTAssertEqual(registration, .blocked(reason: .attestationNotRegistered))
   }
 
   func testMakeIssuerRegistration_WhenTheRegistrationIsValid_ThenIsVerified() throws {
+    // When
     let registration = WalletKitControllerImpl.makeIssuerRegistration(
       policy: try policy(),
       warnings: nil,
       isRegistrationChecked: true
     )
 
+    // Then
     guard case .verified(let details) = registration else {
       return XCTFail("Expected a verified registration, got \(String(describing: registration))")
     }

@@ -20,11 +20,20 @@ import XCTest
 final class TestBlePresentationServiceExtensions: EudiTest {
 
   func testIsReaderDisconnected_WhenTheReaderHasLeft_ThenIsTrue() {
-    XCTAssertTrue(TransferStatus.disconnected.isReaderDisconnected)
+    // When
+    let hasLeft = TransferStatus.disconnected.isReaderDisconnected
+
+    // Then
+    XCTAssertTrue(hasLeft)
   }
 
   func testIsReaderDisconnected_WhenARequestIsUnderWay_ThenIsFalse() {
-    XCTAssertFalse(TransferStatus.requestReceived.isReaderDisconnected)
-    XCTAssertFalse(TransferStatus.responseSent.isReaderDisconnected)
+    // When
+    let afterRequest = TransferStatus.requestReceived.isReaderDisconnected
+    let afterResponse = TransferStatus.responseSent.isReaderDisconnected
+
+    // Then
+    XCTAssertFalse(afterRequest)
+    XCTAssertFalse(afterResponse)
   }
 }

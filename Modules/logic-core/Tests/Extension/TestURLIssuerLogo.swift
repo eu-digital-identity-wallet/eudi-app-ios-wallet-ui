@@ -22,11 +22,17 @@ final class TestURLIssuerLogo: EudiTest {
   private let origins = ["https://issuer.example", "https://eudiw.dev"]
 
   func testIsAllowedIssuerLogo_WhenOnAnAllowedOrigin_ThenIsAllowed() {
-    XCTAssertTrue(URL(string: "https://issuer.example/logo.png")!.isAllowedIssuerLogo(allowedOrigins: origins))
-    XCTAssertTrue(URL(string: "https://EUDIW.dev/img/logo.svg")!.isAllowedIssuerLogo(allowedOrigins: origins))
+    // When
+    let exactOrigin = URL(string: "https://issuer.example/logo.png")!.isAllowedIssuerLogo(allowedOrigins: origins)
+    let otherCase = URL(string: "https://EUDIW.dev/img/logo.svg")!.isAllowedIssuerLogo(allowedOrigins: origins)
+
+    // Then
+    XCTAssertTrue(exactOrigin)
+    XCTAssertTrue(otherCase)
   }
 
   func testIsAllowedIssuerLogo_WhenNotHttpsOrElsewhere_ThenIsNotAllowed() {
+    // Then
     for address in [
       "http://issuer.example/logo.png",
       "https://attacker.example/logo.png",

@@ -22,28 +22,43 @@ final class TestScreenCaptureController: EudiTest {
 
   @MainActor
   func testShouldCover_WhenTheSceneIsCaptured_ThenIsTrue() {
-    XCTAssertTrue(ScreenCaptureControllerImpl.shouldCover(isCaptured: true, isForegroundActive: true))
+    // When
+    let result = ScreenCaptureControllerImpl.shouldCover(isCaptured: true, isForegroundActive: true)
+
+    // Then
+    XCTAssertTrue(result)
   }
 
   @MainActor
   func testShouldCover_WhenTheSceneIsNotActive_ThenIsTrue() {
-    XCTAssertTrue(ScreenCaptureControllerImpl.shouldCover(isCaptured: false, isForegroundActive: false))
+    // When
+    let result = ScreenCaptureControllerImpl.shouldCover(isCaptured: false, isForegroundActive: false)
+
+    // Then
+    XCTAssertTrue(result)
   }
 
   @MainActor
   func testShouldCover_WhenTheSceneIsActiveAndNotCaptured_ThenIsFalse() {
-    XCTAssertFalse(ScreenCaptureControllerImpl.shouldCover(isCaptured: false, isForegroundActive: true))
+    // When
+    let result = ScreenCaptureControllerImpl.shouldCover(isCaptured: false, isForegroundActive: true)
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   @MainActor
   func testStart_WhenTheSettingIsOff_ThenFollowsNothingAndCoversNothing() {
+    // Given
     let scene = RecordingScene(isCaptured: true, isForegroundActive: false)
     let controller = ScreenCaptureControllerImpl(isEnabled: false)
 
+    // When
     controller.start(scenes: [scene])
     post(UIScene.willDeactivateNotification, object: scene)
     post(UIResponder.keyboardWillShowNotification, object: nil)
 
+    // Then
     XCTAssertEqual(scene.observations, 0)
     XCTAssertNil(scene.coverWindow)
     XCTAssertEqual(scene.endEditingCount, 0)
@@ -51,158 +66,202 @@ final class TestScreenCaptureController: EudiTest {
 
   @MainActor
   func testStart_WhenTheSettingIsOff_ThenTheScenesAreNotRead() {
+    // Given
     let controller = ScreenCaptureControllerImpl(isEnabled: false)
     var isRead = false
 
+    // When
     controller.start(scenes: {
       isRead = true
       return []
     }())
 
+    // Then
     XCTAssertFalse(isRead)
   }
 
   @MainActor
   func testStart_WhenTheSceneIsCapturedAndThenNot_ThenTheCoverWithItsMessageComesAndGoes() {
+    // Given
     let scene = RecordingScene()
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
     XCTAssertNil(scene.coverWindow)
 
+    // When
     scene.setCaptured(true)
+
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, false)
     XCTAssertEqual(scene.coverWindow?.isMessageShown, true)
     XCTAssertEqual(scene.endEditingCount, 1)
 
+    // When
     scene.setCaptured(false)
+
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, true)
   }
 
   @MainActor
   func testStart_WhenTheSceneIsAlreadyCaptured_ThenCoversItAtOnce() {
+    // Given
     let scene = RecordingScene(isCaptured: true)
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
 
+    // When
     controller.start(scenes: [scene])
 
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, false)
     XCTAssertEqual(scene.coverWindow?.isMessageShown, true)
   }
 
   @MainActor
   func testStart_WhenTheSceneIsNotActive_ThenCoversItWithoutTheMessageAndTheKeyboardUntilItIsActive() {
+    // Given
     let scene = RecordingScene(isForegroundActive: false)
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
+
+    // When
     controller.start(scenes: [scene])
+
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, false)
     XCTAssertEqual(scene.coverWindow?.isMessageShown, false)
     XCTAssertEqual(scene.endEditingCount, 1)
 
+    // When
     post(UIScene.didActivateNotification, object: scene)
 
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, true)
   }
 
   @MainActor
   func testStart_WhenTheSceneGoesToTheAppSwitcher_ThenCoversItWithoutTheMessage() {
+    // Given
     let scene = RecordingScene()
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
 
+    // When
     post(UIScene.willDeactivateNotification, object: scene)
 
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, false)
     XCTAssertEqual(scene.coverWindow?.isMessageShown, false)
   }
 
   @MainActor
   func testStart_WhenACapturedSceneIsActiveAgain_ThenTheCoverStays() {
+    // Given
     let scene = RecordingScene(isCaptured: true, isForegroundActive: false)
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
 
+    // When
     post(UIScene.didActivateNotification, object: scene)
 
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, false)
     XCTAssertEqual(scene.coverWindow?.isMessageShown, true)
   }
 
   @MainActor
   func testStart_WhenCaptureEndsWhileTheSceneIsNotActive_ThenTheCoverWithoutTheMessageStays() {
+    // Given
     let scene = RecordingScene(isCaptured: true)
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
 
+    // When
     post(UIScene.willDeactivateNotification, object: scene)
     scene.setCaptured(false)
 
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, false)
     XCTAssertEqual(scene.coverWindow?.isMessageShown, false)
   }
 
   @MainActor
   func testStart_WhenCaptureStartedUnheardInTheBackground_ThenTheSceneIsCoveredOnReturn() {
+    // Given
     let scene = RecordingScene()
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
     post(UIScene.willDeactivateNotification, object: scene)
 
+    // When
     scene.isCaptured = true
     post(UIScene.didActivateNotification, object: scene)
 
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, false)
     XCTAssertEqual(scene.coverWindow?.isMessageShown, true)
   }
 
   @MainActor
   func testStart_WhenAnInactiveSceneDisconnects_ThenItsCoverGoes() {
+    // Given
     let scene = RecordingScene(isForegroundActive: false)
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
 
+    // When
     post(UIScene.didDisconnectNotification, object: scene)
 
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, true)
   }
 
   @MainActor
   func testStart_WhenASceneNotFollowedYetIsActivated_ThenItIsCoveredByItsOwnStateOnly() {
+    // Given
     let scene = RecordingScene()
     let other = RecordingScene(isForegroundActive: false)
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
 
+    // When
     post(UIScene.didActivateNotification, object: other)
     controller.start(scenes: [other])
 
+    // Then
     XCTAssertEqual(other.coverWindow?.isHidden, false)
     XCTAssertEqual(other.coverWindow?.isMessageShown, false)
   }
 
   @MainActor
   func testStart_WhenASceneNotFollowedYetChanges_ThenNeitherSceneIsCovered() {
+    // Given
     let scene = RecordingScene()
     let other = RecordingScene()
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
 
+    // When
     post(UIScene.willDeactivateNotification, object: other)
     controller.start(scenes: [other])
 
+    // Then
     XCTAssertNil(scene.coverWindow)
     XCTAssertNil(other.coverWindow)
   }
 
   @MainActor
   func testStart_WhenCalledAgain_ThenFollowsOnlyTheScenesNotFollowedYet() {
+    // Given
     let first = RecordingScene()
     let second = RecordingScene()
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
 
+    // When
     controller.start(scenes: [first])
     controller.start(scenes: [first, second])
     second.setCaptured(true)
 
+    // Then
     XCTAssertEqual(first.observations, 1)
     XCTAssertEqual(second.observations, 1)
     XCTAssertNil(first.coverWindow)
@@ -211,28 +270,34 @@ final class TestScreenCaptureController: EudiTest {
 
   @MainActor
   func testStart_WhenTheSceneIsCapturedAgain_ThenTheSameCoverIsShown() {
+    // Given
     let scene = RecordingScene()
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
 
+    // When
     scene.setCaptured(true)
     scene.setCaptured(false)
     scene.setCaptured(true)
 
+    // Then
     XCTAssertEqual(scene.madeCoverWindows, 1)
     XCTAssertEqual(scene.coverWindow?.isHidden, false)
   }
 
   @MainActor
   func testStart_WhenTheKeyboardShowsInACoveredScene_ThenPutsItAway() {
+    // Given
     let captured = RecordingScene(isCaptured: true)
     let inactive = RecordingScene(isForegroundActive: false)
     let uncovered = RecordingScene()
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [captured, inactive, uncovered])
 
+    // When
     post(UIResponder.keyboardWillShowNotification, object: nil)
 
+    // Then
     XCTAssertEqual(captured.endEditingCount, 2)
     XCTAssertEqual(inactive.endEditingCount, 2)
     XCTAssertEqual(uncovered.endEditingCount, 0)
@@ -240,47 +305,59 @@ final class TestScreenCaptureController: EudiTest {
 
   @MainActor
   func testStart_WhenTheKeyboardShowsAfterTheCoverWent_ThenLeavesItThere() {
+    // Given
     let scene = RecordingScene(isCaptured: true)
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
     scene.setCaptured(false)
 
+    // When
     post(UIResponder.keyboardWillShowNotification, object: nil)
 
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, true)
     XCTAssertEqual(scene.endEditingCount, 1)
   }
 
   @MainActor
   func testStart_WhenTheSceneGoesToTheAppSwitcher_ThenPutsTheKeyboardAway() {
+    // Given
     let scene = RecordingScene()
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
 
+    // When
     post(UIScene.willDeactivateNotification, object: scene)
 
+    // Then
     XCTAssertEqual(scene.endEditingCount, 1)
   }
 
   @MainActor
   func testStart_WhenTheSceneDisconnects_ThenItsCoverGoesAndItIsNoLongerFollowed() {
+    // Given
     let scene = RecordingScene(isCaptured: true)
     let controller = ScreenCaptureControllerImpl(isEnabled: true)
     controller.start(scenes: [scene])
 
+    // When
     post(UIScene.didDisconnectNotification, object: scene)
     scene.setCaptured(true)
 
+    // Then
     XCTAssertEqual(scene.coverWindow?.isHidden, true)
     XCTAssertEqual(scene.madeCoverWindows, 1)
   }
 
   @MainActor
   func testCoverWindow_WhenShown_ThenSitsAboveAlertsKeepsVoiceOverAndNeverBecomesKey() {
+    // Given
     let window = ScreenCaptureCoverWindow(frame: .zero)
 
+    // When
     window.isHidden = false
 
+    // Then
     XCTAssertGreaterThan(window.windowLevel.rawValue, UIWindow.Level.alert.rawValue)
     XCTAssertFalse(window.canBecomeKey)
     XCTAssertTrue(window.accessibilityViewIsModal)

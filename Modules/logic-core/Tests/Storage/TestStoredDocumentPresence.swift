@@ -23,37 +23,51 @@ import Security
 final class TestStoredDocumentPresence: EudiTest {
 
   func testHasDocuments_WhenNoStatusHasAnItem_ThenIsFalseAfterAQueryPerStatus() throws {
+    // Given
     let queries = RecordingKeychainQueries()
     let presence = StoredDocumentPresence(serviceName: "svc", accessGroup: "") { query in
       queries.record(query)
       return errSecItemNotFound
     }
 
-    XCTAssertFalse(try presence.hasDocuments())
+    // When
+    let hasDocuments = try presence.hasDocuments()
+
+    // Then
+    XCTAssertFalse(hasDocuments)
     XCTAssertEqual(queries.services, ["svc:pdoc:issued", "svc:pdoc:deferred", "svc:pdoc:pending"])
   }
 
   func testHasDocuments_WhenOnlyADeferredDocumentExists_ThenIsTrue() throws {
+    // Given
     let presence = StoredDocumentPresence(serviceName: "svc", accessGroup: "") { query in
       query[kSecAttrService as String] as? String == "svc:pdoc:deferred" ? errSecSuccess : errSecItemNotFound
     }
 
-    XCTAssertTrue(try presence.hasDocuments())
+    // When
+    let hasDocuments = try presence.hasDocuments()
+
+    // Then
+    XCTAssertTrue(hasDocuments)
   }
 
   func testHasDocuments_WhenAQueryFails_ThenThrowsTheReadError() {
+    // Given
     let presence = StoredDocumentPresence(serviceName: "svc", accessGroup: "") { _ in
       errSecInteractionNotAllowed
     }
 
+    // Then
     XCTAssertThrowsError(try presence.hasDocuments()) { error in
       XCTAssertEqual(error as? KeyChainError, .readFailed(status: errSecInteractionNotAllowed))
     }
   }
 
   func testQuery_WhenBuilt_ThenMatchesTheWalletStorageItemAndReturnsNothing() {
+    // When
     let query = StoredDocumentPresence(serviceName: "svc", accessGroup: "").query(for: .issued)
 
+    // Then
     XCTAssertEqual(query[kSecAttrService as String] as? String, "svc:pdoc:issued")
     XCTAssertEqual(query[kSecClass as String] as? String, kSecClassGenericPassword as String)
     XCTAssertEqual(query[kSecUseDataProtectionKeychain as String] as? Bool, true)
@@ -64,8 +78,10 @@ final class TestStoredDocumentPresence: EudiTest {
   }
 
   func testQuery_WhenAnAccessGroupIsConfigured_ThenUsesIt() {
+    // When
     let query = StoredDocumentPresence(serviceName: "svc", accessGroup: "group").query(for: .pending)
 
+    // Then
     XCTAssertEqual(query[kSecAttrAccessGroup as String] as? String, "group")
   }
 }

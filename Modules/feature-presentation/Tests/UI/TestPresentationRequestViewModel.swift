@@ -27,91 +27,117 @@ final class TestPresentationRequestViewModel: EudiTest {
 
   @MainActor
   func testDoWork_WhenTheVerifierDidNotAuthenticate_ThenWarnsAboutItsAccessCertificate() async {
+    // Given
     let viewModel = makeViewModel(isTrusted: false)
 
+    // When
     await viewModel.doWork()
 
+    // Then
     XCTAssertEqual(viewModel.viewState.registrationWarning, .accessCertificateNotTrusted)
   }
 
   @MainActor
   func testDoWork_WhenTheVerifierAuthenticated_ThenShowsNoWarning() async {
+    // Given
     let viewModel = makeViewModel(isTrusted: true)
 
+    // When
     await viewModel.doWork()
 
+    // Then
     XCTAssertNil(viewModel.viewState.registrationWarning)
   }
 
   @MainActor
   func testOnShareClick_WhenThePortraitWouldBeShared_ThenAsksForConfirmationFirst() async {
+    // Given
     let viewModel = makeViewModel(isTrusted: true, combinations: [RequestCombinationUiModel(documents: [portraitRequest()])])
     await viewModel.doWork()
 
+    // When
     viewModel.onShareClick()
 
+    // Then
     XCTAssertTrue(viewModel.isUserImageConfirmationShowing)
     verify(interactor, never()).onResponsePrepare(combinationIndex: any())
   }
 
   @MainActor
   func testOnShareClick_WhenNoPortraitWouldBeShared_ThenSharesWithoutAConfirmation() async {
+    // Given
     let viewModel = makeViewModel(isTrusted: true, combinations: [RequestCombinationUiModel(documents: [plainRequest()])])
     await viewModel.doWork()
     let shared = expectSharing()
 
+    // When
     viewModel.onShareClick()
 
+    // Then
     XCTAssertFalse(viewModel.isUserImageConfirmationShowing)
     await fulfillment(of: [shared], timeout: 3)
   }
 
   @MainActor
   func testOnUserImageShareConfirmed_WhenTheUserConfirms_ThenTheConfirmationClosesAndSharingGoesOn() async {
+    // Given
     let viewModel = makeViewModel(isTrusted: true, combinations: [RequestCombinationUiModel(documents: [portraitRequest()])])
     await viewModel.doWork()
     viewModel.onShareClick()
     let shared = expectSharing()
 
+    // When
     viewModel.onUserImageShareConfirmed()
 
+    // Then
     XCTAssertFalse(viewModel.isUserImageConfirmationShowing)
     await fulfillment(of: [shared], timeout: 3)
   }
 
   @MainActor
   func testOnShareClick_WhenTheWarningIsNotAcknowledged_ThenDoesNotShare() async {
+    // Given
     let viewModel = makeViewModel(isTrusted: false, combinations: [RequestCombinationUiModel(documents: [plainRequest()])])
     await viewModel.doWork()
     let shared = expectSharing()
     shared.isInverted = true
 
+    // When
     viewModel.onShareClick()
 
+    // Then
     XCTAssertFalse(viewModel.canShare)
     await fulfillment(of: [shared], timeout: 0.5)
   }
 
   @MainActor
   func testOnShareClick_WhenTheWarningIsAcknowledged_ThenShares() async {
+    // Given
     let viewModel = makeViewModel(isTrusted: false, combinations: [RequestCombinationUiModel(documents: [plainRequest()])])
     await viewModel.doWork()
     viewModel.isRiskAcknowledged = true
     let shared = expectSharing()
 
+    // When
     viewModel.onShareClick()
 
+    // Then
     await fulfillment(of: [shared], timeout: 3)
   }
 
   @MainActor
   func testOnUserImageShareConfirmed_WhenSharingIsNoLongerAllowed_ThenDoesNotShare() async {
+    // Given
     let viewModel = makeViewModel(isTrusted: false, combinations: [RequestCombinationUiModel(documents: [portraitRequest()])])
     await viewModel.doWork()
     viewModel.isRiskAcknowledged = true
     let shared = expectSharing()
     shared.isInverted = true
+
+    // When
     viewModel.onShareClick()
+
+    // Then
     XCTAssertTrue(viewModel.isUserImageConfirmationShowing)
     viewModel.isRiskAcknowledged = false
 

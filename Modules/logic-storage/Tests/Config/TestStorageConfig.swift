@@ -20,10 +20,13 @@ import XCTest
 final class TestStorageConfig: EudiTest {
 
   func testStoreURL_WhenTheFolderIsMade_ThenItIsExcludedFromBackup() throws {
+    // Given
     let folder = StorageConfigImpl().storeURL.deletingLastPathComponent()
 
+    // When
     let values = try folder.resourceValues(forKeys: [.isExcludedFromBackupKey])
 
+    // Then
     XCTAssertEqual(values.isExcludedFromBackup, true)
   }
 }

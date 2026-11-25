@@ -62,13 +62,16 @@ final class TestReIssuanceWorkManager: EudiTest {
   }
 
   func testCheckReIssuance_WhenDocumentsAreRevokedSuspendedOrUnrecognised_ThenOnlyTheOthersAreReIssued() async throws {
+    // Given
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenReturn(["a": .revoked, "b": .suspended, "c": .unrecognised])
       when(mock.fetchIssuedDocuments()).thenReturn(["a", "b", "c", "d"].map { StubDocument.make(id: $0) })
     }
 
+    // When
     try await workManager.checkReIssuance()
 
+    // Then
     verify(walletKitController).reIssueDocument(identifier: equal(to: "d"), isBackgroundOperation: equal(to: true))
     for id in ["a", "b", "c"] {
       verify(walletKitController, never()).reIssueDocument(identifier: equal(to: id), isBackgroundOperation: any())
@@ -76,6 +79,7 @@ final class TestReIssuanceWorkManager: EudiTest {
   }
 
   func testCheckReIssuance_WhenADocumentIsReIssued_ThenTheRevocationCheckIsAskedAboutItsOriginal() async throws {
+    // Given
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenReturn([:])
       when(mock.fetchIssuedDocuments()).thenReturn([StubDocument.make(id: "d")])
@@ -95,31 +99,40 @@ final class TestReIssuanceWorkManager: EudiTest {
         )
     }
 
+    // When
     try await workManager.checkReIssuance()
 
+    // Then
     verify(revocationWorkManager).checkAfterReIssue(of: equal(to: "d"))
   }
 
   func testCheckReIssuance_WhenNothingIsDue_ThenTheOldFailureRecordsAreCleared() async throws {
+    // Given
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenReturn(["a": .revoked])
       when(mock.fetchIssuedDocuments()).thenReturn([StubDocument.make(id: "a")])
     }
 
+    // When
     try await workManager.checkReIssuance()
 
+    // Then
     verify(walletKitController).removeAllFailedReIssuedDocuments()
     verify(walletKitController, never()).reIssueDocument(identifier: any(), isBackgroundOperation: any())
   }
 
   func testCheckReIssuance_WhenTheRevocationRecordsCannotBeRead_ThenReIssuesNothing() async {
+    // Given
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenThrow(RuntimeError.genericError)
       when(mock.fetchIssuedDocuments()).thenReturn([StubDocument.make(id: "d")])
     }
 
+    // When
     do {
       try await workManager.checkReIssuance()
+
+      // Then
       XCTFail("Expected the round to stop")
     } catch {
       verify(walletKitController, never()).reIssueDocument(identifier: any(), isBackgroundOperation: any())
@@ -127,6 +140,7 @@ final class TestReIssuanceWorkManager: EudiTest {
   }
 
   func testCheckReIssuance_WhenTheRoundIsCancelled_ThenNoFailureIsRecorded() async {
+    // Given
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenReturn([:])
       when(mock.fetchIssuedDocuments()).thenReturn(["a", "b"].map { StubDocument.make(id: $0) })
@@ -137,12 +151,15 @@ final class TestReIssuanceWorkManager: EudiTest {
     }
     let manager = workManager!
 
+    // When
     _ = await Task { try await manager.checkReIssuance() }.result
 
+    // Then
     verify(walletKitController, never()).storeFailedReIssuedDocuments(ids: any())
   }
 
   func testStop_WhenARoundIsUnderWay_ThenReturnsOnceItHasFinished() async {
+    // Given
     let runner = SerialCheckRunner()
     let manager = ReIssuanceWorkManagerImpl(
       configLogic: walletKitConfig,
@@ -162,11 +179,13 @@ final class TestReIssuanceWorkManager: EudiTest {
     let stoppedEarly = expectation(description: "stopped while it ran")
     stoppedEarly.isInverted = true
 
+    // When
     let stopping = Task {
       await manager.stop()
       stoppedEarly.fulfill()
     }
 
+    // Then
     await fulfillment(of: [stoppedEarly], timeout: 0.5)
     await gate.open()
     await stopping.value

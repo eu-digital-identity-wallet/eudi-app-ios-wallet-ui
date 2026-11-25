@@ -26,7 +26,8 @@ final class TestPresentationPolicyViolationOverasking: EudiTest {
   private let nameSpace = "eu.europa.ec.eudi.pid.1"
   private let vct = "urn:eu.europa.ec.eudi:pid:1"
 
-  func testToOveraskedClaims_whenViolationListsClaims_thenEachPathBecomesAClaim() {
+  func testToOveraskedClaims_WhenViolationListsClaims_ThenEachPathBecomesAClaim() {
+    // Given
     let violations = [
       overaskingViolation(
         docType: pidDocType,
@@ -34,88 +35,120 @@ final class TestPresentationPolicyViolationOverasking: EudiTest {
       )
     ]
 
+    // When
     let claims = violations.toOveraskedClaims()
 
+    // Then
     XCTAssertEqual(claims.count, 2)
     XCTAssertTrue(claims.contains(overaskedClaim(pidDocType, [nameSpace, "family_name"])))
     XCTAssertTrue(claims.contains(overaskedClaim(pidDocType, [nameSpace, "age_over_18"])))
   }
 
-  func testToOveraskedClaims_whenViolationListsNoClaims_thenTheWholeAttestationIsOverasked() {
+  func testToOveraskedClaims_WhenViolationListsNoClaims_ThenTheWholeAttestationIsOverasked() {
+    // Given
     let violations = [overaskingViolation(docType: pidDocType, paths: nil)]
 
+    // When
     let claims = violations.toOveraskedClaims()
 
+    // Then
     XCTAssertEqual(claims, [OveraskedClaim(attestationType: pidDocType, path: nil)])
   }
 
-  func testToOveraskedClaims_whenViolationIsNotAboutOverasking_thenItIsIgnored() {
+  func testToOveraskedClaims_WhenViolationIsNotAboutOverasking_ThenItIsIgnored() {
+    // Given
     let violations = [
       PresentationPolicyViolation(reason: .expired, message: "expired"),
       PresentationPolicyViolation(reason: .trustError, message: "untrusted")
     ]
 
-    XCTAssertTrue(violations.toOveraskedClaims().isEmpty)
+    // When
+    let result = violations.toOveraskedClaims().isEmpty
+
+    // Then
+    XCTAssertTrue(result)
   }
 
-  func testToOveraskedClaims_whenTheSameClaimIsReportedTwice_thenItIsKeptOnce() {
+  func testToOveraskedClaims_WhenTheSameClaimIsReportedTwice_ThenItIsKeptOnce() {
+    // Given
     let violations = [
       overaskingViolation(docType: pidDocType, paths: [[nameSpace, "family_name"]]),
       overaskingViolation(docType: pidDocType, paths: [[nameSpace, "family_name"]])
     ]
 
-    XCTAssertEqual(violations.toOveraskedClaims().count, 1)
+    // When
+    let result = violations.toOveraskedClaims().count
+
+    // Then
+    XCTAssertEqual(result, 1)
   }
 
-  func testOveraskedPaths_whenNothingIsOverasked_thenNoDocumentIsMarked() {
+  func testOveraskedPaths_WhenNothingIsOverasked_ThenNoDocumentIsMarked() {
+    // Given
     let documents = [mdocElements(docId: "doc-1", claims: ["family_name", "given_name"])]
 
-    XCTAssertTrue(documents.overaskedPaths(from: []).isEmpty)
+    // When
+    let result = documents.overaskedPaths(from: []).isEmpty
+
+    // Then
+    XCTAssertTrue(result)
   }
 
-  func testOveraskedPaths_whenSomeClaimsAreOverasked_thenOnlyThoseAreMarked() {
+  func testOveraskedPaths_WhenSomeClaimsAreOverasked_ThenOnlyThoseAreMarked() {
+    // Given
     let documents = [mdocElements(docId: "doc-1", claims: ["family_name", "age_over_18"])]
 
+    // When
     let overasked = documents.overaskedPaths(
       from: [overaskedClaim(pidDocType, [nameSpace, "age_over_18"])]
     )
 
+    // Then
     XCTAssertEqual(overasked, ["doc-1": [[nameSpace, "age_over_18"]]])
   }
 
-  func testOveraskedPaths_whenTheAttestationItselfIsNotRegistered_thenEveryClaimIsMarked() {
+  func testOveraskedPaths_WhenTheAttestationItselfIsNotRegistered_ThenEveryClaimIsMarked() {
+    // Given
     let documents = [mdocElements(docId: "doc-1", claims: ["family_name", "age_over_18"])]
 
+    // When
     let overasked = documents.overaskedPaths(
       from: [OveraskedClaim(attestationType: pidDocType, path: nil)]
     )
 
+    // Then
     XCTAssertEqual(
       overasked,
       ["doc-1": [[nameSpace, "family_name"], [nameSpace, "age_over_18"]]]
     )
   }
 
-  func testOveraskedPaths_whenTheClaimBelongsToAnotherAttestation_thenNothingIsMarked() {
+  func testOveraskedPaths_WhenTheClaimBelongsToAnotherAttestation_ThenNothingIsMarked() {
+    // Given
     let documents = [mdocElements(docId: "doc-1", claims: ["family_name"])]
 
+    // When
     let overasked = documents.overaskedPaths(
       from: [overaskedClaim("org.iso.18013.5.1.mDL", [nameSpace, "family_name"])]
     )
 
+    // Then
     XCTAssertTrue(overasked.isEmpty)
   }
 
-  func testOveraskedPaths_whenTheSameClaimIsRenderedByTwoDocuments_thenBothAreMarked() {
+  func testOveraskedPaths_WhenTheSameClaimIsRenderedByTwoDocuments_ThenBothAreMarked() {
+    // Given
     let documents = [
       mdocElements(docId: "doc-1", claims: ["family_name"]),
       mdocElements(docId: "doc-2", claims: ["family_name"])
     ]
 
+    // When
     let overasked = documents.overaskedPaths(
       from: [overaskedClaim(pidDocType, [nameSpace, "family_name"])]
     )
 
+    // Then
     XCTAssertEqual(
       overasked,
       [
@@ -125,7 +158,8 @@ final class TestPresentationPolicyViolationOverasking: EudiTest {
     )
   }
 
-  func testOveraskedPaths_whenTheOveraskedPathIsAnAncestor_thenItsLeavesAreMarked() {
+  func testOveraskedPaths_WhenTheOveraskedPathIsAnAncestor_ThenItsLeavesAreMarked() {
+    // Given
     let documents = [
       sdJwtElements(
         docId: "doc-1",
@@ -146,22 +180,29 @@ final class TestPresentationPolicyViolationOverasking: EudiTest {
       )
     ]
 
+    // When
     let overasked = documents.overaskedPaths(from: [overaskedClaim(vct, ["address"])])
 
+    // Then
     XCTAssertEqual(overasked, ["doc-1": [["address", "street"]]])
   }
 
-  func testOveraskedPaths_whenTheOveraskedPathIsAMemberOfAnObjectShownWhole_thenItsRowIsMarked() {
+  func testOveraskedPaths_WhenTheOveraskedPathIsAMemberOfAnObjectShownWhole_ThenItsRowIsMarked() {
+    // Given
     let documents = [sdJwtElements(docId: "doc-1", claim: leafClaim(["place_of_birth"]))]
 
+    // When
     let overasked = documents.overaskedPaths(from: [overaskedClaim(vct, ["place_of_birth", "country"])])
 
+    // Then
     XCTAssertEqual(overasked, ["doc-1": [["place_of_birth"]]])
   }
 
-  func testOveraskedPaths_whenTheOveraskedPathSelectsEveryArrayElement_thenTheArrayRowIsMarked() {
+  func testOveraskedPaths_WhenTheOveraskedPathSelectsEveryArrayElement_ThenTheArrayRowIsMarked() {
+    // Given
     let documents = [sdJwtElements(docId: "doc-1", claim: leafClaim(["nationalities"]))]
 
+    // When
     let overasked = documents.overaskedPaths(
       from: [
         OveraskedClaim(
@@ -171,10 +212,12 @@ final class TestPresentationPolicyViolationOverasking: EudiTest {
       ]
     )
 
+    // Then
     XCTAssertEqual(overasked, ["doc-1": [["nationalities"]]])
   }
 
-  func testOveraskedPaths_whenTheOveraskedPathIsASibling_thenTheRowIsNotMarked() {
+  func testOveraskedPaths_WhenTheOveraskedPathIsASibling_ThenTheRowIsNotMarked() {
+    // Given
     let documents = [
       sdJwtElements(
         docId: "doc-1",
@@ -188,8 +231,10 @@ final class TestPresentationPolicyViolationOverasking: EudiTest {
       )
     ]
 
+    // When
     let overasked = documents.overaskedPaths(from: [overaskedClaim(vct, ["address", "locality"])])
 
+    // Then
     XCTAssertTrue(overasked.isEmpty)
   }
 }

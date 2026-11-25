@@ -68,9 +68,11 @@ final class TestStartupInteractor: EudiTest {
     stubHasStoredDocuments(false)
     stubHasPin(with: false)
     stubRunAtLeastOnce()
+
     // When
     let state = await interactor.initialize(with: .zero)
     let route = try XCTUnwrap(successRoute(from: state))
+
     // Then
     switch route {
     case .featureCommonModule(let module):
@@ -94,9 +96,11 @@ final class TestStartupInteractor: EudiTest {
     stubHasStoredDocuments(true)
     stubHasPin(with: true)
     stubRunAtLeastOnce()
+
     // When
     let state = await interactor.initialize(with: .zero)
     let route = try XCTUnwrap(successRoute(from: state))
+
     // Then
     switch route {
     case .featureCommonModule(let module):
@@ -120,9 +124,11 @@ final class TestStartupInteractor: EudiTest {
     stubHasStoredDocuments(false)
     stubHasPin(with: true)
     stubRunAtLeastOnce()
+
     // When
     let state = await interactor.initialize(with: .zero)
     let route = try XCTUnwrap(successRoute(from: state))
+
     // Then
     switch route {
     case .featureCommonModule(let module):
@@ -146,9 +152,11 @@ final class TestStartupInteractor: EudiTest {
     stubHasStoredDocuments(false)
     stubHasPin(with: false)
     stubRunAtLeastOnce(false)
+
     // When
     let state = await interactor.initialize(with: .zero)
     let route = try XCTUnwrap(successRoute(from: state))
+
     // Then
     switch route {
     case .featureCommonModule(let module):
@@ -179,9 +187,11 @@ final class TestStartupInteractor: EudiTest {
     stubHasPin(with: false)
     stubRunAtLeastOnce()
     stubTrustMarkIntroductionCompleted(false)
+
     // When
     let state = await interactor.initialize(with: .zero)
     let route = try XCTUnwrap(successRoute(from: state))
+
     // Then
     let receivedConfig = try XCTUnwrap(trustMarkConfig(from: route))
     XCTAssertEqual(receivedConfig, expectedConfig)
@@ -201,9 +211,11 @@ final class TestStartupInteractor: EudiTest {
     stubHasPin(with: true)
     stubRunAtLeastOnce()
     stubTrustMarkIntroductionCompleted(false)
+
     // When
     let state = await interactor.initialize(with: .zero)
     let route = try XCTUnwrap(successRoute(from: state))
+
     // Then
     let receivedConfig = try XCTUnwrap(trustMarkConfig(from: route))
     XCTAssertEqual(receivedConfig, expectedConfig)
@@ -215,9 +227,11 @@ final class TestStartupInteractor: EudiTest {
     stubHasPin(with: false)
     stubRunAtLeastOnce(false)
     stubTrustMarkIntroductionCompleted(false)
+
     // When
     let state = await interactor.initialize(with: .zero)
     let route = try XCTUnwrap(successRoute(from: state))
+
     // Then
     let receivedConfig = try XCTUnwrap(trustMarkConfig(from: route))
     XCTAssertTrue(receivedConfig.isWelcome)
@@ -225,50 +239,63 @@ final class TestStartupInteractor: EudiTest {
   }
 
   func testInitialize_WhenPinIsNotSetAndHasDocuments_ThenFailsWithPinNotFound() async {
+    // Given
     stubHasStoredDocuments(true)
     stubHasPin(with: false)
     stubRunAtLeastOnce()
 
+    // When
     let state = await interactor.initialize(with: .zero)
 
+    // Then
     XCTAssertEqual(failureError(from: state) as? AuthenticationError, .pinNotFound)
   }
 
   func testInitialize_WhenPinRecordCannotBeRead_ThenFailsWithTheReadError() async {
+    // Given
     stubHasStoredDocuments(false)
     stub(quickPinInteractor) { mock in
       when(mock.hasPin()).thenThrow(KeyChainError.readFailed(status: errSecInteractionNotAllowed))
     }
     stubRunAtLeastOnce()
 
+    // When
     let state = await interactor.initialize(with: .zero)
 
+    // Then
     XCTAssertEqual(failureError(from: state) as? KeyChainError, .readFailed(status: errSecInteractionNotAllowed))
   }
 
   func testInitialize_WhenPinIsNotSetAndDocumentsCannotBeChecked_ThenFailsWithTheCheckError() async {
+    // Given
     stubDocumentsCheckFailure()
     stubHasPin(with: false)
     stubRunAtLeastOnce()
 
+    // When
     let state = await interactor.initialize(with: .zero)
 
+    // Then
     XCTAssertEqual(failureError(from: state) as? KeyChainError, Self.documentsCheckError)
   }
 
   func testInitialize_WhenFirstBootWipeFailsAndDocumentsRemain_ThenFailsAndWipesAgainNextTime() async {
+    // Given
     stubHasStoredDocuments(true)
     stubHasPin(with: false)
     stubRunAtLeastOnce(false)
     stubKeyChainClear(success: false)
 
+    // When
     let state = await interactor.initialize(with: .zero)
 
+    // Then
     XCTAssertEqual(failureError(from: state) as? AuthenticationError, .pinNotFound)
     verify(prefsController, never()).setValue(any(), forKey: Prefs.Key.runAtLeastOnce)
   }
 
   func testInitialize_WhenTrustMarkIntroductionIsNotCompletedAndPinCannotBeRead_ThenFailsWithoutTrustMark() async {
+    // Given
     stubHasStoredDocuments(false)
     stub(quickPinInteractor) { mock in
       when(mock.hasPin()).thenThrow(KeyChainError.readFailed(status: errSecInteractionNotAllowed))
@@ -276,18 +303,23 @@ final class TestStartupInteractor: EudiTest {
     stubRunAtLeastOnce()
     stubTrustMarkIntroductionCompleted(false)
 
+    // When
     let state = await interactor.initialize(with: .zero)
 
+    // Then
     XCTAssertEqual(failureError(from: state) as? KeyChainError, .readFailed(status: errSecInteractionNotAllowed))
   }
 
   func testInitialize_WhenPinIsSetAndDocumentsCannotBeChecked_ThenReturnBiometricsAppRoute() async throws {
+    // Given
     stubDocumentsCheckFailure()
     stubHasPin(with: true)
     stubRunAtLeastOnce()
 
+    // When
     let state = await interactor.initialize(with: .zero)
 
+    // Then
     let route = try XCTUnwrap(successRoute(from: state))
     guard case .featureCommonModule(let module) = route, case .biometry(let config) = module else {
       return XCTFail("Wrong route \(route)")
@@ -296,6 +328,7 @@ final class TestStartupInteractor: EudiTest {
   }
 
   func testInitialize_WhenFirstBootWipesTheDocuments_ThenChecksForDocumentsAfterTheWipe() async throws {
+    // Given
     let storage = RecordingWipe()
     stubHasPin(with: false)
     stubRunAtLeastOnce(false)
@@ -304,8 +337,10 @@ final class TestStartupInteractor: EudiTest {
       when(mock.hasStoredDocuments()).then { storage.hasDocuments }
     }
 
+    // When
     let state = await interactor.initialize(with: .zero)
 
+    // Then
     let route = try XCTUnwrap(successRoute(from: state))
     guard case .featureCommonModule(let module) = route, case .quickPin = module else {
       return XCTFail("Wrong route \(route)")
@@ -313,12 +348,15 @@ final class TestStartupInteractor: EudiTest {
   }
 
   func testInitialize_WhenPinIsSetAndHasDocuments_ThenLoadsNoDocumentBeforeLogin() async {
+    // Given
     stubHasStoredDocuments(true)
     stubHasPin(with: true)
     stubRunAtLeastOnce()
 
+    // When
     _ = await interactor.initialize(with: .zero)
 
+    // Then
     verify(walletKitController).hasStoredDocuments()
     verify(walletKitController, never()).loadDocuments()
     verify(walletKitController, never()).fetchAllDocuments()

@@ -125,8 +125,10 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testGetCoordinator_WhenBuilt_ThenReturnsTheCoordinatorOfItsRoute() async {
+    // When
     let result = await interactor.getCoordinator()
 
+    // Then
     guard case .success(let coordinator) = result else {
       return XCTFail("Expected success but got \(result)")
     }
@@ -134,6 +136,7 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnSendResponse_WhenAnotherSessionHasStarted_ThenSendsOnTheCoordinatorOfItsRoute() async {
+    // Given
     let otherCoordinator = MockRemoteSessionCoordinator(session: Constants.mockPresentationSession)
     let otherInteractor = PresentationInteractorImpl(
       with: otherCoordinator,
@@ -148,9 +151,11 @@ final class TestPresentationInteractor: EudiTest {
       when(mock.getState()).thenReturn(.loading)
     }
 
+    // When
     _ = await otherInteractor.getCoordinator()
     let result = await interactor.onSendResponse()
 
+    // Then
     guard case .sent = result else {
       return XCTFail("Expected sent but got \(result)")
     }
@@ -174,19 +179,23 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testStopPresentation_WhenInteractorMethodCalled_ThenStopsOnlyItsOwnSession() async {
+    // Given
     let ownSession = presentationCoordinator!
     stub(walletKitController) { mock in
       when(mock.stopRemotePresentation(any())).thenDoNothing()
     }
 
+    // When
     await interactor.stopPresentation()
 
+    // Then
     verify(walletKitController).stopRemotePresentation(ParameterMatcher { $0 === ownSession })
     verify(walletKitController, never()).stopPresentation()
     verify(presentationCoordinator).stopPresentation()
   }
 
   func testOnDeclineRequest_WhenTheDeclineIsSent_ThenStopsOnlyItsOwnSession() async {
+    // Given
     let ownSession = presentationCoordinator!
     stub(presentationCoordinator) { mock in
       when(mock.declineResponse()).thenDoNothing()
@@ -195,8 +204,10 @@ final class TestPresentationInteractor: EudiTest {
       when(mock.stopRemotePresentation(any())).thenDoNothing()
     }
 
+    // When
     await interactor.onDeclineRequest()
 
+    // Then
     verify(presentationCoordinator).declineResponse()
     verify(walletKitController).stopRemotePresentation(ParameterMatcher { $0 === ownSession })
     verify(walletKitController, never()).stopPresentation()
@@ -234,6 +245,7 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnResponsePrepare_WhenADocumentIsNotOnTheConsentScreen_ThenItIsNotInTheResponse() async {
+    // Given
     let request = Constants.mockPresentationRequest
     let shown = request.itemSets[0][0]
     let hidden = DocElements.msoMdoc(
@@ -255,8 +267,10 @@ final class TestPresentationInteractor: EudiTest {
     }
     _ = await interactor.onRequestReceived()
 
+    // When
     let state = await interactor.onResponsePrepare(combinationIndex: 0)
 
+    // Then
     guard case .success(let response) = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -265,6 +279,7 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenThePortraitIsRequested_ThenItsRowIsMarkedAsAPictureOfTheHolder() async {
+    // Given
     let request = Constants.mockPresentationRequest
     let element: (String) -> MsoMdocElement = { name in
       .init(
@@ -297,8 +312,10 @@ final class TestPresentationInteractor: EudiTest {
     )
     await stubReceivedRequest(portraitRequest)
 
+    // When
     let state = await interactor.onRequestReceived()
 
+    // Then
     guard case .success(let successModel) = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -413,6 +430,7 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenTransactionDataCannotBeShownInFull_ThenTheRequestIsDeclined() async {
+    // Then
     for transactionData: [String: [PresentationTransactionDataDomain]] in [
       [Constants.isoMdlModelId: [.unavailable]],
       ["another-document": [.qes(.init(credentialIds: [], signatureRequests: []))]]
@@ -429,13 +447,16 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenTransactionDataIsReadableAndBoundToAShownDocument_ThenTheOptionShowsIt() async throws {
+    // Given
     let transaction: PresentationTransactionDataDomain = .qes(.init(credentialIds: ["pid"], signatureRequests: []))
     await stubReceivedRequest(
       Self.presentationRequest(transactionDataSets: [[Constants.isoMdlModelId: [transaction]]], requestNames: ["option-1"])
     )
 
+    // When
     let state = await interactor.onRequestReceived()
 
+    // Then
     guard case .success(let model) = state else {
       return XCTFail("Wrong state \(state)")
     }
@@ -452,6 +473,7 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenAnOptionThatIsNotOfferedCarriesTransactionData_ThenTheOfferedOptionsAreCheckedOnTheirOwn() async {
+    // Given
     let request = Constants.mockPresentationRequest
     let revoked = DocElements.sdJwt(.init(docId: "pid-sd", vct: "urn:eudi:pid:1", sdJwtElements: []))
     await stubReceivedRequest(
@@ -467,18 +489,22 @@ final class TestPresentationInteractor: EudiTest {
     )
     stubRevokedDocumentStatuses(with: ["pid-sd"])
 
+    // When
     let state = await interactor.onRequestReceived()
 
+    // Then
     guard case .success = state else {
       return XCTFail("Wrong state \(state)")
     }
   }
 
   func testCanShowTransactionData_WhenEveryEntryIsReadableAndBoundToAShownDocument_ThenIsTrue() {
+    // Given
     let sdJwt = DocElements.sdJwt(.init(docId: "pid-sd", vct: "urn:eudi:pid:1", sdJwtElements: []))
     let mdoc = Constants.mockPresentationRequest.itemSets[0][0]
     let readable: [PresentationTransactionDataDomain] = [.qes(.init(credentialIds: [], signatureRequests: []))]
 
+    // Then
     XCTAssertTrue(PresentationInteractorImpl.canShowTransactionData([:], shownDocuments: [mdoc]))
     XCTAssertTrue(PresentationInteractorImpl.canShowTransactionData(["pid-sd": readable], shownDocuments: [sdJwt]))
     XCTAssertFalse(PresentationInteractorImpl.canShowTransactionData(["pid-sd": [.unavailable]], shownDocuments: [sdJwt]))
@@ -615,6 +641,7 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenAnOptionHoldsARevokedDocument_ThenTheWholeOptionIsLeftOut() async {
+    // Given
     let request = Constants.mockPresentationRequest
     let shown = request.itemSets[0][0]
     let revoked = DocElements.sdJwt(.init(docId: "pid-sd", vct: "urn:eudi:pid:1", sdJwtElements: []))
@@ -634,9 +661,11 @@ final class TestPresentationInteractor: EudiTest {
     }
     stubRevokedDocumentStatuses(with: ["pid-sd"])
 
+    // When
     let result = await interactor.onRequestReceived()
     let state = await interactor.onResponsePrepare(combinationIndex: 0)
 
+    // Then
     guard case .success(let model) = result else {
       return XCTFail("Expected success, got \(result)")
     }
@@ -649,6 +678,7 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenAnOptionWithARevokedDocumentHasTransactionData_ThenTheOtherKeepsItsOwn() async throws {
+    // Given
     let request = Constants.mockPresentationRequest
     let shown = request.itemSets[0][0]
     let revoked = DocElements.sdJwt(.init(docId: "pid-sd", vct: "urn:eudi:pid:1", sdJwtElements: []))
@@ -668,8 +698,10 @@ final class TestPresentationInteractor: EudiTest {
     }
     stubRevokedDocumentStatuses(with: ["pid-sd"])
 
+    // When
     let state = await interactor.onRequestReceived()
 
+    // Then
     guard case .success(let model) = state else {
       return XCTFail("Expected success, got \(state)")
     }
@@ -679,6 +711,7 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenTheRevocationRecordsCannotBeRead_ThenFails() async {
+    // Given
     stub(presentationCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(Self.mockPresentationRequest)
     }
@@ -686,8 +719,10 @@ final class TestPresentationInteractor: EudiTest {
       when(mock.fetchRevokedDocumentStatuses()).thenThrow(RuntimeError.genericError)
     }
 
+    // When
     let result = await interactor.onRequestReceived()
 
+    // Then
     switch result {
     case .failure:
       break
@@ -697,11 +732,13 @@ final class TestPresentationInteractor: EudiTest {
   }
 
   func testOnRequestReceived_WhenTheDocumentIsSuspendedOrUnrecognised_ThenItIsLeftOut() async {
+    // Given
     let docIds = Self.mockPresentationRequest.itemSets.flatMap { $0 }.map(\.docId)
     stub(presentationCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(Self.mockPresentationRequest)
     }
 
+    // Then
     for status in [DocumentRevocationStatus.suspended, .unrecognised] {
       stubRevokedDocumentStatuses(with: docIds, as: status)
 

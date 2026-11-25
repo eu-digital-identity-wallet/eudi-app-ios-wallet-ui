@@ -60,50 +60,86 @@ final class TestKeychainPinStorageProvider: EudiTest {
   }
 
   func testHasPin_WhenNothingStored_ThenFalse() throws {
-    XCTAssertFalse(try provider.hasPin())
+    // When
+    let result = try provider.hasPin()
+
+    // Then
+    XCTAssertFalse(result)
   }
 
-  func testHasPin_AfterSetPin_ThenTrue() throws {
+  func testHasPin_WhenAPinWasSet_ThenTrue() throws {
+    // Given
     try provider.setPin(with: "123456")
-    XCTAssertTrue(try provider.hasPin())
+
+    // When
+    let result = try provider.hasPin()
+
+    // Then
+    XCTAssertTrue(result)
   }
 
   func testHasPin_WhenIterationsMissing_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
     storedStrings.removeValue(forKey: KeychainPinStorageProvider.KeyIdentifier.devicePinIterations.rawValue)
 
-    XCTAssertFalse(try provider.hasPin())
+    // When
+    let result = try provider.hasPin()
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testHasPin_WhenSaltMissing_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
     storedData.removeValue(forKey: KeychainPinStorageProvider.KeyIdentifier.devicePinSalt.rawValue)
 
-    XCTAssertFalse(try provider.hasPin())
+    // When
+    let result = try provider.hasPin()
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testHasPin_WhenHashMissing_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
     storedData.removeValue(forKey: KeychainPinStorageProvider.KeyIdentifier.devicePinHash.rawValue)
 
-    XCTAssertFalse(try provider.hasPin())
+    // When
+    let result = try provider.hasPin()
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testHasPin_WhenIterationsIsZero_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
     storedStrings[KeychainPinStorageProvider.KeyIdentifier.devicePinIterations.rawValue] = "0"
 
-    XCTAssertFalse(try provider.hasPin())
+    // When
+    let result = try provider.hasPin()
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testHasPin_WhenIterationsIsNotNumeric_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
     storedStrings[KeychainPinStorageProvider.KeyIdentifier.devicePinIterations.rawValue] = "not_a_number"
 
-    XCTAssertFalse(try provider.hasPin())
+    // When
+    let result = try provider.hasPin()
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testSetPin_WhenEmptyString_ThenThrowsAndStoresNothing() {
+    // Then
     XCTAssertThrowsError(try provider.setPin(with: "")) { error in
       guard case .quickPinInvalid? = error as? AuthenticationError else {
         return XCTFail("Wrong error \(error)")
@@ -115,9 +151,11 @@ final class TestKeychainPinStorageProvider: EudiTest {
     XCTAssertNil(storedStrings[KeychainPinStorageProvider.KeyIdentifier.devicePinIterations.rawValue])
   }
 
-  func testSetPin_StoresSaltHashAndIterations() throws {
+  func testSetPin_WhenAPinIsSet_ThenStoresSaltHashAndIterations() throws {
+    // When
     try provider.setPin(with: "654321")
 
+    // Then
     let salt = storedData[KeychainPinStorageProvider.KeyIdentifier.devicePinSalt.rawValue]
     let hash = storedData[KeychainPinStorageProvider.KeyIdentifier.devicePinHash.rawValue]
     let iterations = storedStrings[KeychainPinStorageProvider.KeyIdentifier.devicePinIterations.rawValue]
@@ -130,81 +168,129 @@ final class TestKeychainPinStorageProvider: EudiTest {
     XCTAssertEqual(iterations, "210000")
   }
 
-  func testSetPin_UsesFreshSaltOnEverySet() throws {
+  func testSetPin_WhenSetTwice_ThenUsesAFreshSaltEachTime() throws {
+    // When
     try provider.setPin(with: "111111")
     let salt1 = storedData[KeychainPinStorageProvider.KeyIdentifier.devicePinSalt.rawValue]
 
     try provider.setPin(with: "111111")
     let salt2 = storedData[KeychainPinStorageProvider.KeyIdentifier.devicePinSalt.rawValue]
 
+    // Then
     XCTAssertNotNil(salt1)
     XCTAssertNotNil(salt2)
     XCTAssertNotEqual(salt1, salt2)
   }
 
   func testIsPinValid_WhenEmptyPin_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
-    XCTAssertFalse(provider.isPinValid(with: ""))
+
+    // When
+    let result = provider.isPinValid(with: "")
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testIsPinValid_WhenNoStoredPin_ThenFalse() {
-    XCTAssertFalse(provider.isPinValid(with: "123456"))
+    // When
+    let result = provider.isPinValid(with: "123456")
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testIsPinValid_WhenCorrectPin_ThenTrue() throws {
+    // Given
     try provider.setPin(with: "123456")
-    XCTAssertTrue(provider.isPinValid(with: "123456"))
+
+    // When
+    let result = provider.isPinValid(with: "123456")
+
+    // Then
+    XCTAssertTrue(result)
   }
 
   func testIsPinValid_WhenWrongPin_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
 
+    // Then
     XCTAssertFalse(provider.isPinValid(with: "111111"))
     XCTAssertFalse(provider.isPinValid(with: "654321"))
     XCTAssertFalse(provider.isPinValid(with: "1234567"))
     XCTAssertFalse(provider.isPinValid(with: "12345"))
   }
 
-  func testIsPinValid_AfterPinChange_OldPinFailsNewPinSucceeds() throws {
+  func testIsPinValid_WhenThePinIsChanged_ThenOldPinFailsAndNewPinSucceeds() throws {
+    // When
     try provider.setPin(with: "111111")
+
+    // Then
     XCTAssertTrue(provider.isPinValid(with: "111111"))
 
+    // When
     try provider.setPin(with: "222222")
+
+    // Then
     XCTAssertFalse(provider.isPinValid(with: "111111"))
     XCTAssertTrue(provider.isPinValid(with: "222222"))
   }
 
   func testIsPinValid_WhenIterationsMissing_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
     storedStrings.removeValue(forKey: KeychainPinStorageProvider.KeyIdentifier.devicePinIterations.rawValue)
 
-    XCTAssertFalse(provider.isPinValid(with: "123456"))
+    // When
+    let result = provider.isPinValid(with: "123456")
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testIsPinValid_WhenIterationsIsZero_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
     storedStrings[KeychainPinStorageProvider.KeyIdentifier.devicePinIterations.rawValue] = "0"
 
-    XCTAssertFalse(provider.isPinValid(with: "123456"))
+    // When
+    let result = provider.isPinValid(with: "123456")
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testHasPin_WhenSaltIsEmptyData_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
     storedData[KeychainPinStorageProvider.KeyIdentifier.devicePinSalt.rawValue] = Data()
 
-    XCTAssertFalse(try provider.hasPin())
+    // When
+    let result = try provider.hasPin()
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testHasPin_WhenHashIsEmptyData_ThenFalse() throws {
+    // Given
     try provider.setPin(with: "123456")
     storedData[KeychainPinStorageProvider.KeyIdentifier.devicePinHash.rawValue] = Data()
 
-    XCTAssertFalse(try provider.hasPin())
+    // When
+    let result = try provider.hasPin()
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   func testHasPin_WhenAnyReadFails_ThenThrowsReadFailed() throws {
+    // Given
     try provider.setPin(with: "123456")
 
+    // Then
     for key in pinKeys {
       failingReadKeys = [key.rawValue]
 
@@ -215,8 +301,10 @@ final class TestKeychainPinStorageProvider: EudiTest {
   }
 
   func testSetPin_WhenReadingThePreviousRecordFails_ThenThrowsAndWritesNothing() throws {
+    // Given
     try provider.setPin(with: "111111")
 
+    // Then
     for key in pinKeys {
       failingReadKeys = [key.rawValue]
 
@@ -235,8 +323,10 @@ final class TestKeychainPinStorageProvider: EudiTest {
   }
 
   func testSetPin_WhenSecondWriteFailsWithoutPreviousRecord_ThenLeavesNoPartialRecord() throws {
+    // Given
     failingWriteKeys = [KeychainPinStorageProvider.KeyIdentifier.devicePinHash.rawValue]
 
+    // Then
     XCTAssertThrowsError(try provider.setPin(with: "123456")) { error in
       XCTAssertEqual(error as? KeyChainError, .writeFailed(status: errSecNotAvailable))
     }
@@ -247,9 +337,11 @@ final class TestKeychainPinStorageProvider: EudiTest {
   }
 
   func testSetPin_WhenLastWriteFailsDuringChange_ThenRestoresThePreviousPin() throws {
+    // Given
     try provider.setPin(with: "111111")
     failingWriteAttempts = [KeychainPinStorageProvider.KeyIdentifier.devicePinIterations.rawValue: [2]]
 
+    // Then
     XCTAssertThrowsError(try provider.setPin(with: "222222")) { error in
       XCTAssertEqual(error as? KeyChainError, .writeFailed(status: errSecNotAvailable))
     }
@@ -260,12 +352,14 @@ final class TestKeychainPinStorageProvider: EudiTest {
   }
 
   func testSetPin_WhenRestoringThePreviousRecordFails_ThenLeavesNoRecord() throws {
+    // Given
     try provider.setPin(with: "111111")
     failingWriteAttempts = [
       KeychainPinStorageProvider.KeyIdentifier.devicePinHash.rawValue: [2],
       KeychainPinStorageProvider.KeyIdentifier.devicePinSalt.rawValue: [3]
     ]
 
+    // Then
     XCTAssertThrowsError(try provider.setPin(with: "222222")) { error in
       XCTAssertEqual(error as? KeyChainError, .writeFailed(status: errSecNotAvailable))
     }

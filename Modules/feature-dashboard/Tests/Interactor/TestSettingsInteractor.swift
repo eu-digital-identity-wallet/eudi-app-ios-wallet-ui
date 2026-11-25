@@ -191,7 +191,7 @@ final class TestSettingsInteractor: EudiTest {
     XCTAssertFalse(result)
   }
 
-  func testBatchCounter_WhenSetToTrue_CallsPrefsControllerWithTrue() async {
+  func testBatchCounter_WhenSetToTrue_ThenCallsPrefsController() async {
     // Given
     stub(prefsController) { mock in
       when(mock.setValue(any(), forKey: Prefs.Key.batchCounter)).thenDoNothing()
@@ -205,36 +205,46 @@ final class TestSettingsInteractor: EudiTest {
   }
 
   func testResetWallet_WhenTheResetSucceeds_ThenReportsSuccess() async {
+    // Given
     stub(walletResetController) { mock in
       when(mock.resetWallet()).thenDoNothing()
     }
 
+    // When
     let state = await interactor.resetWallet()
 
+    // Then
     guard case .success = state else { return XCTFail("Expected success, got \(state)") }
   }
 
   func testResetWallet_WhenTheResetFails_ThenReportsTheFailure() async {
+    // Given
     stub(walletResetController) { mock in
       when(mock.resetWallet()).thenThrow(WalletCoreError.unableToIssueAndStore)
     }
 
+    // When
     let state = await interactor.resetWallet()
 
+    // Then
     guard case .failure = state else { return XCTFail("Expected a failure, got \(state)") }
   }
 
   func testIsOfferingDocumentsToApps_WhenTheSettingIsOn_ThenReportsIt() async {
+    // Given
     stub(prefsController) { mock in
       when(mock.getBool(forKey: equal(to: Prefs.Key.offerDocumentsToApps))).thenReturn(true)
     }
 
+    // When
     let isOffering = await interactor.isOfferingDocumentsToApps()
 
+    // Then
     XCTAssertTrue(isOffering)
   }
 
   func testSetOfferingDocumentsToApps_WhenTurnedOff_ThenStoresItAndWithdrawsTheRegistrations() async {
+    // Given
     stub(prefsController) { mock in
       when(mock.setValue(any(), forKey: any())).thenDoNothing()
     }
@@ -242,8 +252,10 @@ final class TestSettingsInteractor: EudiTest {
       when(mock.reconcileRegistrations()).thenDoNothing()
     }
 
+    // When
     await interactor.setOfferingDocumentsToApps(isEnabled: false)
 
+    // Then
     verify(prefsController).setValue(
       ParameterMatcher<Any?> { ($0 as? Bool) == false },
       forKey: equal(to: Prefs.Key.offerDocumentsToApps)

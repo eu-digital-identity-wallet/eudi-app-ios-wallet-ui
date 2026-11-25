@@ -26,11 +26,14 @@ final class TestSettingsViewModel: EudiTest {
 
   @MainActor
   func testOnBiometrySwitch_WhenBiometricUnlockIsOff_ThenAsksForThePinBeforeTurningItOn() async {
+    // Given
     let fixture = makeFixture(isBiometryEnabled: false)
     await fixture.viewModel.initialize()
 
+    // When
     fixture.viewModel.onBiometrySwitch()
 
+    // Then
     let config = biometryConfig(pushedOn: fixture.router)
     XCTAssertEqual(config?.pinTextFieldTitle, .biometryUnlockOnCaption)
     XCTAssertEqual(requestedSetting(after: config), true)
@@ -41,11 +44,14 @@ final class TestSettingsViewModel: EudiTest {
 
   @MainActor
   func testOnBiometrySwitch_WhenBiometricUnlockIsOn_ThenAcceptsThePinOrABiometricToTurnItOff() async {
+    // Given
     let fixture = makeFixture(isBiometryEnabled: true)
     await fixture.viewModel.initialize()
 
+    // When
     fixture.viewModel.onBiometrySwitch()
 
+    // Then
     let config = biometryConfig(pushedOn: fixture.router)
     XCTAssertEqual(config?.pinTextFieldTitle, .biometryUnlockOffCaption)
     XCTAssertEqual(requestedSetting(after: config), false)
@@ -55,15 +61,22 @@ final class TestSettingsViewModel: EudiTest {
 
   @MainActor
   func testOnBiometrySwitch_WhenTappedAgainBeforeSettingsAppearAgain_ThenOpensOneCheck() async {
+    // Given
     let fixture = makeFixture(isBiometryEnabled: false)
     await fixture.viewModel.initialize()
 
+    // When
     fixture.viewModel.onBiometrySwitch()
     fixture.viewModel.onBiometrySwitch()
+
+    // Then
     verify(fixture.router, times(1)).push(with: any())
 
+    // When
     await fixture.viewModel.initialize()
     fixture.viewModel.onBiometrySwitch()
+
+    // Then
     verify(fixture.router, times(2)).push(with: any())
   }
 }

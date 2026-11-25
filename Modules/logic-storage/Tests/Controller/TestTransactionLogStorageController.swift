@@ -44,8 +44,10 @@ final class TestTransactionLogStorageController: EudiTest {
   }
 
   func testRetrieveRevision_WhenTheHistoryIsWrittenOrDeleted_ThenItChangesEachTime() async throws {
+    // Given
     var revisions = [await controller.retrieveRevision()]
 
+    // When
     try await controller.store(log("a"))
     revisions.append(await controller.retrieveRevision())
     try await controller.store([log("b"), log("c")])
@@ -57,35 +59,47 @@ final class TestTransactionLogStorageController: EudiTest {
     try await controller.deleteAll()
     revisions.append(await controller.retrieveRevision())
 
+    // Then
     XCTAssertEqual(Set(revisions).count, revisions.count)
   }
 
   func testRetrieveRevision_WhenNothingIsWritten_ThenItStaysTheSame() async throws {
+    // Given
     try await controller.store(log("a"))
     let before = await controller.retrieveRevision()
 
+    // When
     _ = try await controller.retrieveAll()
     _ = try await controller.retrieve(parentPresentationId: "presentation")
 
+    // Then
     let after = await controller.retrieveRevision()
     XCTAssertEqual(before, after)
   }
 
   func testEraseStore_WhenTheStoreHoldsHistory_ThenEmptiesItAndKeepsItUsable() async throws {
+    // Given
     try await controller.store([log("a"), log("b")])
 
+    // When
     try await StorageEraseControllerImpl(swiftDataService: swiftDataService).eraseStore()
 
+    // Then
     do {
       _ = try await controller.retrieveAll()
       XCTFail("Expected an empty store")
     } catch {}
+
+    // When
     try await controller.store(log("c"))
     let logs = try await controller.retrieveAll()
+
+    // Then
     XCTAssertEqual(logs.map(\.identifier), ["c"])
   }
 
   func testEraseStore_WhenTheStoreIsOnDisk_ThenNoFileKeepsTheDeletedHistory() async throws {
+    // Given
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     let service = SwiftDataServiceImpl(storageConfig: StubStorageConfig(folder: directory))
@@ -94,9 +108,11 @@ final class TestTransactionLogStorageController: EudiTest {
     try await onDisk.store(TransactionLog(identifier: "a", value: marker))
     try await onDisk.deleteAll()
 
+    // When
     try await StorageEraseControllerImpl(swiftDataService: service).eraseStore()
     try await onDisk.store(log("b"))
 
+    // Then
     let files = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
     for file in files {
       let bytes = try Data(contentsOf: file)
@@ -106,14 +122,18 @@ final class TestTransactionLogStorageController: EudiTest {
   }
 
   func testRetrieveAll_WhenTheHistoryExceedsOneBatch_ThenReturnsEveryEntry() async throws {
+    // Given
     try await controller.store((0..<250).map { log("entry-\($0)") })
 
+    // When
     let logs = try await controller.retrieveAll()
 
+    // Then
     XCTAssertEqual(Set(logs.map(\.identifier)).count, 250)
   }
 
   func testRetrieveParentPresentationId_WhenEntriesBelongToSeveralPresentations_ThenReturnsOnlyThatOnesActions() async throws {
+    // Given
     try await controller.store([
       log("presentation"),
       log("deletion-request", parent: "presentation"),
@@ -121,8 +141,10 @@ final class TestTransactionLogStorageController: EudiTest {
       log("other-action", parent: "other-presentation")
     ])
 
+    // When
     let actions = try await controller.retrieve(parentPresentationId: "presentation")
 
+    // Then
     XCTAssertEqual(Set(actions.map(\.identifier)), ["deletion-request", "report"])
   }
 }

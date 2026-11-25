@@ -22,7 +22,7 @@ import logic_resources
 
 final class TestRequestDataUiModelSelection: EudiTest {
 
-  func testFilterSelectedRows_whenARowIsOverasked_thenTheMarkDoesNotTravelOnwards() {
+  func testFilterSelectedRows_WhenARowIsOverasked_ThenTheMarkDoesNotTravelOnwards() {
     // Given
     let models = [requestDataUiModel(rows: [row(title: "Age", isOverasked: true)])]
 
@@ -34,7 +34,7 @@ final class TestRequestDataUiModelSelection: EudiTest {
     XCTAssertNil(supportingText(of: sections.first?.listItems.first))
   }
 
-  func testFilterSelectedRows_whenARowIsNotSelected_thenItIsDropped() {
+  func testFilterSelectedRows_WhenARowIsNotSelected_ThenItIsDropped() {
     // Given
     let models = [
       requestDataUiModel(
@@ -53,7 +53,7 @@ final class TestRequestDataUiModelSelection: EudiTest {
     XCTAssertEqual(sections.first?.listItems.first?.overlineText, .custom("Family name"))
   }
 
-  func testFilterSelectedRows_whenRowsAreNested_thenTheMarkIsDroppedFromTheChildren() {
+  func testFilterSelectedRows_WhenRowsAreNested_ThenTheMarkIsDroppedFromTheChildren() {
     // Given
     let models = [
       requestDataUiModel(
@@ -79,42 +79,65 @@ final class TestRequestDataUiModelSelection: EudiTest {
     XCTAssertNil(supportingText(of: group.expanded.first))
   }
 
-  func testRequestsUserImage_whenADocumentHasAPictureOfTheHolder_thenIsTrue() {
+  func testRequestsUserImage_WhenADocumentHasAPictureOfTheHolder_ThenIsTrue() {
+    // Given
     let models = [requestDataUiModel(rows: [pictureRow(isSelected: false)], userImageItemIds: ["portrait-id"])]
 
-    XCTAssertTrue(models.requestsUserImage())
+    // When
+    let result = models.requestsUserImage()
+
+    // Then
+    XCTAssertTrue(result)
   }
 
-  func testRequestsUserImage_whenNoDocumentHasOne_thenIsFalse() {
+  func testRequestsUserImage_WhenNoDocumentHasOne_ThenIsFalse() {
+    // Given
     let models = [requestDataUiModel(rows: [row(title: "Family name")])]
 
+    // Then
     XCTAssertFalse(models.requestsUserImage())
     XCTAssertFalse(models.sharesUserImage())
   }
 
-  func testSharesUserImage_whenThePictureIsSelected_thenIsTrue() {
+  func testSharesUserImage_WhenThePictureIsSelected_ThenIsTrue() {
+    // Given
     let models = [
       requestDataUiModel(rows: [row(title: "Family name"), pictureRow(isSelected: true)], userImageItemIds: ["portrait-id"])
     ]
 
-    XCTAssertTrue(models.sharesUserImage())
+    // When
+    let result = models.sharesUserImage()
+
+    // Then
+    XCTAssertTrue(result)
   }
 
-  func testSharesUserImage_whenThePictureIsUnticked_thenIsFalse() {
+  func testSharesUserImage_WhenThePictureIsUnticked_ThenIsFalse() {
+    // Given
     let models = [
       requestDataUiModel(rows: [row(title: "Family name"), pictureRow(isSelected: false)], userImageItemIds: ["portrait-id"])
     ]
 
-    XCTAssertFalse(models.sharesUserImage())
+    // When
+    let result = models.sharesUserImage()
+
+    // Then
+    XCTAssertFalse(result)
   }
 
-  func testSharesUserImage_whenTheClaimsAreDisclosedAsAWhole_thenIsTrue() {
+  func testSharesUserImage_WhenTheClaimsAreDisclosedAsAWhole_ThenIsTrue() {
+    // Given
     let models = [requestDataUiModel(rows: [pictureRow(isSelected: nil)], userImageItemIds: ["portrait-id"])]
 
-    XCTAssertTrue(models.sharesUserImage())
+    // When
+    let result = models.sharesUserImage()
+
+    // Then
+    XCTAssertTrue(result)
   }
 
-  func testSharesUserImage_whenThePictureIsInAGroup_thenItsSelectionCounts() {
+  func testSharesUserImage_WhenThePictureIsInAGroup_ThenItsSelectionCounts() {
+    // Given
     let group: ExpandableListItem<DocumentElementClaim> = .nested(
       .init(
         collapsed: .init(groupId: "group", mainContent: .text(.custom("Group"))),
@@ -124,7 +147,11 @@ final class TestRequestDataUiModelSelection: EudiTest {
     )
     let models = [requestDataUiModel(rows: [group], userImageItemIds: ["portrait-id"])]
 
-    XCTAssertTrue(models.sharesUserImage())
+    // When
+    let result = models.sharesUserImage()
+
+    // Then
+    XCTAssertTrue(result)
   }
 }
 

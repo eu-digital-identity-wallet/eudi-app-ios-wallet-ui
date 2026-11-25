@@ -16,7 +16,7 @@
 @testable import logic_business
 @testable import logic_test
 
-final class TestFormValidator: XCTestCase {
+final class TestFormValidator: EudiTest {
   
   private let plainErrorMessage = "generic_error_description"
   
@@ -31,8 +31,11 @@ final class TestFormValidator: XCTestCase {
     validationSuccess = FormValidationResult(isValid: true)
   }
   
-  func testValidateNotEmptyRule() async {
+  func testValidateNotEmptyRule_WhenValueIsEmptyOrFilled_ThenOnlyTheEmptyOneFails() async {
+    // Given
     let rules = [Rule.ValidateNotEmpty(errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       rules,
       "",
@@ -45,8 +48,11 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateEmailRule() async {
+  func testValidateEmailRule_WhenAddressIsCompleteOrCutOff_ThenOnlyTheCompleteOneSucceeds() async {
+    // Given
     let rules = [Rule.ValidateEmail(errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       rules,
       "test@test.com",
@@ -59,9 +65,12 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidatePhoneNumberRule() async {
+  func testValidatePhoneNumberRule_WhenNumbersAreCheckedPerCountry_ThenOnlyMatchingNumbersSucceed() async {
+    // Given
     let greekPhoneRule = [Rule.ValidatePhoneNumber(countryCode: "GR", errorMessage: plainErrorMessage)]
     let usPhoneRule = [Rule.ValidatePhoneNumber(countryCode: "US", errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       greekPhoneRule,
       "1111111111",
@@ -89,8 +98,11 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateStringMaxLengthRule() async {
+  func testValidateStringMaxLengthRule_WhenValueExceedsOrFitsTheMaximum_ThenOnlyTheLongOnesFail() async {
+    // Given
     let rules = [Rule.ValidateStringMaxLength(length: 10, errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       rules,
       "aaaaaaaaaaa",
@@ -108,8 +120,11 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateStringMinLengthRule() async {
+  func testValidateStringMinLengthRule_WhenValueIsBelowOrReachesTheMinimum_ThenOnlyTheShortOnesFail() async {
+    // Given
     let rules = [Rule.ValidateStringMinLength(length: 5, errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       rules,
       "aaaa",
@@ -127,12 +142,14 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateRegexRule() async {
+  func testValidateRegexRule_WhenValuesAreMatchedAgainstEachPattern_ThenOnlyMatchingValuesSucceed() async {
+    // Given
     let atLeastOneCapitalLetterRule = [Rule.ValidateRegex(regex: ".*[A-Z].*", errorMessage: plainErrorMessage)]
     let atLeastOneDigitRule = [Rule.ValidateRegex(regex: ".*(\\d).*", errorMessage: plainErrorMessage)]
     let atLeastOneSpecialCharRule = [Rule.ValidateRegex(regex: ".*[^a-zA-Z0-9].*", errorMessage: plainErrorMessage)]
     let onlyLettersNumbersSpaceAndDashesRule = [Rule.ValidateRegex(regex: "^[a-zA-Z0-9-\\s]+$", errorMessage: plainErrorMessage)]
     
+    // Then
     await validateForm(
       atLeastOneCapitalLetterRule,
       "test",
@@ -225,8 +242,11 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateStringRangeRule() async {
+  func testValidateStringRangeRule_WhenValueIsInsideOrOutsideTheRange_ThenOnlyTheOutsideOneFails() async {
+    // Given
     let rules = [Rule.ValidateStringRange(minLength: 0, maxLength: 10, errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       rules,
       "aaaaaaaaaaa",
@@ -244,9 +264,12 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateStringMatchRule() async {
+  func testValidateStringMatchRule_WhenValueEqualsOrDiffersFromTheString_ThenOnlyTheEqualOneSucceeds() async {
+    // Given
     let isNotCaseSensitiveRule = [Rule.ValidateStringMatch(stringToMatch: "test", errorMessage: plainErrorMessage)]
     let isCaseSensitiveRule = [Rule.ValidateStringMatch(stringToMatch: "test", errorMessage: plainErrorMessage, isCaseSensitive: true)]
+
+    // Then
     await validateForm(
       isNotCaseSensitiveRule,
       "testt",
@@ -284,9 +307,12 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateStringNotMatchRule() async {
+  func testValidateStringNotMatchRule_WhenValueEqualsOrDiffersFromTheString_ThenOnlyTheEqualOneFails() async {
+    // Given
     let isNotCaseSensitiveRule = [Rule.ValidateStringNotMatch(stringToMatch: "test", errorMessage: plainErrorMessage)]
     let isCaseSensitiveRule = [Rule.ValidateStringNotMatch(stringToMatch: "test", errorMessage: plainErrorMessage, isCaseSensitive: true)]
+
+    // Then
     await validateForm(
       isNotCaseSensitiveRule,
       "test",
@@ -329,9 +355,12 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateDuplicateCharacterNotInConsecutiveOrderRule() async {
+  func testValidateDuplicateCharacterNotInConsecutiveOrderRule_WhenACharacterRepeatsTheMaximumTimesInARow_ThenOnlyThoseValuesFail() async {
+    // Given
     let maxTimesOfConsecutiveOrder2Rule = [Rule.ValidateDuplicateCharacterNotInConsecutiveOrder(maxTimesOfConsecutiveOrder: 2, errorMessage: plainErrorMessage)]
     let maxTimesOfConsecutiveOrder4Rule = [Rule.ValidateDuplicateCharacterNotInConsecutiveOrder(maxTimesOfConsecutiveOrder: 4, errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       maxTimesOfConsecutiveOrder2Rule,
       "1313",
@@ -389,8 +418,11 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateNumericNotInConsecutiveSequenceOrderRule() async {
+  func testValidateNumericNotInConsecutiveSequenceOrderRule_WhenDigitsFormARunOfFour_ThenOnlyThoseValuesFail() async {
+    // Given
     let rules = [Rule.ValidateNumericNotInConsecutiveSequenceOrder(length: 4, errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       rules,
       "1234",
@@ -453,7 +485,8 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateMultipleForms() async {
+  func testValidateForms_WhenSeveralFormsAreValidated_ThenAllFailingMessagesAreCollected() async {
+    // Given
     let forms = [
       ValidatableForm(
         inputs : [
@@ -530,7 +563,10 @@ final class TestFormValidator: XCTestCase {
       )
     ]
     
+    // When
     let result = await formValidator.validateForms(forms: forms)
+
+    // Then
     XCTAssertEqual(FormsValidationResult(
       isValid: false,
       messages: [
@@ -546,8 +582,11 @@ final class TestFormValidator: XCTestCase {
     ), result)
   }
   
-  func testValidateMaximumAmountRule() async {
+  func testValidateMaximumAmountRule_WhenAmountExceedsOrFitsTheMaximum_ThenLargeOrNonNumericValuesFail() async {
+    // Given
     let rules = [Rule.ValidateMaximumAmount(max: 5, errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       rules,
       "6",
@@ -575,8 +614,11 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateMinimumAmountRule() async {
+  func testValidateMinimumAmountRule_WhenAmountIsBelowOrReachesTheMinimum_ThenSmallOrNonNumericValuesFail() async {
+    // Given
     let rules = [Rule.ValidateMinimumAmount(min: 2, errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       rules,
       "0",
@@ -604,8 +646,11 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateNoWhiteSpaces() async {
+  func testValidateNoWhiteSpaces_WhenValueHoldsOrLacksWhiteSpace_ThenOnlyTheOnesWithWhiteSpaceFail() async {
+    // Given
     let rules = [Rule.ValidateNoWhiteSpaces(errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(
       rules,
       " ",
@@ -638,9 +683,11 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateUrl() async {
+  func testValidateUrl_WhenValuesAreCheckedAsUrls_ThenOnlyUrlsWithASchemeHostAndQuerySucceed() async {
+    // Given
     let rules = [Rule.ValidateUrl(errorMessage: plainErrorMessage, shouldValidatePath: false)]
     
+    // Then
     await validateForm(
       rules,
       "",
@@ -718,8 +765,11 @@ final class TestFormValidator: XCTestCase {
     )
   }
   
-  func testValidateStringLengthsRule() async {
+  func testValidateStringLengthsRule_WhenLengthIsListedOrNot_ThenOnlyListedLengthsSucceed() async {
+    // Given
     let rules = [Rule.ValidateStringLengths(lengths: [4, 6, 8], errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(rules, "ab", validationError)
     await validateForm(rules, "abc", validationError)
     await validateForm(rules, "abcd", validationSuccess)
@@ -730,27 +780,33 @@ final class TestFormValidator: XCTestCase {
     await validateForm(rules, "", validationError)
   }
 
+  /// A length below 2 short-circuits to success regardless of the input.
   func testValidateNumericNotInConsecutiveSequenceOrder_WhenLengthIsLessThanTwo_ThenAlwaysSuccess() async {
-    // length < 2 short-circuits to success regardless of input
+    // Given
     let rules = [Rule.ValidateNumericNotInConsecutiveSequenceOrder(length: 1, errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(rules, "1", validationSuccess)
     await validateForm(rules, "9", validationSuccess)
     await validateForm(rules, "", validationSuccess)
   }
 
+  /// A `maxTimesOfConsecutiveOrder` below 2 returns true unconditionally (line 238), so even strings like "1111" pass the rule.
   func testValidateDuplicateCharacter_WhenMaxConsecutiveOrderIsLessThanTwo_ThenAlwaysSuccess() async {
-    // maxTimesOfConsecutiveOrder < 2 returns true unconditionally (line 238),
-    // so even strings like "1111" pass the rule.
+    // Given
     let rules1 = [Rule.ValidateDuplicateCharacterNotInConsecutiveOrder(maxTimesOfConsecutiveOrder: 1, errorMessage: plainErrorMessage)]
     let rules0 = [Rule.ValidateDuplicateCharacterNotInConsecutiveOrder(maxTimesOfConsecutiveOrder: 0, errorMessage: plainErrorMessage)]
+
+    // Then
     await validateForm(rules1, "1111", validationSuccess)
     await validateForm(rules1, "aaaa", validationSuccess)
     await validateForm(rules0, "0000", validationSuccess)
   }
 
+  /// `shouldValidatePath: true` with a URL that has an empty path component (e.g. `https://example.com`) hits the
+  /// empty-path failure branch (line 159).
   func testValidateUrl_WhenPathIsEmptyAndShouldValidatePath_ThenFailsValidation() async {
-    // shouldValidatePath: true + URL with empty path component
-    // (e.g. `https://example.com`) hits the empty-path failure branch (line 159).
+    // Given
     let rules = [Rule.ValidateUrl(
       errorMessage: plainErrorMessage,
       shouldValidateHost: false,
@@ -758,6 +814,8 @@ final class TestFormValidator: XCTestCase {
       shouldValidateQuery: false,
       shouldValidatePath: true
     )]
+
+    // Then
     await validateForm(rules, "https://example.com", validationError)
   }
 

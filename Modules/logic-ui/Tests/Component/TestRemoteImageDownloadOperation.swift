@@ -24,15 +24,18 @@ final class TestRemoteImageDownloadOperation: EudiTest {
   private let logo = URL(string: "https://issuer.example/logo.png")!
 
   func testRedirect_WhenItLeavesTheOrigin_ThenIsNotFollowed() {
+    // Then
     assertRedirect(to: "https://elsewhere.example/logo.png", isFollowed: false)
     assertRedirect(to: "http://issuer.example/logo.png", isFollowed: false)
   }
 
   func testRedirect_WhenItStaysOnTheOrigin_ThenIsFollowed() {
+    // Then
     assertRedirect(to: "https://issuer.example/other.png", isFollowed: true)
   }
 
   func testRedirect_WhenTheSessionAsks_ThenTheOperationAnswers() {
+    // Then
     XCTAssertTrue(
       RemoteImageDownloadOperation.instancesRespond(
         to: #selector(URLSessionTaskDelegate.urlSession(_:task:willPerformHTTPRedirection:newRequest:completionHandler:))
@@ -41,19 +44,30 @@ final class TestRemoteImageDownloadOperation: EudiTest {
   }
 
   func testProgress_WhenTheDataExceedsTheLimit_ThenTheDownloadStops() {
+    // Given
     let reported = expectation(description: "progress")
     reported.isInverted = true
+
+    // When
     receive(byteCount: RemoteImagePolicy.maxImageByteCount + 1) { reported.fulfill() }
+
+    // Then
     wait(for: [reported], timeout: 0.2)
   }
 
   func testProgress_WhenTheDataIsWithinTheLimit_ThenItIsReported() {
+    // Given
     let reported = expectation(description: "progress")
+
+    // When
     receive(byteCount: 1) { reported.fulfill() }
+
+    // Then
     wait(for: [reported], timeout: 1)
   }
 
   func testDownload_WhenTheDeclaredSizeExceedsTheLimit_ThenTheTaskIsCancelled() throws {
+    // Given
     let body = Data(count: RemoteImagePolicy.maxImageByteCount + 1).base64EncodedString()
     let image = try XCTUnwrap(URL(string: "data:application/octet-stream;base64,\(body)"))
     let operation = RemoteImageDownloadOperation(request: URLRequest(url: image), in: nil, options: [])
@@ -64,9 +78,12 @@ final class TestRemoteImageDownloadOperation: EudiTest {
       completed.fulfill()
     }
 
+    // When
     operation.start()
 
     wait(for: [completed], timeout: 5)
+
+    // Then
     XCTAssertEqual(failure.withLock { $0 }, .cancelled)
   }
 }

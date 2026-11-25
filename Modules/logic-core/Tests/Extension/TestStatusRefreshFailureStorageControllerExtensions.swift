@@ -21,18 +21,25 @@ import logic_storage
 final class TestStatusRefreshFailureStorageControllerExtensions: EudiTest {
 
   func testRetrieveIdentifiers_WhenStoreIsEmpty_ThenIsEmpty() async throws {
+    // Given
     let storage = StubStatusRefreshFailureStorageController(failure: logic_storage.StorageError.itemsNotFound)
 
+    // When
     let identifiers = try await storage.retrieveIdentifiers()
 
+    // Then
     XCTAssertEqual(identifiers, [])
   }
 
   func testRetrieveIdentifiers_WhenReadFails_ThenThrows() async {
+    // Given
     let storage = StubStatusRefreshFailureStorageController(failure: logic_storage.StorageError.itemNotFound)
 
+    // When
     do {
       _ = try await storage.retrieveIdentifiers()
+
+      // Then
       XCTFail("Expected the read error")
     } catch {
       XCTAssertNotNil(error as? logic_storage.StorageError)
@@ -40,13 +47,16 @@ final class TestStatusRefreshFailureStorageControllerExtensions: EudiTest {
   }
 
   func testRetrieveIdentifiers_WhenRecordsAreStored_ThenReturnsTheirDocuments() async throws {
+    // Given
     let storage = StubStatusRefreshFailureStorageController(records: [
       StatusRefreshFailure(identifier: "a"),
       StatusRefreshFailure(identifier: "b")
     ])
 
+    // When
     let identifiers = try await storage.retrieveIdentifiers()
 
+    // Then
     XCTAssertEqual(identifiers, ["a", "b"])
   }
 }

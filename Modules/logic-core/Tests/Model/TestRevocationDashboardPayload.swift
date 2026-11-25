@@ -20,19 +20,34 @@ import XCTest
 final class TestRevocationDashboardPayload: EudiTest {
 
   func testInitUserInfo_WhenBuiltFromItsOwnUserInfo_ThenRoundTrips() {
+    // Given
     let payload = RevocationDashboardPayload(revoked: ["a": "PID"], suspended: ["b": "mDL"])
 
-    XCTAssertEqual(RevocationDashboardPayload(userInfo: payload.userInfo), payload)
+    // When
+    let restored = RevocationDashboardPayload(userInfo: payload.userInfo)
+
+    // Then
+    XCTAssertEqual(restored, payload)
   }
 
   func testInitUserInfo_WhenBothGroupsAreEmpty_ThenIsNil() {
+    // Given
     let payload = RevocationDashboardPayload(revoked: [:], suspended: [:])
 
-    XCTAssertNil(RevocationDashboardPayload(userInfo: payload.userInfo))
+    // When
+    let restored = RevocationDashboardPayload(userInfo: payload.userInfo)
+
+    // Then
+    XCTAssertNil(restored)
   }
 
   func testInitUserInfo_WhenUserInfoHasTheOldFlatShape_ThenIsNil() {
-    XCTAssertNil(RevocationDashboardPayload(userInfo: ["PID": "a"]))
-    XCTAssertNil(RevocationDashboardPayload(userInfo: nil))
+    // When
+    let flat = RevocationDashboardPayload(userInfo: ["PID": "a"])
+    let none = RevocationDashboardPayload(userInfo: nil)
+
+    // Then
+    XCTAssertNil(flat)
+    XCTAssertNil(none)
   }
 }

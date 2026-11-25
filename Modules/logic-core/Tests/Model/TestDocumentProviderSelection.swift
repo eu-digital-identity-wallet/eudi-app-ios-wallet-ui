@@ -21,6 +21,7 @@ import MdocDataModel18013
 final class TestDocumentProviderSelection: EudiTest {
 
   func testInit_WhenTheSheetShowsDocuments_ThenSelectsOnlyThemAndTheirShownClaims() {
+    // When
     let selection = DocumentProviderSelection(
       documents: [
         Self.document(id: "pid", claims: [("eu.europa.ec.eudi.pid.1", "family_name"), ("eu.europa.ec.eudi.pid.1", "birth_date")]),
@@ -28,6 +29,7 @@ final class TestDocumentProviderSelection: EudiTest {
       ]
     )
 
+    // Then
     XCTAssertEqual(selection.documentIds, ["pid", "mdl"])
     XCTAssertEqual(
       selection.claimsByDocumentId,
@@ -39,8 +41,10 @@ final class TestDocumentProviderSelection: EudiTest {
   }
 
   func testInit_WhenNothingIsShown_ThenSelectsNothing() {
+    // When
     let selection = DocumentProviderSelection(documents: [])
 
+    // Then
     XCTAssertTrue(selection.documentIds.isEmpty)
     XCTAssertTrue(selection.claimsByDocumentId.isEmpty)
   }

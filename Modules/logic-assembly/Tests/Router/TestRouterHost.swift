@@ -53,96 +53,139 @@ final class TestRouterHost: EudiTest {
 
   @MainActor
   func testUserIsLoggedInWithDocuments_WhenTheDashboardIsOnThePath_ThenNeedsAnUnlockedSession() {
+    // Given
     let host = makeHost(isUnlocked: true)
     host.push(with: dashboard)
-    XCTAssertTrue(host.userIsLoggedInWithDocuments())
 
+    // When
+    let result = host.userIsLoggedInWithDocuments()
+
+    // Then
+    XCTAssertTrue(result)
+
+    // When
     stubSession(isUnlocked: false)
 
+    // Then
     XCTAssertFalse(host.userIsLoggedInWithDocuments())
   }
 
   @MainActor
   func testUserIsLoggedInWithNoDocuments_WhenAddDocumentIsOnThePath_ThenNeedsAnUnlockedSession() {
+    // Given
     let host = makeHost(isUnlocked: true)
     host.push(with: .featureIssuanceModule(.issuanceAddDocument(config: NoConfig())))
-    XCTAssertTrue(host.userIsLoggedInWithNoDocuments())
 
+    // When
+    let result = host.userIsLoggedInWithNoDocuments()
+
+    // Then
+    XCTAssertTrue(result)
+
+    // When
     stubSession(isUnlocked: false)
 
+    // Then
     XCTAssertFalse(host.userIsLoggedInWithNoDocuments())
   }
 
   @MainActor
   func testPush_WhenLocked_ThenOpensOnlyALoginScreen() {
+    // Given
     let host = makeHost(isUnlocked: false)
 
+    // When
     host.push(with: dashboard)
+
+    // Then
     XCTAssertNil(host.getCurrentScreen())
+
+    // When
     host.push(with: login)
 
+    // Then
     XCTAssertEqual(host.getCurrentScreen(), login)
   }
 
   @MainActor
   func testRequireLoginIfLocked_WhenLockedWithAWalletScreenOnThePath_ThenClearsThePath() {
+    // Given
     let host = makeHost(isUnlocked: true)
     host.push(with: dashboard)
 
+    // When
     stubSession(isUnlocked: false)
     host.requireLoginIfLocked()
 
+    // Then
     XCTAssertNil(host.getCurrentScreen())
   }
 
   @MainActor
   func testRequireLoginIfLocked_WhenUnlocked_ThenKeepsThePath() {
+    // Given
     let host = makeHost(isUnlocked: true)
     host.push(with: dashboard)
 
+    // When
     host.requireLoginIfLocked()
 
+    // Then
     XCTAssertEqual(host.getCurrentScreen(), dashboard)
   }
 
   @MainActor
   func testRequireLoginIfLocked_WhenOnlyLoginScreensAreOnThePath_ThenKeepsThem() {
+    // Given
     let host = makeHost(isUnlocked: false)
     host.push(with: login)
 
+    // When
     host.requireLoginIfLocked()
 
+    // Then
     XCTAssertEqual(host.getCurrentScreen(), login)
   }
 
   @MainActor
   func testIsInProtectedFlow_WhenAProtectedScreenFollowsAScreenPastLogin_ThenIsTrue() async throws {
+    // Given
     let host = makeHost(isUnlocked: true)
     XCTAssertFalse(host.isInProtectedFlow())
 
+    // When
     host.push(with: dashboard)
     host.push(with: login)
     try await Task.sleep(seconds: 1)
 
+    // Then
     XCTAssertEqual(host.getCurrentScreen(), login)
     XCTAssertTrue(host.isInProtectedFlow())
   }
 
   @MainActor
   func testIsInProtectedFlow_WhenLoginIsAllThePathHolds_ThenIsFalse() {
+    // Given
     let host = makeHost(isUnlocked: true)
 
     host.push(with: login)
 
-    XCTAssertFalse(host.isInProtectedFlow())
+    // When
+    let result = host.isInProtectedFlow()
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   @MainActor
   func testPop_WhenThePathIsEmpty_ThenDoesNothing() {
+    // Given
     let host = makeHost(isUnlocked: true)
 
+    // When
     host.pop()
 
+    // Then
     XCTAssertNil(host.getCurrentScreen())
   }
 }

@@ -21,20 +21,31 @@ import MdocDataModel18013
 final class TestRevocationRecordUpdate: EudiTest {
 
   func testAfter_WhenTheStatusIsValid_ThenClearsOnlyASuspendedOrUnrecognisedRecord() {
-    XCTAssertEqual(RevocationRecordUpdate.after(stored: .suspended, observed: .valid), .clear)
-    XCTAssertEqual(RevocationRecordUpdate.after(stored: .unrecognised, observed: .valid), .clear)
-    XCTAssertEqual(RevocationRecordUpdate.after(stored: .revoked, observed: .valid), .keep)
-    XCTAssertEqual(RevocationRecordUpdate.after(stored: nil, observed: .valid), .keep)
+    // When
+    let suspended = RevocationRecordUpdate.after(stored: .suspended, observed: .valid)
+    let unrecognised = RevocationRecordUpdate.after(stored: .unrecognised, observed: .valid)
+    let revoked = RevocationRecordUpdate.after(stored: .revoked, observed: .valid)
+    let nothing = RevocationRecordUpdate.after(stored: nil, observed: .valid)
+
+    // Then
+    XCTAssertEqual(suspended, .clear)
+    XCTAssertEqual(unrecognised, .clear)
+    XCTAssertEqual(revoked, .keep)
+    XCTAssertEqual(nothing, .keep)
   }
 
   func testAfter_WhenTheDocumentIsRevoked_ThenKeepsTheRecordWhateverIsReported() {
+    // Given
     let observed: [CredentialStatus] = [.valid, .invalid, .suspended, .applicationSpecific(3), .reserved(3)]
+
+    // Then
     for status in observed {
       XCTAssertEqual(RevocationRecordUpdate.after(stored: .revoked, observed: status), .keep, "\(status)")
     }
   }
 
   func testAfter_WhenTheStatusIsInvalid_ThenRecordsARevocation() {
+    // Then
     for stored: DocumentRevocationStatus? in [nil, .suspended, .unrecognised] {
       XCTAssertEqual(
         RevocationRecordUpdate.after(stored: stored, observed: .invalid),
@@ -45,13 +56,22 @@ final class TestRevocationRecordUpdate: EudiTest {
   }
 
   func testAfter_WhenTheStatusIsSuspended_ThenRecordsASuspensionUnlessOneIsStored() {
-    XCTAssertEqual(RevocationRecordUpdate.after(stored: nil, observed: .suspended), .record(.suspended))
-    XCTAssertEqual(RevocationRecordUpdate.after(stored: .unrecognised, observed: .suspended), .record(.suspended))
-    XCTAssertEqual(RevocationRecordUpdate.after(stored: .suspended, observed: .suspended), .keep)
+    // When
+    let nothing = RevocationRecordUpdate.after(stored: nil, observed: .suspended)
+    let unrecognised = RevocationRecordUpdate.after(stored: .unrecognised, observed: .suspended)
+    let suspended = RevocationRecordUpdate.after(stored: .suspended, observed: .suspended)
+
+    // Then
+    XCTAssertEqual(nothing, .record(.suspended))
+    XCTAssertEqual(unrecognised, .record(.suspended))
+    XCTAssertEqual(suspended, .keep)
   }
 
   func testAfter_WhenTheStatusCannotBeInterpreted_ThenRecordsItAsUnrecognisedUnlessOneIsStored() {
+    // Given
     let observed: [CredentialStatus] = [.applicationSpecific(3), .reserved(3)]
+
+    // Then
     for status in observed {
       XCTAssertEqual(RevocationRecordUpdate.after(stored: nil, observed: status), .record(.unrecognised), "\(status)")
       XCTAssertEqual(

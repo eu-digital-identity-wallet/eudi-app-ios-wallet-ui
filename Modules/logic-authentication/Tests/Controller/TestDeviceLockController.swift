@@ -20,11 +20,19 @@ import XCTest
 final class TestDeviceLockController: EudiTest {
 
   func testIsDeviceSecure_WhenAPasscodeIsSet_ThenIsTrue() {
-    XCTAssertTrue(controller(canEvaluate: true).isDeviceSecure())
+    // When
+    let result = controller(canEvaluate: true).isDeviceSecure()
+
+    // Then
+    XCTAssertTrue(result)
   }
 
   func testIsDeviceSecure_WhenNoPasscodeIsSet_ThenIsFalse() {
-    XCTAssertFalse(controller(canEvaluate: false).isDeviceSecure())
+    // When
+    let result = controller(canEvaluate: false).isDeviceSecure()
+
+    // Then
+    XCTAssertFalse(result)
   }
 }
 

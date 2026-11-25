@@ -21,16 +21,20 @@ import os
 final class TestRemoteSessionCoordinator: EudiTest {
 
   func testDeclineResponse_WhenTheWalletHasNotAnswered_ThenDeclinesOnce() async throws {
+    // Given
     let answers = RecordingAnswers()
     let coordinator = RemoteSessionCoordinatorImpl(session: .answeringFixture { answers.record($0) })
 
+    // When
     try await coordinator.declineResponse()
     try await coordinator.declineResponse()
 
+    // Then
     XCTAssertEqual(answers.sent, [false])
   }
 
   func testDeclineResponse_WhenTheResponseFailed_ThenSendsNoSecondAnswer() async throws {
+    // Given
     let answers = RecordingAnswers()
     let coordinator = RemoteSessionCoordinatorImpl(
       session: .answeringFixture { userAccepted in
@@ -39,28 +43,38 @@ final class TestRemoteSessionCoordinator: EudiTest {
       }
     )
 
+    // When
     do {
       try await coordinator.sendResponse(response: StubResponse())
+
+      // Then
       XCTFail("The response was expected to fail")
     } catch {
       XCTAssertTrue(error is SendFailure)
     }
+
+    // When
     try await coordinator.declineResponse()
 
+    // Then
     XCTAssertEqual(answers.sent, [true])
   }
 
   func testDeclineResponse_WhenTheResponseWasSent_ThenSendsNoSecondAnswer() async throws {
+    // Given
     let answers = RecordingAnswers()
     let coordinator = RemoteSessionCoordinatorImpl(session: .answeringFixture { answers.record($0) })
 
+    // When
     try await coordinator.sendResponse(response: StubResponse())
     try await coordinator.declineResponse()
 
+    // Then
     XCTAssertEqual(answers.sent, [true])
   }
 
   func testSendResponse_WhenSharedAgainAfterAFailure_ThenSendsTheResponseAgain() async throws {
+    // Given
     let answers = RecordingAnswers()
     let coordinator = RemoteSessionCoordinatorImpl(
       session: .answeringFixture { userAccepted in
@@ -69,20 +83,25 @@ final class TestRemoteSessionCoordinator: EudiTest {
       }
     )
 
+    // When
     try? await coordinator.sendResponse(response: StubResponse())
     try await coordinator.sendResponse(response: StubResponse())
 
+    // Then
     XCTAssertEqual(answers.sent, [true, true])
   }
 
   func testDeclineResponse_WhenTwoDeclinesOverlap_ThenDeclinesOnce() async throws {
+    // Given
     let answers = RecordingAnswers()
     let coordinator = RemoteSessionCoordinatorImpl(session: .answeringFixture { answers.record($0) })
 
+    // When
     async let first: Void = coordinator.declineResponse()
     async let second: Void = coordinator.declineResponse()
     _ = try await (first, second)
 
+    // Then
     XCTAssertEqual(answers.sent, [false])
   }
 }

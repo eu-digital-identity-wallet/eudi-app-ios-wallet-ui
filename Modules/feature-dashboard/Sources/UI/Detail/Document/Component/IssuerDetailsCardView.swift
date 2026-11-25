@@ -91,8 +91,7 @@ struct IssuerDetailsCardView: View {
       .padding(.horizontal, SPACING_MEDIUM)
       .padding(.bottom, SPACING_MEDIUM)
     }
-    .accessibilityElement()
-    .combineChilrenAccessibility(
+    .containChildrenAccessibility(
       locator: DocumentDetailsLocators.documetIssuerDetails
     )
   }

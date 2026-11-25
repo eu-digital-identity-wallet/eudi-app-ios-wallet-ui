@@ -74,10 +74,12 @@ final class TestHomeTabInteractor: EudiTest {
   }
   
   func testGetBleAvailability_WhenReachabilityControllerReturnsBleAvailability_ThenVerifyAvailableEnum() async {
+    // Then
     await checkBle(with: Reachability.BleAvailibity.available)
   }
   
   func testGetBleAvailability_WhenReachabilityControllerReturnsBleAvailability_ThenVerifyDisabledEnum() async {
+    // Then
     await checkBle(with: Reachability.BleAvailibity.disabled)
   }
 }

@@ -69,16 +69,13 @@ public struct ExpandableCardView<Content: View>: View {
             ),
             mainTextVerticalPadding: mainTextVerticalPadding
           ) {
-            if !isLoading {
-              let isOpening = !isExpanded
-              withAnimation {
-                isExpanded.toggle()
-              } completion: {
-                if isOpening, isExpanded {
-                  onExpand?()
-                }
-              }
-            }
+            toggle()
+          }
+          .accessibilityElement(children: .ignore)
+          .accessibilityLabel(headerAccessibilityLabel)
+          .accessibilityAddTraits(.isButton)
+          .accessibilityAction {
+            toggle()
           }
 
           if isExpanded {
@@ -93,5 +90,35 @@ public struct ExpandableCardView<Content: View>: View {
         isExpanded = true
       }
     }
+  }
+
+  /// Opens or closes the card on a tap on its header or VoiceOver's activation; nothing happens while it loads.
+  private func toggle() {
+    if !isLoading {
+      let isOpening = !isExpanded
+      withAnimation {
+        isExpanded.toggle()
+      } completion: {
+        if isOpening, isExpanded {
+          onExpand?()
+        }
+      }
+    }
+  }
+}
+
+extension ExpandableCardView {
+
+  /// The header as VoiceOver reads it, one button: its title and supporting text ("View details"), without the
+  /// chevron.
+  var headerAccessibilityLabel: String {
+    var parts: [String] = []
+    if case .text(let title) = header.mainContent {
+      parts.append(title.toString)
+    }
+    if let supportingText = header.supportingText {
+      parts.append(supportingText.toString)
+    }
+    return parts.joined(separator: ", ")
   }
 }

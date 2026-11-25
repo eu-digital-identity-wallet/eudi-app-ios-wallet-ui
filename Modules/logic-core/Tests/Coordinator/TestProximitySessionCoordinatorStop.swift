@@ -21,6 +21,7 @@ import XCTest
 final class TestProximitySessionCoordinatorStop: EudiTest {
 
   func testStopPresentation_WhenTheSessionHasATransfer_ThenItIsStoppedOnTheMainActor() async {
+    // Given
     let stopped = expectation(description: "transfer stopped")
     let coordinator = ProximitySessionCoordinatorImpl(
       session: .stoppableFixture { isMainThread in
@@ -29,12 +30,15 @@ final class TestProximitySessionCoordinatorStop: EudiTest {
       }
     )
 
+    // When
     coordinator.stopPresentation()
 
+    // Then
     await fulfillment(of: [stopped], timeout: 5)
   }
 
   func testDeinit_WhenACoordinatorIsReleasedWithoutAStop_ThenTheTransferIsLeftAlone() async {
+    // Given
     let stopped = expectation(description: "transfer stopped")
     stopped.isInverted = true
     var coordinator: ProximitySessionCoordinatorImpl? = .init(
@@ -42,28 +46,37 @@ final class TestProximitySessionCoordinatorStop: EudiTest {
     )
     XCTAssertNotNil(coordinator)
 
+    // When
     coordinator = nil
 
+    // Then
     await fulfillment(of: [stopped], timeout: 0.5)
   }
 
   func testWaitForReaderDisconnect_WhenTheReaderHasLeft_ThenReturnsTrue() async {
+    // Given
     let coordinator = ProximitySessionCoordinatorImpl(
       session: .stoppableFixture(onStop: nil, isReaderDisconnected: true)
     )
 
+    // When
     let hasLeft = await coordinator.waitForReaderDisconnect()
 
+    // Then
     XCTAssertTrue(hasLeft)
   }
 
   func testWaitForReaderDisconnect_WhenTheWaitIsCancelled_ThenReturnsFalse() async {
+    // Given
     let coordinator = ProximitySessionCoordinatorImpl(session: .stoppableFixture(onStop: nil))
     let wait = Task { await coordinator.waitForReaderDisconnect() }
 
+    // When
     wait.cancel()
 
     let hasLeft = await wait.value
+
+    // Then
     XCTAssertFalse(hasLeft)
   }
 }

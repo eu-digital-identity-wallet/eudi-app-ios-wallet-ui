@@ -21,6 +21,7 @@ import Swinject
 final class TestLogicCoreAssembly: EudiTest {
 
   func testAssemble_WhenAWorkManagerIsResolvedTwice_ThenItIsTheSameInstance() {
+    // Given
     let container = Container()
     LogicCoreAssembly().assemble(container: container)
     container.register(WalletKitController.self) { _ in MockWalletKitController() }
@@ -38,9 +39,11 @@ final class TestLogicCoreAssembly: EudiTest {
       return config
     }
 
+    // When
     let revocation = container.resolve(RevocationWorkManager.self) as AnyObject?
     let reIssuance = container.resolve(ReIssuanceWorkManager.self) as AnyObject?
 
+    // Then
     XCTAssertNotNil(revocation)
     XCTAssertNotNil(reIssuance)
     XCTAssertTrue(revocation === container.resolve(RevocationWorkManager.self) as AnyObject?)

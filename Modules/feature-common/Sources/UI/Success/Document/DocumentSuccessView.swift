@@ -123,8 +123,7 @@ private func documents<RequestItem: Sendable>(
           isLoading: viewState.isLoading,
           onItemClick: { onSelectionChanged($0.groupId) }
         )
-        .accessibilityElement()
-        .combineChilrenAccessibility(
+        .containChildrenAccessibility(
           locator: BaseRequestLocators.requestedDocument(index.string)
         )
       }

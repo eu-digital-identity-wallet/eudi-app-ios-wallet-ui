@@ -27,7 +27,8 @@ final class TestTransactionEntryExtensions: EudiTest {
     Locale.current.systemLanguageCode ?? "en"
   }
 
-  func testToTransactionLogDomain_whenPresentationIsCompleted_thenMapsPartyRegistrationAndClaims() throws {
+  func testToTransactionLogDomain_WhenPresentationIsCompleted_ThenMapsPartyRegistrationAndClaims() throws {
+    // Given
     let entry = TransactionEntry.presentation(
       .init(
         transactionIdentifier: "tx-1",
@@ -64,8 +65,10 @@ final class TestTransactionEntryExtensions: EudiTest {
       )
     )
 
+    // When
     let domain = entry.toTransactionLogDomain(id: "row-1", parentPresentationId: nil)
 
+    // Then
     guard case .presentation(let presentation)? = domain else {
       return XCTFail("Expected a presentation, got \(String(describing: domain))")
     }
@@ -124,7 +127,8 @@ final class TestTransactionEntryExtensions: EudiTest {
     )
   }
 
-  func testToTransactionLogDomain_whenPresentationHasNoRegistration_thenRegistrationAndIntermediaryAreNil() throws {
+  func testToTransactionLogDomain_WhenPresentationHasNoRegistration_ThenRegistrationAndIntermediaryAreNil() throws {
+    // Given
     let entry = TransactionEntry.presentation(
       .init(
         transactionIdentifier: "tx-2",
@@ -137,8 +141,10 @@ final class TestTransactionEntryExtensions: EudiTest {
       )
     )
 
+    // When
     let domain = entry.toTransactionLogDomain(id: "row-2", parentPresentationId: nil)
 
+    // Then
     guard case .presentation(let presentation)? = domain else {
       return XCTFail("Expected a presentation")
     }
@@ -156,7 +162,8 @@ final class TestTransactionEntryExtensions: EudiTest {
     XCTAssertTrue(presentation.claimsPresented.isEmpty)
   }
 
-  func testToTransactionLogDomain_whenPurposeHasNoDeviceLanguage_thenFallsBackToTheFirst() throws {
+  func testToTransactionLogDomain_WhenPurposeHasNoDeviceLanguage_ThenFallsBackToTheFirst() throws {
+    // Given
     let entry = TransactionEntry.presentation(
       .init(
         transactionIdentifier: "tx-3",
@@ -168,13 +175,18 @@ final class TestTransactionEntryExtensions: EudiTest {
       )
     )
 
-    guard case .presentation(let presentation)? = entry.toTransactionLogDomain(id: "row-3", parentPresentationId: nil) else {
+    // When
+    let result = entry.toTransactionLogDomain(id: "row-3", parentPresentationId: nil)
+
+    // Then
+    guard case .presentation(let presentation)? = result else {
       return XCTFail("Expected a presentation")
     }
     XCTAssertEqual(presentation.registration?.purpose, "First written")
   }
 
-  func testToTransactionLogDomain_whenCredentialIssuance_thenMapsDetails() throws {
+  func testToTransactionLogDomain_WhenCredentialIssuance_ThenMapsDetails() throws {
+    // Given
     let entry = TransactionEntry.credentialIssuance(
       .init(
         transactionIdentifier: "issuance:doc-1",
@@ -194,7 +206,11 @@ final class TestTransactionEntryExtensions: EudiTest {
       )
     )
 
-    guard case .credentialIssuance(let issuance)? = entry.toTransactionLogDomain(id: "row-4", parentPresentationId: nil) else {
+    // When
+    let actual = entry.toTransactionLogDomain(id: "row-4", parentPresentationId: nil)
+
+    // Then
+    guard case .credentialIssuance(let issuance)? = actual else {
       return XCTFail("Expected a credential issuance")
     }
     XCTAssertEqual(issuance.id, "row-4")
@@ -216,7 +232,8 @@ final class TestTransactionEntryExtensions: EudiTest {
     )
   }
 
-  func testToTransactionLogDomain_whenCredentialReissuance_thenMapsToReissuance() throws {
+  func testToTransactionLogDomain_WhenCredentialReissuance_ThenMapsToReissuance() throws {
+    // Given
     let entry = TransactionEntry.credentialReissuance(
       .init(
         transactionIdentifier: "issuance:doc-2",
@@ -231,7 +248,11 @@ final class TestTransactionEntryExtensions: EudiTest {
       )
     )
 
-    guard case .credentialReissuance(let reissuance)? = entry.toTransactionLogDomain(id: "row-5", parentPresentationId: nil) else {
+    // When
+    let actual = entry.toTransactionLogDomain(id: "row-5", parentPresentationId: nil)
+
+    // Then
+    guard case .credentialReissuance(let reissuance)? = actual else {
       return XCTFail("Expected a credential reissuance")
     }
     XCTAssertEqual(reissuance.result, .completed)
@@ -241,7 +262,8 @@ final class TestTransactionEntryExtensions: EudiTest {
     XCTAssertNil(reissuance.details.issuer.type)
   }
 
-  func testToTransactionLogDomain_whenCredentialDeletion_thenMapsCredentialAndIssuer() throws {
+  func testToTransactionLogDomain_WhenCredentialDeletion_ThenMapsCredentialAndIssuer() throws {
+    // Given
     let entry = TransactionEntry.credentialDeletion(
       .init(
         transactionIdentifier: "tx-6",
@@ -253,7 +275,11 @@ final class TestTransactionEntryExtensions: EudiTest {
       )
     )
 
-    guard case .credentialDeletion(let deletion)? = entry.toTransactionLogDomain(id: "row-6", parentPresentationId: nil) else {
+    // When
+    let result = entry.toTransactionLogDomain(id: "row-6", parentPresentationId: nil)
+
+    // Then
+    guard case .credentialDeletion(let deletion)? = result else {
       return XCTFail("Expected a credential deletion")
     }
     XCTAssertEqual(deletion.credential, .init(identifier: .sdJwtPid))
@@ -263,7 +289,8 @@ final class TestTransactionEntryExtensions: EudiTest {
     )
   }
 
-  func testToTransactionLogDomain_whenSigningSealing_thenMapsServiceAndDocument() throws {
+  func testToTransactionLogDomain_WhenSigningSealing_ThenMapsServiceAndDocument() throws {
+    // Given
     let entry = TransactionEntry.signingSealing(
       .init(
         transactionIdentifier: "sign-1:0",
@@ -279,7 +306,11 @@ final class TestTransactionEntryExtensions: EudiTest {
       )
     )
 
-    guard case .signingSealing(let signing)? = entry.toTransactionLogDomain(id: "row-7", parentPresentationId: nil) else {
+    // When
+    let result = entry.toTransactionLogDomain(id: "row-7", parentPresentationId: nil)
+
+    // Then
+    guard case .signingSealing(let signing)? = result else {
       return XCTFail("Expected a signing transaction")
     }
     XCTAssertEqual(
@@ -296,7 +327,8 @@ final class TestTransactionEntryExtensions: EudiTest {
     XCTAssertEqual(signing.dtbsr, "ZGlnZXN0")
   }
 
-  func testToTransactionLogDomain_whenSigningFileSizeIsNotNumeric_thenFileSizeIsNil() throws {
+  func testToTransactionLogDomain_WhenSigningFileSizeIsNotNumeric_ThenFileSizeIsNil() throws {
+    // Given
     let entry = TransactionEntry.signingSealing(
       .init(
         transactionIdentifier: "sign-2:0",
@@ -307,14 +339,19 @@ final class TestTransactionEntryExtensions: EudiTest {
       )
     )
 
-    guard case .signingSealing(let signing)? = entry.toTransactionLogDomain(id: "row-8", parentPresentationId: nil) else {
+    // When
+    let actual = entry.toTransactionLogDomain(id: "row-8", parentPresentationId: nil)
+
+    // Then
+    guard case .signingSealing(let signing)? = actual else {
       return XCTFail("Expected a signing transaction")
     }
     XCTAssertNil(signing.fileSizeBytes)
     XCTAssertEqual(signing.result, .notCompleted(reason: "Signing failed"))
   }
 
-  func testToTransactionLogDomain_whenDataDeletionRequestHasParent_thenMapsWithParent() throws {
+  func testToTransactionLogDomain_WhenDataDeletionRequestHasParent_ThenMapsWithParent() throws {
+    // Given
     let entry = TransactionEntry.dataDeletionRequest(
       .init(
         transactionIdentifier: "ddr-1",
@@ -326,7 +363,11 @@ final class TestTransactionEntryExtensions: EudiTest {
       )
     )
 
-    guard case .dataDeletionRequest(let request)? = entry.toTransactionLogDomain(id: "ddr-1", parentPresentationId: "tx-1") else {
+    // When
+    let result = entry.toTransactionLogDomain(id: "ddr-1", parentPresentationId: "tx-1")
+
+    // Then
+    guard case .dataDeletionRequest(let request)? = result else {
       return XCTFail("Expected a data deletion request")
     }
     XCTAssertEqual(request.parentPresentationId, "tx-1")
@@ -335,26 +376,34 @@ final class TestTransactionEntryExtensions: EudiTest {
     XCTAssertEqual(entry.toTransactionLogDomain(id: "ddr-1", parentPresentationId: "tx-1")?.parentPresentationId, "tx-1")
   }
 
-  func testToTransactionLogDomain_whenActionParentIsMissingBlankOrSelf_thenReturnsNil() throws {
+  func testToTransactionLogDomain_WhenActionParentIsMissingBlankOrSelf_ThenReturnsNil() throws {
+    // Given
     let entry = TransactionEntry.dpaReport(
       .init(transactionIdentifier: "dpar-1", time: time, transactionResult: .completed, dpaName: .init(content: "DPA"))
     )
 
+    // Then
     XCTAssertNil(entry.toTransactionLogDomain(id: "dpar-1", parentPresentationId: nil))
     XCTAssertNil(entry.toTransactionLogDomain(id: "dpar-1", parentPresentationId: ""))
     XCTAssertNil(entry.toTransactionLogDomain(id: "dpar-1", parentPresentationId: "dpar-1"))
     XCTAssertNotNil(entry.toTransactionLogDomain(id: "dpar-1", parentPresentationId: "tx-1"))
   }
 
-  func testToTransactionLogDomain_whenKindIsUnsupported_thenReturnsNil() throws {
+  func testToTransactionLogDomain_WhenKindIsUnsupported_ThenReturnsNil() throws {
+    // Given
     let entry = TransactionEntry.pseudonymGeneration(
       .init(transactionIdentifier: "pseudo-1", time: time, transactionResult: .completed, pseudonym: .init(value: "abc"))
     )
 
-    XCTAssertNil(entry.toTransactionLogDomain(id: "pseudo-1", parentPresentationId: nil))
+    // When
+    let result = entry.toTransactionLogDomain(id: "pseudo-1", parentPresentationId: nil)
+
+    // Then
+    XCTAssertNil(result)
   }
 
-  func testStorageRoundTrip_whenEntryIsStoredAndReadBack_thenDomainIsPreserved() throws {
+  func testStorageRoundTrip_WhenEntryIsStoredAndReadBack_ThenDomainIsPreserved() throws {
+    // Given
     let entry = TransactionEntry.presentation(
       .init(
         transactionIdentifier: "tx-9",
@@ -366,8 +415,10 @@ final class TestTransactionEntryExtensions: EudiTest {
       )
     )
 
+    // When
     let stored = try entry.toTransactionLogStorage(parentPresentationId: nil)
 
+    // Then
     XCTAssertEqual(stored.identifier, "tx-9")
     XCTAssertNil(stored.parentPresentationId)
     XCTAssertFalse(stored.value.contains("rawResponse"))
@@ -377,23 +428,28 @@ final class TestTransactionEntryExtensions: EudiTest {
     )
   }
 
-  func testStorageRoundTrip_whenActionIsStoredWithParent_thenParentIsReadBack() throws {
+  func testStorageRoundTrip_WhenActionIsStoredWithParent_ThenParentIsReadBack() throws {
+    // Given
     let entry = TransactionEntry.dpaReport(
       .init(transactionIdentifier: "dpar-2", time: time, transactionResult: .completed)
     )
 
+    // When
     let stored = try entry.toTransactionLogStorage(parentPresentationId: "tx-9")
 
+    // Then
     XCTAssertEqual(stored.parentPresentationId, "tx-9")
     XCTAssertEqual(stored.toTransactionLogDomain()?.parentPresentationId, "tx-9")
   }
 
-  func testToTransactionEntry_whenStoredValueUsesTheLegacyModel_thenReturnsNil() {
+  func testToTransactionEntry_WhenStoredValueUsesTheLegacyModel_ThenReturnsNil() {
+    // Given
     let legacy = logic_storage.TransactionLog(
       identifier: "legacy",
       value: #"{"timestamp":1700000000,"status":"completed","type":"presentation","dataFormat":"cbor"}"#
     )
 
+    // Then
     XCTAssertNil(legacy.toTransactionEntry())
     XCTAssertNil(legacy.toTransactionLogDomain())
   }

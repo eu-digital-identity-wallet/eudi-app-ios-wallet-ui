@@ -20,32 +20,38 @@ import XCTest
 final class TestWalletKitControllerRegistrations: EudiTest {
 
   func testRegistrationDescriptors_WhenOffering_ThenRegistersTheUnblockedDocuments() {
+    // When
     let descriptors = WalletKitControllerImpl.registrationDescriptors(
       candidates: [candidate("mdl"), candidate("pid")],
       blockedDocumentIds: ["pid"],
       isOffering: true
     )
 
+    // Then
     XCTAssertEqual(descriptors.map(\.documentIdentifier), ["mdl"])
   }
 
   func testRegistrationDescriptors_WhenTheOfferingIsOff_ThenRegistersNothing() {
+    // When
     let descriptors = WalletKitControllerImpl.registrationDescriptors(
       candidates: [candidate("mdl")],
       blockedDocumentIds: [],
       isOffering: false
     )
 
+    // Then
     XCTAssertTrue(descriptors.isEmpty)
   }
 
   func testRegistrationDescriptors_WhenTheRecordsCannotBeRead_ThenRegistersNothing() {
+    // When
     let descriptors = WalletKitControllerImpl.registrationDescriptors(
       candidates: [candidate("mdl")],
       blockedDocumentIds: nil,
       isOffering: true
     )
 
+    // Then
     XCTAssertTrue(descriptors.isEmpty)
   }
 }

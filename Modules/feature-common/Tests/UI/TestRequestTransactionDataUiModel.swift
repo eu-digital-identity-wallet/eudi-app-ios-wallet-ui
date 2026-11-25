@@ -24,7 +24,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
 
   private let sectionId = "transaction-data:0"
 
-  func testToRequestTransactionDataUiModel_whenThereAreNoTransactions_thenIsNil() {
+  func testToRequestTransactionDataUiModel_WhenThereAreNoTransactions_ThenIsNil() {
     // Given
     let transactions: [PresentationTransactionDataDomain] = []
 
@@ -35,7 +35,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     XCTAssertNil(model)
   }
 
-  func testToRequestTransactionDataUiModel_whenQesApproval_thenListsTheSignatureDetailsInOrder() throws {
+  func testToRequestTransactionDataUiModel_WhenQesApproval_ThenListsTheSignatureDetailsInOrder() throws {
     // Given
     let transactions = [approval()]
 
@@ -74,7 +74,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     )
   }
 
-  func testToRequestTransactionDataUiModel_whenQesRequest_thenListsEachSignatureRequest() throws {
+  func testToRequestTransactionDataUiModel_WhenQesRequest_ThenListsEachSignatureRequest() throws {
     // Given
     let transactions = [request()]
 
@@ -110,7 +110,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     XCTAssertTrue(model.documentUrlsByItemId.isEmpty)
   }
 
-  func testToRequestTransactionDataUiModel_whenThereAreSeveralTransactions_thenNumbersThemAndShowsTheTrustFrameworkOnce() throws {
+  func testToRequestTransactionDataUiModel_WhenThereAreSeveralTransactions_ThenNumbersThemAndShowsTheTrustFrameworkOnce() throws {
     // Given
     let transactions: [PresentationTransactionDataDomain] = [approval(), .unavailable]
 
@@ -133,7 +133,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     )
   }
 
-  func testToRequestTransactionDataUiModel_whenTheDocumentIsAWebLink_thenOffersToOpenIt() throws {
+  func testToRequestTransactionDataUiModel_WhenTheDocumentIsAWebLink_ThenOffersToOpenIt() throws {
     // Given
     let transactions = [approval(href: "https://tsp.example/contract.pdf")]
 
@@ -147,7 +147,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     )
   }
 
-  func testToRequestTransactionDataUiModel_whenTheDocumentLocationIsNotAWebLink_thenOffersNoAction() throws {
+  func testToRequestTransactionDataUiModel_WhenTheDocumentLocationIsNotAWebLink_ThenOffersNoAction() throws {
     for href in ["ftp://tsp.example/contract.pdf", "https://user@tsp.example/contract.pdf", "https:///contract.pdf", "contract.pdf"] {
       // Given
       let transactions = [approval(href: href)]
@@ -162,7 +162,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     }
   }
 
-  func testToRecordedTransactionDataItems_whenRecorded_thenShowsNoTransactionTypeAndNoDocumentAction() {
+  func testToRecordedTransactionDataItems_WhenRecorded_ThenShowsNoTransactionTypeAndNoDocumentAction() {
     // Given
     let transactions = [approval()]
 
@@ -178,7 +178,7 @@ final class TestRequestTransactionDataUiModel: EudiTest {
     XCTAssertTrue(allRows.contains { $0.id == "transaction-data/transaction-0/document-0/access" })
   }
 
-  func testToRecordedTransactionDataItems_whenThereAreNoTransactions_thenIsEmpty() {
+  func testToRecordedTransactionDataItems_WhenThereAreNoTransactions_ThenIsEmpty() {
     // Given
     let transactions: [PresentationTransactionDataDomain] = []
 

@@ -21,12 +21,15 @@ import EudiWalletKit
 final class TestWalletKitControllerLogFile: EudiTest {
 
   func testRemoveLogFileOfAnEarlierBuild_WhenADebugBuildLeftItsLogFile_ThenItIsDeleted() throws {
+    // Given
     let url = try XCTUnwrap(EudiWallet.getLogFileURL(WalletKitConfigImpl.debugLogFileName))
     try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
     try Data("log".utf8).write(to: url)
 
+    // When
     WalletKitControllerImpl.removeLogFileOfAnEarlierBuild()
 
+    // Then
     XCTAssertFalse(FileManager.default.fileExists(atPath: url.path))
   }
 }

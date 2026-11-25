@@ -22,6 +22,7 @@ final class TestRemoteImagePolicy: EudiTest {
   private let logo = URL(string: "https://issuer.example/logo.png")!
 
   func testLoadableUrl_WhenTheImageIsNotHttps_ThenIsNotLoaded() {
+    // Then
     for address in ["http://issuer.example/logo.png", "file:///etc/passwd", "data:image/png;base64,AA=="] {
       XCTAssertNil(RemoteImagePolicy.loadableUrl(URL(string: address)), address)
     }
@@ -29,6 +30,7 @@ final class TestRemoteImagePolicy: EudiTest {
   }
 
   func testFollowsRedirect_WhenItLeavesTheOriginOrHttps_ThenIsFalse() {
+    // Then
     for address in [
       "https://elsewhere.example/logo.png",
       "http://issuer.example/logo.png",
@@ -40,11 +42,18 @@ final class TestRemoteImagePolicy: EudiTest {
   }
 
   func testFollowsRedirect_WhenItStaysOnTheOrigin_ThenIsTrue() {
-    XCTAssertTrue(RemoteImagePolicy.followsRedirect(from: logo, to: URL(string: "https://ISSUER.example:443/other.png")))
+    // When
+    let result = RemoteImagePolicy.followsRedirect(from: logo, to: URL(string: "https://ISSUER.example:443/other.png"))
+
+    // Then
+    XCTAssertTrue(result)
   }
 
   func testIsWithinLimit_WhenTheReceivedOrDeclaredSizeExceedsTheLimit_ThenIsFalse() {
+    // Given
     let limit = RemoteImagePolicy.maxImageByteCount
+
+    // Then
     XCTAssertFalse(RemoteImagePolicy.isWithinLimit(receivedByteCount: limit + 1, expectedByteCount: 0))
     XCTAssertFalse(RemoteImagePolicy.isWithinLimit(receivedByteCount: 0, expectedByteCount: limit + 1))
     XCTAssertTrue(RemoteImagePolicy.isWithinLimit(receivedByteCount: limit, expectedByteCount: limit))

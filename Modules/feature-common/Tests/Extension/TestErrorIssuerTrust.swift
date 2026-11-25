@@ -25,44 +25,75 @@ final class TestErrorIssuerTrust: EudiTest {
 
   // MARK: - WalletError
 
-  func testIsIssuerNotTrusted_whenWalletErrorTrustError_thenReturnsTrue() {
+  func testIsTrustBlocked_WhenWalletErrorTrustError_ThenReturnsTrue() {
+    // Given
     let error: Error = WalletError(description: "trust", code: .trustError)
-    XCTAssertTrue(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertTrue(result)
   }
 
-  func testIsIssuerNotTrusted_whenWalletErrorOtherCode_thenReturnsFalse() {
+  func testIsTrustBlocked_WhenWalletErrorOtherCode_ThenReturnsFalse() {
+    // Given
     let error: Error = WalletError(description: "boom", code: .internalError)
-    XCTAssertFalse(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertFalse(result)
   }
 
-  func testIsIssuerNotTrusted_whenWalletErrorNotSecuredRequest_thenReturnsFalse() {
-    // `.notSecuredRequest` is a distinct code from `.trustError`; only `.trustError`
-    // maps to an untrusted issuer.
+  /// `.notSecuredRequest` is a distinct code from `.trustError`; only `.trustError`
+  /// maps to an untrusted issuer.
+  func testIsTrustBlocked_WhenWalletErrorNotSecuredRequest_ThenReturnsFalse() {
+    // Given
     let error: Error = WalletError(description: "not secured", code: .notSecuredRequest)
-    XCTAssertFalse(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   // MARK: - Credential issuer metadata
 
-  func testIsIssuerNotTrusted_whenOfferResolutionFailedWithUntrustedMetadata_thenReturnsTrue() {
+  func testIsTrustBlocked_WhenOfferResolutionFailedWithUntrustedMetadata_ThenReturnsTrue() {
+    // Given
     let error: Error = WalletError(
       description: "Unable to resolve credential offer: Credential issuer metadata is not issued by a trusted issuer",
       code: .offerResolutionFailed,
       innerError: CredentialIssuerMetadataError.invalidIssuerTrust
     )
-    XCTAssertTrue(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertTrue(result)
   }
 
-  func testIsIssuerNotTrusted_whenOfferResolutionFailedWithUnsignedMetadata_thenReturnsTrue() {
+  func testIsTrustBlocked_WhenOfferResolutionFailedWithUnsignedMetadata_ThenReturnsTrue() {
+    // Given
     let error: Error = WalletError(
       description: "Unable to resolve credential offer",
       code: .offerResolutionFailed,
       innerError: CredentialIssuerMetadataError.missingRightContentTypeHeader
     )
-    XCTAssertTrue(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertTrue(result)
   }
 
-  func testIsIssuerNotTrusted_whenOfferResolutionFailedBecauseTheIssuerIsUnreachable_thenReturnsFalse() {
+  func testIsTrustBlocked_WhenOfferResolutionFailedBecauseTheIssuerIsUnreachable_ThenReturnsFalse() {
+    // Given
     let error: Error = WalletError(
       description: "Unable to resolve credential offer",
       code: .offerResolutionFailed,
@@ -70,10 +101,16 @@ final class TestErrorIssuerTrust: EudiTest {
         cause: URLError(.notConnectedToInternet)
       )
     )
-    XCTAssertFalse(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertFalse(result)
   }
 
-  func testIsIssuerNotTrusted_whenOfferResolutionFailedWithMalformedMetadata_thenReturnsFalse() {
+  func testIsTrustBlocked_WhenOfferResolutionFailedWithMalformedMetadata_ThenReturnsFalse() {
+    // Given
     let error: Error = WalletError(
       description: "Unable to resolve credential offer",
       code: .offerResolutionFailed,
@@ -81,62 +118,115 @@ final class TestErrorIssuerTrust: EudiTest {
         cause: URLError(.cannotParseResponse)
       )
     )
-    XCTAssertFalse(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertFalse(result)
   }
 
-  func testIsIssuerNotTrusted_whenOfferResolutionFailedWithoutAnInnerError_thenReturnsFalse() {
+  func testIsTrustBlocked_WhenOfferResolutionFailedWithoutAnInnerError_ThenReturnsFalse() {
+    // Given
     let error: Error = WalletError(description: "Unable to resolve credential offer", code: .offerResolutionFailed)
-    XCTAssertFalse(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertFalse(result)
   }
 
   // MARK: - MsoValidationError
 
-  func testIsIssuerNotTrusted_whenMsoIssuerTrustFailed_thenReturnsTrue() {
+  func testIsTrustBlocked_WhenMsoIssuerTrustFailed_ThenReturnsTrue() {
+    // Given
     let error: Error = MsoValidationError.issuerTrustFailed("untrusted issuer")
-    XCTAssertTrue(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertTrue(result)
   }
 
-  func testIsIssuerNotTrusted_whenMsoOtherCase_thenReturnsFalse() {
+  func testIsTrustBlocked_WhenMsoOtherCase_ThenReturnsFalse() {
+    // Given
     let error: Error = MsoValidationError.signatureVerificationFailed("bad signature")
-    XCTAssertFalse(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertFalse(result)
   }
 
-  func testIsIssuerNotTrusted_whenMsoMultipleErrorsContainsTrustFailure_thenReturnsTrue() {
+  func testIsTrustBlocked_WhenMsoMultipleErrorsContainsTrustFailure_ThenReturnsTrue() {
+    // Given
     let error: Error = MsoValidationError.multipleErrors([
       .signatureVerificationFailed("bad signature"),
       .issuerTrustFailed("untrusted issuer")
     ])
-    XCTAssertTrue(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertTrue(result)
   }
 
-  func testIsIssuerNotTrusted_whenMsoMultipleErrorsNoTrustFailure_thenReturnsFalse() {
+  func testIsTrustBlocked_WhenMsoMultipleErrorsNoTrustFailure_ThenReturnsFalse() {
+    // Given
     let error: Error = MsoValidationError.multipleErrors([
       .signatureVerificationFailed("bad signature"),
       .validityInfo("expired")
     ])
-    XCTAssertFalse(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertFalse(result)
   }
 
-  func testIsIssuerNotTrusted_whenMsoMultipleErrorsEmpty_thenReturnsFalse() {
+  func testIsTrustBlocked_WhenMsoMultipleErrorsEmpty_ThenReturnsFalse() {
+    // Given
     let error: Error = MsoValidationError.multipleErrors([])
-    XCTAssertFalse(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertFalse(result)
   }
 
-  func testIsIssuerNotTrusted_whenMsoNestedMultipleErrorsContainsTrustFailure_thenReturnsTrue() {
-    // Exercises the recursive walk through nested `.multipleErrors`.
+  /// Exercises the recursive walk through nested `.multipleErrors`.
+  func testIsTrustBlocked_WhenMsoNestedMultipleErrorsContainsTrustFailure_ThenReturnsTrue() {
+    // Given
     let error: Error = MsoValidationError.multipleErrors([
       .multipleErrors([
         .validityInfo("expired"),
         .issuerTrustFailed("untrusted issuer")
       ])
     ])
-    XCTAssertTrue(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertTrue(result)
   }
 
   // MARK: - Unrelated errors
 
-  func testIsIssuerNotTrusted_whenGenericError_thenReturnsFalse() {
+  func testIsTrustBlocked_WhenGenericError_ThenReturnsFalse() {
+    // Given
     let error: Error = NSError(domain: "com.eudi.test", code: 1)
-    XCTAssertFalse(error.isTrustBlocked)
+
+    // When
+    let result = error.isTrustBlocked
+
+    // Then
+    XCTAssertFalse(result)
   }
 }

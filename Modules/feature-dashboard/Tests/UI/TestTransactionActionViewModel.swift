@@ -28,20 +28,26 @@ final class TestTransactionActionViewModel: EudiTest {
 
   @MainActor
   func testOpenActionChannel_WhenTheHandOffFails_ThenRecordsNothing() async {
+    // Given
     let fixture = makeFixture(opens: false, recordResult: .success)
 
+    // When
     await fixture.viewModel.openActionChannel(contactUrl, contactUrl: contactUrl)
 
+    // Then
     verify(fixture.interactor, never()).recordDataProtectionAction(transactionId: any(), action: any(), contactUrl: any())
     XCTAssertEqual(fixture.viewModel.viewState.error?.description, .transactionDetailsActionOpenFailed)
   }
 
   @MainActor
   func testOpenActionChannel_WhenTheHandOffSucceeds_ThenRecordsItAfterwards() async {
+    // Given
     let fixture = makeFixture(opens: true, recordResult: .success)
 
+    // When
     await fixture.viewModel.openActionChannel(contactUrl, contactUrl: contactUrl)
 
+    // Then
     XCTAssertEqual(fixture.opener.urls, [contactUrl])
     verify(fixture.interactor).recordDataProtectionAction(transactionId: any(), action: any(), contactUrl: any())
     XCTAssertNil(fixture.viewModel.viewState.error)
@@ -50,10 +56,13 @@ final class TestTransactionActionViewModel: EudiTest {
 
   @MainActor
   func testOpenActionChannel_WhenTheRecordFails_ThenOffersToRecordAgainWithoutOpeningAgain() async {
+    // Given
     let fixture = makeFixture(opens: true, recordResult: .failure(error: WalletCoreError.unableToIssueAndStore))
 
+    // When
     await fixture.viewModel.openActionChannel(contactUrl, contactUrl: contactUrl)
 
+    // Then
     XCTAssertEqual(fixture.viewModel.viewState.error?.description, .transactionDetailsActionError)
     XCTAssertNotNil(fixture.viewModel.viewState.error?.action)
     XCTAssertEqual(fixture.opener.urls, [contactUrl])

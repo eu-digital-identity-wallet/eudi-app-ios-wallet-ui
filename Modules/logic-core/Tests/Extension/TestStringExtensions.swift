@@ -20,12 +20,22 @@ import XCTest
 final class TestStringExtensions: EudiTest {
 
   func testDecodedBase64ByteCount_WhenTheContentIsBase64InEitherAlphabet_ThenIsItsDecodedSize() {
-    XCTAssertEqual("QUJD".decodedBase64ByteCount, 3)
-    XCTAssertEqual("QUI=".decodedBase64ByteCount, 2)
-    XCTAssertEqual("Q-_x".decodedBase64ByteCount, 3)
-    XCTAssertEqual("QU JD\n".decodedBase64ByteCount, 3)
-    XCTAssertNil("not base64 !".decodedBase64ByteCount)
-    XCTAssertNil("QUJ=D".decodedBase64ByteCount)
-    XCTAssertNil("Q+_x".decodedBase64ByteCount)
+    // When
+    let plain = "QUJD".decodedBase64ByteCount
+    let padded = "QUI=".decodedBase64ByteCount
+    let urlSafe = "Q-_x".decodedBase64ByteCount
+    let withWhitespace = "QU JD\n".decodedBase64ByteCount
+    let notBase64 = "not base64 !".decodedBase64ByteCount
+    let misplacedPadding = "QUJ=D".decodedBase64ByteCount
+    let mixedAlphabets = "Q+_x".decodedBase64ByteCount
+
+    // Then
+    XCTAssertEqual(plain, 3)
+    XCTAssertEqual(padded, 2)
+    XCTAssertEqual(urlSafe, 3)
+    XCTAssertEqual(withWhitespace, 3)
+    XCTAssertNil(notBase64)
+    XCTAssertNil(misplacedPadding)
+    XCTAssertNil(mixedAlphabets)
   }
 }
