@@ -72,6 +72,7 @@ public protocol ProximityInteractor: Sendable {
   func onResponsePrepare(requestItems: [RequestDataUiModel]) async -> ProximityResponsePreparationPartialState
   func onSendResponse() async -> ProximityResponsePartialState
   func stopPresentation() async
+  func stopPresentationOnceTheReaderLeaves() async
   func registrationForFailedRequest() async -> RelyingPartyRegistration?
   /// Returns true once the reader ends the Bluetooth session, false if the wait is cancelled first.
   func waitForReaderDisconnect() async -> Bool
@@ -81,18 +82,23 @@ public protocol ProximityInteractor: Sendable {
 /// Works on the session its route carries, never on another one started later.
 final actor ProximityInteractorImpl: ProximityInteractor {
 
+  static let readerLeaveTimeout: TimeInterval = 30
+
   private let proximitySessionCoordinator: ProximitySessionCoordinator
   private let walletKitController: WalletKitController
   private let configUiLogic: ConfigUiLogic
+  private let readerLeaveTimeout: TimeInterval
 
   init(
     with proximitySessionCoordinator: ProximitySessionCoordinator,
     and walletKitController: WalletKitController,
-    configUiLogic: ConfigUiLogic
+    configUiLogic: ConfigUiLogic,
+    readerLeaveTimeout: TimeInterval = ProximityInteractorImpl.readerLeaveTimeout
   ) {
     self.proximitySessionCoordinator = proximitySessionCoordinator
     self.walletKitController = walletKitController
     self.configUiLogic = configUiLogic
+    self.readerLeaveTimeout = readerLeaveTimeout
   }
 
   func getCoordinator() async -> ProximityCoordinatorPartialState {
@@ -196,6 +202,18 @@ final actor ProximityInteractorImpl: ProximityInteractor {
   public func stopPresentation() async {
     await walletKitController.stopProximityPresentation(proximitySessionCoordinator)
     proximitySessionCoordinator.stopPresentation()
+  }
+
+  public func stopPresentationOnceTheReaderLeaves() async {
+    let coordinator = proximitySessionCoordinator
+    let timeout = readerLeaveTimeout
+    await withTaskGroup(of: Void.self) { group in
+      group.addTask { _ = await coordinator.waitForReaderDisconnect() }
+      group.addTask { try? await Task.sleep(seconds: timeout) }
+      await group.next()
+      group.cancelAll()
+    }
+    await stopPresentation()
   }
 
   public func waitForReaderDisconnect() async -> Bool {
