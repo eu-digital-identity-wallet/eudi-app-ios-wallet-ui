@@ -95,8 +95,7 @@ struct RequestAuthorizationView: View {
                   }
                 )
                 .id(section.id)
-                .accessibilityElement()
-                .combineChilrenAccessibility(
+                .containChildrenAccessibility(
                   locator: BaseRequestLocators.requestedDocument(index.string)
                 )
               }

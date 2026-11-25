@@ -204,8 +204,7 @@ private struct BaseRequestViewContainer: View {
         proxy: proxy,
         onItemClick: { onSelectionChanged($0) }
       )
-      .accessibilityElement()
-      .combineChilrenAccessibility(
+      .containChildrenAccessibility(
         locator: BaseRequestLocators.requestedDocument(index.string)
       )
     }
@@ -240,8 +239,7 @@ private struct BaseRequestViewContainer: View {
           }
         }
       )
-      .accessibilityElement()
-      .combineChilrenAccessibility(
+      .containChildrenAccessibility(
         locator: BaseRequestLocators.requestedDocument(index.string)
       )
     }

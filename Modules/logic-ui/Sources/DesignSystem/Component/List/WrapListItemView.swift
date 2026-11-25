@@ -16,6 +16,21 @@
 import SwiftUI
 import logic_resources
 
+/// The traits VoiceOver gives a row that shows a choice: a button while the user can change it, and selected while
+/// it is chosen.
+struct RowSelection: Equatable {
+  let isSelected: Bool
+  let canChange: Bool
+
+  var traits: AccessibilityTraits {
+    var traits: AccessibilityTraits = canChange ? .isButton : []
+    if isSelected {
+      traits.formUnion(.isSelected)
+    }
+    return traits
+  }
+}
+
 public struct WrapListItemView: View {
   public enum ClickableArea {
     case entireRow
@@ -90,6 +105,7 @@ public struct WrapListItemView: View {
             .foregroundColor(
               isSelected ? Theme.shared.color.accent : Theme.shared.color.secondaryLabel
             )
+            .accessibilityHidden(true)
         }
       }
 
@@ -172,18 +188,9 @@ public struct WrapListItemView: View {
             .resizable().scaledToFit()
             .frame(width: 16, height: 16)
             .foregroundColor(color)
-        case .checkbox(let enabled, let isChecked, let onToggle):
-          WrapCheckboxView(
-            checkboxData: CheckboxData(
-              isChecked: isChecked,
-              enabled: enabled,
-              onCheckedChange: { _ in
-                if clickableArea == .trailingContent {
-                  onToggle(!isChecked)
-                } else {
-                  action?()
-                }
-              }))
+        case .checkbox(let enabled, let isChecked, _):
+          WrapCheckboxView(checkboxData: checkboxData(isEnabled: enabled, isChecked: isChecked))
+            .accessibilityHidden(true)
         case .empty, .textWithIcon:
           EmptyView()
         }
@@ -195,6 +202,16 @@ public struct WrapListItemView: View {
         .combineChilrenAccessibility(
           locator: locator
         )
+    }
+    .ifLet(selection) { view, selection in
+      view
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(selection.traits)
+        .if(selection.canChange) {
+          $0.accessibilityAction {
+            performSelection()
+          }
+        }
     }
     .contentShape(Rectangle())
     .onTapGesture {
@@ -208,6 +225,44 @@ public struct WrapListItemView: View {
     }
     .disabled(self.isLoading)
     .shimmer(isLoading: self.isLoading)
+  }
+}
+
+extension WrapListItemView {
+
+  /// The choice the row shows, for VoiceOver: a trailing checkbox or a leading radio button (the checkbox wins if
+  /// both); nil for any other row, which keeps its own accessibility. The user can change it when it is enabled and
+  /// something runs on a tap: the checkbox's toggle, or the row's action when the whole row is tappable.
+  var selection: RowSelection? {
+    if case .checkbox(let isEnabled, let isChecked, _) = listItem.trailingContent {
+      let isTappable = clickableArea == .trailingContent || action != nil
+      return RowSelection(isSelected: isChecked, canChange: isEnabled && isTappable)
+    }
+    if case .radioButton(let isSelected) = listItem.leadingContent {
+      return RowSelection(isSelected: isSelected, canChange: clickableArea == .entireRow && action != nil)
+    }
+    return nil
+  }
+
+  /// What a tap on a choice row does: the checkbox's own toggle when only the control is tappable, otherwise the
+  /// row's action. The checkbox and VoiceOver's activation both call it.
+  func performSelection() {
+    if clickableArea == .trailingContent, case .checkbox(_, let isChecked, let onToggle) = listItem.trailingContent {
+      onToggle(!isChecked)
+    } else {
+      action?()
+    }
+  }
+
+  /// The data of the row's trailing checkbox, whose change does what a tap on the row's control does.
+  func checkboxData(isEnabled: Bool, isChecked: Bool) -> CheckboxData {
+    CheckboxData(
+      isChecked: isChecked,
+      enabled: isEnabled,
+      onCheckedChange: { _ in
+        performSelection()
+      }
+    )
   }
 }
 
