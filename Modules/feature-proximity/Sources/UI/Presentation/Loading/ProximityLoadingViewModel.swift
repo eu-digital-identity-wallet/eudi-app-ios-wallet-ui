@@ -108,7 +108,7 @@ final class ProximityLoadingViewModel<Router: RouterHost, RequestItem: Sendable>
         case .error(let error):
           self.onError(with: error)
         case .responseSent:
-          await self.interactor.stopPresentation()
+          Task { [interactor] in await interactor.stopPresentationOnceTheReaderLeaves() }
           self.onNavigate(
             type: .push(
               getOnSuccessRoute()

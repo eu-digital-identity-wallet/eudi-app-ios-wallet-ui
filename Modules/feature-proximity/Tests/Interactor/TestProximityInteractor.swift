@@ -258,6 +258,68 @@ final class TestProximityInteractor: EudiTest {
     verify(walletKitController, never()).stopPresentation()
     verify(presentationSessionCoordinator).stopPresentation()
   }
+
+  func testStopPresentationOnceTheReaderLeaves_WhenTheReaderLeaves_ThenStopsThePresentationWithoutWaitingForTheTimeout() async {
+    // Given
+    let ownSession = presentationSessionCoordinator!
+    stub(presentationSessionCoordinator) { mock in
+      when(mock.waitForReaderDisconnect()).thenReturn(true)
+    }
+    stub(walletKitController) { mock in
+      when(mock.stopProximityPresentation(any())).thenDoNothing()
+    }
+    let interactor = makeInteractor(with: ownSession, readerLeaveTimeout: 60)
+    let start = Date()
+
+    // When
+    await interactor.stopPresentationOnceTheReaderLeaves()
+
+    // Then
+    XCTAssertLessThan(Date().timeIntervalSince(start), 5)
+    verify(walletKitController).stopProximityPresentation(ParameterMatcher { $0 === ownSession })
+    verify(presentationSessionCoordinator).stopPresentation()
+  }
+
+  func testStopPresentationOnceTheReaderLeaves_WhenTheReaderHasNotLeftYet_ThenTheSessionStaysOpen() async throws {
+    // Given
+    let session = ReaderStaysCoordinator(session: Constants.mockPresentationSession)
+    stub(session) { mock in
+      when(mock.stopPresentation()).thenDoNothing()
+    }
+    stub(walletKitController) { mock in
+      when(mock.stopProximityPresentation(any())).thenDoNothing()
+    }
+    let interactor = makeInteractor(with: session, readerLeaveTimeout: 60)
+
+    // When
+    let waiting = Task { await interactor.stopPresentationOnceTheReaderLeaves() }
+    try await Task.sleep(seconds: 0.3)
+
+    // Then
+    verify(walletKitController, never()).stopProximityPresentation(any())
+    verify(session, never()).stopPresentation()
+    waiting.cancel()
+    await waiting.value
+  }
+
+  func testStopPresentationOnceTheReaderLeaves_WhenTheReaderNeverLeaves_ThenStopsThePresentationAfterTheTimeout() async {
+    // Given
+    let session = ReaderStaysCoordinator(session: Constants.mockPresentationSession)
+    stub(session) { mock in
+      when(mock.stopPresentation()).thenDoNothing()
+    }
+    stub(walletKitController) { mock in
+      when(mock.stopProximityPresentation(any())).thenDoNothing()
+    }
+    let interactor = makeInteractor(with: session, readerLeaveTimeout: 0.2)
+
+    // When
+    await interactor.stopPresentationOnceTheReaderLeaves()
+
+    // Then
+    verify(walletKitController).stopProximityPresentation(ParameterMatcher { $0 === session })
+    verify(session).stopPresentation()
+  }
   
   /// Proximity carries no registration certificate
   func testOnRequestReceived_WhenCoordinatorRequestReceivedReturnsSuccess_ThenVerifySuccessState() async {
@@ -733,5 +795,27 @@ private extension TestProximityInteractor {
 
   static func statuses(_ documentIds: [String], as status: DocumentRevocationStatus) -> [String: DocumentRevocationStatus] {
     Dictionary(documentIds.map { ($0, status) }, uniquingKeysWith: { first, _ in first })
+  }
+
+  func makeInteractor(
+    with coordinator: ProximitySessionCoordinator,
+    readerLeaveTimeout: TimeInterval
+  ) -> ProximityInteractor {
+    ProximityInteractorImpl(
+      with: coordinator,
+      and: walletKitController,
+      configUiLogic: configUiLogic,
+      readerLeaveTimeout: readerLeaveTimeout
+    )
+  }
+}
+
+private final class ReaderStaysCoordinator: MockProximitySessionCoordinator, @unchecked Sendable {
+
+  override func waitForReaderDisconnect() async -> Bool {
+    while !Task.isCancelled {
+      try? await Task.sleep(seconds: 0.01)
+    }
+    return false
   }
 }

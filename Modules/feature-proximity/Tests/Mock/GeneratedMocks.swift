@@ -1905,6 +1905,16 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
         )
     }
 
+    public func stopPresentationOnceTheReaderLeaves() async {
+        return await cuckoo_manager.call(
+            "stopPresentationOnceTheReaderLeaves() async",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.stopPresentationOnceTheReaderLeaves()
+        )
+    }
+
     public func registrationForFailedRequest() async -> RelyingPartyRegistration? {
         return await cuckoo_manager.call(
             "registrationForFailedRequest() async -> RelyingPartyRegistration?",
@@ -1992,6 +2002,14 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractor.self,
                 method: "stopPresentation() async",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func stopPresentationOnceTheReaderLeaves() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockProximityInteractor.self,
+                method: "stopPresentationOnceTheReaderLeaves() async",
                 parameterMatchers: matchers
             ))
         }
@@ -2122,6 +2140,18 @@ public class MockProximityInteractor: ProximityInteractor, Cuckoo.ProtocolMock, 
         
         
         @discardableResult
+        func stopPresentationOnceTheReaderLeaves() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "stopPresentationOnceTheReaderLeaves() async",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
         func registrationForFailedRequest() -> Cuckoo.__DoNotUse<(), RelyingPartyRegistration?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
@@ -2179,6 +2209,10 @@ public class ProximityInteractorStub:ProximityInteractor, @unchecked Sendable {
     }
     
     public func stopPresentation() async {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    public func stopPresentationOnceTheReaderLeaves() async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     
@@ -15409,6 +15443,21 @@ public class LocatorTypeStub:LocatorType, @unchecked Sendable {
 
 
 // MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Accessibility/CombineAccessibilityModifier.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_proximity
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-ui/Sources/DesignSystem/Component/Accessibility/ContainAccessibilityModifier.swift'
 
 import Cuckoo
 import SwiftUI
