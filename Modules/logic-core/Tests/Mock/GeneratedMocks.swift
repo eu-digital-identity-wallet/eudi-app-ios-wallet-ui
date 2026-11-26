@@ -7078,15 +7078,6 @@ import logic_storage
 
 
 
-// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/DisclosedDocumentSet+CredentialQueries.swift'
-
-import Cuckoo
-import EudiWalletKit
-@testable import logic_business
-@testable import logic_core
-
-
-
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/DocClaim+Extensions.swift'
 
 import Cuckoo
@@ -7185,6 +7176,23 @@ import OpenID4VCI
 import Cuckoo
 import Foundation
 import EudiWalletKit
+@testable import logic_business
+@testable import logic_core
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/PresentationCredentialQueries+Domain.swift'
+
+import Cuckoo
+import EudiWalletKit
+@testable import logic_business
+@testable import logic_core
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/PresentationCredentialQueriesDomain+Extensions.swift'
+
+import Cuckoo
 @testable import logic_business
 @testable import logic_core
 

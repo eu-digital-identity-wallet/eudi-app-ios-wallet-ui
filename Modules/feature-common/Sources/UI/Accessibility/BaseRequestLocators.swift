@@ -38,10 +38,8 @@ public enum BaseRequestLocators: LocatorType {
     switch self {
     case .description:
       return .isStaticText
-    case .shareButton, .requestedDocument:
+    case .shareButton, .requestedDocument, .credentialChoice:
       return .isButton
-    case .credentialChoice:
-      return nil
     }
   }
 }

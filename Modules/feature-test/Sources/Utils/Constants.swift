@@ -336,6 +336,7 @@ extension Constants {
     isTrusted: true,
     overaskedClaims: [],
     transactionDataSets: [],
-    requestNames: []
+    requestNames: [],
+    credentialQueries: []
   )
 }

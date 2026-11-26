@@ -259,7 +259,8 @@ final class TestPresentationInteractor: EudiTest {
         isTrusted: request.isTrusted,
         overaskedClaims: request.overaskedClaims,
         transactionDataSets: [],
-        requestNames: []
+        requestNames: [],
+        credentialQueries: []
       )
     )
     stub(presentationCoordinator) { mock in
@@ -308,7 +309,8 @@ final class TestPresentationInteractor: EudiTest {
       isTrusted: request.isTrusted,
       overaskedClaims: request.overaskedClaims,
       transactionDataSets: [],
-      requestNames: []
+      requestNames: [],
+      credentialQueries: []
     )
     await stubReceivedRequest(portraitRequest)
 
@@ -484,7 +486,8 @@ final class TestPresentationInteractor: EudiTest {
         isTrusted: request.isTrusted,
         overaskedClaims: request.overaskedClaims,
         transactionDataSets: [["pid-sd": [.unavailable]], [:]],
-        requestNames: [nil, nil]
+        requestNames: [nil, nil],
+        credentialQueries: []
       )
     )
     stubRevokedDocumentStatuses(with: ["pid-sd"])
@@ -654,7 +657,8 @@ final class TestPresentationInteractor: EudiTest {
           isTrusted: request.isTrusted,
           overaskedClaims: request.overaskedClaims,
           transactionDataSets: [],
-          requestNames: ["option-with-revoked", "option-valid"]
+          requestNames: ["option-with-revoked", "option-valid"],
+          credentialQueries: []
         )
       )
       when(mock.setState(presentationState: any())).thenDoNothing()
@@ -692,7 +696,8 @@ final class TestPresentationInteractor: EudiTest {
           isTrusted: request.isTrusted,
           overaskedClaims: request.overaskedClaims,
           transactionDataSets: [["pid-sd": [.unavailable]], [Constants.isoMdlModelId: [transaction]]],
-          requestNames: [nil, nil]
+          requestNames: [nil, nil],
+          credentialQueries: []
         )
       )
     }

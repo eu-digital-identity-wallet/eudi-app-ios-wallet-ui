@@ -59,8 +59,11 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
       requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)
     ]
 
+    // When
+    let result = models.keepsEveryChoosableQuery()
+
     // Then
-    XCTAssertFalse(models.keepsEveryChoosableQuery())
+    XCTAssertFalse(result)
   }
 
   func testKeepsEveryChoosableQuery_WhenOneDocumentOfTheQueryIsChosen_ThenIsTrue() {
@@ -70,8 +73,11 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
       requestDataUiModel("pid-2", queryIds: ["pid"], isChosen: true)
     ]
 
+    // When
+    let result = models.keepsEveryChoosableQuery()
+
     // Then
-    XCTAssertTrue(models.keepsEveryChoosableQuery())
+    XCTAssertTrue(result)
   }
 
   func testKeepsEveryChoosableQuery_WhenTheQueryHasADocumentSharedWithTheOption_ThenIsTrue() {
@@ -82,19 +88,25 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
       requestDataUiModel("pid-3", queryIds: ["pid"], isChosen: false)
     ]
 
+    // When
+    let result = models.keepsEveryChoosableQuery()
+
     // Then
-    XCTAssertTrue(models.keepsEveryChoosableQuery())
+    XCTAssertTrue(result)
   }
 
   func testKeepsEveryChoosableQuery_WhenNoDocumentCanBeChosen_ThenIsTrue() {
     // Given
     let models = [requestDataUiModel("mdl", queryIds: [], isChosen: nil)]
 
+    // When
+    let result = models.keepsEveryChoosableQuery()
+
     // Then
-    XCTAssertTrue(models.keepsEveryChoosableQuery())
+    XCTAssertTrue(result)
   }
 
-  func testTogglingChoice_WhenTheMatchIsNotChosen_ThenOnlyItIsChosen() {
+  func testToggleChoice_WhenTheMatchIsNotChosen_ThenOnlyItIsChosen() {
     // Given
     let models = [
       requestDataUiModel("pid-1", queryIds: ["pid"], isChosen: false),
@@ -102,13 +114,13 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
     ]
 
     // When
-    let toggled = models.togglingChoice(of: "pid-2")
+    let toggled = models.toggleChoice(id: "pid-2")
 
     // Then
     XCTAssertEqual(toggled.map(\.isChosen), [false, true])
   }
 
-  func testTogglingChoice_WhenTheMatchIsChosen_ThenTheChoiceIsCleared() {
+  func testToggleChoice_WhenTheMatchIsChosen_ThenTheChoiceIsCleared() {
     // Given
     let models = [
       requestDataUiModel("pid-1", queryIds: ["pid"], isChosen: false),
@@ -116,18 +128,18 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
     ]
 
     // When
-    let toggled = models.togglingChoice(of: "pid-2")
+    let toggled = models.toggleChoice(id: "pid-2")
 
     // Then
     XCTAssertEqual(toggled.map(\.isChosen), [false, false])
   }
 
-  func testTogglingChoice_WhenTheDocumentCannotBeChosen_ThenNothingChanges() {
+  func testToggleChoice_WhenTheDocumentCannotBeChosen_ThenNothingChanges() {
     // Given
     let models = [requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)]
 
     // When
-    let toggled = models.togglingChoice(of: "mdl")
+    let toggled = models.toggleChoice(id: "mdl")
 
     // Then
     XCTAssertEqual(toggled, models)
@@ -135,6 +147,7 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
 }
 
 private extension TestRequestDataUiModelCredentialChoice {
+
   func requestDataUiModel(_ id: String, queryIds: [String], isChosen: Bool?) -> RequestDataUiModel {
     RequestDataUiModel(
       section: .init(id: id, title: "PID", listItems: []),

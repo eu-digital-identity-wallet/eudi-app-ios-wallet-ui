@@ -346,7 +346,7 @@ public extension Array where Element == RequestDataUiModel {
 
   /// These documents with the choice of the document with `documentId` reversed; a document the user cannot choose
   /// is left as it is.
-  func togglingChoice(of documentId: String) -> [RequestDataUiModel] {
+  func toggleChoice(id documentId: String) -> [RequestDataUiModel] {
     map { model in
       guard model.section.id == documentId, let isChosen = model.isChosen else { return model }
       return model.copy(isChosen: !isChosen)

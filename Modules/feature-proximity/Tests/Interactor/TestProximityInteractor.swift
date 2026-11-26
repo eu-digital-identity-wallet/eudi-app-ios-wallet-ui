@@ -381,7 +381,8 @@ final class TestProximityInteractor: EudiTest {
       isTrusted: request.isTrusted,
       overaskedClaims: request.overaskedClaims,
       transactionDataSets: [],
-      requestNames: []
+      requestNames: [],
+      credentialQueries: []
     )
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(portraitRequest)
@@ -418,7 +419,8 @@ final class TestProximityInteractor: EudiTest {
       isTrusted: single.isTrusted,
       overaskedClaims: single.overaskedClaims,
       transactionDataSets: single.transactionDataSets,
-      requestNames: single.requestNames + single.requestNames
+      requestNames: single.requestNames + single.requestNames,
+      credentialQueries: []
     )
 
     let expectedUiModels = Self.mockUiModels()
@@ -455,7 +457,8 @@ final class TestProximityInteractor: EudiTest {
       isTrusted: false,
       overaskedClaims: trusted.overaskedClaims,
       transactionDataSets: trusted.transactionDataSets,
-      requestNames: trusted.requestNames
+      requestNames: trusted.requestNames,
+      credentialQueries: []
     )
     stub(presentationSessionCoordinator) { mock in
       when(mock.requestReceived()).thenReturn(request)

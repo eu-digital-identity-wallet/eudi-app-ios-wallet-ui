@@ -19,7 +19,7 @@ import OpenID4VP
 @testable import logic_core
 @testable import logic_test
 
-final class TestDisclosedDocumentSetCredentialQueries: EudiTest {
+final class TestPresentationCredentialQueriesDomainMapping: EudiTest {
 
   func testQueryIdsByDocumentId_WhenADocumentAnswersMergedAlternatives_ThenCarriesEveryQueryId() throws {
     // Given
@@ -47,7 +47,8 @@ final class TestDisclosedDocumentSetCredentialQueries: EudiTest {
   }
 }
 
-private extension TestDisclosedDocumentSetCredentialQueries {
+private extension TestPresentationCredentialQueriesDomainMapping {
+
   func selection(documentId: String, queryIds: [String]) throws -> CredentialSelection {
     let ids = try queryIds.map { try QueryId(value: $0) }
     return CredentialSelection(

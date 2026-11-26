@@ -17,7 +17,7 @@ import XCTest
 @testable import logic_core
 @testable import logic_test
 
-final class TestPresentationCredentialQueriesDomain: EudiTest {
+final class TestPresentationCredentialQueriesDomainExtensions: EudiTest {
 
   func testChoosableDocumentIds_WhenAMultipleQueryHasTwoDocuments_ThenBothCanBeChosen() {
     // Given
@@ -107,8 +107,11 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
       multipleQueryIds: []
     )
 
+    // When
+    let result = queries.hasSingleQueryWithManyDocuments(among: ["pid-1", "pid-2"])
+
     // Then
-    XCTAssertTrue(queries.hasSingleQueryWithManyDocuments(among: ["pid-1", "pid-2"]))
+    XCTAssertTrue(result)
   }
 
   func testHasSingleQueryWithManyDocuments_WhenOneDocumentAnswersASingleQuery_ThenIsFalse() {
@@ -118,8 +121,11 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
       multipleQueryIds: []
     )
 
+    // When
+    let result = queries.hasSingleQueryWithManyDocuments(among: ["pid-1"])
+
     // Then
-    XCTAssertFalse(queries.hasSingleQueryWithManyDocuments(among: ["pid-1"]))
+    XCTAssertFalse(result)
   }
 
   func testHasSingleQueryWithManyDocuments_WhenTwoDocumentsAnswerAMultipleQuery_ThenIsFalse() {
@@ -129,8 +135,11 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
       multipleQueryIds: ["pid"]
     )
 
+    // When
+    let result = queries.hasSingleQueryWithManyDocuments(among: ["pid-1", "pid-2"])
+
     // Then
-    XCTAssertFalse(queries.hasSingleQueryWithManyDocuments(among: ["pid-1", "pid-2"]))
+    XCTAssertFalse(result)
   }
 
   func testKeepsEveryQuery_WhenEachQueryKeepsADocument_ThenIsTrue() {
@@ -140,8 +149,11 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
       multipleQueryIds: ["pid"]
     )
 
+    // When
+    let result = queries.keepsEveryQuery(of: ["pid-1", "pid-2", "mdl"], sharing: ["pid-2", "mdl"])
+
     // Then
-    XCTAssertTrue(queries.keepsEveryQuery(of: ["pid-1", "pid-2", "mdl"], sharing: ["pid-2", "mdl"]))
+    XCTAssertTrue(result)
   }
 
   func testKeepsEveryQuery_WhenAQueryLosesAllItsDocuments_ThenIsFalse() {
@@ -151,8 +163,11 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
       multipleQueryIds: ["pid"]
     )
 
+    // When
+    let result = queries.keepsEveryQuery(of: ["pid-1", "pid-2", "mdl"], sharing: ["mdl"])
+
     // Then
-    XCTAssertFalse(queries.keepsEveryQuery(of: ["pid-1", "pid-2", "mdl"], sharing: ["mdl"]))
+    XCTAssertFalse(result)
   }
 
   func testCanLeaveOut_WhenABlockedMatchLeavesAnotherForItsMultipleQuery_ThenIsTrue() {
@@ -162,8 +177,11 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
       multipleQueryIds: ["pid"]
     )
 
+    // When
+    let result = queries.canLeaveOut(["pid-1"], among: ["pid-1", "pid-2", "mdl"], transactionDocumentIds: [])
+
     // Then
-    XCTAssertTrue(queries.canLeaveOut(["pid-1"], among: ["pid-1", "pid-2", "mdl"], transactionDocumentIds: []))
+    XCTAssertTrue(result)
   }
 
   func testCanLeaveOut_WhenEveryMatchOfTheQueryIsBlocked_ThenIsFalse() {
@@ -173,8 +191,11 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
       multipleQueryIds: ["pid"]
     )
 
+    // When
+    let result = queries.canLeaveOut(["pid-1", "pid-2"], among: ["pid-1", "pid-2"], transactionDocumentIds: [])
+
     // Then
-    XCTAssertFalse(queries.canLeaveOut(["pid-1", "pid-2"], among: ["pid-1", "pid-2"], transactionDocumentIds: []))
+    XCTAssertFalse(result)
   }
 
   func testCanLeaveOut_WhenTheBlockedDocumentAnswersASingleQuery_ThenIsFalse() {
@@ -184,8 +205,11 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
       multipleQueryIds: ["pid"]
     )
 
+    // When
+    let result = queries.canLeaveOut(["pid-1"], among: ["pid-1", "pid-2"], transactionDocumentIds: [])
+
     // Then
-    XCTAssertFalse(queries.canLeaveOut(["pid-1"], among: ["pid-1", "pid-2"], transactionDocumentIds: []))
+    XCTAssertFalse(result)
   }
 
   func testCanLeaveOut_WhenTheBlockedMatchCarriesTransactionData_ThenIsFalse() {
@@ -195,15 +219,21 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
       multipleQueryIds: ["pid"]
     )
 
+    // When
+    let result = queries.canLeaveOut(["pid-1"], among: ["pid-1", "pid-2"], transactionDocumentIds: ["pid-1"])
+
     // Then
-    XCTAssertFalse(queries.canLeaveOut(["pid-1"], among: ["pid-1", "pid-2"], transactionDocumentIds: ["pid-1"]))
+    XCTAssertFalse(result)
   }
 
   func testCanLeaveOut_WhenTheRequestHasNoQueries_ThenIsFalse() {
     // Given
     let queries = PresentationCredentialQueriesDomain()
 
+    // When
+    let result = queries.canLeaveOut(["mdl-1"], among: ["mdl-1", "mdl-2"], transactionDocumentIds: [])
+
     // Then
-    XCTAssertFalse(queries.canLeaveOut(["mdl-1"], among: ["mdl-1", "mdl-2"], transactionDocumentIds: []))
+    XCTAssertFalse(result)
   }
 }

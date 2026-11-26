@@ -304,7 +304,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     else { return }
     updateCombination(
       at: combinationIndex,
-      with: viewState.combinations[combinationIndex].documents.togglingChoice(of: documentId)
+      with: viewState.combinations[combinationIndex].documents.toggleChoice(id: documentId)
     )
   }
 

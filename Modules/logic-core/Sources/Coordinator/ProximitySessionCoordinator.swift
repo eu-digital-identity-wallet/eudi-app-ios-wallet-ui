@@ -185,7 +185,8 @@ final class ProximitySessionCoordinatorImpl: ProximitySessionCoordinator {
       isTrusted: isTrusted,
       overaskedClaims: overaskedClaims,
       transactionDataSets: [],
-      requestNames: session.disclosedDocumentSets.map(\.requestName)
+      requestNames: session.disclosedDocumentSets.map(\.requestName),
+      credentialQueries: []
     )
   }
 }

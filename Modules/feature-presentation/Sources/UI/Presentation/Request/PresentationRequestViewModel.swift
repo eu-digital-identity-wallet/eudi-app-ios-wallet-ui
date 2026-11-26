@@ -75,7 +75,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
       switch result {
       case .success:
-        if let route = self.successRoute(sharing: items) {
+        if let route = self.getSuccessRoute(sharing: items) {
           self.router.push(with: route)
         } else {
           self.router.popTo(
@@ -89,7 +89,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func getSuccessRoute() -> AppRoute? {
-    successRoute(sharing: viewState.items)
+    getSuccessRoute(sharing: viewState.items)
   }
 
   override func getPopRoute() -> AppRoute? {
@@ -109,7 +109,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   /// The biometry route that shares `items`: the success screen lists only the documents they share.
-  private func successRoute(sharing items: [RequestDataUiModel]) -> AppRoute? {
+  private func getSuccessRoute(sharing items: [RequestDataUiModel]) -> AppRoute? {
     guard let coordinator = self.coordinator else { return nil }
     return .featureCommonModule(
       .biometry(
