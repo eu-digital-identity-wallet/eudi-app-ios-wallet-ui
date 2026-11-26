@@ -23,7 +23,7 @@ import Observation
 struct RequestAuthorizationViewState: ViewState {
   /// The documents of each way to answer the request; the sheet offers them as options when there are several.
   let options: [[AuthorizationUIRequestItem]]
-  /// The option Accept sends, the first at first.
+  /// The option Accept sends; the first until the user selects another.
   let selectedOptionIndex: Int
   let errorMessage: String?
   let isLoading: Bool

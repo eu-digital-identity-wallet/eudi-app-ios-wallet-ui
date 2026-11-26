@@ -36,10 +36,10 @@ public enum DocumentProviderPolicy {
     }
   }
 
-  /// The ways the extension can answer a request with one document of each type the DC API library returned for it:
-  /// every combination of one document per type in `documents`, in their order. An option that includes a
-  /// document with a revocation record is not offered. Declines while the user has turned off offering documents to
-  /// apps and websites, and when every option includes a blocked document; no documents give no options.
+  /// The ways the extension can answer a request with one document of each requested type the wallet holds, as the DC
+  /// API library returns them in `documents`: every combination of one document per type, in their order. An option
+  /// that includes a document with a revocation record is not offered. Declines while the user has turned off offering
+  /// documents to apps and websites, and when every option includes a blocked document; no documents give no options.
   public static func options(
     for documents: [DocClaimsModel],
     isOffering: Bool,
@@ -73,6 +73,9 @@ public enum DocumentProviderPolicy {
   /// True when a claim requested from one of an option's documents is a picture of the holder, so the sheet shows the
   /// notice and Accept asks first while that option is selected.
   public static func requestsUserImage(in option: [DocClaimsModel], userImageClaimKeys: Set<String>) -> Bool {
-    requestsUserImage(claimNames: option.flatMap { $0.docClaims.map(\.name) }, userImageClaimKeys: userImageClaimKeys)
+    requestsUserImage(
+      claimNames: option.flatMap { $0.docClaims.map(\.name) },
+      userImageClaimKeys: userImageClaimKeys
+    )
   }
 }

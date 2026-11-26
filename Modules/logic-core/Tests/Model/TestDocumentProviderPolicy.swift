@@ -61,6 +61,32 @@ final class TestDocumentProviderPolicy: EudiTest {
     XCTAssertFalse(withoutPortrait)
   }
 
+  func testRequestsUserImage_WhenOnlyAnotherOptionRequestsThePortrait_ThenTheOptionDoesNot() {
+    // Given
+    let withPortrait = [
+      Self.document(id: "mdl-1", docType: "mdl"),
+      Self.document(id: "pid-1", docType: "pid", claimNames: ["family_name", "portrait"])
+    ]
+    let withoutPortrait = [
+      Self.document(id: "mdl-1", docType: "mdl"),
+      Self.document(id: "pid-2", docType: "pid", claimNames: ["family_name"])
+    ]
+
+    // When
+    let optionWithPortrait = DocumentProviderPolicy.requestsUserImage(
+      in: withPortrait,
+      userImageClaimKeys: ["portrait"]
+    )
+    let optionWithoutPortrait = DocumentProviderPolicy.requestsUserImage(
+      in: withoutPortrait,
+      userImageClaimKeys: ["portrait"]
+    )
+
+    // Then
+    XCTAssertTrue(optionWithPortrait)
+    XCTAssertFalse(optionWithoutPortrait)
+  }
+
   func testOptions_WhenTheWalletHoldsTwoDocumentsOfTheRequestedType_ThenOffersEachAlone() throws {
     // Given
     let documents = [Self.document(id: "mdl-1", docType: "mdl"), Self.document(id: "mdl-2", docType: "mdl")]
@@ -150,20 +176,6 @@ final class TestDocumentProviderPolicy: EudiTest {
     ) { error in
       XCTAssertEqual(error.localizedDescription, WalletCoreError.documentOfferingDisabled.localizedDescription)
     }
-  }
-
-  func testRequestsUserImage_WhenOnlyAnotherOptionRequestsThePortrait_ThenTheOptionDoesNot() {
-    // Given
-    let withPortrait = [Self.document(id: "pid-1", docType: "pid", claimNames: ["family_name", "portrait"])]
-    let withoutPortrait = [Self.document(id: "pid-2", docType: "pid", claimNames: ["family_name"])]
-
-    // When
-    let first = DocumentProviderPolicy.requestsUserImage(in: withPortrait, userImageClaimKeys: ["portrait"])
-    let second = DocumentProviderPolicy.requestsUserImage(in: withoutPortrait, userImageClaimKeys: ["portrait"])
-
-    // Then
-    XCTAssertTrue(first)
-    XCTAssertFalse(second)
   }
 
   func testOptions_WhenNoDocumentMatches_ThenOffersNothing() throws {

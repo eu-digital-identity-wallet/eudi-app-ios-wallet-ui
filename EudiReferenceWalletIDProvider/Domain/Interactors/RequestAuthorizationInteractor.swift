@@ -61,7 +61,7 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
   /// the reason.
   /// A request is declined while the user has turned off offering documents to apps and websites, since one may
   /// still arrive through a registration the system has not yet withdrawn.
-  /// The request is answered with one document of each type the DC API library returns for it; when the wallet holds
+  /// The request is answered with one document of each requested type the wallet holds; when the wallet holds
   /// several of a type, each combination is an option the user chooses from. An option that includes a document with a
   /// revocation record (revoked, suspended or unrecognised) is not offered, as the in-app flows refuse one, and the
   /// request is declined when none is left; when the records cannot be read, the request is declined too.
