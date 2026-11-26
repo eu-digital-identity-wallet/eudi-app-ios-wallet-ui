@@ -61,8 +61,10 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
   /// the reason.
   /// A request is declined while the user has turned off offering documents to apps and websites, since one may
   /// still arrive through a registration the system has not yet withdrawn.
-  /// A request that would include a document with a revocation record (revoked, suspended or unrecognised) is
-  /// declined, as the in-app flows refuse one; when the records cannot be read, the request is declined too.
+  /// The request is answered with one document of each requested type the wallet holds; when the wallet holds
+  /// several of a type, each combination is an option the user chooses from. An option that includes a document with a
+  /// revocation record (revoked, suspended or unrecognised) is not offered, as the in-app flows refuse one, and the
+  /// request is declined when none is left; when the records cannot be read, the request is declined too.
   /// `DcApiHandler` validates no reader certificate chain and returns no trust verdict, so the relying
   /// party is never reported as verified. The authority key identifier is kept for a later lookup. Without
   /// a website origin the requester gets the generic name, not the one in its unvalidated certificate, as
@@ -72,40 +74,43 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
   ) async throws -> AuthorizationUIModel {
     isOutcomeRecorded = false
     let (docClaimsModels, _, authorityKeyIdentifier, _) = try await dcApiHandler.validateRequest(context.request)
+    let options: [[DocClaimsModel]]
     do {
-      try await checkRequest(documentIds: docClaimsModels.map(\.id))
+      options = try await offeredOptions(documents: docClaimsModels)
     } catch {
       isOutcomeRecorded = true
       await dcApiHandler.completeTransaction(reasonOfNoncompletion: error.localizedDescription)
       throw error
     }
     let websiteName = context.requestingWebsiteOrigin?.absoluteString ?? LocalizableStringKey.unknownVerifier.toString
-    let requestsUserImage = DocumentProviderPolicy.requestsUserImage(
-      claimNames: docClaimsModels.flatMap { $0.docClaims.map(\.name) },
-      userImageClaimKeys: configUiLogic.userImageClaimKeys
-    )
     let issuerLogoOrigins = await interactor.issuerLogoOrigins()
-    let documents = docClaimsModels.compactMap {
-      $0.transformToDocumentUi(isSensitive: false, issuerLogoOrigins: issuerLogoOrigins)
-    }
 
     return AuthorizationUIModel(
       issuerName: websiteName,
-      documents: documents.map { document in
-        return AuthorizationUIDocument(
-          id: document.id,
-          name: document.documentName,
-          requestedElements: document.documentFields
+      options: options.map { option in
+        AuthorizationUIOption(
+          documents: option.compactMap {
+            $0.transformToDocumentUi(isSensitive: false, issuerLogoOrigins: issuerLogoOrigins)
+          }.map { document in
+            AuthorizationUIDocument(
+              id: document.id,
+              name: document.documentName,
+              requestedElements: document.documentFields
+            )
+          },
+          selection: DocumentProviderSelection(documents: option),
+          requestsUserImage: DocumentProviderPolicy.requestsUserImage(
+            in: option,
+            userImageClaimKeys: configUiLogic.userImageClaimKeys
+          )
         )
       },
       isRelyingPartyVerified: false,
-      requestsUserImage: requestsUserImage,
-      authorityKeyIdentifier: authorityKeyIdentifier,
-      selection: DocumentProviderSelection(documents: docClaimsModels)
+      authorityKeyIdentifier: authorityKeyIdentifier
     )
   }
 
-  /// Sends only what the sheet showed (`selection`), after checking those documents' records again. The request is
+  /// Sends only the option the user chose (`selection`), after checking those documents' records again. The request is
   /// not validated a second time, since each validation starts a new history entry; the entry written when the
   /// request was loaded is completed once the system has taken the response, or given the reason it was not.
   func acceptVerification(
@@ -147,8 +152,19 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
     context.cancel()
   }
 
-  /// Checks the setting and the revocation records again on every step, since either may change while the sheet is
-  /// open (`DocumentProviderPolicy.checkRequest`); records that cannot be read decline the request.
+  /// The options the sheet may offer, by the setting and the revocation records (`DocumentProviderPolicy.options`);
+  /// records that cannot be read decline the request.
+  private func offeredOptions(documents: [DocClaimsModel]) async throws -> [[DocClaimsModel]] {
+    let blocked = try await interactor.fetchRevokedDocumentStatuses()
+    return try DocumentProviderPolicy.options(
+      for: documents,
+      isOffering: prefsController.getBool(forKey: .offerDocumentsToApps),
+      blockedDocumentIds: Set(blocked.keys)
+    )
+  }
+
+  /// Checks the setting and the revocation records again on Accept, since either may change while the sheet is open
+  /// (`DocumentProviderPolicy.checkRequest`); records that cannot be read decline the request.
   private func checkRequest(documentIds: [String]) async throws {
     let blocked = try await interactor.fetchRevokedDocumentStatuses()
     try DocumentProviderPolicy.checkRequest(

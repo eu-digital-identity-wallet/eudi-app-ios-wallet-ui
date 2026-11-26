@@ -21,14 +21,18 @@ import Observation
 
 @Copyable
 struct RequestAuthorizationViewState: ViewState {
-  let items: [AuthorizationUIRequestItem]
+  /// The documents of each way to answer the request; the sheet offers them as options when there are several.
+  let options: [[AuthorizationUIRequestItem]]
+  /// The option Accept sends; the first until the user selects another.
+  let selectedOptionIndex: Int
   let errorMessage: String?
   let isLoading: Bool
   let contentHeaderConfig: ContentHeaderConfig
   /// The warning to acknowledge before Accept: `accessCertificateNotTrusted` while the requester is not
   /// verified, which the reference app never reports it to be.
   let warning: RegistrationWarning?
-  /// Shows the biometric-data notice, and Accept asks for confirmation first, as Share does in the app.
+  /// Shows the biometric-data notice, and Accept asks for confirmation first, as Share does in the app, when the
+  /// selected option includes a picture of the holder.
   let requestsUserImage: Bool
 }
 
@@ -40,7 +44,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
   var isUserImageConfirmationShowing: Bool = false
 
   private var isRequestAuthorized: Bool = false
-  private var selection: DocumentProviderSelection?
+  private var options: [AuthorizationUIOption] = []
 
   private var context: ISO18013MobileDocumentRequestContext?
   private var interactor: RequestAuthorizationInteractor = DIGraph.shared.resolver.force(
@@ -53,7 +57,8 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     self.context = context
     super.init(
       initialState: .init(
-        items: [],
+        options: [],
+        selectedOptionIndex: 0,
         errorMessage: nil,
         isLoading: true,
         contentHeaderConfig: .init(
@@ -104,11 +109,12 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
       }
 
       let uiModel = try await interactor.loadRequestData(context: context)
-      selection = uiModel.selection
+      options = uiModel.options
 
       setState {
         $0.copy(
-          items: uiModel.documents.toRequestItems(),
+          options: uiModel.options.map { $0.documents.toRequestItems() },
+          selectedOptionIndex: 0,
           isLoading: false,
           contentHeaderConfig: .init(
             appIconAndTextData: AppIconAndTextData(
@@ -123,7 +129,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
             )
           ),
           warning: uiModel.isRelyingPartyVerified ? nil : .accessCertificateNotTrusted,
-          requestsUserImage: uiModel.requestsUserImage
+          requestsUserImage: uiModel.options.first?.requestsUserImage ?? false
         )
       }
     } catch let error {
@@ -136,9 +142,16 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     }
   }
 
-  /// Sends the response, unless a warning is still waiting for the user's acknowledgement.
+  /// Selects the option Accept sends; the portrait notice follows it.
+  func onOptionSelected(index: Int) {
+    guard options.indices.contains(index) else { return }
+    setState { $0.copy(selectedOptionIndex: index, requestsUserImage: options[index].requestsUserImage) }
+  }
+
+  /// Sends the selected option, unless a warning is still waiting for the user's acknowledgement.
   func acceptVerification() async {
-    guard canAccept, let context, let selection else { return }
+    guard canAccept, let context, options.indices.contains(viewState.selectedOptionIndex) else { return }
+    let selection = options[viewState.selectedOptionIndex].selection
     setState {
       $0.copy(
         isLoading: true
@@ -157,7 +170,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     }
   }
 
-  /// Asks for the PIN or biometrics that send the response, after a confirmation when the request includes a
+  /// Asks for the PIN or biometrics that send the response, after a confirmation when the selected option includes a
   /// picture of the holder.
   func onAcceptClick() {
     guard viewState.requestsUserImage else {

@@ -19,15 +19,22 @@ import logic_core
 
 struct AuthorizationUIModel: Sendable {
   let issuerName: String
-  let documents: [AuthorizationUIDocument]
+  /// The ways to answer the request, one document of each requested type the wallet holds in each; the user chooses
+  /// one when there are several (`DocumentProviderPolicy.options`).
+  let options: [AuthorizationUIOption]
   /// Whether the relying party was found trusted. Only a real trust verdict may set it.
   let isRelyingPartyVerified: Bool
-  /// Whether the request includes a picture of the holder (`ConfigUiLogic.userImageClaimKeys`).
-  let requestsUserImage: Bool
   /// The authority key identifier of the reader certificate's root, kept for a trust-list lookup.
   let authorityKeyIdentifier: [UInt8]
-  /// What the sheet shows, which is all the response may contain.
+}
+
+/// One way to answer the request: the documents the sheet shows for it, and what the response may then contain.
+struct AuthorizationUIOption: Sendable {
+  let documents: [AuthorizationUIDocument]
   let selection: DocumentProviderSelection
+  /// Whether the claims requested from these documents include a picture of the holder
+  /// (`DocumentProviderPolicy.requestsUserImage(in:userImageClaimKeys:)`).
+  let requestsUserImage: Bool
 }
 
 struct AuthorizationUIDocument: Sendable, Identifiable {

@@ -17,6 +17,7 @@ import XCTest
 import Cuckoo
 @testable import logic_core
 @testable import logic_ui
+@testable import feature_common
 @testable import feature_dashboard
 @testable import logic_test
 @testable import feature_test
@@ -68,9 +69,62 @@ final class TestDocumentDetailsViewModel: EudiTest {
     // Then
     XCTAssertNotNil(error?.action)
   }
+
+  @MainActor
+  func testToggleIsVisible_WhenTheDataIsHidden_ThenItIsShown() async {
+    // Given
+    let viewModel = await viewModelShowingHiddenData()
+
+    // When
+    viewModel.toggleIsVisible()
+
+    // Then
+    XCTAssertFalse(viewModel.isVisible)
+    XCTAssertEqual(Set(blurFlags(of: viewModel.viewState.document.documentFields)), [false])
+  }
+
+  @MainActor
+  func testToggleIsVisible_WhenTheDataIsShown_ThenItIsHiddenAgain() async {
+    // Given
+    let viewModel = await viewModelShowingHiddenData()
+    viewModel.toggleIsVisible()
+
+    // When
+    viewModel.toggleIsVisible()
+
+    // Then
+    XCTAssertTrue(viewModel.isVisible)
+    XCTAssertEqual(Set(blurFlags(of: viewModel.viewState.document.documentFields)), [true])
+  }
 }
 
 private extension TestDocumentDetailsViewModel {
+
+  /// The details screen's view model once the document has loaded with its values hidden, as stored documents open.
+  @MainActor
+  func viewModelShowingHiddenData() async -> DocumentDetailsViewModel<MockRouterHost> {
+    let document = DocumentUIModel.mock()
+    let hidden = document.copy(documentFields: document.toggleVisibility(isVisible: true))
+    let interactor = MockDocumentDetailsInteractor()
+    stub(interactor) { mock in
+      when(mock.fetchStoredDocument(documentId: any())).thenReturn(.success(hidden, nil, nil, false, false))
+    }
+    let viewModel = DocumentDetailsViewModel(router: MockRouterHost(), interactor: interactor, documentId: "pid")
+    await viewModel.fetchDocumentDetails()
+    return viewModel
+  }
+
+  /// Whether each row of the document's fields is blurred, nested rows included, in order.
+  func blurFlags(of fields: [GenericExpandableItem]) -> [Bool] {
+    fields.flatMap { field -> [Bool] in
+      switch field {
+      case .single(let item):
+        return [item.collapsed.isBlur]
+      case .nested(let item):
+        return blurFlags(of: item.expanded)
+      }
+    }
+  }
 
   @MainActor
   func waitForError(

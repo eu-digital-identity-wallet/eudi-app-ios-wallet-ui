@@ -1048,8 +1048,9 @@ Current registration behavior:
 * Registrations are reconciled against storage rather than tracked incrementally, so a document deleted in the app is deregistered, and a registration left behind by an earlier build is removed after login by a pass that runs in a task of its own once the dashboard has loaded the documents, so a slow registration store holds up neither the tabs nor the background checks. Passes run one at a time (`SerialCheckRunner`).
 * A document with a revocation record (revoked, suspended or unrecognised) is not registered, and the registrations are
   updated whenever a revocation check stores or clears a record; when the records cannot be read nothing is
-  registered, as on Android. The extension also declines a request that would include such a document
-  (`RequestAuthorizationInteractor.loadRequestData`). See [Revocation And Status Checking](#revocation-and-status-checking).
+  registered, as on Android. The extension does not offer an option that would include such a document, and declines
+  the request when no option is left (`DocumentProviderPolicy.options`,
+  `RequestAuthorizationInteractor.loadRequestData`). See [Revocation And Status Checking](#revocation-and-status-checking).
 * Settings has a switch, "Allow document requests from apps and websites (DC API)", which is on by default and shown
   only on iOS 26 and later. While it is off, nothing is registered and every registration is withdrawn when the user
   turns it off (`Prefs.Key.offerDocumentsToApps`, on by default in `PrefsControllerImpl`). The extension declines a
@@ -1062,14 +1063,17 @@ Current request handling:
   asks for the wallet PIN or biometrics first, with the same screen as the app's login, and reads the
   request's documents only after that. No requested value is shown before the user has authenticated.
 * Accept asks for the PIN or biometrics again before the response is sent.
+* The request is answered with one document of each requested type the wallet holds. When it holds several of a type,
+  the sheet shows "Option 1 of N" cards with a radio button, one document of each type in each and the first
+  selected, as the request screen offers its options (`DocumentProviderPolicy.options`). The portrait notice and
+  Accept's confirmation follow the selected option.
 * The request is validated once, when it is loaded, so each request writes one history entry. Accept sends only the
-  documents and claims the sheet showed (`DocumentProviderSelection`), after reading their revocation records
-  again, and then completes that entry. Each document's claims are worked out from that document alone, and a
-  document with none of them is left out, so documents of the same type with different claims are each sent with
-  their own. A request declined while it loads, after its validation, or one
-  the user rejects with the Reject button, is recorded as not completed, with the reason; once Accept or a decline has
-  recorded the outcome, Reject only closes the sheet. A sheet dismissed another way leaves the entry not completed,
-  without a reason.
+  selected option's documents and the claims the sheet showed for them (`DocumentProviderSelection`), after reading
+  their revocation records again, and then completes that entry. Each document's claims are worked out from that
+  document alone, and a document with none of them is left out. A request declined while it loads, after its
+  validation, or one the user rejects with the Reject button, is recorded as not completed, with the reason; once
+  Accept or a decline has recorded the outcome, Reject only closes the sheet. A sheet dismissed another way leaves the
+  entry not completed, without a reason.
 * The requester is shown without the verified badge and behind the warning "The identity of this
   relying party could not be verified"; Accept stays disabled until the user acknowledges it, as on
   Android. Without a website origin the requester gets the generic name, not the one in its
@@ -1086,7 +1090,7 @@ Production validation:
 * Confirm the document is registered with the system.
 * Trigger a web presentment request.
 * Confirm the extension appears and can authorize or deny the request.
-* Delete the document and confirm its registration is removed; revoke or suspend it and confirm that its registration is withdrawn and that the extension declines a request for it.
+* Delete the document and confirm its registration is removed; revoke or suspend it and confirm that its registration is withdrawn and that the extension declines a request for it, or, while other documents of its type are held, offers only those.
 
 ## Trust Store
 
@@ -1548,8 +1552,9 @@ The rules are the Android wallet's (`RevocationRecordUpdate`, Android's `revocat
   Otherwise the wallet never offers an option with a blocked document removed
   (`PresentationInteractorImpl.onRequestReceived`). If the records cannot be read, the request fails
   rather than offer a blocked document. The Digital Credentials API registrations leave them out;
-  the extension declines a request that would include one, when it loads and again on Accept, and
-  declines when the records cannot be read (`WalletKitController.reconcileRegistrations`,
+  the extension leaves out every option that would include one, declines the request when none is
+  left, checks the selected option again on Accept, and declines when the records cannot be read
+  (`WalletKitController.reconcileRegistrations`, `DocumentProviderPolicy.options`,
   `DocumentProviderPolicy.checkRequest`). The documents list, the details screen and the issuer card
   show a suspended document as suspended and the others as revoked; the list's "Revoked" filter
   lists all of them.
@@ -2894,8 +2899,9 @@ Before release candidate approval, test:
 * An offer from an issuer that is not configured refused; a partial issuance naming the documents not added.
 * The portrait notice, and Share or Accept asking for confirmation.
 * "Allow document requests from apps and websites (DC API)" off: registrations withdrawn, the extension declines.
-* A DC API request for claims that two documents of the same type hold between them: each document is sent with only
-  the claims the sheet showed for it.
+* A DC API request while the wallet holds two documents of a requested type: the sheet offers each as an option, the
+  first selected, and the verifier receives only the selected one, with the claims the sheet showed; the portrait
+  notice and Accept's confirmation follow the selected option.
 * A proximity request that several document sets satisfy offers the choice.
 * A BLE reader whose authentication fails is refused on the QR screen and receives nothing; a reader that sends no
   reader authentication raises the warning.
