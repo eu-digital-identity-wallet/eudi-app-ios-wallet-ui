@@ -45,6 +45,9 @@ public struct WrapListItemView: View {
   private let clickableArea: ClickableArea
   private let isLoading: Bool
 
+  /// The side of a leading tick box, the size `WrapCheckboxView` draws by default.
+  private static let checkboxSize: CGFloat = 24
+
   private var overlineText: LocalizableStringKey? {
     guard
       let text = listItem.overlineText,
@@ -105,6 +108,12 @@ public struct WrapListItemView: View {
             .foregroundColor(
               isSelected ? Theme.shared.color.accent : Theme.shared.color.secondaryLabel
             )
+            .accessibilityHidden(true)
+        case .checkbox(let isSelected, let isEnabled):
+          (isSelected ? Theme.shared.image.checkmarkSquareFill : Theme.shared.image.square)
+            .resizable()
+            .frame(width: Self.checkboxSize, height: Self.checkboxSize)
+            .foregroundColor(isEnabled ? Theme.shared.color.accent : Theme.shared.color.tertiaryLabel)
             .accessibilityHidden(true)
         }
       }
@@ -230,9 +239,9 @@ public struct WrapListItemView: View {
 
 extension WrapListItemView {
 
-  /// The choice the row shows, for VoiceOver: a trailing checkbox or a leading radio button (the checkbox wins if
-  /// both); nil for any other row, which keeps its own accessibility. The user can change it when it is enabled and
-  /// something runs on a tap: the checkbox's toggle, or the row's action when the whole row is tappable.
+  /// The choice the row shows, for VoiceOver: a trailing checkbox, or a leading radio button or tick box (the trailing
+  /// checkbox wins if both); nil for any other row, which keeps its own accessibility. The user can change it when it
+  /// is enabled and something runs on a tap: the checkbox's toggle, or the row's action when the whole row is tappable.
   var selection: RowSelection? {
     if case .checkbox(let isEnabled, let isChecked, _) = listItem.trailingContent {
       let isTappable = clickableArea == .trailingContent || action != nil
@@ -240,6 +249,9 @@ extension WrapListItemView {
     }
     if case .radioButton(let isSelected) = listItem.leadingContent {
       return RowSelection(isSelected: isSelected, canChange: clickableArea == .entireRow && action != nil)
+    }
+    if case .checkbox(let isSelected, let isEnabled) = listItem.leadingContent {
+      return RowSelection(isSelected: isSelected, canChange: isEnabled && clickableArea == .entireRow && action != nil)
     }
     return nil
   }

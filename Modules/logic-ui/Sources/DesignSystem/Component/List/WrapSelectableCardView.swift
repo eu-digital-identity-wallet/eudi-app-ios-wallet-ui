@@ -16,21 +16,29 @@
 import SwiftUI
 import logic_resources
 
+/// A card the user selects by its header: a radio button for one choice among the cards (the default), or with
+/// `allowsMultipleSelection` a tick box for any number of them. A disabled card shows its state but cannot change.
 public struct WrapSelectableCardView<Content: View>: View {
 
   private let title: LocalizableStringKey
   private let isSelected: Bool
+  private let allowsMultipleSelection: Bool
+  private let isEnabled: Bool
   private let onSelected: () -> Void
   private let content: () -> Content
 
   public init(
     title: LocalizableStringKey,
     isSelected: Bool,
+    allowsMultipleSelection: Bool = false,
+    isEnabled: Bool = true,
     onSelected: @escaping () -> Void,
     @ViewBuilder content: @escaping () -> Content
   ) {
     self.title = title
     self.isSelected = isSelected
+    self.allowsMultipleSelection = allowsMultipleSelection
+    self.isEnabled = isEnabled
     self.onSelected = onSelected
     self.content = content
   }
@@ -41,11 +49,11 @@ public struct WrapSelectableCardView<Content: View>: View {
         WrapListItemView(
           listItem: .init(
             mainContent: .text(title),
-            leadingContent: .radioButton(isSelected: isSelected)
+            leadingContent: selectionContent
           ),
           mainTextVerticalPadding: 0,
           minHeight: false,
-          action: onSelected
+          action: isEnabled ? onSelected : nil
         )
 
         content()
@@ -55,10 +63,19 @@ public struct WrapSelectableCardView<Content: View>: View {
     .overlay(
       RoundedRectangle(cornerRadius: 18)
         .strokeBorder(
-          isSelected ? Theme.shared.color.accent : .clear,
+          isSelected ? (isEnabled ? Theme.shared.color.accent : Theme.shared.color.tertiaryLabel) : .clear,
           lineWidth: 1
         )
     )
+  }
+}
+
+extension WrapSelectableCardView {
+  /// The header's control: a tick box when several cards can be selected, otherwise a radio button.
+  var selectionContent: LeadingContent {
+    allowsMultipleSelection
+      ? .checkbox(isSelected: isSelected, isEnabled: isEnabled)
+      : .radioButton(isSelected: isSelected)
   }
 }
 
@@ -78,6 +95,15 @@ public struct WrapSelectableCardView<Content: View>: View {
       onSelected: {},
       content: {
         Text(.custom("PID (MSO mDoc)"))
+      }
+    )
+    WrapSelectableCardView(
+      title: .custom("Share this document"),
+      isSelected: true,
+      allowsMultipleSelection: true,
+      onSelected: {},
+      content: {
+        Text(.custom("PID (SD-JWT VC)"))
       }
     )
   }

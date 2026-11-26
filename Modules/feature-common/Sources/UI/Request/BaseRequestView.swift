@@ -270,59 +270,49 @@ private struct BaseRequestViewContainer: View {
     isChoiceEnabled: Bool,
     onChoiceToggled: @escaping () -> Void
   ) -> some View {
-    VStack(alignment: .leading, spacing: SPACING_SMALL) {
+    Group {
       if let isChosen = section.isChosen {
-        credentialChoiceRow(
-          section,
-          isChosen: isChosen,
-          locator: choiceLocator,
+        WrapSelectableCardView(
+          title: .requestCredentialChoiceTitle,
+          isSelected: isChosen,
+          allowsMultipleSelection: true,
           isEnabled: isChoiceEnabled,
-          onToggled: onChoiceToggled
+          onSelected: onChoiceToggled,
+          content: {
+            documentCard(section, scrollId: scrollId, proxy: proxy, onItemClick: onItemClick)
+          }
         )
+        .containChildrenAccessibility(locator: choiceLocator)
+      } else {
+        documentCard(section, scrollId: scrollId, proxy: proxy, onItemClick: onItemClick)
       }
-
-      WrapExpandableListView(
-        header: .init(
-          mainContent: .text(.custom(section.section.title)),
-          supportingText: .viewDetails
-        ),
-        items: section.section.listItems,
-        backgroundColor: Theme.shared.color.groupedElevatedBackground,
-        hideSensitiveContent: false,
-        isLoading: viewState.isLoading,
-        onItemClick: { onItemClick($0.groupId) },
-        onExpand: { headerId, height in
-          showOpened(headerId ?? scrollId, height: height, with: proxy)
-        }
-      )
     }
     .id(scrollId)
   }
 
-  /// The row above a document that the user picks among the matches of a `multiple: true` query: a tap on it or on
-  /// its checkbox chooses the document or clears the choice, and VoiceOver reads it as one selectable button. In an
-  /// option that is not selected the row is disabled, so a choice always belongs to the option Share sends.
+  /// A document's card: its title, "View details" and, once opened, its claims.
   @MainActor
   @ViewBuilder
-  private func credentialChoiceRow(
+  private func documentCard(
     _ section: RequestDataUiModel,
-    isChosen: Bool,
-    locator: BaseRequestLocators,
-    isEnabled: Bool,
-    onToggled: @escaping () -> Void
+    scrollId: String,
+    proxy: ScrollViewProxy,
+    onItemClick: @escaping (String) -> Void
   ) -> some View {
-    WrapCardView(backgroundColor: Theme.shared.color.groupedElevatedBackground) {
-      WrapListItemView(
-        listItem: .init(
-          id: "\(section.section.id):choice",
-          mainContent: .text(.requestCredentialChoiceTitle([section.section.title])),
-          trailingContent: .checkbox(isEnabled, isChosen, { _ in })
-        ),
-        isLoading: viewState.isLoading,
-        action: isEnabled ? onToggled : nil
-      )
-      .accessibilityIdentifier(locator.id)
-    }
+    WrapExpandableListView(
+      header: .init(
+        mainContent: .text(.custom(section.section.title)),
+        supportingText: .viewDetails
+      ),
+      items: section.section.listItems,
+      backgroundColor: Theme.shared.color.groupedElevatedBackground,
+      hideSensitiveContent: false,
+      isLoading: viewState.isLoading,
+      onItemClick: { onItemClick($0.groupId) },
+      onExpand: { headerId, height in
+        showOpened(headerId ?? scrollId, height: height, with: proxy)
+      }
+    )
   }
 
   @MainActor

@@ -42,7 +42,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case requestDataInfoNotice
   case requestDataTitle([String])
   case requestCombinationTitle([String])
-  case requestCredentialChoiceTitle([String])
+  case requestCredentialChoiceTitle
   case requestRequestedDataTitle
   case requestTransactionDataSectionTitle
   case requestTransactionDataSignatureDetails

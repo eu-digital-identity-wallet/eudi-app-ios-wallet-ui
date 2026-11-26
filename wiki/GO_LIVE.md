@@ -893,10 +893,11 @@ A DCQL credential query with `multiple: true` (OpenID4VP 1.0, section 6.1) accep
 WalletKit puts every matching credential into one option of the request screen. When such a query has two or more
 matches in an option, the user chooses which to share (`PresentationInteractorImpl.onRequestReceived`):
 
-* A "Share <document>" row with a checkbox sits above each match the user can choose. None is ticked at first, and
-  Share stays disabled until every such query has a ticked match, unless the query already has a match that is
-  shared with its option. The rows of an option that is not selected are disabled; the choice is kept when the user
-  switches options.
+* Each match the user can choose is a card with a checkbox on the left of its header, "Share this document"
+  (`request_credential_choice_title`), and the document's own card inside it, as the options' cards have a radio
+  button. None is ticked at first, and Share stays disabled until every such query has a ticked match, unless the
+  query already has a match that is shared with its option. The cards of an option that is not selected are
+  disabled; the choice is kept when the user switches options.
 * A credential for a query that accepts one credential, and the only match of a query, are shared with their option,
   without a checkbox.
 * A match that carries transaction data is always shared, without a checkbox: WalletKit authorizes the transaction
