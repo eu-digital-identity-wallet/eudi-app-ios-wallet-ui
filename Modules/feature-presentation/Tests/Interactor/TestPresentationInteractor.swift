@@ -947,6 +947,74 @@ final class TestPresentationInteractor: EudiTest {
       return XCTFail("Wrong state \(state)")
     }
     XCTAssertEqual(Set(response.items.keys), ["pid-2"])
+    XCTAssertEqual(response.requestName, "option-1")
+  }
+
+  func testOnRequestReceived_WhenAMatchIsBlockedAndAnotherCarriesTransactionData_ThenTheRestStaysChoosable() async {
+    // Given
+    let readable: [PresentationTransactionDataDomain] = [.qes(.init(credentialIds: [], signatureRequests: []))]
+    stubRequest(
+      Self.presentationRequest(
+        itemSets: [[Self.pid("pid-1"), Self.pid("pid-2"), Self.pid("pid-3")]],
+        transactionDataSets: [["pid-2": readable]],
+        requestNames: ["option-1"],
+        credentialQueries: [
+          .init(
+            queryIdsByDocumentId: ["pid-1": ["pid"], "pid-2": ["pid"], "pid-3": ["pid"]],
+            multipleQueryIds: ["pid"]
+          )
+        ]
+      ),
+      blocking: ["pid-1"]
+    )
+
+    // When
+    let state = await interactor.onRequestReceived()
+
+    // Then
+    guard case .success(let model) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    let combination = model.requestDataCombinations.first
+    XCTAssertEqual(combination?.documents.map(\.section.id), ["pid-2", "pid-3"])
+    XCTAssertEqual(combination?.documents.map(\.isChosen), [nil, false])
+    XCTAssertNotNil(combination?.transactionData)
+  }
+
+  func testOnRequestReceived_WhenAQueryHasNoMatchTheScreenCanShow_ThenTheOptionIsLeftOut() async {
+    // Given
+    let mdl = Constants.mockPresentationRequest.itemSets[0][0]
+    let undisplayable = DocElements.msoMdoc(
+      .init(docId: "pid-1", docType: "eu.europa.ec.eudi.pid.1", displayName: "PID", nameSpacedElements: [])
+    )
+    await stubReceivedRequest(
+      Self.presentationRequest(
+        itemSets: [[undisplayable, mdl], [mdl]],
+        transactionDataSets: [],
+        requestNames: ["option-pid-and-mdl", "option-mdl"],
+        credentialQueries: [
+          .init(queryIdsByDocumentId: ["pid-1": ["pid"], mdl.docId: ["mdl"]], multipleQueryIds: ["pid"]),
+          .init(queryIdsByDocumentId: [mdl.docId: ["mdl"]])
+        ]
+      )
+    )
+    stub(presentationCoordinator) { mock in
+      when(mock.setState(presentationState: any())).thenDoNothing()
+    }
+
+    // When
+    let result = await interactor.onRequestReceived()
+    let state = await interactor.onResponsePrepare(combinationIndex: 0, chosenDocumentIds: [])
+
+    // Then
+    guard case .success(let model) = result else {
+      return XCTFail("Wrong state \(result)")
+    }
+    XCTAssertEqual(model.requestDataCombinations.count, 1)
+    guard case .success(let response) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    XCTAssertEqual(response.requestName, "option-mdl")
   }
 
   func testOnRequestReceived_WhenTheBlockedMatchCarriesTransactionData_ThenTheOptionIsLeftOut() async {
@@ -964,7 +1032,7 @@ final class TestPresentationInteractor: EudiTest {
     XCTAssertTrue(model.requestDataCombinations.isEmpty)
   }
 
-  func testOnRequestReceived_WhenTheBlockedDocumentAnswersASingleQuery_ThenTheOptionIsLeftOut() async {
+  func testOnRequestReceived_WhenTheBlockedDocumentIsTheOnlyMatchOfItsQuery_ThenTheOptionIsLeftOut() async {
     // Given
     let mdl = Constants.mockPresentationRequest.itemSets[0][0]
     stubRequest(

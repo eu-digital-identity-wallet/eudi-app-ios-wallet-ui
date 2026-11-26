@@ -857,8 +857,8 @@ is more than one, as on Android:
 * A request whose transaction data cannot be shown in full is declined with an explanation, never shown in part
   (`PresentationInteractorImpl.canShowTransactionData`): an entry WalletKit cannot read, or an entry bound to a
   document the consent screen does not show. Each option is checked against its own transaction data; an option
-  that is not offered, because it holds a blocked document or WalletKit would refuse to send it, is not checked. WalletKit binds transaction data
-  to SD-JWT and mdoc documents alike.
+  that is not offered, because it holds a blocked document or WalletKit would refuse to send it, is not checked.
+  WalletKit binds transaction data to SD-JWT and mdoc documents alike.
 * When WalletKit itself cannot take a remote request (transaction data it cannot process, no document that satisfies
   the query, a reader certificate whose authentication was required and not established), it sends the error to the
   verifier's response endpoint, and the wallet then shows its error screen, or for the certificate the trust alert
@@ -902,13 +902,15 @@ matches in an option, the user chooses which to share (`PresentationInteractorIm
 * A match that carries transaction data is always shared, without a checkbox: WalletKit authorizes the transaction
   with the credential it assigned it to.
 * A revoked, suspended or unrecognised match is left out of its option when every query it answers accepts more than
-  one credential and keeps another match, and it carries no transaction data; the user chooses among the rest.
+  one credential and keeps another match, and it carries no transaction data; the user chooses among the rest when
+  two or more remain, and a single remaining match is shared without a checkbox.
   Otherwise the whole option is left out (see [Revocation And Status Checking](#revocation-and-status-checking)).
 * Share sends the shared credentials under the option's name, and each keeps the query ids WalletKit gave it.
   WalletKit checks the selection again before anything is sent and refuses one that leaves a required credential set
   unsatisfied.
 * An option that would give a query that accepts one credential two of them is not offered. WalletKit builds such an
-  option when two `credential_sets` name the same query, but refuses to send it (OpenID4VP 1.0, section 8.1).
+  option when two `credential_sets` name the same query, but refuses to send it (OpenID4VP 1.0, section 8.1). Nor is
+  an option in which a query has no credential the screen can show.
 * Proximity presentations and the Digital Credentials API are unchanged: their requests carry no DCQL queries.
 
 Before release, exercise a `multiple: true` request with two or more matching credentials: share one, then several,
@@ -1533,7 +1535,7 @@ The rules are the Android wallet's (`RevocationRecordUpdate`, Android's `revocat
 * Every record blocks the document. A revoked, suspended or unrecognised document is left out of
   proximity presentations, and a remote request does not offer an option that holds one. The one
   exception is a match of `multiple: true` queries that each keep another match, carrying no
-  transaction data: it is left out of its option and the user chooses among the rest (see
+  transaction data: it is left out of its option and the user chooses among the rest, if two or more remain (see
   [Choosing Credentials For `multiple: true` Queries](#choosing-credentials-for-multiple-true-queries)).
   Otherwise the wallet never offers an option with a blocked document removed
   (`PresentationInteractorImpl.onRequestReceived`). If the records cannot be read, the request fails

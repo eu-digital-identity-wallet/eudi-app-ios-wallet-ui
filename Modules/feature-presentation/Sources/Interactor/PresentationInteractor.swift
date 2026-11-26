@@ -109,7 +109,8 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   /// Offers the options as WalletKit built them, without their revoked, suspended or unrecognised documents. A blocked
   /// document is left out of its option only when it answers `multiple: true` queries that each keep another match and
   /// it carries no transaction data; otherwise the whole option is left out, never offered without that document. So
-  /// is an option that gives a query accepting one document two of them, which WalletKit would refuse to send. Where a
+  /// is an option that gives a query accepting one document two of them, or leaves a query without a document the
+  /// screen can show, which WalletKit would refuse to send. Where a
   /// `multiple: true` query has two or more matches in an option, the user chooses which to share (none at first),
   /// except a document that carries transaction data, which is always sent.
   public func onRequestReceived() async -> PresentationRequestPartialState {
@@ -136,7 +137,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
           ) else { return nil }
           return (index, documentSet.filter { !blockedDocumentIds.contains($0.docId) })
         }
-        .map { index, documentSet in
+        .compactMap { index, documentSet -> RequestCombination? in
           let uiModels = documentSet.toUiModels(
             with: self.walletKitController,
             claimsAreSelectable: false,
@@ -148,6 +149,9 @@ final actor PresentationInteractorImpl: PresentationInteractor {
           let shownDocumentIds = Set(uiModels.map(\.section.id))
           let shownDocuments = documentSet.filter { shownDocumentIds.contains($0.docId) }
           let credentialQueries = credentialQuerySets.indices.contains(index) ? credentialQuerySets[index] : .init()
+          guard credentialQueries.keepsEveryQuery(of: documentSet.map(\.docId), sharing: shownDocumentIds) else {
+            return nil
+          }
           let choosableDocumentIds = credentialQueries.choosableDocumentIds(
             among: shownDocuments.map(\.docId),
             excluding: Self.transactionDocumentIds(in: transactionData)
