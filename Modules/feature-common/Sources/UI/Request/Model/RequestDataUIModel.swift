@@ -70,6 +70,22 @@ public struct RequestCombinationUiModel: Equatable, Sendable {
 }
 
 extension RequestDataUiModel {
+
+  /// True when Share sends this document: unless the user can choose it and has not.
+  var isShared: Bool {
+    isChosen != false
+  }
+
+  /// True when the user chooses whether to share this document, the match of a `multiple: true` query with others.
+  var isChoosable: Bool {
+    isChosen != nil
+  }
+
+  /// True when the user can change this document's checkbox: a choosable document in the selected option.
+  func canChangeChoice(inSelectedOption isSelectedOption: Bool) -> Bool {
+    isChoosable && isSelectedOption
+  }
+
   mutating func toggleSelection(id: String) {
 
     func findSelection(id: String, listItems: inout [PresentationExpandableListItem]) {
@@ -327,13 +343,13 @@ public extension Array where Element == RequestDataUiModel {
 
   /// The documents Share sends: every document except those the user can choose and has not chosen.
   func sharedDocuments() -> [RequestDataUiModel] {
-    filter { $0.isChosen != false }
+    filter(\.isShared)
   }
 
   /// True when the user chooses whether to share at least one of these documents, so the screen shows a checkbox for
   /// each of them.
   func offersChoice() -> Bool {
-    contains { $0.isChosen != nil }
+    contains(where: \.isChoosable)
   }
 
   /// The ids of the documents the user has chosen to share among the matches of a `multiple: true` query.
@@ -345,7 +361,7 @@ public extension Array where Element == RequestDataUiModel {
   /// is shared with its option.
   func keepsEveryChoosableQuery() -> Bool {
     let sharedQueryIds = Set(sharedDocuments().flatMap(\.queryIds))
-    return filter { $0.isChosen != nil }
+    return filter(\.isChoosable)
       .flatMap(\.queryIds)
       .allSatisfy(sharedQueryIds.contains)
   }

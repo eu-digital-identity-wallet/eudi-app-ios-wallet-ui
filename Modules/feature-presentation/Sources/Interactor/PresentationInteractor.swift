@@ -49,7 +49,10 @@ public protocol PresentationInteractor: Sendable {
   func getSessionStatePublisher() async -> RemotePublisherPartialState
   func getCoordinator() async -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> PresentationRequestPartialState
-  func onResponsePrepare(combinationIndex: Int, chosenDocumentIds: Set<String>) async -> Result<RequestItemConvertible, Error>
+  func onResponsePrepare(
+    combinationIndex: Int,
+    chosenDocumentIds: Set<String>
+  ) async -> Result<RequestItemConvertible, Error>
   func onRequestReceived() async -> PresentationRequestPartialState
   func onSendResponse() async -> RemoteSentResponsePartialState
   func onDeclineRequest() async
@@ -110,9 +113,9 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   /// document is left out of its option only when it answers `multiple: true` queries that each keep another match and
   /// it carries no transaction data; otherwise the whole option is left out, never offered without that document. So
   /// is an option that gives a query accepting one document two of them, or leaves a query without a document the
-  /// screen can show, which WalletKit would refuse to send. Where a `multiple: true` query has two or more matches in an
-  /// option, the user chooses which to share (none at first), except a document that carries transaction data, which
-  /// is always sent.
+  /// screen can show, which WalletKit would refuse to send. Where a `multiple: true` query has two or more matches in
+  /// an option, the user chooses which to share (none at first), except a document that carries transaction data,
+  /// which is always sent.
   public func onRequestReceived() async -> PresentationRequestPartialState {
     do {
       let coordinator = presentationCoordinator

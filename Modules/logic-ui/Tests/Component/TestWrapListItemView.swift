@@ -168,6 +168,17 @@ final class TestWrapListItemView: EudiTest {
     XCTAssertEqual(selection.traits, [])
   }
 
+  func testLeadingContent_WhenTwoCheckboxesDifferOnlyInIsEnabled_ThenTheyAreNotEqual() {
+    // Given
+    let enabled = LeadingContent.checkbox(isSelected: true, isEnabled: true)
+
+    // When
+    let disabled = LeadingContent.checkbox(isSelected: true, isEnabled: false)
+
+    // Then
+    XCTAssertNotEqual(disabled, enabled)
+  }
+
   @MainActor
   func testSelection_WhenARowShowsNoChoice_ThenItIsNil() {
     // Given

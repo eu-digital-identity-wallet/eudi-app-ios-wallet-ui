@@ -134,7 +134,8 @@ The three groups:
 
 > **Two separators.** `separator` is a **brand** color (always from the catalog); `opaqueSeparator`
 > is a **semantic** role (falls back to the UIKit separator). The visible hairline dividers across the
-> UI use `separator`, so edit that one to recolor dividers.
+> UI, and the outline of an unticked "Share this document" card, use `separator`, so edit that one to
+> recolor them.
 
 ### Navigation bar title color (`navigationBarColorScheme`)
 

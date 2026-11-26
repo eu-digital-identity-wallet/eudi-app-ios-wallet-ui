@@ -24,7 +24,10 @@ public extension PresentationCredentialQueriesDomain {
   /// The documents of `documentIds` that the user chooses to share or not: each answers only queries that accept
   /// more than one document, and every one of those queries has two or more of `documentIds`. Documents in
   /// `transactionDocumentIds` are left out: WalletKit authorizes their transaction data with them.
-  func choosableDocumentIds(among documentIds: [String], excluding transactionDocumentIds: Set<String> = []) -> Set<String> {
+  func choosableDocumentIds(
+    among documentIds: [String],
+    excluding transactionDocumentIds: Set<String> = []
+  ) -> Set<String> {
     let documentCounts = documentCountsByQueryId(among: documentIds)
     return Set(
       documentIds.filter { documentId in

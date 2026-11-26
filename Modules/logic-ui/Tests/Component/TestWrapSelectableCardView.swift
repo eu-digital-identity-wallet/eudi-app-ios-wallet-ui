@@ -15,7 +15,6 @@
  */
 import XCTest
 import SwiftUI
-import os
 import logic_resources
 @testable import logic_ui
 @testable import logic_test
@@ -64,41 +63,29 @@ final class TestWrapSelectableCardView: EudiTest {
   }
 
   @MainActor
-  func testSelectionContent_WhenTheCardIsDisabled_ThenItIsNotTheEnabledCheckbox() {
+  func testHeader_WhenTheCardIsEnabledAndTapped_ThenRunsOnSelected() {
     // Given
-    let card = documentChoiceCard(isSelected: true, isEnabled: false)
-
-    // When
-    let content = card.selectionContent
-
-    // Then
-    XCTAssertNotEqual(content, .checkbox(isSelected: true, isEnabled: true))
-  }
-
-  @MainActor
-  func testHeader_WhenTheCardIsEnabledAndTapped_ThenItIsSelected() {
-    // Given
-    let taps = OSAllocatedUnfairLock(initialState: 0)
-    let card = documentChoiceCard(isSelected: false, isEnabled: true, onSelected: { taps.withLock { $0 += 1 } })
+    var taps = 0
+    let card = documentChoiceCard(isSelected: false, isEnabled: true, onSelected: { taps += 1 })
 
     // When
     card.header.performSelection()
 
     // Then
-    XCTAssertEqual(taps.withLock { $0 }, 1)
+    XCTAssertEqual(taps, 1)
   }
 
   @MainActor
-  func testHeader_WhenTheCardIsDisabledAndTapped_ThenNothingHappens() {
+  func testHeader_WhenTheCardIsDisabledAndTapped_ThenDoesNotRunOnSelected() {
     // Given
-    let taps = OSAllocatedUnfairLock(initialState: 0)
-    let card = documentChoiceCard(isSelected: true, isEnabled: false, onSelected: { taps.withLock { $0 += 1 } })
+    var taps = 0
+    let card = documentChoiceCard(isSelected: true, isEnabled: false, onSelected: { taps += 1 })
 
     // When
     card.header.performSelection()
 
     // Then
-    XCTAssertEqual(taps.withLock { $0 }, 0)
+    XCTAssertEqual(taps, 0)
   }
 
   @MainActor
@@ -111,10 +98,11 @@ final class TestWrapSelectableCardView: EudiTest {
 
     // Then
     XCTAssertEqual(selection, RowSelection(isSelected: true, canChange: false))
+    XCTAssertEqual(selection.traits, [.isSelected])
   }
 
   @MainActor
-  func testBorderColor_WhenACheckboxCardIsNotSelected_ThenItIsTheSeparatorColour() {
+  func testBorderColor_WhenACheckboxCardIsNotSelected_ThenItIsTheSeparatorColor() {
     // Given
     let card = documentChoiceCard(isSelected: false, isEnabled: true)
 
@@ -143,7 +131,7 @@ final class TestWrapSelectableCardView: EudiTest {
   }
 
   @MainActor
-  func testBorderColor_WhenACheckboxCardIsSelected_ThenItIsTheAccentColour() {
+  func testBorderColor_WhenACheckboxCardIsSelected_ThenItIsTheAccentColor() {
     // Given
     let card = documentChoiceCard(isSelected: true, isEnabled: true)
 
@@ -152,6 +140,18 @@ final class TestWrapSelectableCardView: EudiTest {
 
     // Then
     XCTAssertEqual(color, Theme.shared.color.accent)
+  }
+
+  @MainActor
+  func testBorderColor_WhenACheckboxCardIsSelectedAndDisabled_ThenItIsTheTertiaryLabelColor() {
+    // Given
+    let card = documentChoiceCard(isSelected: true, isEnabled: false)
+
+    // When
+    let color = card.borderColor
+
+    // Then
+    XCTAssertEqual(color, Theme.shared.color.tertiaryLabel)
   }
 
   @MainActor

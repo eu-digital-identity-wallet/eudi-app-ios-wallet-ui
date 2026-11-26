@@ -18,8 +18,8 @@ import logic_resources
 
 /// A card the user selects by its header: a radio button for one choice among the cards (the default), or with
 /// `allowsMultipleSelection` a checkbox for any number of them. A selected card has an accent border, and a checkbox
-/// card that is not selected a separator-coloured one. A disabled card cannot change; a checkbox card then greys its
-/// checkbox and border, while a radio card keeps its look. `accessibilityName` names what the card selects
+/// card that is not selected a separator-coloured one. A disabled card cannot change: a selected one has a grey border,
+/// and a checkbox card also greys its checkbox. `accessibilityName` names what the card selects
 /// for VoiceOver, after the title, when several cards share one title; `headerLocator` identifies the header for UI
 /// automation.
 public struct WrapSelectableCardView<Content: View>: View {
@@ -60,8 +60,8 @@ public struct WrapSelectableCardView<Content: View>: View {
     WrapCardView(backgroundColor: Theme.shared.color.groupedBackground) {
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
         header
-          .ifLet(accessibilityName) { view, _ in
-            view.accessibilityLabel(headerAccessibilityLabel)
+          .if(accessibilityName != nil) {
+            $0.accessibilityLabel(headerAccessibilityLabel)
           }
           .ifLet(headerLocator) { view, locator in
             view.accessibilityIdentifier(locator.id)

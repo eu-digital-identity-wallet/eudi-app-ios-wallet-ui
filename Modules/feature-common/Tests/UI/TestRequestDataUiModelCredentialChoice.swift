@@ -120,6 +120,75 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
     XCTAssertTrue(result)
   }
 
+  func testOffersChoice_WhenEveryChoosableDocumentIsChosen_ThenIsTrue() {
+    // Given
+    let models = [
+      requestDataUiModel("pid-1", queryIds: ["pid"], isChosen: true),
+      requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)
+    ]
+
+    // When
+    let result = models.offersChoice()
+
+    // Then
+    XCTAssertTrue(result)
+  }
+
+  func testIsShared_WhenTheDocumentIsSharedWithItsOption_ThenIsTrue() {
+    // Given
+    let model = requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)
+
+    // When
+    let result = model.isShared
+
+    // Then
+    XCTAssertTrue(result)
+  }
+
+  func testIsShared_WhenTheDocumentIsNotChosen_ThenIsFalse() {
+    // Given
+    let model = requestDataUiModel("pid-1", queryIds: ["pid"], isChosen: false)
+
+    // When
+    let result = model.isShared
+
+    // Then
+    XCTAssertFalse(result)
+  }
+
+  func testCanChangeChoice_WhenAChoosableDocumentIsInTheSelectedOption_ThenIsTrue() {
+    // Given
+    let model = requestDataUiModel("pid-1", queryIds: ["pid"], isChosen: false)
+
+    // When
+    let result = model.canChangeChoice(inSelectedOption: true)
+
+    // Then
+    XCTAssertTrue(result)
+  }
+
+  func testCanChangeChoice_WhenAChoosableDocumentIsInAnotherOption_ThenIsFalse() {
+    // Given
+    let model = requestDataUiModel("pid-1", queryIds: ["pid"], isChosen: true)
+
+    // When
+    let result = model.canChangeChoice(inSelectedOption: false)
+
+    // Then
+    XCTAssertFalse(result)
+  }
+
+  func testCanChangeChoice_WhenTheDocumentIsSharedWithItsOption_ThenIsFalse() {
+    // Given
+    let model = requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)
+
+    // When
+    let result = model.canChangeChoice(inSelectedOption: true)
+
+    // Then
+    XCTAssertFalse(result)
+  }
+
   func testOffersChoice_WhenNoDocumentCanBeChosen_ThenIsFalse() {
     // Given
     let models = [requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)]

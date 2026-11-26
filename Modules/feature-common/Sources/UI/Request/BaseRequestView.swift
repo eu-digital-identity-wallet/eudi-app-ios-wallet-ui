@@ -280,9 +280,9 @@ private struct BaseRequestViewContainer: View {
       if offersChoice {
         WrapSelectableCardView(
           title: .requestCredentialChoiceTitle,
-          isSelected: section.isChosen ?? true,
+          isSelected: section.isShared,
           allowsMultipleSelection: true,
-          isEnabled: section.isChosen != nil && isChoiceEnabled,
+          isEnabled: section.canChangeChoice(inSelectedOption: isChoiceEnabled),
           isLoading: viewState.isLoading,
           accessibilityName: section.section.title,
           headerLocator: choiceLocator,
