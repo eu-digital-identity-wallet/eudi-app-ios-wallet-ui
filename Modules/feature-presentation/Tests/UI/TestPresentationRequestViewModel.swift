@@ -160,6 +160,25 @@ final class TestPresentationRequestViewModel: EudiTest {
   }
 
   @MainActor
+  func testDoWork_WhenAnotherDocumentIsSharedButNoMatchIsChosen_ThenShareIsDisabled() async {
+    // Given
+    let viewModel = makeViewModel(
+      isTrusted: true,
+      combinations: [
+        RequestCombinationUiModel(
+          documents: [plainRequest(), choosableRequest(id: "pid-1"), choosableRequest(id: "pid-2")]
+        )
+      ]
+    )
+
+    // When
+    await viewModel.doWork()
+
+    // Then
+    XCTAssertFalse(viewModel.viewState.allowShare)
+  }
+
+  @MainActor
   func testOnCredentialChoiceToggled_WhenAMatchIsChosen_ThenShareIsEnabled() async {
     // Given
     let viewModel = makeViewModel(isTrusted: true, combinations: [choiceCombination()])

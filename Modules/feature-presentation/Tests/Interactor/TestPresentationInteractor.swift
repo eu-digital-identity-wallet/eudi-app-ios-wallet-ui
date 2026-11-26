@@ -883,6 +883,9 @@ final class TestPresentationInteractor: EudiTest {
         ]
       )
     )
+    stub(presentationCoordinator) { mock in
+      when(mock.setState(presentationState: any())).thenDoNothing()
+    }
 
     // When
     let state = await interactor.onResponsePrepare(combinationIndex: 0, chosenDocumentIds: [])
