@@ -50,6 +50,9 @@ public struct BaseRequestView<Router: RouterHost>: View {
           Task {
             await viewModel.onCombinationItemClick(combinationIndex: index, id: id)
           }
+        },
+        onCredentialChoiceToggled: { index, documentId in
+          viewModel.onCredentialChoiceToggled(combinationIndex: index, documentId: documentId)
         }
       )
     }
@@ -99,6 +102,7 @@ private struct BaseRequestViewContainer: View {
   let onSelectionChanged: (String) -> Void
   var onCombinationSelected: (Int) -> Void = { _ in }
   var onCombinationItemClick: (Int, String) -> Void = { _, _ in }
+  var onCredentialChoiceToggled: (Int, String) -> Void = { _, _ in }
 
   @State private var scrollAreaHeight: CGFloat = .zero
 
@@ -202,7 +206,10 @@ private struct BaseRequestViewContainer: View {
         viewState.items[index],
         scrollId: viewState.items[index].section.id,
         proxy: proxy,
-        onItemClick: { onSelectionChanged($0) }
+        onItemClick: { onSelectionChanged($0) },
+        onChoiceToggled: {
+          onCredentialChoiceToggled(viewState.selectedCombinationIndex, viewState.items[index].section.id)
+        }
       )
       .containChildrenAccessibility(
         locator: BaseRequestLocators.requestedDocument(index.string)
@@ -229,7 +236,10 @@ private struct BaseRequestViewContainer: View {
                 viewState.combinations[index].documents[sectionIndex],
                 scrollId: "\(index):\(viewState.combinations[index].documents[sectionIndex].section.id)",
                 proxy: proxy,
-                onItemClick: { onCombinationItemClick(index, $0) }
+                onItemClick: { onCombinationItemClick(index, $0) },
+                onChoiceToggled: {
+                  onCredentialChoiceToggled(index, viewState.combinations[index].documents[sectionIndex].section.id)
+                }
               )
             }
 
@@ -251,23 +261,53 @@ private struct BaseRequestViewContainer: View {
     _ section: RequestDataUiModel,
     scrollId: String,
     proxy: ScrollViewProxy,
-    onItemClick: @escaping (String) -> Void
+    onItemClick: @escaping (String) -> Void,
+    onChoiceToggled: @escaping () -> Void
   ) -> some View {
-    WrapExpandableListView(
-      header: .init(
-        mainContent: .text(.custom(section.section.title)),
-        supportingText: .viewDetails
-      ),
-      items: section.section.listItems,
-      backgroundColor: Theme.shared.color.groupedElevatedBackground,
-      hideSensitiveContent: false,
-      isLoading: viewState.isLoading,
-      onItemClick: { onItemClick($0.groupId) },
-      onExpand: { headerId, height in
-        showOpened(headerId ?? scrollId, height: height, with: proxy)
+    VStack(alignment: .leading, spacing: SPACING_SMALL) {
+      if let isChosen = section.isChosen {
+        credentialChoiceRow(section, isChosen: isChosen, onToggled: onChoiceToggled)
       }
-    )
+
+      WrapExpandableListView(
+        header: .init(
+          mainContent: .text(.custom(section.section.title)),
+          supportingText: .viewDetails
+        ),
+        items: section.section.listItems,
+        backgroundColor: Theme.shared.color.groupedElevatedBackground,
+        hideSensitiveContent: false,
+        isLoading: viewState.isLoading,
+        onItemClick: { onItemClick($0.groupId) },
+        onExpand: { headerId, height in
+          showOpened(headerId ?? scrollId, height: height, with: proxy)
+        }
+      )
+    }
     .id(scrollId)
+  }
+
+  /// The row above a document that the user picks among the matches of a `multiple: true` query: a tap on it or on
+  /// its checkbox chooses or unchooses the document, and VoiceOver reads it as one selectable button.
+  @MainActor
+  @ViewBuilder
+  private func credentialChoiceRow(
+    _ section: RequestDataUiModel,
+    isChosen: Bool,
+    onToggled: @escaping () -> Void
+  ) -> some View {
+    WrapCardView(backgroundColor: Theme.shared.color.groupedElevatedBackground) {
+      WrapListItemView(
+        listItem: .init(
+          id: "\(section.section.id):choice",
+          mainContent: .text(.requestShareDocument([section.section.title])),
+          trailingContent: .checkbox(true, isChosen, { _ in })
+        ),
+        isLoading: viewState.isLoading,
+        action: onToggled
+      )
+      .accessibilityIdentifier(BaseRequestLocators.credentialChoice(section.section.id).id)
+    }
   }
 
   @MainActor

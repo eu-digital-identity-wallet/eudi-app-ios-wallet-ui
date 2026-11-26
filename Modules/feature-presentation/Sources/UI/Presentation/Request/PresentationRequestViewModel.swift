@@ -65,7 +65,8 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     Task {
 
       let result = await interactor.onResponsePrepare(
-        combinationIndex: self.viewState.selectedCombinationIndex
+        combinationIndex: self.viewState.selectedCombinationIndex,
+        chosenDocumentIds: self.viewState.items.chosenDocumentIds()
       )
 
       switch result {
@@ -99,7 +100,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
                 relyingPartyisTrusted: getRelyingPartyIsTrusted(),
                 presentationCoordinator: coordinator,
                 originator: getOriginator(),
-                items: viewState.items.filterSelectedRows()
+                items: viewState.items.sharedDocuments().filterSelectedRows()
               )
             )
           ),

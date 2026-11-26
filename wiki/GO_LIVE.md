@@ -887,6 +887,25 @@ Before release, exercise QES approval and QES requests with transaction data: ch
 each applicable option, the document links where supplied, and the recorded details after
 restarting the app. Also check that requests without transaction data show no extra section.
 
+### Choosing Credentials For `multiple: true` Queries
+
+A DCQL credential query with `multiple: true` (OpenID4VP 1.0, section 6.1) accepts more than one credential, and
+WalletKit puts every matching credential into one option of the request screen. When such a query has two or more
+matches in an option, the user chooses which to share (`PresentationInteractorImpl.onRequestReceived`):
+
+* A "Share <document>" row with a checkbox sits above each match. None is ticked at first, and Share stays disabled
+  until every such query has a ticked match. The choice is kept when the user switches options.
+* A credential for a query that accepts one credential, and the only match of a query, are shared with their option,
+  without a checkbox.
+* A match that carries transaction data is always shared, without a checkbox: WalletKit authorizes the transaction
+  with the credential it assigned it to.
+* Share sends the shared credentials under the option's name, and each keeps the query ids WalletKit gave it.
+  WalletKit checks the selection again before anything is sent and refuses one that leaves a required credential set
+  unsatisfied.
+* An option that would give a query that accepts one credential two of them is not offered. WalletKit builds such an
+  option when two `credential_sets` name the same query, but refuses to send it (OpenID4VP 1.0, section 8.1).
+* Proximity presentations and the Digital Credentials API are unchanged: their requests carry no DCQL queries.
+
 ### Relay Attack Risk In Presentation Flows
 
 Production presentation flows must explicitly account for relay attacks. This is especially

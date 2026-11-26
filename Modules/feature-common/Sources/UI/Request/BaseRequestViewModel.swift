@@ -105,7 +105,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   /// Shares, or first asks for confirmation when Share would disclose a picture of the holder, as on Android.
   func onShareClick() {
     guard canShare else { return }
-    guard viewState.items.sharesUserImage() else {
+    guard viewState.items.sharedDocuments().sharesUserImage() else {
       onShare()
       return
     }
@@ -307,8 +307,27 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
     }
   }
 
+  /// Reverses the user's choice of the document with `documentId` in the option at `combinationIndex`, for a document
+  /// of a `multiple: true` query with two or more matches. The choice is kept when the user switches options.
+  func onCredentialChoiceToggled(combinationIndex: Int, documentId: String) {
+    guard viewState.combinations.indices.contains(combinationIndex) else { return }
+    let updatedItems = viewState.combinations[combinationIndex].documents.togglingChoice(of: documentId)
+    var combinations = viewState.combinations
+    combinations[combinationIndex] = combinations[combinationIndex].copy(documents: updatedItems)
+    let isSelectedCombination = combinationIndex == viewState.selectedCombinationIndex
+    setState {
+      $0.copy(
+        items: isSelectedCombination ? updatedItems : $0.items,
+        combinations: combinations,
+        allowShare: isSelectedCombination ? hasSharableSelection(updatedItems) : $0.allowShare
+      )
+    }
+  }
+
+  /// True when Share has something to send: the shared documents' selected claims, and a shared document for every
+  /// DCQL query whose documents the user chooses.
   private func hasSharableSelection(_ items: [RequestDataUiModel]) -> Bool {
-    items.canShare()
+    items.sharedDocuments().canShare() && items.keepsEveryChosenQuery()
   }
 
   private func onErrorAction() {

@@ -24,6 +24,28 @@ public struct PresentationRequest: Sendable, Equatable {
   public let overaskedClaims: [OveraskedClaim]
   public let transactionDataSets: [[String: [PresentationTransactionDataDomain]]]
   public let requestNames: [String?]
+  /// The DCQL credential queries of each option, in the order of `itemSets`; empty for proximity.
+  public let credentialQueries: [PresentationCredentialQueriesDomain]
+
+  public init(
+    itemSets: [[DocElements]],
+    relyingParty: String,
+    dataRequestInfo: String,
+    isTrusted: Bool,
+    overaskedClaims: [OveraskedClaim],
+    transactionDataSets: [[String: [PresentationTransactionDataDomain]]],
+    requestNames: [String?],
+    credentialQueries: [PresentationCredentialQueriesDomain] = []
+  ) {
+    self.itemSets = itemSets
+    self.relyingParty = relyingParty
+    self.dataRequestInfo = dataRequestInfo
+    self.isTrusted = isTrusted
+    self.overaskedClaims = overaskedClaims
+    self.transactionDataSets = transactionDataSets
+    self.requestNames = requestNames
+    self.credentialQueries = credentialQueries
+  }
 }
 
 extension PresentationRequest {

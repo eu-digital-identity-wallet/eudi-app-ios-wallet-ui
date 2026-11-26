@@ -268,7 +268,7 @@ final class TestPresentationInteractor: EudiTest {
     _ = await interactor.onRequestReceived()
 
     // When
-    let state = await interactor.onResponsePrepare(combinationIndex: 0)
+    let state = await interactor.onResponsePrepare(combinationIndex: 0, chosenDocumentIds: [])
 
     // Then
     guard case .success(let response) = state else {
@@ -416,7 +416,7 @@ final class TestPresentationInteractor: EudiTest {
     }
 
     // When
-    let state = await interactor.onResponsePrepare(combinationIndex: 0)
+    let state = await interactor.onResponsePrepare(combinationIndex: 0, chosenDocumentIds: [])
 
     // Then
     switch state {
@@ -523,7 +523,7 @@ final class TestPresentationInteractor: EudiTest {
     }
 
     // When
-    let state = await interactor.onResponsePrepare(combinationIndex: 0)
+    let state = await interactor.onResponsePrepare(combinationIndex: 0, chosenDocumentIds: [])
 
     // Then
     switch state {
@@ -549,7 +549,7 @@ final class TestPresentationInteractor: EudiTest {
     await stubReceivedRequest()
 
     // When
-    let state = await interactor.onResponsePrepare(combinationIndex: 1)
+    let state = await interactor.onResponsePrepare(combinationIndex: 1, chosenDocumentIds: [])
 
     // Then
     switch state {
@@ -663,7 +663,7 @@ final class TestPresentationInteractor: EudiTest {
 
     // When
     let result = await interactor.onRequestReceived()
-    let state = await interactor.onResponsePrepare(combinationIndex: 0)
+    let state = await interactor.onResponsePrepare(combinationIndex: 0, chosenDocumentIds: [])
 
     // Then
     guard case .success(let model) = result else {
@@ -752,11 +752,150 @@ final class TestPresentationInteractor: EudiTest {
       }
     }
   }
+
+  func testOnRequestReceived_WhenAMultipleQueryHasTwoMatches_ThenTheUserChoosesWhichToShare() async {
+    // Given
+    await stubReceivedRequest(Self.choiceRequest())
+
+    // When
+    let state = await interactor.onRequestReceived()
+
+    // Then
+    guard case .success(let model) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    let documents = model.requestDataCombinations.first?.documents ?? []
+    XCTAssertEqual(documents.map(\.section.id), ["pid-1", "pid-2"])
+    XCTAssertEqual(documents.map(\.isChosen), [false, false])
+    XCTAssertEqual(documents.map(\.queryIds), [["pid"], ["pid"]])
+  }
+
+  func testOnRequestReceived_WhenASingleQueryIsGivenTwoDocuments_ThenThatOptionIsLeftOut() async {
+    // Given
+    let single = PresentationCredentialQueriesDomain(
+      queryIdsByDocumentId: ["pid-1": ["pid"], "pid-2": ["pid"]],
+      multipleQueryIds: []
+    )
+    await stubReceivedRequest(
+      Self.choiceRequest(
+        itemSets: [[Self.mdoc("pid-1"), Self.mdoc("pid-2")], [Self.mdoc("pid-1")]],
+        requestNames: ["option-refused", "option-valid"],
+        credentialQueries: [single, single]
+      )
+    )
+    stub(presentationCoordinator) { mock in
+      when(mock.setState(presentationState: any())).thenDoNothing()
+    }
+
+    // When
+    let result = await interactor.onRequestReceived()
+    let state = await interactor.onResponsePrepare(combinationIndex: 0, chosenDocumentIds: [])
+
+    // Then
+    guard case .success(let model) = result else {
+      return XCTFail("Wrong state \(result)")
+    }
+    XCTAssertEqual(model.requestDataCombinations.count, 1)
+    XCTAssertEqual(model.requestDataCombinations.first?.documents.map(\.isChosen), [nil])
+    guard case .success(let response) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    XCTAssertEqual(response.requestName, "option-valid")
+  }
+
+  /// The other match stays optional: the query keeps the match with the transaction data.
+  func testOnRequestReceived_WhenAMatchCarriesTransactionData_ThenItIsAlwaysShared() async {
+    // Given
+    let readable: [PresentationTransactionDataDomain] = [.qes(.init(credentialIds: [], signatureRequests: []))]
+    await stubReceivedRequest(Self.choiceRequest(transactionDataSets: [["pid-1": readable]]))
+
+    // When
+    let state = await interactor.onRequestReceived()
+
+    // Then
+    guard case .success(let model) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    XCTAssertEqual(model.requestDataCombinations.first?.documents.map(\.isChosen), [nil, false])
+  }
+
+  func testOnResponsePrepare_WhenOneOfTwoMatchesIsChosen_ThenOnlyThatOneIsSent() async {
+    // Given
+    await stubReceivedRequest(Self.choiceRequest())
+    stub(presentationCoordinator) { mock in
+      when(mock.setState(presentationState: any())).thenDoNothing()
+    }
+
+    // When
+    let state = await interactor.onResponsePrepare(combinationIndex: 0, chosenDocumentIds: ["pid-2"])
+
+    // Then
+    guard case .success(let response) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    XCTAssertEqual(Set(response.items.keys), ["pid-2"])
+    XCTAssertEqual(response.requestName, "option-1")
+  }
+
+  func testOnResponsePrepare_WhenNoMatchOfAMultipleQueryIsChosen_ThenFailsWithoutAResponse() async {
+    // Given
+    await stubReceivedRequest(Self.choiceRequest())
+
+    // When
+    let state = await interactor.onResponsePrepare(combinationIndex: 0, chosenDocumentIds: [])
+
+    // Then
+    guard case .failure(let error) = state else {
+      return XCTFail("Wrong state \(state)")
+    }
+    XCTAssertEqual(
+      error.localizedDescription,
+      PresentationSessionError.conversionToRequestItemModel.localizedDescription
+    )
+    verify(presentationCoordinator, never()).setState(presentationState: any())
+  }
 }
 
 private extension TestPresentationInteractor {
 
   static let mockPresentationRequest = Constants.mockPresentationRequest
+
+  /// An mdoc with one requested element, like `Constants.mockPresentationRequest`'s, under `documentId`.
+  static func mdoc(_ documentId: String) -> DocElements {
+    guard case .msoMdoc(let template) = Constants.mockPresentationRequest.itemSets[0][0] else {
+      fatalError("The fixture's document is an mdoc")
+    }
+    return .msoMdoc(
+      .init(
+        docId: documentId,
+        docType: template.docType,
+        displayName: template.displayName,
+        nameSpacedElements: template.nameSpacedElements
+      )
+    )
+  }
+
+  /// A request whose one option answers the query `pid` with two documents, `pid-1` and `pid-2`.
+  static func choiceRequest(
+    itemSets: [[DocElements]] = [[mdoc("pid-1"), mdoc("pid-2")]],
+    transactionDataSets: [[String: [PresentationTransactionDataDomain]]] = [],
+    requestNames: [String?] = ["option-1"],
+    credentialQueries: [PresentationCredentialQueriesDomain] = [
+      .init(queryIdsByDocumentId: ["pid-1": ["pid"], "pid-2": ["pid"]], multipleQueryIds: ["pid"])
+    ]
+  ) -> PresentationRequest {
+    let request = Constants.mockPresentationRequest
+    return PresentationRequest(
+      itemSets: itemSets,
+      relyingParty: request.relyingParty,
+      dataRequestInfo: request.dataRequestInfo,
+      isTrusted: request.isTrusted,
+      overaskedClaims: request.overaskedClaims,
+      transactionDataSets: transactionDataSets,
+      requestNames: requestNames,
+      credentialQueries: credentialQueries
+    )
+  }
 
   static func presentationRequest(
     transactionDataSets: [[String: [PresentationTransactionDataDomain]]],

@@ -60,7 +60,7 @@ final class TestPresentationRequestViewModel: EudiTest {
 
     // Then
     XCTAssertTrue(viewModel.isUserImageConfirmationShowing)
-    verify(interactor, never()).onResponsePrepare(combinationIndex: any())
+    verify(interactor, never()).onResponsePrepare(combinationIndex: any(), chosenDocumentIds: any())
   }
 
   @MainActor
@@ -146,9 +146,105 @@ final class TestPresentationRequestViewModel: EudiTest {
     XCTAssertFalse(viewModel.isUserImageConfirmationShowing)
     await fulfillment(of: [shared], timeout: 0.5)
   }
+
+  @MainActor
+  func testOnCredentialChoiceToggled_WhenAMatchIsChosenAndUnchosen_ThenShareFollowsIt() async {
+    // Given
+    let viewModel = makeViewModel(isTrusted: true, combinations: [choiceCombination()])
+    await viewModel.doWork()
+    XCTAssertFalse(viewModel.viewState.allowShare)
+
+    // When
+    viewModel.onCredentialChoiceToggled(combinationIndex: 0, documentId: "pid-1")
+
+    // Then
+    XCTAssertTrue(viewModel.viewState.allowShare)
+    XCTAssertEqual(viewModel.viewState.items.map(\.isChosen), [true, false])
+    viewModel.onCredentialChoiceToggled(combinationIndex: 0, documentId: "pid-1")
+    XCTAssertFalse(viewModel.viewState.allowShare)
+  }
+
+  @MainActor
+  func testOnCombinationSelected_WhenTheUserSwitchesOptions_ThenTheChoiceIsKept() async {
+    // Given
+    let viewModel = makeViewModel(
+      isTrusted: true,
+      combinations: [choiceCombination(), RequestCombinationUiModel(documents: [plainRequest()])]
+    )
+    await viewModel.doWork()
+    viewModel.onCredentialChoiceToggled(combinationIndex: 0, documentId: "pid-2")
+
+    // When
+    viewModel.onCombinationSelected(index: 1)
+    viewModel.onCombinationSelected(index: 0)
+
+    // Then
+    XCTAssertEqual(viewModel.viewState.items.map(\.isChosen), [false, true])
+    XCTAssertTrue(viewModel.viewState.allowShare)
+  }
+
+  @MainActor
+  func testOnShareClick_WhenThePortraitIsOnAMatchThatIsNotChosen_ThenSharesWithoutAConfirmation() async {
+    // Given
+    let viewModel = makeViewModel(
+      isTrusted: true,
+      combinations: [
+        RequestCombinationUiModel(
+          documents: [
+            portraitRequest().withCredentialChoice(queryIds: ["pid"], isChosen: false),
+            choosableRequest(id: "pid-2")
+          ]
+        )
+      ]
+    )
+    await viewModel.doWork()
+    viewModel.onCredentialChoiceToggled(combinationIndex: 0, documentId: "pid-2")
+    let shared = expectSharing()
+
+    // When
+    viewModel.onShareClick()
+
+    // Then
+    XCTAssertFalse(viewModel.isUserImageConfirmationShowing)
+    await fulfillment(of: [shared], timeout: 0.5)
+  }
+
+  @MainActor
+  func testOnShareClick_WhenAMatchIsChosen_ThenTheInteractorGetsOnlyItsId() async {
+    // Given
+    let viewModel = makeViewModel(isTrusted: true, combinations: [choiceCombination()])
+    await viewModel.doWork()
+    viewModel.onCredentialChoiceToggled(combinationIndex: 0, documentId: "pid-2")
+    let shared = expectSharing()
+
+    // When
+    viewModel.onShareClick()
+
+    // Then
+    await fulfillment(of: [shared], timeout: 0.5)
+    verify(interactor).onResponsePrepare(
+      combinationIndex: 0,
+      chosenDocumentIds: ParameterMatcher { $0 == ["pid-2"] }
+    )
+  }
 }
 
 private extension TestPresentationRequestViewModel {
+
+  /// An option whose query `pid` has two matches, `pid-1` and `pid-2`, neither chosen yet.
+  func choiceCombination() -> RequestCombinationUiModel {
+    RequestCombinationUiModel(documents: [choosableRequest(id: "pid-1"), choosableRequest(id: "pid-2")])
+  }
+
+  /// A match of the query `pid` that the user can choose, not chosen yet.
+  func choosableRequest(id: String) -> RequestDataUiModel {
+    let plain = plainRequest()
+    return RequestDataUiModel(
+      section: .init(id: id, title: "PID", listItems: plain.section.listItems),
+      queryIds: ["pid"],
+      isChosen: false
+    )
+  }
 
   @MainActor
   func makeViewModel(
@@ -156,7 +252,7 @@ private extension TestPresentationRequestViewModel {
     combinations: [RequestCombinationUiModel] = []
   ) -> PresentationRequestViewModel<MockRouterHost> {
     stub(interactor) { mock in
-      when(mock.onResponsePrepare(combinationIndex: any())).thenReturn(.failure(RuntimeError.genericError))
+      when(mock.onResponsePrepare(combinationIndex: any(), chosenDocumentIds: any())).thenReturn(.failure(RuntimeError.genericError))
       when(mock.getCoordinator()).thenReturn(.failure(RuntimeError.genericError))
       when(mock.onDeviceEngagement()).thenReturn(
         .success(
@@ -229,7 +325,7 @@ private extension TestPresentationRequestViewModel {
   func expectSharing() -> XCTestExpectation {
     let shared = expectation(description: "the response is prepared")
     stub(interactor) { mock in
-      when(mock.onResponsePrepare(combinationIndex: any())).then { _ in
+      when(mock.onResponsePrepare(combinationIndex: any(), chosenDocumentIds: any())).then { _ in
         shared.fulfill()
         return .failure(RuntimeError.genericError)
       }

@@ -2460,6 +2460,17 @@
         }
       }
     },
+    "request_share_document" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share %@"
+          }
+        }
+      }
+    },
     "request_transaction_data_chosen_by_relying_party_warning" : {
       "extractionState" : "manual",
       "localizations" : {

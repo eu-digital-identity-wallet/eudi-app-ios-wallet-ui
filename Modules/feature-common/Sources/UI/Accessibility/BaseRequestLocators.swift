@@ -19,6 +19,7 @@ public enum BaseRequestLocators: LocatorType {
   case description
   case shareButton
   case requestedDocument(String)
+  case credentialChoice(String)
 
   public var id: String {
     switch self {
@@ -28,6 +29,8 @@ public enum BaseRequestLocators: LocatorType {
       return "request_screen_share_button"
     case let .requestedDocument(index):
       return "request_screen_requested_document_\(index)"
+    case let .credentialChoice(documentId):
+      return "request_screen_credential_choice_\(documentId)"
     }
   }
 
@@ -35,7 +38,7 @@ public enum BaseRequestLocators: LocatorType {
     switch self {
     case .description:
       return .isStaticText
-    case .shareButton, .requestedDocument:
+    case .shareButton, .requestedDocument, .credentialChoice:
       return .isButton
     }
   }
