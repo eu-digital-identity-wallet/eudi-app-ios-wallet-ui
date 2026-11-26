@@ -21,7 +21,10 @@ import Observation
 
 @Copyable
 struct RequestAuthorizationViewState: ViewState {
-  let items: [AuthorizationUIRequestItem]
+  /// The documents of each way to answer the request; the sheet offers them as options when there are several.
+  let options: [[AuthorizationUIRequestItem]]
+  /// The option Accept sends, the first at first.
+  let selectedOptionIndex: Int
   let errorMessage: String?
   let isLoading: Bool
   let contentHeaderConfig: ContentHeaderConfig
@@ -40,7 +43,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
   var isUserImageConfirmationShowing: Bool = false
 
   private var isRequestAuthorized: Bool = false
-  private var selection: DocumentProviderSelection?
+  private var selections: [DocumentProviderSelection] = []
 
   private var context: ISO18013MobileDocumentRequestContext?
   private var interactor: RequestAuthorizationInteractor = DIGraph.shared.resolver.force(
@@ -53,7 +56,8 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     self.context = context
     super.init(
       initialState: .init(
-        items: [],
+        options: [],
+        selectedOptionIndex: 0,
         errorMessage: nil,
         isLoading: true,
         contentHeaderConfig: .init(
@@ -104,11 +108,12 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
       }
 
       let uiModel = try await interactor.loadRequestData(context: context)
-      selection = uiModel.selection
+      selections = uiModel.options.map(\.selection)
 
       setState {
         $0.copy(
-          items: uiModel.documents.toRequestItems(),
+          options: uiModel.options.map { $0.documents.toRequestItems() },
+          selectedOptionIndex: 0,
           isLoading: false,
           contentHeaderConfig: .init(
             appIconAndTextData: AppIconAndTextData(
@@ -136,9 +141,16 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     }
   }
 
-  /// Sends the response, unless a warning is still waiting for the user's acknowledgement.
+  /// Selects the option Accept sends.
+  func onOptionSelected(_ index: Int) {
+    guard viewState.options.indices.contains(index) else { return }
+    setState { $0.copy(selectedOptionIndex: index) }
+  }
+
+  /// Sends the selected option, unless a warning is still waiting for the user's acknowledgement.
   func acceptVerification() async {
-    guard canAccept, let context, let selection else { return }
+    guard canAccept, let context, selections.indices.contains(viewState.selectedOptionIndex) else { return }
+    let selection = selections[viewState.selectedOptionIndex]
     setState {
       $0.copy(
         isLoading: true

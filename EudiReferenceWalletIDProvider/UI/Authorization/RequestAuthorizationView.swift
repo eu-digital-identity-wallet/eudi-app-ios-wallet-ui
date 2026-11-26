@@ -30,7 +30,7 @@ struct RequestAuthorizationView: View {
   var body: some View {
     NavigationStack {
       VStack(alignment: .center) {
-        if !viewModel.viewState.items.isEmpty, viewModel.viewState.errorMessage == nil {
+        if !viewModel.viewState.options.isEmpty, viewModel.viewState.errorMessage == nil {
           contentView(viewState: viewModel.viewState)
         } else {
           noDocumentsFound()
@@ -79,25 +79,15 @@ struct RequestAuthorizationView: View {
                 WarningNoticeView(message: .requestUserImageNotice)
               }
 
-              ForEach(viewState.items.indices, id: \.self) { index in
-                let section = viewState.items[index]
-                WrapExpandableListView(
-                  header: .init(
-                    mainContent: .text(.custom(section.section.title)),
-                    supportingText: .viewDetails
-                  ),
-                  items: section.section.listItems,
-                  backgroundColor: Theme.shared.color.groupedElevatedBackground,
-                  hideSensitiveContent: false,
-                  isLoading: viewState.isLoading,
-                  onExpand: { headerId, height in
-                    showOpened(headerId ?? section.id, height: height, with: proxy)
-                  }
-                )
-                .id(section.id)
-                .containChildrenAccessibility(
-                  locator: BaseRequestLocators.requestedDocument(index.string)
-                )
+              if let documents = viewState.options.first, viewState.options.count == 1 {
+                ForEach(documents.indices, id: \.self) { index in
+                  documentCard(documents[index], scrollId: documents[index].id, proxy: proxy)
+                    .containChildrenAccessibility(
+                      locator: BaseRequestLocators.requestedDocument(index.string)
+                    )
+                }
+              } else {
+                optionCards(viewState: viewState, proxy: proxy)
               }
             }
             .padding(.horizontal, Theme.shared.dimension.padding)
@@ -115,6 +105,52 @@ struct RequestAuthorizationView: View {
 
       actionButtonsFooter()
     }
+  }
+
+  /// The ways to answer the request when the wallet holds more than one document of a requested type, as the
+  /// request screen offers its options: a radio button on each, the first selected.
+  @ViewBuilder
+  private func optionCards(viewState: RequestAuthorizationViewState, proxy: ScrollViewProxy) -> some View {
+    ForEach(viewState.options.indices, id: \.self) { optionIndex in
+      WrapSelectableCardView(
+        title: .requestCombinationTitle(["\(optionIndex + 1)", "\(viewState.options.count)"]),
+        isSelected: optionIndex == viewState.selectedOptionIndex,
+        onSelected: { viewModel.onOptionSelected(optionIndex) },
+        content: {
+          VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+            ForEach(viewState.options[optionIndex]) { document in
+              documentCard(document, scrollId: "\(optionIndex):\(document.id)", proxy: proxy)
+            }
+          }
+        }
+      )
+      .containChildrenAccessibility(
+        locator: BaseRequestLocators.requestedDocument(optionIndex.string)
+      )
+    }
+  }
+
+  /// A requested document's card: its name, "View details" and, once opened, the requested claims.
+  @ViewBuilder
+  private func documentCard(
+    _ document: AuthorizationUIRequestItem,
+    scrollId: String,
+    proxy: ScrollViewProxy
+  ) -> some View {
+    WrapExpandableListView(
+      header: .init(
+        mainContent: .text(.custom(document.section.title)),
+        supportingText: .viewDetails
+      ),
+      items: document.section.listItems,
+      backgroundColor: Theme.shared.color.groupedElevatedBackground,
+      hideSensitiveContent: false,
+      isLoading: viewModel.viewState.isLoading,
+      onExpand: { headerId, height in
+        showOpened(headerId ?? scrollId, height: height, with: proxy)
+      }
+    )
+    .id(scrollId)
   }
 
   /// The sheet's buttons, and its warning when one is shown, stay fixed below a short scroll area, so the claims

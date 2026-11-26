@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import MdocDataModel18013
 
 /// The ID Provider extension's decisions on a Digital Credential API request, kept here so that they are tested; the
 /// extension has no test target.
@@ -33,6 +34,35 @@ public enum DocumentProviderPolicy {
     guard !requestedDocumentIds.contains(where: blockedDocumentIds.contains) else {
       throw WalletCoreError.documentBlocked
     }
+  }
+
+  /// The ways the extension can answer a request, which asks for one document of each type: every combination of one
+  /// document per requested type that the wallet holds, in the order of `documents`. An option that includes a
+  /// document with a revocation record is not offered. Declines while the user has turned off offering documents to
+  /// apps and websites, and when every option includes a blocked document; no documents give no options.
+  public static func options(
+    for documents: [DocClaimsModel],
+    isOffering: Bool,
+    blockedDocumentIds: Set<String>
+  ) throws -> [[DocClaimsModel]] {
+    guard isOffering else {
+      throw WalletCoreError.documentOfferingDisabled
+    }
+    guard !documents.isEmpty else { return [] }
+    let docTypes = documents.map(\.docType).reduce(into: [String]()) { docTypes, docType in
+      if !docTypes.contains(docType) { docTypes.append(docType) }
+    }
+    let combinations = docTypes.reduce([[DocClaimsModel]()]) { options, docType in
+      let matches = documents.filter { $0.docType == docType }
+      return options.flatMap { option in matches.map { option + [$0] } }
+    }
+    let offered = combinations.filter { option in
+      !option.contains { blockedDocumentIds.contains($0.id) }
+    }
+    guard !offered.isEmpty else {
+      throw WalletCoreError.documentBlocked
+    }
+    return offered
   }
 
   /// True when a requested claim is a picture of the holder (`ConfigUiLogic.userImageClaimKeys`).

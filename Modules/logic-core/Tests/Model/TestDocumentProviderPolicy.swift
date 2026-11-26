@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
+import MdocDataModel18013
 @testable import logic_core
 @testable import logic_test
 
@@ -58,5 +59,112 @@ final class TestDocumentProviderPolicy: EudiTest {
     // Then
     XCTAssertTrue(withPortrait)
     XCTAssertFalse(withoutPortrait)
+  }
+
+  func testOptions_WhenTheWalletHoldsTwoDocumentsOfTheRequestedType_ThenOffersEachAlone() throws {
+    // Given
+    let documents = [Self.document(id: "mdl-1", docType: "mdl"), Self.document(id: "mdl-2", docType: "mdl")]
+
+    // When
+    let options = try DocumentProviderPolicy.options(for: documents, isOffering: true, blockedDocumentIds: [])
+
+    // Then
+    XCTAssertEqual(options.map { $0.map(\.id) }, [["mdl-1"], ["mdl-2"]])
+  }
+
+  func testOptions_WhenOnlyOneRequestedTypeHasTwoDocuments_ThenEachOptionKeepsTheOtherType() throws {
+    // Given
+    let documents = [
+      Self.document(id: "pid", docType: "pid"),
+      Self.document(id: "mdl-1", docType: "mdl"),
+      Self.document(id: "mdl-2", docType: "mdl")
+    ]
+
+    // When
+    let options = try DocumentProviderPolicy.options(for: documents, isOffering: true, blockedDocumentIds: [])
+
+    // Then
+    XCTAssertEqual(options.map { $0.map(\.id) }, [["pid", "mdl-1"], ["pid", "mdl-2"]])
+  }
+
+  func testOptions_WhenEachRequestedTypeHasOneDocument_ThenOffersOneOptionWithAll() throws {
+    // Given
+    let documents = [Self.document(id: "pid", docType: "pid"), Self.document(id: "mdl", docType: "mdl")]
+
+    // When
+    let options = try DocumentProviderPolicy.options(for: documents, isOffering: true, blockedDocumentIds: [])
+
+    // Then
+    XCTAssertEqual(options.map { $0.map(\.id) }, [["pid", "mdl"]])
+  }
+
+  func testOptions_WhenOneOfTwoDocumentsIsBlocked_ThenOffersOnlyTheOther() throws {
+    // Given
+    let documents = [Self.document(id: "mdl-1", docType: "mdl"), Self.document(id: "mdl-2", docType: "mdl")]
+
+    // When
+    let options = try DocumentProviderPolicy.options(for: documents, isOffering: true, blockedDocumentIds: ["mdl-1"])
+
+    // Then
+    XCTAssertEqual(options.map { $0.map(\.id) }, [["mdl-2"]])
+  }
+
+  func testOptions_WhenEveryOptionIncludesABlockedDocument_ThenDeclines() {
+    // Given
+    let documents = [Self.document(id: "pid", docType: "pid"), Self.document(id: "mdl", docType: "mdl")]
+
+    // Then
+    XCTAssertThrowsError(
+      try DocumentProviderPolicy.options(for: documents, isOffering: true, blockedDocumentIds: ["pid"])
+    ) { error in
+      XCTAssertEqual(error.localizedDescription, WalletCoreError.documentBlocked.localizedDescription)
+    }
+  }
+
+  func testOptions_WhenTheOfferingIsOff_ThenDeclines() {
+    // Given
+    let documents = [Self.document(id: "mdl", docType: "mdl")]
+
+    // Then
+    XCTAssertThrowsError(
+      try DocumentProviderPolicy.options(for: documents, isOffering: false, blockedDocumentIds: [])
+    ) { error in
+      XCTAssertEqual(error.localizedDescription, WalletCoreError.documentOfferingDisabled.localizedDescription)
+    }
+  }
+
+  func testOptions_WhenNoDocumentMatches_ThenOffersNothing() throws {
+    // When
+    let options = try DocumentProviderPolicy.options(for: [], isOffering: true, blockedDocumentIds: [])
+
+    // Then
+    XCTAssertTrue(options.isEmpty)
+  }
+}
+
+private extension TestDocumentProviderPolicy {
+
+  /// A stored document of `docType` with one claim, as the DC API library returns it for a request.
+  static func document(id: String, docType: String) -> DocClaimsModel {
+    DocClaimsModel(
+      configuration: DocClaimsModelConfiguration(
+        id: id,
+        docType: docType,
+        displayName: nil,
+        display: nil,
+        credentialIssuerIdentifier: nil,
+        configurationIdentifier: nil,
+        validFrom: nil,
+        validUntil: nil,
+        statusList: nil,
+        credentialsUsageCounts: nil,
+        credentialPolicy: .rotateUse,
+        secureAreaName: nil,
+        modifiedAt: nil,
+        docClaims: [DocClaim(name: "family_name", dataValue: .string("value"), stringValue: "value", namespace: docType)],
+        docDataFormat: .cbor,
+        hashingAlg: nil
+      )
+    )
   }
 }
