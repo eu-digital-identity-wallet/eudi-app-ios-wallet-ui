@@ -2372,6 +2372,17 @@
         }
       }
     },
+    "request_credential_choice_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share %@"
+          }
+        }
+      }
+    },
     "request_credential_offer_no_document" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2456,17 +2467,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Requested data"
-          }
-        }
-      }
-    },
-    "request_share_document" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Share %@"
           }
         }
       }

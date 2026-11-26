@@ -27,7 +27,7 @@ public struct PresentationRequest: Sendable, Equatable {
   /// The DCQL credential queries of each option, in the order of `itemSets`; empty for proximity.
   public let credentialQueries: [PresentationCredentialQueriesDomain]
 
-  public init(
+  init(
     itemSets: [[DocElements]],
     relyingParty: String,
     dataRequestInfo: String,

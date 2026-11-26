@@ -148,11 +148,22 @@ final class TestPresentationRequestViewModel: EudiTest {
   }
 
   @MainActor
-  func testOnCredentialChoiceToggled_WhenAMatchIsChosenAndUnchosen_ThenShareFollowsIt() async {
+  func testDoWork_WhenAQueryHasTwoMatchesToChooseFrom_ThenShareIsDisabled() async {
+    // Given
+    let viewModel = makeViewModel(isTrusted: true, combinations: [choiceCombination()])
+
+    // When
+    await viewModel.doWork()
+
+    // Then
+    XCTAssertFalse(viewModel.viewState.allowShare)
+  }
+
+  @MainActor
+  func testOnCredentialChoiceToggled_WhenAMatchIsChosen_ThenShareIsEnabled() async {
     // Given
     let viewModel = makeViewModel(isTrusted: true, combinations: [choiceCombination()])
     await viewModel.doWork()
-    XCTAssertFalse(viewModel.viewState.allowShare)
 
     // When
     viewModel.onCredentialChoiceToggled(combinationIndex: 0, documentId: "pid-1")
@@ -160,8 +171,38 @@ final class TestPresentationRequestViewModel: EudiTest {
     // Then
     XCTAssertTrue(viewModel.viewState.allowShare)
     XCTAssertEqual(viewModel.viewState.items.map(\.isChosen), [true, false])
+  }
+
+  @MainActor
+  func testOnCredentialChoiceToggled_WhenTheOnlyChosenMatchIsCleared_ThenShareIsDisabledAgain() async {
+    // Given
+    let viewModel = makeViewModel(isTrusted: true, combinations: [choiceCombination()])
+    await viewModel.doWork()
     viewModel.onCredentialChoiceToggled(combinationIndex: 0, documentId: "pid-1")
+
+    // When
+    viewModel.onCredentialChoiceToggled(combinationIndex: 0, documentId: "pid-1")
+
+    // Then
     XCTAssertFalse(viewModel.viewState.allowShare)
+    XCTAssertEqual(viewModel.viewState.items.map(\.isChosen), [false, false])
+  }
+
+  @MainActor
+  func testOnCredentialChoiceToggled_WhenTheOptionIsNotSelected_ThenNothingChanges() async {
+    // Given
+    let viewModel = makeViewModel(
+      isTrusted: true,
+      combinations: [RequestCombinationUiModel(documents: [plainRequest()]), choiceCombination()]
+    )
+    await viewModel.doWork()
+
+    // When
+    viewModel.onCredentialChoiceToggled(combinationIndex: 1, documentId: "pid-1")
+
+    // Then
+    XCTAssertEqual(viewModel.viewState.combinations[1].documents.map(\.isChosen), [false, false])
+    XCTAssertTrue(viewModel.viewState.allowShare)
   }
 
   @MainActor
@@ -191,7 +232,7 @@ final class TestPresentationRequestViewModel: EudiTest {
       combinations: [
         RequestCombinationUiModel(
           documents: [
-            portraitRequest().withCredentialChoice(queryIds: ["pid"], isChosen: false),
+            portraitRequest().copy(queryIds: ["pid"], isChosen: false),
             choosableRequest(id: "pid-2")
           ]
         )
@@ -236,11 +277,25 @@ private extension TestPresentationRequestViewModel {
     RequestCombinationUiModel(documents: [choosableRequest(id: "pid-1"), choosableRequest(id: "pid-2")])
   }
 
-  /// A match of the query `pid` that the user can choose, not chosen yet.
+  /// A PID that answers the query `pid` and that the user can choose, not chosen yet.
   func choosableRequest(id: String) -> RequestDataUiModel {
-    let plain = plainRequest()
+    let familyName: ExpandableListItem<DocumentElementClaim> = .single(
+      .init(
+        collapsed: .init(groupId: "\(id)-family-name", mainContent: .text(.custom("Doe")), overlineText: .custom("Family name")),
+        domainModel: .primitive(
+          id: "\(id)-family-name",
+          title: "Family name",
+          documentId: id,
+          nameSpace: "eu.europa.ec.eudi.pid.1",
+          path: ["eu.europa.ec.eudi.pid.1", "family_name"],
+          type: .mdoc,
+          value: .string("Doe"),
+          status: .available(isRequired: false)
+        )
+      )
+    )
     return RequestDataUiModel(
-      section: .init(id: id, title: "PID", listItems: plain.section.listItems),
+      section: .init(id: id, title: "PID", listItems: [familyName]),
       queryIds: ["pid"],
       isChosen: false
     )

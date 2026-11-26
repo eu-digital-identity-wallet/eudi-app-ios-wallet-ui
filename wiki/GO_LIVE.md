@@ -857,7 +857,7 @@ is more than one, as on Android:
 * A request whose transaction data cannot be shown in full is declined with an explanation, never shown in part
   (`PresentationInteractorImpl.canShowTransactionData`): an entry WalletKit cannot read, or an entry bound to a
   document the consent screen does not show. Each option is checked against its own transaction data; an option
-  that is not offered, because it holds a blocked document, is not checked. WalletKit binds transaction data
+  that is not offered, because it holds a blocked document or WalletKit would refuse to send it, is not checked. WalletKit binds transaction data
   to SD-JWT and mdoc documents alike.
 * When WalletKit itself cannot take a remote request (transaction data it cannot process, no document that satisfies
   the query, a reader certificate whose authentication was required and not established), it sends the error to the
@@ -893,18 +893,26 @@ A DCQL credential query with `multiple: true` (OpenID4VP 1.0, section 6.1) accep
 WalletKit puts every matching credential into one option of the request screen. When such a query has two or more
 matches in an option, the user chooses which to share (`PresentationInteractorImpl.onRequestReceived`):
 
-* A "Share <document>" row with a checkbox sits above each match. None is ticked at first, and Share stays disabled
-  until every such query has a ticked match. The choice is kept when the user switches options.
+* A "Share <document>" row with a checkbox sits above each match the user can choose. None is ticked at first, and
+  Share stays disabled until every such query has a ticked match, unless the query already has a match that is
+  shared with its option. The rows of an option that is not selected are disabled; the choice is kept when the user
+  switches options.
 * A credential for a query that accepts one credential, and the only match of a query, are shared with their option,
   without a checkbox.
 * A match that carries transaction data is always shared, without a checkbox: WalletKit authorizes the transaction
   with the credential it assigned it to.
+* A revoked, suspended or unrecognised match is left out of its option when every query it answers accepts more than
+  one credential and keeps another match, and it carries no transaction data; the user chooses among the rest.
+  Otherwise the whole option is left out (see [Revocation And Status Checking](#revocation-and-status-checking)).
 * Share sends the shared credentials under the option's name, and each keeps the query ids WalletKit gave it.
   WalletKit checks the selection again before anything is sent and refuses one that leaves a required credential set
   unsatisfied.
 * An option that would give a query that accepts one credential two of them is not offered. WalletKit builds such an
   option when two `credential_sets` name the same query, but refuses to send it (OpenID4VP 1.0, section 8.1).
 * Proximity presentations and the Digital Credentials API are unchanged: their requests carry no DCQL queries.
+
+Before release, exercise a `multiple: true` request with two or more matching credentials: share one, then several,
+and check what the verifier receives; repeat with `credential_sets` alternatives and with a blocked match.
 
 ### Relay Attack Risk In Presentation Flows
 
@@ -1523,9 +1531,11 @@ The rules are the Android wallet's (`RevocationRecordUpdate`, Android's `revocat
   records that status. A record stored before the status was kept counts as unrecognised too, so the
   next check that reads the document's status replaces or clears it.
 * Every record blocks the document. A revoked, suspended or unrecognised document is left out of
-  proximity presentations, and a remote request does not offer an option that holds one: the wallet
-  never offers an option with a blocked document removed. The documents that match one
-  `multiple: true` query form a single option, so it is not offered when one of them is blocked
+  proximity presentations, and a remote request does not offer an option that holds one. The one
+  exception is a match of `multiple: true` queries that each keep another match, carrying no
+  transaction data: it is left out of its option and the user chooses among the rest (see
+  [Choosing Credentials For `multiple: true` Queries](#choosing-credentials-for-multiple-true-queries)).
+  Otherwise the wallet never offers an option with a blocked document removed
   (`PresentationInteractorImpl.onRequestReceived`). If the records cannot be read, the request fails
   rather than offer a blocked document. The Digital Credentials API registrations leave them out;
   the extension declines a request that would include one, when it loads and again on Accept, and

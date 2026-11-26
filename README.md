@@ -196,7 +196,9 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
    turned it on, and shows the request after that.
 7. You will be redirected to the app's "Request" screen, which shows the attributes the Verifier
    requested. These are disclosed as requested; this flow has no per-attribute selection. If the
-   request can be satisfied in more than one way, choose the option you prefer.
+   request can be satisfied in more than one way, choose the option you prefer. If the Verifier accepts
+   more than one document for a request and you hold several, tick the ones to share: none is ticked at
+   first, and "Share" stays disabled until each such request has one.
    The screen also shows who is asking. With "Check Registration Certificates" enabled in Settings
    that identity comes from the Verifier's registration certificate, and if that certificate is
    missing or cannot be validated, or if the request reaches beyond what the Verifier registered

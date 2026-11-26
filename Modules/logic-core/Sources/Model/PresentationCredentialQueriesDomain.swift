@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-/// The DCQL credential queries of one option of a remote request, as wallet-kit built the option: the queries each
+/// The DCQL credential queries of one option of a remote request, as WalletKit built the option: the queries each
 /// document answers, and the queries that accept more than one document (`multiple: true`, OpenID4VP 1.0, section
 /// 6.1). Empty for proximity, whose requests have no DCQL queries.
 public struct PresentationCredentialQueriesDomain: Sendable, Equatable {
@@ -39,22 +39,21 @@ public extension PresentationCredentialQueriesDomain {
 
   /// The documents of `documentIds` that the user chooses to share or not: each answers only queries that accept
   /// more than one document, and every one of those queries has two or more of `documentIds`. Documents in
-  /// `fixedDocumentIds` are left out: they carry transaction data, which wallet-kit can only authorize with them.
-  func choosableDocumentIds(among documentIds: [String], excluding fixedDocumentIds: Set<String> = []) -> Set<String> {
+  /// `transactionDocumentIds` are left out: WalletKit authorizes their transaction data with them.
+  func choosableDocumentIds(among documentIds: [String], excluding transactionDocumentIds: Set<String> = []) -> Set<String> {
     let documentCounts = documentCountsByQueryId(among: documentIds)
     return Set(
       documentIds.filter { documentId in
-        let queryIds = queryIds(of: documentId)
-        return !fixedDocumentIds.contains(documentId)
-          && !queryIds.isEmpty
-          && queryIds.allSatisfy { multipleQueryIds.contains($0) && documentCounts[$0, default: 0] > 1 }
+        !transactionDocumentIds.contains(documentId)
+          && answersOnlyMultipleQueries(documentId)
+          && queryIds(of: documentId).allSatisfy { documentCounts[$0, default: 0] > 1 }
       }
     )
   }
 
-  /// True when `documentIds` give a query that accepts one document two or more documents. wallet-kit offers such
-  /// an option when two credential sets name the same query, but refuses to send it (OpenID4VP 1.0, section 8.1).
-  func givesASingleQueryManyDocuments(_ documentIds: [String]) -> Bool {
+  /// True when two or more of `documentIds` answer the same query that accepts only one document. WalletKit builds
+  /// such an option when two credential sets name the same query, but refuses to send it (OpenID4VP 1.0, section 8.1).
+  func hasSingleQueryWithManyDocuments(among documentIds: [String]) -> Bool {
     documentCountsByQueryId(among: documentIds).contains { queryId, count in
       !multipleQueryIds.contains(queryId) && count > 1
     }
@@ -65,9 +64,27 @@ public extension PresentationCredentialQueriesDomain {
     let sharedQueryIds = Set(documentIds.filter(sharedDocumentIds.contains).flatMap(queryIds(of:)))
     return documentIds.flatMap(queryIds(of:)).allSatisfy(sharedQueryIds.contains)
   }
+
+  /// True when the option can be offered without `blockedDocumentIds`: each of them answers only queries that accept
+  /// more than one document, carries no transaction data (`transactionDocumentIds`), and every query keeps another
+  /// document of `documentIds`. The user then chooses among the rest.
+  func canLeaveOut(
+    _ blockedDocumentIds: Set<String>,
+    among documentIds: [String],
+    transactionDocumentIds: Set<String>
+  ) -> Bool {
+    blockedDocumentIds.allSatisfy { answersOnlyMultipleQueries($0) && !transactionDocumentIds.contains($0) }
+      && keepsEveryQuery(of: documentIds, sharing: Set(documentIds).subtracting(blockedDocumentIds))
+  }
 }
 
 private extension PresentationCredentialQueriesDomain {
+
+  /// True when `documentId` answers at least one query, and only queries that accept more than one document.
+  func answersOnlyMultipleQueries(_ documentId: String) -> Bool {
+    let queryIds = queryIds(of: documentId)
+    return !queryIds.isEmpty && queryIds.allSatisfy(multipleQueryIds.contains)
+  }
 
   /// How many distinct documents of `documentIds` answer each query.
   func documentCountsByQueryId(among documentIds: [String]) -> [String: Int] {

@@ -55,19 +55,6 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
   }
 }
 
-public extension RequestDataUiModel {
-  /// This document with the DCQL queries it answers and its choice state (see `isChosen`).
-  func withCredentialChoice(queryIds: [String], isChosen: Bool?) -> RequestDataUiModel {
-    RequestDataUiModel(
-      id: id,
-      section: section,
-      userImageItemIds: userImageItemIds,
-      queryIds: queryIds,
-      isChosen: isChosen
-    )
-  }
-}
-
 @Copyable
 public struct RequestCombinationUiModel: Equatable, Sendable {
   public let documents: [RequestDataUiModel]
@@ -348,9 +335,9 @@ public extension Array where Element == RequestDataUiModel {
     Set(filter { $0.isChosen == true }.map(\.section.id))
   }
 
-  /// True when every DCQL query of a document the user can choose keeps a shared document: a chosen one, or one that
+  /// True when every DCQL query whose documents the user chooses keeps a shared document: a chosen one, or one that
   /// is shared with its option.
-  func keepsEveryChosenQuery() -> Bool {
+  func keepsEveryChoosableQuery() -> Bool {
     let sharedQueryIds = Set(sharedDocuments().flatMap(\.queryIds))
     return filter { $0.isChosen != nil }
       .flatMap(\.queryIds)
@@ -362,7 +349,7 @@ public extension Array where Element == RequestDataUiModel {
   func togglingChoice(of documentId: String) -> [RequestDataUiModel] {
     map { model in
       guard model.section.id == documentId, let isChosen = model.isChosen else { return model }
-      return model.withCredentialChoice(queryIds: model.queryIds, isChosen: !isChosen)
+      return model.copy(isChosen: !isChosen)
     }
   }
 

@@ -290,36 +290,40 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
         updatedItem.toggleSelection(id: id)
         return updatedItem
       }
-
-      var combinations = viewState.combinations
-      combinations[combinationIndex] = combinations[combinationIndex].copy(documents: updatedItems)
-
-      let isSelectedCombination = combinationIndex == viewState.selectedCombinationIndex
-
-      setState {
-        $0.copy(
-          showMissingCredentials: false,
-          items: isSelectedCombination ? updatedItems : $0.items,
-          combinations: combinations,
-          allowShare: isSelectedCombination ? hasSharableSelection(updatedItems) : $0.allowShare
-        )
-      }
+      updateCombination(at: combinationIndex, with: updatedItems, hidingMissingCredentials: true)
     }
   }
 
-  /// Reverses the user's choice of the document with `documentId` in the option at `combinationIndex`, for a document
-  /// of a `multiple: true` query with two or more matches. The choice is kept when the user switches options.
+  /// Reverses the user's choice of the document with `documentId` in the selected option, for a document of a
+  /// `multiple: true` query with two or more matches. The rows of the other options are disabled, so the choice
+  /// always belongs to the option Share sends; it is kept when the user switches options.
   func onCredentialChoiceToggled(combinationIndex: Int, documentId: String) {
-    guard viewState.combinations.indices.contains(combinationIndex) else { return }
-    let updatedItems = viewState.combinations[combinationIndex].documents.togglingChoice(of: documentId)
+    guard
+      combinationIndex == viewState.selectedCombinationIndex,
+      viewState.combinations.indices.contains(combinationIndex)
+    else { return }
+    updateCombination(
+      at: combinationIndex,
+      with: viewState.combinations[combinationIndex].documents.togglingChoice(of: documentId)
+    )
+  }
+
+  /// Replaces the documents of the option at `combinationIndex`, and the shown items and Share when it is the
+  /// selected option; with `hidingMissingCredentials`, also hides the missing-credentials notice.
+  private func updateCombination(
+    at combinationIndex: Int,
+    with documents: [RequestDataUiModel],
+    hidingMissingCredentials: Bool = false
+  ) {
     var combinations = viewState.combinations
-    combinations[combinationIndex] = combinations[combinationIndex].copy(documents: updatedItems)
+    combinations[combinationIndex] = combinations[combinationIndex].copy(documents: documents)
     let isSelectedCombination = combinationIndex == viewState.selectedCombinationIndex
     setState {
       $0.copy(
-        items: isSelectedCombination ? updatedItems : $0.items,
+        showMissingCredentials: hidingMissingCredentials ? false : $0.showMissingCredentials,
+        items: isSelectedCombination ? documents : $0.items,
         combinations: combinations,
-        allowShare: isSelectedCombination ? hasSharableSelection(updatedItems) : $0.allowShare
+        allowShare: isSelectedCombination ? hasSharableSelection(documents) : $0.allowShare
       )
     }
   }
@@ -327,7 +331,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   /// True when Share has something to send: the shared documents' selected claims, and a shared document for every
   /// DCQL query whose documents the user chooses.
   private func hasSharableSelection(_ items: [RequestDataUiModel]) -> Bool {
-    items.sharedDocuments().canShare() && items.keepsEveryChosenQuery()
+    items.sharedDocuments().canShare() && items.keepsEveryChoosableQuery()
   }
 
   private func onErrorAction() {

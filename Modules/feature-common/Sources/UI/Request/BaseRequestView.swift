@@ -91,6 +91,13 @@ public struct BaseRequestView<Router: RouterHost>: View {
   }
 }
 
+/// The choice row of a document in one option: its locator, whether it can be changed, and what a change does.
+private struct CredentialChoiceRow {
+  let locatorId: String
+  let isEnabled: Bool
+  let onToggled: () -> Void
+}
+
 private struct BaseRequestViewContainer: View {
 
   @Environment(\.openURL) private var openURL
@@ -207,9 +214,13 @@ private struct BaseRequestViewContainer: View {
         scrollId: viewState.items[index].section.id,
         proxy: proxy,
         onItemClick: { onSelectionChanged($0) },
-        onChoiceToggled: {
-          onCredentialChoiceToggled(viewState.selectedCombinationIndex, viewState.items[index].section.id)
-        }
+        choice: .init(
+          locatorId: "\(viewState.selectedCombinationIndex)_\(index)",
+          isEnabled: true,
+          onToggled: {
+            onCredentialChoiceToggled(viewState.selectedCombinationIndex, viewState.items[index].section.id)
+          }
+        )
       )
       .containChildrenAccessibility(
         locator: BaseRequestLocators.requestedDocument(index.string)
@@ -237,9 +248,13 @@ private struct BaseRequestViewContainer: View {
                 scrollId: "\(index):\(viewState.combinations[index].documents[sectionIndex].section.id)",
                 proxy: proxy,
                 onItemClick: { onCombinationItemClick(index, $0) },
-                onChoiceToggled: {
-                  onCredentialChoiceToggled(index, viewState.combinations[index].documents[sectionIndex].section.id)
-                }
+                choice: .init(
+                  locatorId: "\(index)_\(sectionIndex)",
+                  isEnabled: index == viewState.selectedCombinationIndex,
+                  onToggled: {
+                    onCredentialChoiceToggled(index, viewState.combinations[index].documents[sectionIndex].section.id)
+                  }
+                )
               )
             }
 
@@ -262,11 +277,11 @@ private struct BaseRequestViewContainer: View {
     scrollId: String,
     proxy: ScrollViewProxy,
     onItemClick: @escaping (String) -> Void,
-    onChoiceToggled: @escaping () -> Void
+    choice: CredentialChoiceRow
   ) -> some View {
     VStack(alignment: .leading, spacing: SPACING_SMALL) {
       if let isChosen = section.isChosen {
-        credentialChoiceRow(section, isChosen: isChosen, onToggled: onChoiceToggled)
+        credentialChoiceRow(section, isChosen: isChosen, choice: choice)
       }
 
       WrapExpandableListView(
@@ -288,25 +303,26 @@ private struct BaseRequestViewContainer: View {
   }
 
   /// The row above a document that the user picks among the matches of a `multiple: true` query: a tap on it or on
-  /// its checkbox chooses or unchooses the document, and VoiceOver reads it as one selectable button.
+  /// its checkbox chooses the document or clears the choice, and VoiceOver reads it as one selectable button. In an
+  /// option that is not selected the row is disabled, so a choice always belongs to the option Share sends.
   @MainActor
   @ViewBuilder
   private func credentialChoiceRow(
     _ section: RequestDataUiModel,
     isChosen: Bool,
-    onToggled: @escaping () -> Void
+    choice: CredentialChoiceRow
   ) -> some View {
     WrapCardView(backgroundColor: Theme.shared.color.groupedElevatedBackground) {
       WrapListItemView(
         listItem: .init(
           id: "\(section.section.id):choice",
-          mainContent: .text(.requestShareDocument([section.section.title])),
-          trailingContent: .checkbox(true, isChosen, { _ in })
+          mainContent: .text(.requestCredentialChoiceTitle([section.section.title])),
+          trailingContent: .checkbox(choice.isEnabled, isChosen, { _ in })
         ),
         isLoading: viewState.isLoading,
-        action: onToggled
+        action: choice.isEnabled ? choice.onToggled : nil
       )
-      .accessibilityIdentifier(BaseRequestLocators.credentialChoice(section.section.id).id)
+      .accessibilityIdentifier(BaseRequestLocators.credentialChoice(choice.locatorId).id)
     }
   }
 

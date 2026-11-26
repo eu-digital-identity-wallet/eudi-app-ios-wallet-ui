@@ -100,7 +100,7 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
     XCTAssertEqual(choosable, [])
   }
 
-  func testGivesASingleQueryManyDocuments_WhenTwoDocumentsAnswerASingleQuery_ThenIsTrue() {
+  func testHasSingleQueryWithManyDocuments_WhenTwoDocumentsAnswerASingleQuery_ThenIsTrue() {
     // Given
     let queries = PresentationCredentialQueriesDomain(
       queryIdsByDocumentId: ["pid-1": ["pid"], "pid-2": ["pid"]],
@@ -108,11 +108,21 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
     )
 
     // Then
-    XCTAssertTrue(queries.givesASingleQueryManyDocuments(["pid-1", "pid-2"]))
-    XCTAssertFalse(queries.givesASingleQueryManyDocuments(["pid-1"]))
+    XCTAssertTrue(queries.hasSingleQueryWithManyDocuments(among: ["pid-1", "pid-2"]))
   }
 
-  func testGivesASingleQueryManyDocuments_WhenTwoDocumentsAnswerAMultipleQuery_ThenIsFalse() {
+  func testHasSingleQueryWithManyDocuments_WhenOneDocumentAnswersASingleQuery_ThenIsFalse() {
+    // Given
+    let queries = PresentationCredentialQueriesDomain(
+      queryIdsByDocumentId: ["pid-1": ["pid"], "pid-2": ["pid"]],
+      multipleQueryIds: []
+    )
+
+    // Then
+    XCTAssertFalse(queries.hasSingleQueryWithManyDocuments(among: ["pid-1"]))
+  }
+
+  func testHasSingleQueryWithManyDocuments_WhenTwoDocumentsAnswerAMultipleQuery_ThenIsFalse() {
     // Given
     let queries = PresentationCredentialQueriesDomain(
       queryIdsByDocumentId: ["pid-1": ["pid"], "pid-2": ["pid"]],
@@ -120,7 +130,7 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
     )
 
     // Then
-    XCTAssertFalse(queries.givesASingleQueryManyDocuments(["pid-1", "pid-2"]))
+    XCTAssertFalse(queries.hasSingleQueryWithManyDocuments(among: ["pid-1", "pid-2"]))
   }
 
   func testKeepsEveryQuery_WhenEachQueryKeepsADocument_ThenIsTrue() {
@@ -143,5 +153,57 @@ final class TestPresentationCredentialQueriesDomain: EudiTest {
 
     // Then
     XCTAssertFalse(queries.keepsEveryQuery(of: ["pid-1", "pid-2", "mdl"], sharing: ["mdl"]))
+  }
+
+  func testCanLeaveOut_WhenABlockedMatchLeavesAnotherForItsMultipleQuery_ThenIsTrue() {
+    // Given
+    let queries = PresentationCredentialQueriesDomain(
+      queryIdsByDocumentId: ["pid-1": ["pid"], "pid-2": ["pid"], "mdl": ["mdl"]],
+      multipleQueryIds: ["pid"]
+    )
+
+    // Then
+    XCTAssertTrue(queries.canLeaveOut(["pid-1"], among: ["pid-1", "pid-2", "mdl"], transactionDocumentIds: []))
+  }
+
+  func testCanLeaveOut_WhenEveryMatchOfTheQueryIsBlocked_ThenIsFalse() {
+    // Given
+    let queries = PresentationCredentialQueriesDomain(
+      queryIdsByDocumentId: ["pid-1": ["pid"], "pid-2": ["pid"]],
+      multipleQueryIds: ["pid"]
+    )
+
+    // Then
+    XCTAssertFalse(queries.canLeaveOut(["pid-1", "pid-2"], among: ["pid-1", "pid-2"], transactionDocumentIds: []))
+  }
+
+  func testCanLeaveOut_WhenTheBlockedDocumentAnswersASingleQuery_ThenIsFalse() {
+    // Given
+    let queries = PresentationCredentialQueriesDomain(
+      queryIdsByDocumentId: ["pid-1": ["pid", "single"], "pid-2": ["pid", "single"]],
+      multipleQueryIds: ["pid"]
+    )
+
+    // Then
+    XCTAssertFalse(queries.canLeaveOut(["pid-1"], among: ["pid-1", "pid-2"], transactionDocumentIds: []))
+  }
+
+  func testCanLeaveOut_WhenTheBlockedMatchCarriesTransactionData_ThenIsFalse() {
+    // Given
+    let queries = PresentationCredentialQueriesDomain(
+      queryIdsByDocumentId: ["pid-1": ["pid"], "pid-2": ["pid"]],
+      multipleQueryIds: ["pid"]
+    )
+
+    // Then
+    XCTAssertFalse(queries.canLeaveOut(["pid-1"], among: ["pid-1", "pid-2"], transactionDocumentIds: ["pid-1"]))
+  }
+
+  func testCanLeaveOut_WhenTheRequestHasNoQueries_ThenIsFalse() {
+    // Given
+    let queries = PresentationCredentialQueriesDomain()
+
+    // Then
+    XCTAssertFalse(queries.canLeaveOut(["mdl-1"], among: ["mdl-1", "mdl-2"], transactionDocumentIds: []))
   }
 }

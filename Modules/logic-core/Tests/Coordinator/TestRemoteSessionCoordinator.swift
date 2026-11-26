@@ -15,6 +15,8 @@
  */
 import XCTest
 import os
+import EudiWalletKit
+import OpenID4VP
 @testable import logic_core
 @testable import logic_test
 
@@ -103,6 +105,37 @@ final class TestRemoteSessionCoordinator: EudiTest {
 
     // Then
     XCTAssertEqual(answers.sent, [false])
+  }
+
+  @MainActor
+  func testRequestReceived_WhenAnOptionNamesTheQueriesOfItsDocuments_ThenTheRequestCarriesThem() async throws {
+    // Given
+    let session = PresentationSession.stoppableFixture(onStop: nil)
+    session.disclosedDocumentSets = [
+      DisclosedDocumentSet(
+        docElements: [.msoMdoc(.init(docId: "pid-1", docType: "eu.europa.ec.eudi.pid.1", nameSpacedElements: []))],
+        warnings: nil,
+        credentialSelections: [
+          CredentialSelection(
+            credentialId: "pid-1",
+            docType: "eu.europa.ec.eudi.pid.1",
+            queryId: try QueryId(value: "pid"),
+            optionId: "option-1",
+            claimQueries: []
+          )
+        ]
+      )
+    ]
+    let coordinator = RemoteSessionCoordinatorImpl(session: session)
+
+    // When
+    let request = try await coordinator.requestReceived()
+
+    // Then
+    XCTAssertEqual(
+      request.credentialQueries,
+      [PresentationCredentialQueriesDomain(queryIdsByDocumentId: ["pid-1": ["pid"]])]
+    )
   }
 }
 
