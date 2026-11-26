@@ -87,7 +87,7 @@ final class TestDocumentProviderPolicy: EudiTest {
     XCTAssertEqual(options.map { $0.map(\.id) }, [["pid", "mdl-1"], ["pid", "mdl-2"]])
   }
 
-  func testOptions_WhenTwoRequestedTypesHaveTwoDocumentsEach_ThenOffersEveryPairInTheLibrarysOrder() throws {
+  func testOptions_WhenTwoRequestedTypesHaveTwoDocumentsEach_ThenOffersEveryPairInTheLibraryOrder() throws {
     // Given
     let documents = [
       Self.document(id: "pid-1", docType: "pid"),
@@ -152,6 +152,20 @@ final class TestDocumentProviderPolicy: EudiTest {
     }
   }
 
+  func testRequestsUserImage_WhenOnlyAnotherOptionRequestsThePortrait_ThenTheOptionDoesNot() {
+    // Given
+    let withPortrait = [Self.document(id: "pid-1", docType: "pid", claimNames: ["family_name", "portrait"])]
+    let withoutPortrait = [Self.document(id: "pid-2", docType: "pid", claimNames: ["family_name"])]
+
+    // When
+    let first = DocumentProviderPolicy.requestsUserImage(in: withPortrait, userImageClaimKeys: ["portrait"])
+    let second = DocumentProviderPolicy.requestsUserImage(in: withoutPortrait, userImageClaimKeys: ["portrait"])
+
+    // Then
+    XCTAssertTrue(first)
+    XCTAssertFalse(second)
+  }
+
   func testOptions_WhenNoDocumentMatches_ThenOffersNothing() throws {
     // When
     let options = try DocumentProviderPolicy.options(for: [], isOffering: true, blockedDocumentIds: [])
@@ -163,8 +177,8 @@ final class TestDocumentProviderPolicy: EudiTest {
 
 private extension TestDocumentProviderPolicy {
 
-  /// A stored document of `docType` with one claim, as the DC API library returns it for a request.
-  static func document(id: String, docType: String) -> DocClaimsModel {
+  /// A stored document of `docType` with the requested claims, as the DC API library returns it for a request.
+  static func document(id: String, docType: String, claimNames: [String] = ["family_name"]) -> DocClaimsModel {
     DocClaimsModel(
       configuration: DocClaimsModelConfiguration(
         id: id,
@@ -180,9 +194,9 @@ private extension TestDocumentProviderPolicy {
         credentialPolicy: .rotateUse,
         secureAreaName: nil,
         modifiedAt: nil,
-        docClaims: [
-          DocClaim(name: "family_name", dataValue: .string("value"), stringValue: "value", namespace: docType)
-        ],
+        docClaims: claimNames.map {
+          DocClaim(name: $0, dataValue: .string("value"), stringValue: "value", namespace: docType)
+        },
         docDataFormat: .cbor,
         hashingAlg: nil
       )

@@ -19,8 +19,8 @@ import logic_core
 
 struct AuthorizationUIModel: Sendable {
   let issuerName: String
-  /// The ways to answer the request, one document of each type the request asks for in each; the user chooses one when
-  /// there are several (`DocumentProviderPolicy.options`).
+  /// The ways to answer the request, one document of each requested type the wallet holds in each; the user chooses
+  /// one when there are several (`DocumentProviderPolicy.options`).
   let options: [AuthorizationUIOption]
   /// Whether the relying party was found trusted. Only a real trust verdict may set it.
   let isRelyingPartyVerified: Bool
@@ -32,7 +32,8 @@ struct AuthorizationUIModel: Sendable {
 struct AuthorizationUIOption: Sendable {
   let documents: [AuthorizationUIDocument]
   let selection: DocumentProviderSelection
-  /// Whether these documents include a picture of the holder (`ConfigUiLogic.userImageClaimKeys`).
+  /// Whether the claims requested from these documents include a picture of the holder
+  /// (`DocumentProviderPolicy.requestsUserImage(in:userImageClaimKeys:)`).
   let requestsUserImage: Bool
 }
 

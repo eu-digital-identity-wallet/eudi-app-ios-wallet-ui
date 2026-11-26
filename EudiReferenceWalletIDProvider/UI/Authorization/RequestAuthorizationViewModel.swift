@@ -170,7 +170,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     }
   }
 
-  /// Asks for the PIN or biometrics that send the response, after a confirmation when the request includes a
+  /// Asks for the PIN or biometrics that send the response, after a confirmation when the selected option includes a
   /// picture of the holder.
   func onAcceptClick() {
     guard viewState.requestsUserImage else {

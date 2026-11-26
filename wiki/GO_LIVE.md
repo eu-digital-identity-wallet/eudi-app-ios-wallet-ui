@@ -1063,7 +1063,7 @@ Current request handling:
   asks for the wallet PIN or biometrics first, with the same screen as the app's login, and reads the
   request's documents only after that. No requested value is shown before the user has authenticated.
 * Accept asks for the PIN or biometrics again before the response is sent.
-* The request is answered with one document of each type that it asks for. When the wallet holds several of a type,
+* The request is answered with one document of each requested type the wallet holds. When it holds several of a type,
   the sheet shows "Option 1 of N" cards with a radio button, one document of each type in each and the first
   selected, as the request screen offers its options (`DocumentProviderPolicy.options`). The portrait notice and
   Accept's confirmation follow the selected option.
@@ -1090,7 +1090,7 @@ Production validation:
 * Confirm the document is registered with the system.
 * Trigger a web presentment request.
 * Confirm the extension appears and can authorize or deny the request.
-* Delete the document and confirm its registration is removed; revoke or suspend it and confirm that its registration is withdrawn and that the extension declines a request for it, or, while another document of its type is held, offers only that one.
+* Delete the document and confirm its registration is removed; revoke or suspend it and confirm that its registration is withdrawn and that the extension declines a request for it, or, while other documents of its type are held, offers only those.
 
 ## Trust Store
 
@@ -2900,7 +2900,8 @@ Before release candidate approval, test:
 * The portrait notice, and Share or Accept asking for confirmation.
 * "Allow document requests from apps and websites (DC API)" off: registrations withdrawn, the extension declines.
 * A DC API request while the wallet holds two documents of a requested type: the sheet offers each as an option, the
-  first selected, and the verifier receives only the selected one, with the claims the sheet showed.
+  first selected, and the verifier receives only the selected one, with the claims the sheet showed; the portrait
+  notice and Accept's confirmation follow the selected option.
 * A proximity request that several document sets satisfy offers the choice.
 * A BLE reader whose authentication fails is refused on the QR screen and receives nothing; a reader that sends no
   reader authentication raises the warning.

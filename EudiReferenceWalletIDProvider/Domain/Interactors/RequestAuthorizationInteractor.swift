@@ -62,9 +62,9 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
   /// A request is declined while the user has turned off offering documents to apps and websites, since one may
   /// still arrive through a registration the system has not yet withdrawn.
   /// The request is answered with one document of each type the DC API library returns for it; when the wallet holds
-  /// several of a type, each combination is an option the user chooses from. An option that includes a document with a revocation record (revoked, suspended or
-  /// unrecognised) is not offered, as the in-app flows refuse one, and the request is declined when none is left; when
-  /// the records cannot be read, the request is declined too.
+  /// several of a type, each combination is an option the user chooses from. An option that includes a document with a
+  /// revocation record (revoked, suspended or unrecognised) is not offered, as the in-app flows refuse one, and the
+  /// request is declined when none is left; when the records cannot be read, the request is declined too.
   /// `DcApiHandler` validates no reader certificate chain and returns no trust verdict, so the relying
   /// party is never reported as verified. The authority key identifier is kept for a later lookup. Without
   /// a website origin the requester gets the generic name, not the one in its unvalidated certificate, as
@@ -100,7 +100,7 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
           },
           selection: DocumentProviderSelection(documents: option),
           requestsUserImage: DocumentProviderPolicy.requestsUserImage(
-            claimNames: option.flatMap { $0.docClaims.map(\.name) },
+            in: option,
             userImageClaimKeys: configUiLogic.userImageClaimKeys
           )
         )

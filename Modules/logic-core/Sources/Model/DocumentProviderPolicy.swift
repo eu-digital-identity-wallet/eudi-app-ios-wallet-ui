@@ -69,4 +69,10 @@ public enum DocumentProviderPolicy {
   public static func requestsUserImage(claimNames: [String], userImageClaimKeys: Set<String>) -> Bool {
     claimNames.contains(where: userImageClaimKeys.contains)
   }
+
+  /// True when a claim requested from one of an option's documents is a picture of the holder, so the sheet shows the
+  /// notice and Accept asks first while that option is selected.
+  public static func requestsUserImage(in option: [DocClaimsModel], userImageClaimKeys: Set<String>) -> Bool {
+    requestsUserImage(claimNames: option.flatMap { $0.docClaims.map(\.name) }, userImageClaimKeys: userImageClaimKeys)
+  }
 }
