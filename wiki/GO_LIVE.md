@@ -857,7 +857,7 @@ is more than one, as on Android:
 * A request whose transaction data cannot be shown in full is declined with an explanation, never shown in part
   (`PresentationInteractorImpl.canShowTransactionData`): an entry WalletKit cannot read, or an entry bound to a
   document the consent screen does not show. Each option is checked against its own transaction data; an option
-  that is not offered (one that holds a blocked document, or one that
+  that is not offered (one whose blocked document cannot be left out, or one that
   [Choosing Credentials For `multiple: true` Queries](#choosing-credentials-for-multiple-true-queries) leaves out)
   is not checked.
   WalletKit binds transaction data to SD-JWT and mdoc documents alike.
@@ -894,7 +894,8 @@ restarting the app. Also check that requests without transaction data show no ex
 A DCQL credential query with `multiple: true` (OpenID4VP 1.0, section 6.1) accepts more than one credential, and
 WalletKit puts every matching credential into one option of the request screen. When such a query has two or more
 matches in an option, the user chooses which to share (`PresentationInteractorImpl.onRequestReceived` and
-`onResponsePrepare`; the rules are in `logic-core`'s `PresentationCredentialQueriesDomain+Extensions.swift`):
+`onResponsePrepare`; the option rules are in `logic-core`'s `PresentationCredentialQueriesDomain+Extensions.swift`, the
+screen's in `feature-common`'s `RequestDataUIModel.swift`):
 
 * Each match the user can choose is a card with a checkbox on the left of its header, "Share this document"
   (`request_credential_choice_title`), and the document's own card inside it, as the options' cards have a radio

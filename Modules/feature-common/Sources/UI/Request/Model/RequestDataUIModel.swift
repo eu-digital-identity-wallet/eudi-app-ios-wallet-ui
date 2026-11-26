@@ -76,14 +76,15 @@ extension RequestDataUiModel {
     isChosen != false
   }
 
-  /// True when the user chooses whether to share this document, the match of a `multiple: true` query with others.
+  /// True when the user chooses whether to share this document: `isChosen` is set, for a document the user picks among
+  /// two or more matches of a `multiple: true` query.
   var isChoosable: Bool {
     isChosen != nil
   }
 
   /// True when the user can change this document's checkbox: a choosable document in the selected option.
-  func canChangeChoice(inSelectedOption isSelectedOption: Bool) -> Bool {
-    isChoosable && isSelectedOption
+  func canChangeChoice(isInSelectedOption: Bool) -> Bool {
+    isChoosable && isInSelectedOption
   }
 
   mutating func toggleSelection(id: String) {

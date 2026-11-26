@@ -77,8 +77,8 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
 public enum LeadingContent: Sendable, Equatable {
   case remoteImage(url: URL? = nil, image: Image? = nil)
   case radioButton(isSelected: Bool)
-  /// A checkbox for a choice among several, as `radioButton` is for one. `isEnabled` greys it and keeps the row from
-  /// being a VoiceOver button; a tap on the row still runs the row's action, so a disabled row passes none.
+  /// A checkbox for a choice among several, as `radioButton` is for one. When `isEnabled` is false it is greyed and the
+  /// row is not a VoiceOver button; a tap on the row still runs the row's action, so a disabled row passes none.
   case checkbox(isSelected: Bool, isEnabled: Bool)
 
   public static func == (lhs: LeadingContent, rhs: LeadingContent) -> Bool {

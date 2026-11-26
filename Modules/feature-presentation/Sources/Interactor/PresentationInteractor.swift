@@ -110,12 +110,12 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   }
 
   /// Offers the options as WalletKit built them, without their revoked, suspended or unrecognised documents. A blocked
-  /// document is left out of its option only when it answers `multiple: true` queries that each keep another match and
-  /// it carries no transaction data; otherwise the whole option is left out, never offered without that document. So
-  /// is an option that gives a query accepting one document two of them, or leaves a query without a document the
-  /// screen can show, which WalletKit would refuse to send. Where a `multiple: true` query has two or more matches in
-  /// an option, the user chooses which to share (none at first), except a document that carries transaction data,
-  /// which is always sent.
+  /// document is left out of its option only when it answers only `multiple: true` queries, each of which keeps a match
+  /// that is not blocked, and it carries no transaction data; otherwise the whole option is left out, never offered
+  /// without that document. So is an option that gives a query accepting one document two of them, or leaves a query
+  /// without a document the screen can show, which WalletKit would refuse to send. Where a `multiple: true` query has
+  /// two or more matches in an option, the user chooses which to share (none at first), except a document that carries
+  /// transaction data, which is always sent.
   public func onRequestReceived() async -> PresentationRequestPartialState {
     do {
       let coordinator = presentationCoordinator

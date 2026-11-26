@@ -53,8 +53,8 @@ public extension PresentationCredentialQueriesDomain {
   }
 
   /// True when the option can be offered without `blockedDocumentIds`: each of them answers only queries that accept
-  /// more than one document, carries no transaction data (`transactionDocumentIds`), and every query keeps another
-  /// document of `documentIds`. The user then chooses among the rest.
+  /// more than one document, carries no transaction data (`transactionDocumentIds`), and every query keeps a document
+  /// of `documentIds` that is not blocked. The user then chooses among the rest.
   func canLeaveOut(
     _ blockedDocumentIds: Set<String>,
     among documentIds: [String],

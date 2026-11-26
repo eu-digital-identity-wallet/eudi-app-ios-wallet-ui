@@ -134,6 +134,17 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
     XCTAssertTrue(result)
   }
 
+  func testOffersChoice_WhenNoDocumentCanBeChosen_ThenIsFalse() {
+    // Given
+    let models = [requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)]
+
+    // When
+    let result = models.offersChoice()
+
+    // Then
+    XCTAssertFalse(result)
+  }
+
   func testIsShared_WhenTheDocumentIsSharedWithItsOption_ThenIsTrue() {
     // Given
     let model = requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)
@@ -161,7 +172,7 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
     let model = requestDataUiModel("pid-1", queryIds: ["pid"], isChosen: false)
 
     // When
-    let result = model.canChangeChoice(inSelectedOption: true)
+    let result = model.canChangeChoice(isInSelectedOption: true)
 
     // Then
     XCTAssertTrue(result)
@@ -172,7 +183,7 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
     let model = requestDataUiModel("pid-1", queryIds: ["pid"], isChosen: true)
 
     // When
-    let result = model.canChangeChoice(inSelectedOption: false)
+    let result = model.canChangeChoice(isInSelectedOption: false)
 
     // Then
     XCTAssertFalse(result)
@@ -183,18 +194,7 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
     let model = requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)
 
     // When
-    let result = model.canChangeChoice(inSelectedOption: true)
-
-    // Then
-    XCTAssertFalse(result)
-  }
-
-  func testOffersChoice_WhenNoDocumentCanBeChosen_ThenIsFalse() {
-    // Given
-    let models = [requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)]
-
-    // When
-    let result = models.offersChoice()
+    let result = model.canChangeChoice(isInSelectedOption: true)
 
     // Then
     XCTAssertFalse(result)

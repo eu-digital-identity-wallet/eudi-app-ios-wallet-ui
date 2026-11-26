@@ -209,7 +209,7 @@ private struct BaseRequestViewContainer: View {
         onItemClick: { onSelectionChanged($0) },
         choiceLocator: .credentialChoice("\(viewState.selectedCombinationIndex)_\(index)"),
         offersChoice: viewState.items.offersChoice(),
-        isChoiceEnabled: true,
+        isSelectedOption: true,
         onChoiceToggled: {
           onCredentialChoiceToggled(viewState.selectedCombinationIndex, viewState.items[index].section.id)
         }
@@ -242,7 +242,7 @@ private struct BaseRequestViewContainer: View {
                 onItemClick: { onCombinationItemClick(index, $0) },
                 choiceLocator: .credentialChoice("\(index)_\(sectionIndex)"),
                 offersChoice: viewState.combinations[index].documents.offersChoice(),
-                isChoiceEnabled: index == viewState.selectedCombinationIndex,
+                isSelectedOption: index == viewState.selectedCombinationIndex,
                 onChoiceToggled: {
                   onCredentialChoiceToggled(index, viewState.combinations[index].documents[sectionIndex].section.id)
                 }
@@ -273,7 +273,7 @@ private struct BaseRequestViewContainer: View {
     onItemClick: @escaping (String) -> Void,
     choiceLocator: BaseRequestLocators,
     offersChoice: Bool,
-    isChoiceEnabled: Bool,
+    isSelectedOption: Bool,
     onChoiceToggled: @escaping () -> Void
   ) -> some View {
     Group {
@@ -282,7 +282,7 @@ private struct BaseRequestViewContainer: View {
           title: .requestCredentialChoiceTitle,
           isSelected: section.isShared,
           allowsMultipleSelection: true,
-          isEnabled: section.canChangeChoice(inSelectedOption: isChoiceEnabled),
+          isEnabled: section.canChangeChoice(isInSelectedOption: isSelectedOption),
           isLoading: viewState.isLoading,
           accessibilityName: section.section.title,
           headerLocator: choiceLocator,
