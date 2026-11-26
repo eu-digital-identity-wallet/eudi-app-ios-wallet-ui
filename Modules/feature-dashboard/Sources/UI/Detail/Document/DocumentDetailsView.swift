@@ -171,10 +171,14 @@ private struct DocumentDetailsViewContainer: View {
                 .frame(width: 24, height: 24)
                 .foregroundStyle(Theme.shared.color.accent)
                 .shimmer(isLoading: viewState.isLoading)
+                .padding(10)
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .padding(-10)
             .accessibilityLocator(isVisible ? DocumentDetailsLocators.eyeSlash : DocumentDetailsLocators.eye)
           }
+          .zIndex(1)
 
           WrapExpandableListView(
             items: viewState.document.documentFields,

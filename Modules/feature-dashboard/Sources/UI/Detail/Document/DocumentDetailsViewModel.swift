@@ -82,7 +82,7 @@ final class DocumentDetailsViewModel<Router: RouterHost>: ViewModel<Router, Docu
     ):
       self.setState {
         $0.copy(
-          document: document,
+          document: document.copy(documentFields: document.toggleVisibility(isVisible: isVisible)),
           isLoading: false,
           documentFieldsCount: document.documentFields.count,
           isBookmarked: isBookmarked,
