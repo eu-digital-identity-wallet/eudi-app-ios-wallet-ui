@@ -15,8 +15,8 @@
  */
 import MdocDataModel18013
 
-/// The documents and claims the ID Provider extension's sheet showed for a Digital Credential API request. The
-/// response is limited to them, so it cannot include an optional request the sheet left out or a document whose
+/// The documents and claims of the option the user accepted in the ID Provider extension's sheet for a Digital
+/// Credential API request. The response is limited to them, so it cannot include an optional request the sheet left out or a document whose
 /// revocation record was never checked.
 public struct DocumentProviderSelection: Equatable, Sendable {
 

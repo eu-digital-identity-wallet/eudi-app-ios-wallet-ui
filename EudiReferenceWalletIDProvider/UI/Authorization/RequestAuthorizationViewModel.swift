@@ -31,7 +31,8 @@ struct RequestAuthorizationViewState: ViewState {
   /// The warning to acknowledge before Accept: `accessCertificateNotTrusted` while the requester is not
   /// verified, which the reference app never reports it to be.
   let warning: RegistrationWarning?
-  /// Shows the biometric-data notice, and Accept asks for confirmation first, as Share does in the app.
+  /// Shows the biometric-data notice, and Accept asks for confirmation first, as Share does in the app, when the
+  /// selected option includes a picture of the holder.
   let requestsUserImage: Bool
 }
 
@@ -43,7 +44,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
   var isUserImageConfirmationShowing: Bool = false
 
   private var isRequestAuthorized: Bool = false
-  private var selections: [DocumentProviderSelection] = []
+  private var options: [AuthorizationUIOption] = []
 
   private var context: ISO18013MobileDocumentRequestContext?
   private var interactor: RequestAuthorizationInteractor = DIGraph.shared.resolver.force(
@@ -108,7 +109,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
       }
 
       let uiModel = try await interactor.loadRequestData(context: context)
-      selections = uiModel.options.map(\.selection)
+      options = uiModel.options
 
       setState {
         $0.copy(
@@ -128,7 +129,7 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
             )
           ),
           warning: uiModel.isRelyingPartyVerified ? nil : .accessCertificateNotTrusted,
-          requestsUserImage: uiModel.requestsUserImage
+          requestsUserImage: uiModel.options.first?.requestsUserImage ?? false
         )
       }
     } catch let error {
@@ -141,16 +142,16 @@ final class RequestAuthorizationViewModel: ViewModel<RequestAuthorizationViewSta
     }
   }
 
-  /// Selects the option Accept sends.
-  func onOptionSelected(_ index: Int) {
-    guard viewState.options.indices.contains(index) else { return }
-    setState { $0.copy(selectedOptionIndex: index) }
+  /// Selects the option Accept sends; the portrait notice follows it.
+  func onOptionSelected(index: Int) {
+    guard options.indices.contains(index) else { return }
+    setState { $0.copy(selectedOptionIndex: index, requestsUserImage: options[index].requestsUserImage) }
   }
 
   /// Sends the selected option, unless a warning is still waiting for the user's acknowledgement.
   func acceptVerification() async {
-    guard canAccept, let context, selections.indices.contains(viewState.selectedOptionIndex) else { return }
-    let selection = selections[viewState.selectedOptionIndex]
+    guard canAccept, let context, options.indices.contains(viewState.selectedOptionIndex) else { return }
+    let selection = options[viewState.selectedOptionIndex].selection
     setState {
       $0.copy(
         isLoading: true

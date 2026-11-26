@@ -87,6 +87,25 @@ final class TestDocumentProviderPolicy: EudiTest {
     XCTAssertEqual(options.map { $0.map(\.id) }, [["pid", "mdl-1"], ["pid", "mdl-2"]])
   }
 
+  func testOptions_WhenTwoRequestedTypesHaveTwoDocumentsEach_ThenOffersEveryPairInTheLibrarysOrder() throws {
+    // Given
+    let documents = [
+      Self.document(id: "pid-1", docType: "pid"),
+      Self.document(id: "mdl-1", docType: "mdl"),
+      Self.document(id: "pid-2", docType: "pid"),
+      Self.document(id: "mdl-2", docType: "mdl")
+    ]
+
+    // When
+    let options = try DocumentProviderPolicy.options(for: documents, isOffering: true, blockedDocumentIds: [])
+
+    // Then
+    XCTAssertEqual(
+      options.map { $0.map(\.id) },
+      [["pid-1", "mdl-1"], ["pid-1", "mdl-2"], ["pid-2", "mdl-1"], ["pid-2", "mdl-2"]]
+    )
+  }
+
   func testOptions_WhenEachRequestedTypeHasOneDocument_ThenOffersOneOptionWithAll() throws {
     // Given
     let documents = [Self.document(id: "pid", docType: "pid"), Self.document(id: "mdl", docType: "mdl")]
@@ -161,7 +180,9 @@ private extension TestDocumentProviderPolicy {
         credentialPolicy: .rotateUse,
         secureAreaName: nil,
         modifiedAt: nil,
-        docClaims: [DocClaim(name: "family_name", dataValue: .string("value"), stringValue: "value", namespace: docType)],
+        docClaims: [
+          DocClaim(name: "family_name", dataValue: .string("value"), stringValue: "value", namespace: docType)
+        ],
         docDataFormat: .cbor,
         hashingAlg: nil
       )

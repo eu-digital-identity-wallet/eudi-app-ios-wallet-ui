@@ -36,8 +36,8 @@ public enum DocumentProviderPolicy {
     }
   }
 
-  /// The ways the extension can answer a request, which asks for one document of each type: every combination of one
-  /// document per requested type that the wallet holds, in the order of `documents`. An option that includes a
+  /// The ways the extension can answer a request with one document of each type the DC API library returned for it:
+  /// every combination of one document per type in `documents`, in their order. An option that includes a
   /// document with a revocation record is not offered. Declines while the user has turned off offering documents to
   /// apps and websites, and when every option includes a blocked document; no documents give no options.
   public static func options(

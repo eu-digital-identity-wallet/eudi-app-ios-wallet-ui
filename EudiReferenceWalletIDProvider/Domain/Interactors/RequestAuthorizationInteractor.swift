@@ -61,8 +61,8 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
   /// the reason.
   /// A request is declined while the user has turned off offering documents to apps and websites, since one may
   /// still arrive through a registration the system has not yet withdrawn.
-  /// The request asks for one document of each type; when the wallet holds several of a type, each combination is an
-  /// option the user chooses from. An option that includes a document with a revocation record (revoked, suspended or
+  /// The request is answered with one document of each type the DC API library returns for it; when the wallet holds
+  /// several of a type, each combination is an option the user chooses from. An option that includes a document with a revocation record (revoked, suspended or
   /// unrecognised) is not offered, as the in-app flows refuse one, and the request is declined when none is left; when
   /// the records cannot be read, the request is declined too.
   /// `DcApiHandler` validates no reader certificate chain and returns no trust verdict, so the relying
@@ -83,10 +83,6 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
       throw error
     }
     let websiteName = context.requestingWebsiteOrigin?.absoluteString ?? LocalizableStringKey.unknownVerifier.toString
-    let requestsUserImage = DocumentProviderPolicy.requestsUserImage(
-      claimNames: docClaimsModels.flatMap { $0.docClaims.map(\.name) },
-      userImageClaimKeys: configUiLogic.userImageClaimKeys
-    )
     let issuerLogoOrigins = await interactor.issuerLogoOrigins()
 
     return AuthorizationUIModel(
@@ -102,11 +98,14 @@ final actor RequestAuthorizationInteractorImpl: RequestAuthorizationInteractor {
               requestedElements: document.documentFields
             )
           },
-          selection: DocumentProviderSelection(documents: option)
+          selection: DocumentProviderSelection(documents: option),
+          requestsUserImage: DocumentProviderPolicy.requestsUserImage(
+            claimNames: option.flatMap { $0.docClaims.map(\.name) },
+            userImageClaimKeys: configUiLogic.userImageClaimKeys
+          )
         )
       },
       isRelyingPartyVerified: false,
-      requestsUserImage: requestsUserImage,
       authorityKeyIdentifier: authorityKeyIdentifier
     )
   }

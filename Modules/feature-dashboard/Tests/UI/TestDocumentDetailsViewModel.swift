@@ -17,6 +17,7 @@ import XCTest
 import Cuckoo
 @testable import logic_core
 @testable import logic_ui
+@testable import feature_common
 @testable import feature_dashboard
 @testable import logic_test
 @testable import feature_test
@@ -70,13 +71,9 @@ final class TestDocumentDetailsViewModel: EudiTest {
   }
 
   @MainActor
-  func testToggleIsVisible_WhenTheDataIsHidden_ThenItIsShown() {
+  func testToggleIsVisible_WhenTheDataIsHidden_ThenItIsShown() async {
     // Given
-    let viewModel = DocumentDetailsViewModel(
-      router: MockRouterHost(),
-      interactor: MockDocumentDetailsInteractor(),
-      documentId: "pid"
-    )
+    let viewModel = await viewModelShowingHiddenData()
 
     // When
     viewModel.toggleIsVisible()
@@ -87,13 +84,9 @@ final class TestDocumentDetailsViewModel: EudiTest {
   }
 
   @MainActor
-  func testToggleIsVisible_WhenTheDataIsShown_ThenItIsHiddenAgain() {
+  func testToggleIsVisible_WhenTheDataIsShown_ThenItIsHiddenAgain() async {
     // Given
-    let viewModel = DocumentDetailsViewModel(
-      router: MockRouterHost(),
-      interactor: MockDocumentDetailsInteractor(),
-      documentId: "pid"
-    )
+    let viewModel = await viewModelShowingHiddenData()
     viewModel.toggleIsVisible()
 
     // When
@@ -106,6 +99,20 @@ final class TestDocumentDetailsViewModel: EudiTest {
 }
 
 private extension TestDocumentDetailsViewModel {
+
+  /// The details screen's view model once the document has loaded with its values hidden, as stored documents open.
+  @MainActor
+  func viewModelShowingHiddenData() async -> DocumentDetailsViewModel<MockRouterHost> {
+    let document = DocumentUIModel.mock()
+    let hidden = document.copy(documentFields: document.toggleVisibility(isVisible: true))
+    let interactor = MockDocumentDetailsInteractor()
+    stub(interactor) { mock in
+      when(mock.fetchStoredDocument(documentId: any())).thenReturn(.success(hidden, nil, nil, false, false))
+    }
+    let viewModel = DocumentDetailsViewModel(router: MockRouterHost(), interactor: interactor, documentId: "pid")
+    await viewModel.fetchDocumentDetails()
+    return viewModel
+  }
 
   /// Whether each row of the document's fields is blurred, nested rows included, in order.
   func blurFlags(of fields: [GenericExpandableItem]) -> [Bool] {

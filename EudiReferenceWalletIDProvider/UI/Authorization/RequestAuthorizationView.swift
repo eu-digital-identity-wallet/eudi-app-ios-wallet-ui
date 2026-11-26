@@ -115,7 +115,8 @@ struct RequestAuthorizationView: View {
       WrapSelectableCardView(
         title: .requestCombinationTitle(["\(optionIndex + 1)", "\(viewState.options.count)"]),
         isSelected: optionIndex == viewState.selectedOptionIndex,
-        onSelected: { viewModel.onOptionSelected(optionIndex) },
+        isLoading: viewState.isLoading,
+        onSelected: { viewModel.onOptionSelected(index: optionIndex) },
         content: {
           VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
             ForEach(viewState.options[optionIndex]) { document in

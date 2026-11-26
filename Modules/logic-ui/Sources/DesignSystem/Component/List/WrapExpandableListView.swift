@@ -33,8 +33,8 @@ public struct WrapExpandableListView<T: Sendable>: View {
   /// `onExpand` runs each time the user opens a header card in the list, once it is laid out (see
   /// `ExpandableCardView`). It passes the opened header's id, `nil` for the list's own header and the header's
   /// `ListItemData.id` for a group inside the list, and the opened card's height. Each group carries its header's id
-  /// as its view identity, so a screen can scroll to it. The list measures its height only when `onExpand` is set:
-  /// measured on every screen, it took the taps of a view just above it, such as the eye on document details.
+  /// as its view identity, so a screen can scroll to it. The list measures its height only when `onExpand` is set;
+  /// with the measurement on document details, the list kept the eye above it from taking taps.
   public init(
     header: ListItemData? = nil,
     items: [ExpandableListItem<T>],
