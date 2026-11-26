@@ -896,15 +896,17 @@ matches in an option, the user chooses which to share (`PresentationInteractorIm
 * Each match the user can choose is a card with a checkbox on the left of its header, "Share this document"
   (`request_credential_choice_title`), and the document's own card inside it, as the options' cards have a radio
   button. None is ticked at first, and Share stays disabled until every such query has a ticked match, unless the
-  query already has a match that is shared with its option. The cards of an option that is not selected are
-  disabled; the choice is kept when the user switches options.
-* A credential for a query that accepts one credential, and the only match of a query, are shared with their option,
-  without a checkbox.
-* A match that carries transaction data is always shared, without a checkbox: WalletKit authorizes the transaction
-  with the credential it assigned it to.
+  query already has a match that is shared with its option. The checkboxes of an option that is not selected are
+  disabled; the choice is kept when the user switches options. VoiceOver reads the header with the document's name
+  ("Share this document, PID (SD-JWT VC)").
+* A credential for a query that accepts one credential, and the only match of a query, are shared with their option.
+  In an option that offers a choice they show a ticked checkbox the user cannot change; an option with no choice
+  shows no checkboxes.
+* A match that carries transaction data is always shared, with a ticked checkbox the user cannot change: WalletKit
+  authorizes the transaction with the credential it assigned it to.
 * A revoked, suspended or unrecognised match is left out of its option when every query it answers accepts more than
   one credential and keeps another match, and it carries no transaction data; the user chooses among the rest when
-  two or more remain, and a single remaining match is shared without a checkbox.
+  two or more remain, and a single remaining match is always shared.
   Otherwise the whole option is left out (see [Revocation And Status Checking](#revocation-and-status-checking)).
 * Share sends the shared credentials under the option's name, and each keeps the query ids WalletKit gave it.
   WalletKit checks the selection again before anything is sent and refuses one that leaves a required credential set

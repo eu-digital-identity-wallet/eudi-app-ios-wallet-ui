@@ -330,6 +330,12 @@ public extension Array where Element == RequestDataUiModel {
     filter { $0.isChosen != false }
   }
 
+  /// True when the user chooses whether to share at least one of these documents, so the screen shows a checkbox for
+  /// each of them.
+  func offersChoice() -> Bool {
+    contains { $0.isChosen != nil }
+  }
+
   /// The ids of the documents the user has chosen to share among the matches of a `multiple: true` query.
   func chosenDocumentIds() -> Set<String> {
     Set(filter { $0.isChosen == true }.map(\.section.id))

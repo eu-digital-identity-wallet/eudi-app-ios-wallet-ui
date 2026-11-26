@@ -17,13 +17,20 @@ import SwiftUI
 import logic_resources
 
 /// A card the user selects by its header: a radio button for one choice among the cards (the default), or with
-/// `allowsMultipleSelection` a tick box for any number of them. A disabled card shows its state but cannot change.
+/// `allowsMultipleSelection` a checkbox for any number of them. A selected card has an accent border, and a checkbox
+/// card that is not selected a separator-coloured one. A disabled card cannot change; a checkbox card then greys its
+/// checkbox and border, while a radio card keeps its look. `accessibilityName` names what the card selects
+/// for VoiceOver, after the title, when several cards share one title; `headerLocator` identifies the header for UI
+/// automation.
 public struct WrapSelectableCardView<Content: View>: View {
 
   private let title: LocalizableStringKey
   private let isSelected: Bool
   private let allowsMultipleSelection: Bool
   private let isEnabled: Bool
+  private let isLoading: Bool
+  private let accessibilityName: String?
+  private let headerLocator: LocatorType?
   private let onSelected: () -> Void
   private let content: () -> Content
 
@@ -32,6 +39,9 @@ public struct WrapSelectableCardView<Content: View>: View {
     isSelected: Bool,
     allowsMultipleSelection: Bool = false,
     isEnabled: Bool = true,
+    isLoading: Bool = false,
+    accessibilityName: String? = nil,
+    headerLocator: LocatorType? = nil,
     onSelected: @escaping () -> Void,
     @ViewBuilder content: @escaping () -> Content
   ) {
@@ -39,6 +49,9 @@ public struct WrapSelectableCardView<Content: View>: View {
     self.isSelected = isSelected
     self.allowsMultipleSelection = allowsMultipleSelection
     self.isEnabled = isEnabled
+    self.isLoading = isLoading
+    self.accessibilityName = accessibilityName
+    self.headerLocator = headerLocator
     self.onSelected = onSelected
     self.content = content
   }
@@ -46,15 +59,13 @@ public struct WrapSelectableCardView<Content: View>: View {
   public var body: some View {
     WrapCardView(backgroundColor: Theme.shared.color.groupedBackground) {
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-        WrapListItemView(
-          listItem: .init(
-            mainContent: .text(title),
-            leadingContent: selectionContent
-          ),
-          mainTextVerticalPadding: 0,
-          minHeight: false,
-          action: isEnabled ? onSelected : nil
-        )
+        header
+          .ifLet(accessibilityName) { view, _ in
+            view.accessibilityLabel(headerAccessibilityLabel)
+          }
+          .ifLet(headerLocator) { view, locator in
+            view.accessibilityIdentifier(locator.id)
+          }
 
         content()
       }
@@ -62,20 +73,47 @@ public struct WrapSelectableCardView<Content: View>: View {
     }
     .overlay(
       RoundedRectangle(cornerRadius: 18)
-        .strokeBorder(
-          isSelected ? (isEnabled ? Theme.shared.color.accent : Theme.shared.color.tertiaryLabel) : .clear,
-          lineWidth: 1
-        )
+        .strokeBorder(borderColor, lineWidth: 1)
     )
   }
 }
 
 extension WrapSelectableCardView {
-  /// The header's control: a tick box when several cards can be selected, otherwise a radio button.
+
+  /// The header row: the title after its control, which selects the card on a tap while the card is enabled.
+  var header: WrapListItemView {
+    WrapListItemView(
+      listItem: .init(
+        mainContent: .text(title),
+        leadingContent: selectionContent
+      ),
+      mainTextVerticalPadding: 0,
+      minHeight: false,
+      isLoading: isLoading,
+      action: isEnabled ? onSelected : nil
+    )
+  }
+
+  /// The header's control: a checkbox when several cards can be selected, otherwise a radio button.
   var selectionContent: LeadingContent {
     allowsMultipleSelection
       ? .checkbox(isSelected: isSelected, isEnabled: isEnabled)
       : .radioButton(isSelected: isSelected)
+  }
+
+  /// The card's border: the accent colour when selected (grey when disabled), the separator colour around a checkbox
+  /// card that is not selected, none around a radio card that is not.
+  var borderColor: Color {
+    if isSelected {
+      return isEnabled ? Theme.shared.color.accent : Theme.shared.color.tertiaryLabel
+    }
+    return allowsMultipleSelection ? Theme.shared.color.separator : .clear
+  }
+
+  /// The header as VoiceOver reads it: the title, then `accessibilityName` when there is one
+  /// ("Share this document, PID (SD-JWT VC)").
+  var headerAccessibilityLabel: String {
+    [title.toString, accessibilityName].compactMap { $0 }.joined(separator: ", ")
   }
 }
 
@@ -101,6 +139,7 @@ extension WrapSelectableCardView {
       title: .custom("Share this document"),
       isSelected: true,
       allowsMultipleSelection: true,
+      accessibilityName: "PID (SD-JWT VC)",
       onSelected: {},
       content: {
         Text(.custom("PID (SD-JWT VC)"))

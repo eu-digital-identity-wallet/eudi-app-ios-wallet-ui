@@ -21,8 +21,8 @@ import logic_resources
 @testable import logic_test
 
 /// Checks what a list row that shows a choice gives VoiceOver: a trailing checkbox (a claim on the request screen), a
-/// leading radio button (an option) or a leading tick box (a document chosen among several). The rendered accessibility tree cannot be read in this project's unit tests; how
-/// VoiceOver speaks it is checked on an iPhone.
+/// leading radio button (an option) or a leading checkbox (a document chosen among several). The rendered
+/// accessibility tree cannot be read in this project's unit tests; how VoiceOver speaks it is checked on an iPhone.
 final class TestWrapListItemView: EudiTest {
 
   @MainActor
@@ -117,9 +117,9 @@ final class TestWrapListItemView: EudiTest {
   }
 
   @MainActor
-  func testSelection_WhenADocumentsTickBoxIsTicked_ThenItsRowIsASelectedButton() throws {
+  func testSelection_WhenADocumentChoiceIsSelected_ThenItsRowIsASelectedButton() throws {
     // Given
-    let row = tickBoxRow(isSelected: true, isEnabled: true)
+    let row = documentChoiceRow(isSelected: true, isEnabled: true)
 
     // When
     let selection = try XCTUnwrap(row.selection)
@@ -130,9 +130,9 @@ final class TestWrapListItemView: EudiTest {
   }
 
   @MainActor
-  func testSelection_WhenADocumentsTickBoxIsNotTicked_ThenItsRowIsAButtonThatIsNotSelected() throws {
+  func testSelection_WhenADocumentChoiceIsNotSelected_ThenItsRowIsAButtonThatIsNotSelected() throws {
     // Given
-    let row = tickBoxRow(isSelected: false, isEnabled: true)
+    let row = documentChoiceRow(isSelected: false, isEnabled: true)
 
     // When
     let selection = try XCTUnwrap(row.selection)
@@ -143,9 +143,9 @@ final class TestWrapListItemView: EudiTest {
   }
 
   @MainActor
-  func testSelection_WhenADocumentsTickBoxIsDisabled_ThenItIsNoButton() throws {
+  func testSelection_WhenADocumentChoiceIsDisabled_ThenItIsNoButton() throws {
     // Given
-    let row = tickBoxRow(isSelected: true, isEnabled: false)
+    let row = documentChoiceRow(isSelected: true, isEnabled: false)
 
     // When
     let selection = try XCTUnwrap(row.selection)
@@ -153,6 +153,19 @@ final class TestWrapListItemView: EudiTest {
     // Then
     XCTAssertEqual(selection, RowSelection(isSelected: true, canChange: false))
     XCTAssertEqual(selection.traits, [.isSelected])
+  }
+
+  @MainActor
+  func testSelection_WhenADocumentChoiceHasNoAction_ThenItIsNoButton() throws {
+    // Given
+    let row = documentChoiceRow(isSelected: false, isEnabled: true, action: nil)
+
+    // When
+    let selection = try XCTUnwrap(row.selection)
+
+    // Then
+    XCTAssertEqual(selection, RowSelection(isSelected: false, canChange: false))
+    XCTAssertEqual(selection.traits, [])
   }
 
   @MainActor
@@ -273,17 +286,17 @@ private extension TestWrapListItemView {
     )
   }
 
-  /// The row at the top of a document's card when the user chooses among several: its title and a tick box at its
+  /// The row at the top of a document's card when the user chooses among several: its title and a checkbox at its
   /// start.
   @MainActor
-  func tickBoxRow(isSelected: Bool, isEnabled: Bool) -> WrapListItemView {
+  func documentChoiceRow(isSelected: Bool, isEnabled: Bool, action: (() -> Void)? = {}) -> WrapListItemView {
     WrapListItemView(
       listItem: ListItemData(
         mainContent: .text(.custom("Share this document")),
         leadingContent: .checkbox(isSelected: isSelected, isEnabled: isEnabled)
       ),
       minHeight: false,
-      action: {}
+      action: action
     )
   }
 }

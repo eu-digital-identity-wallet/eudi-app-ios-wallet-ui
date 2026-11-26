@@ -77,7 +77,7 @@ public struct ListItemData: Identifiable, Sendable, Equatable {
 public enum LeadingContent: Sendable, Equatable {
   case remoteImage(url: URL? = nil, image: Image? = nil)
   case radioButton(isSelected: Bool)
-  /// A tick box for a choice among several, as `radioButton` is for one.
+  /// A checkbox for a choice among several, as `radioButton` is for one.
   case checkbox(isSelected: Bool, isEnabled: Bool)
 
   public static func == (lhs: LeadingContent, rhs: LeadingContent) -> Bool {

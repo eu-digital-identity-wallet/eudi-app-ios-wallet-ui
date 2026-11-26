@@ -208,6 +208,7 @@ private struct BaseRequestViewContainer: View {
         proxy: proxy,
         onItemClick: { onSelectionChanged($0) },
         choiceLocator: .credentialChoice("\(viewState.selectedCombinationIndex)_\(index)"),
+        offersChoice: viewState.items.offersChoice(),
         isChoiceEnabled: true,
         onChoiceToggled: {
           onCredentialChoiceToggled(viewState.selectedCombinationIndex, viewState.items[index].section.id)
@@ -240,6 +241,7 @@ private struct BaseRequestViewContainer: View {
                 proxy: proxy,
                 onItemClick: { onCombinationItemClick(index, $0) },
                 choiceLocator: .credentialChoice("\(index)_\(sectionIndex)"),
+                offersChoice: viewState.combinations[index].documents.offersChoice(),
                 isChoiceEnabled: index == viewState.selectedCombinationIndex,
                 onChoiceToggled: {
                   onCredentialChoiceToggled(index, viewState.combinations[index].documents[sectionIndex].section.id)
@@ -259,6 +261,9 @@ private struct BaseRequestViewContainer: View {
     }
   }
 
+  /// A document's card, inside a checkbox card when its option offers a choice: the user's choice, disabled outside the
+  /// selected option so that a choice always belongs to the option Share sends, or for a document the option always
+  /// shares a ticked checkbox the user cannot change.
   @MainActor
   @ViewBuilder
   private func documentSection(
@@ -267,22 +272,25 @@ private struct BaseRequestViewContainer: View {
     proxy: ScrollViewProxy,
     onItemClick: @escaping (String) -> Void,
     choiceLocator: BaseRequestLocators,
+    offersChoice: Bool,
     isChoiceEnabled: Bool,
     onChoiceToggled: @escaping () -> Void
   ) -> some View {
     Group {
-      if let isChosen = section.isChosen {
+      if offersChoice {
         WrapSelectableCardView(
           title: .requestCredentialChoiceTitle,
-          isSelected: isChosen,
+          isSelected: section.isChosen ?? true,
           allowsMultipleSelection: true,
-          isEnabled: isChoiceEnabled,
+          isEnabled: section.isChosen != nil && isChoiceEnabled,
+          isLoading: viewState.isLoading,
+          accessibilityName: section.section.title,
+          headerLocator: choiceLocator,
           onSelected: onChoiceToggled,
           content: {
             documentCard(section, scrollId: scrollId, proxy: proxy, onItemClick: onItemClick)
           }
         )
-        .containChildrenAccessibility(locator: choiceLocator)
       } else {
         documentCard(section, scrollId: scrollId, proxy: proxy, onItemClick: onItemClick)
       }

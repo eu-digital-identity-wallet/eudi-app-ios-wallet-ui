@@ -295,7 +295,7 @@ open class BaseRequestViewModel<Router: RouterHost>: ViewModel<Router, RequestVi
   }
 
   /// Reverses the user's choice of the document with `documentId` in the selected option, for a document of a
-  /// `multiple: true` query with two or more matches. The rows of the other options are disabled, so the choice
+  /// `multiple: true` query with two or more matches. The checkboxes of the other options are disabled, so the choice
   /// always belongs to the option Share sends; it is kept when the user switches options.
   func onCredentialChoiceToggled(combinationIndex: Int, documentId: String) {
     guard

@@ -106,6 +106,31 @@ final class TestRequestDataUiModelCredentialChoice: EudiTest {
     XCTAssertTrue(result)
   }
 
+  func testOffersChoice_WhenOneDocumentCanBeChosen_ThenIsTrue() {
+    // Given
+    let models = [
+      requestDataUiModel("pid-1", queryIds: ["pid"], isChosen: false),
+      requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)
+    ]
+
+    // When
+    let result = models.offersChoice()
+
+    // Then
+    XCTAssertTrue(result)
+  }
+
+  func testOffersChoice_WhenNoDocumentCanBeChosen_ThenIsFalse() {
+    // Given
+    let models = [requestDataUiModel("mdl", queryIds: ["mdl"], isChosen: nil)]
+
+    // When
+    let result = models.offersChoice()
+
+    // Then
+    XCTAssertFalse(result)
+  }
+
   func testToggleChoice_WhenTheMatchIsNotChosen_ThenOnlyItIsChosen() {
     // Given
     let models = [
