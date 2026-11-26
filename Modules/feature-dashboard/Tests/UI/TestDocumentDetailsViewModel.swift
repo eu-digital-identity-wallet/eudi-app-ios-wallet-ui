@@ -68,9 +68,56 @@ final class TestDocumentDetailsViewModel: EudiTest {
     // Then
     XCTAssertNotNil(error?.action)
   }
+
+  @MainActor
+  func testToggleIsVisible_WhenTheDataIsHidden_ThenItIsShown() {
+    // Given
+    let viewModel = DocumentDetailsViewModel(
+      router: MockRouterHost(),
+      interactor: MockDocumentDetailsInteractor(),
+      documentId: "pid"
+    )
+
+    // When
+    viewModel.toggleIsVisible()
+
+    // Then
+    XCTAssertFalse(viewModel.isVisible)
+    XCTAssertEqual(Set(blurFlags(of: viewModel.viewState.document.documentFields)), [false])
+  }
+
+  @MainActor
+  func testToggleIsVisible_WhenTheDataIsShown_ThenItIsHiddenAgain() {
+    // Given
+    let viewModel = DocumentDetailsViewModel(
+      router: MockRouterHost(),
+      interactor: MockDocumentDetailsInteractor(),
+      documentId: "pid"
+    )
+    viewModel.toggleIsVisible()
+
+    // When
+    viewModel.toggleIsVisible()
+
+    // Then
+    XCTAssertTrue(viewModel.isVisible)
+    XCTAssertEqual(Set(blurFlags(of: viewModel.viewState.document.documentFields)), [true])
+  }
 }
 
 private extension TestDocumentDetailsViewModel {
+
+  /// Whether each row of the document's fields is blurred, nested rows included, in order.
+  func blurFlags(of fields: [GenericExpandableItem]) -> [Bool] {
+    fields.flatMap { field -> [Bool] in
+      switch field {
+      case .single(let item):
+        return [item.collapsed.isBlur]
+      case .nested(let item):
+        return blurFlags(of: item.expanded)
+      }
+    }
+  }
 
   @MainActor
   func waitForError(
