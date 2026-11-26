@@ -1855,13 +1855,13 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         )
     }
 
-    public func onResponsePrepare(combinationIndex p0: Int) async -> Result<RequestItemConvertible, Error> {
+    public func onResponsePrepare(combinationIndex p0: Int, chosenDocumentIds p1: Set<String>) async -> Result<RequestItemConvertible, Error> {
         return await cuckoo_manager.call(
-            "onResponsePrepare(combinationIndex p0: Int) async -> Result<RequestItemConvertible, Error>",
-            parameters: (p0),
-            escapingParameters: (p0),
+            "onResponsePrepare(combinationIndex p0: Int, chosenDocumentIds p1: Set<String>) async -> Result<RequestItemConvertible, Error>",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.onResponsePrepare(combinationIndex: p0)
+            defaultCall: await __defaultImplStub!.onResponsePrepare(combinationIndex: p0, chosenDocumentIds: p1)
         )
     }
 
@@ -1956,10 +1956,10 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
             ))
         }
         
-        func onResponsePrepare<M1: Cuckoo.Matchable>(combinationIndex p0: M1) -> Cuckoo.ProtocolStubFunction<(Int), Result<RequestItemConvertible, Error>> where M1.MatchedType == Int {
-            let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: p0) { $0 }]
+        func onResponsePrepare<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(combinationIndex p0: M1, chosenDocumentIds p1: M2) -> Cuckoo.ProtocolStubFunction<(Int, Set<String>), Result<RequestItemConvertible, Error>> where M1.MatchedType == Int, M2.MatchedType == Set<String> {
+            let matchers: [Cuckoo.ParameterMatcher<(Int, Set<String>)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockPresentationInteractor.self,
-                method: "onResponsePrepare(combinationIndex p0: Int) async -> Result<RequestItemConvertible, Error>",
+                method: "onResponsePrepare(combinationIndex p0: Int, chosenDocumentIds p1: Set<String>) async -> Result<RequestItemConvertible, Error>",
                 parameterMatchers: matchers
             ))
         }
@@ -2062,10 +2062,10 @@ public class MockPresentationInteractor: PresentationInteractor, Cuckoo.Protocol
         
         
         @discardableResult
-        func onResponsePrepare<M1: Cuckoo.Matchable>(combinationIndex p0: M1) -> Cuckoo.__DoNotUse<(Int), Result<RequestItemConvertible, Error>> where M1.MatchedType == Int {
-            let matchers: [Cuckoo.ParameterMatcher<(Int)>] = [wrap(matchable: p0) { $0 }]
+        func onResponsePrepare<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(combinationIndex p0: M1, chosenDocumentIds p1: M2) -> Cuckoo.__DoNotUse<(Int, Set<String>), Result<RequestItemConvertible, Error>> where M1.MatchedType == Int, M2.MatchedType == Set<String> {
+            let matchers: [Cuckoo.ParameterMatcher<(Int, Set<String>)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return cuckoo_manager.verify(
-                "onResponsePrepare(combinationIndex p0: Int) async -> Result<RequestItemConvertible, Error>",
+                "onResponsePrepare(combinationIndex p0: Int, chosenDocumentIds p1: Set<String>) async -> Result<RequestItemConvertible, Error>",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -2162,7 +2162,7 @@ public class PresentationInteractorStub:PresentationInteractor, @unchecked Senda
         return DefaultValueRegistry.defaultValue(for: (PresentationRequestPartialState).self)
     }
     
-    public func onResponsePrepare(combinationIndex p0: Int) async -> Result<RequestItemConvertible, Error> {
+    public func onResponsePrepare(combinationIndex p0: Int, chosenDocumentIds p1: Set<String>) async -> Result<RequestItemConvertible, Error> {
         return DefaultValueRegistry.defaultValue(for: (Result<RequestItemConvertible, Error>).self)
     }
     
@@ -12590,6 +12590,35 @@ import EudiWalletKit
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/PresentationCredentialQueries+Domain.swift'
+
+import Cuckoo
+import EudiWalletKit
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_presentation
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/PresentationCredentialQueriesDomain+Extensions.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_presentation
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/PresentationPolicyViolation+Overasking.swift'
 
 import Cuckoo
@@ -12980,6 +13009,20 @@ import Foundation
 import Cuckoo
 import Foundation
 import OpenID4VCI
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+@testable import feature_presentation
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/PresentationCredentialQueriesDomain.swift'
+
+import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

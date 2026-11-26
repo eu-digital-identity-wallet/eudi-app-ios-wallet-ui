@@ -106,6 +106,9 @@ public struct WrapListItemView: View {
               isSelected ? Theme.shared.color.accent : Theme.shared.color.secondaryLabel
             )
             .accessibilityHidden(true)
+        case .checkbox(isSelected: let isSelected, isEnabled: let isEnabled):
+          WrapCheckboxView(checkboxData: checkboxData(isEnabled: isEnabled, isChecked: isSelected))
+            .accessibilityHidden(true)
         }
       }
 
@@ -230,9 +233,9 @@ public struct WrapListItemView: View {
 
 extension WrapListItemView {
 
-  /// The choice the row shows, for VoiceOver: a trailing checkbox or a leading radio button (the checkbox wins if
-  /// both); nil for any other row, which keeps its own accessibility. The user can change it when it is enabled and
-  /// something runs on a tap: the checkbox's toggle, or the row's action when the whole row is tappable.
+  /// The choice the row shows, for VoiceOver: a trailing checkbox, or a leading radio button or checkbox (the trailing
+  /// checkbox wins if both); nil for any other row, which keeps its own accessibility. The user can change it when it
+  /// is enabled and something runs on a tap: the checkbox's toggle, or the row's action when the whole row is tappable.
   var selection: RowSelection? {
     if case .checkbox(let isEnabled, let isChecked, _) = listItem.trailingContent {
       let isTappable = clickableArea == .trailingContent || action != nil
@@ -240,6 +243,9 @@ extension WrapListItemView {
     }
     if case .radioButton(let isSelected) = listItem.leadingContent {
       return RowSelection(isSelected: isSelected, canChange: clickableArea == .entireRow && action != nil)
+    }
+    if case .checkbox(isSelected: let isSelected, isEnabled: let isEnabled) = listItem.leadingContent {
+      return RowSelection(isSelected: isSelected, canChange: isEnabled && clickableArea == .entireRow && action != nil)
     }
     return nil
   }
@@ -254,7 +260,7 @@ extension WrapListItemView {
     }
   }
 
-  /// The data of the row's trailing checkbox, whose change does what a tap on the row's control does.
+  /// The data of the row's checkbox, whose change does what a tap on the row's control does.
   func checkboxData(isEnabled: Bool, isChecked: Bool) -> CheckboxData {
     CheckboxData(
       isChecked: isChecked,

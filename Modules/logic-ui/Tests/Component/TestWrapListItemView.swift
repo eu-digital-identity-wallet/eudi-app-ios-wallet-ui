@@ -20,9 +20,9 @@ import logic_resources
 @testable import logic_ui
 @testable import logic_test
 
-/// Checks what a list row that shows a choice gives VoiceOver: a trailing checkbox (a claim on the request screen) or a
-/// leading radio button (an option). The rendered accessibility tree cannot be read in this project's unit tests; how
-/// VoiceOver speaks it is checked on an iPhone.
+/// Checks what a list row that shows a choice gives VoiceOver: a trailing checkbox (a claim on the request screen), a
+/// leading radio button (an option) or a leading checkbox (a document chosen among several). The rendered
+/// accessibility tree cannot be read in this project's unit tests; how VoiceOver speaks it is checked on an iPhone.
 final class TestWrapListItemView: EudiTest {
 
   @MainActor
@@ -117,6 +117,58 @@ final class TestWrapListItemView: EudiTest {
   }
 
   @MainActor
+  func testSelection_WhenADocumentChoiceIsSelected_ThenItsRowIsASelectedButton() throws {
+    // Given
+    let row = documentChoiceRow(isSelected: true, isEnabled: true)
+
+    // When
+    let selection = try XCTUnwrap(row.selection)
+
+    // Then
+    XCTAssertEqual(selection, RowSelection(isSelected: true, canChange: true))
+    XCTAssertEqual(selection.traits, [.isButton, .isSelected])
+  }
+
+  @MainActor
+  func testSelection_WhenADocumentChoiceIsNotSelected_ThenItsRowIsAButtonThatIsNotSelected() throws {
+    // Given
+    let row = documentChoiceRow(isSelected: false, isEnabled: true)
+
+    // When
+    let selection = try XCTUnwrap(row.selection)
+
+    // Then
+    XCTAssertEqual(selection, RowSelection(isSelected: false, canChange: true))
+    XCTAssertEqual(selection.traits, [.isButton])
+  }
+
+  @MainActor
+  func testSelection_WhenADocumentChoiceIsDisabled_ThenItIsNoButton() throws {
+    // Given
+    let row = documentChoiceRow(isSelected: true, isEnabled: false)
+
+    // When
+    let selection = try XCTUnwrap(row.selection)
+
+    // Then
+    XCTAssertEqual(selection, RowSelection(isSelected: true, canChange: false))
+    XCTAssertEqual(selection.traits, [.isSelected])
+  }
+
+  @MainActor
+  func testSelection_WhenADocumentChoiceHasNoAction_ThenItIsNoButton() throws {
+    // Given
+    let row = documentChoiceRow(isSelected: false, isEnabled: true, action: nil)
+
+    // When
+    let selection = try XCTUnwrap(row.selection)
+
+    // Then
+    XCTAssertEqual(selection, RowSelection(isSelected: false, canChange: false))
+    XCTAssertEqual(selection.traits, [])
+  }
+
+  @MainActor
   func testSelection_WhenARowShowsNoChoice_ThenItIsNil() {
     // Given
     let row = WrapListItemView(
@@ -132,6 +184,18 @@ final class TestWrapListItemView: EudiTest {
 
     // Then
     XCTAssertNil(selection)
+  }
+
+  func testLeadingContent_WhenTwoCheckboxesDifferOnlyInIsEnabled_ThenTheyAreNotEqual() {
+    // Given
+    let enabled = LeadingContent.checkbox(isSelected: true, isEnabled: true)
+    let disabled = LeadingContent.checkbox(isSelected: true, isEnabled: false)
+
+    // When
+    let isEqual = disabled == enabled
+
+    // Then
+    XCTAssertFalse(isEqual)
   }
 
   @MainActor
@@ -228,6 +292,20 @@ private extension TestWrapListItemView {
       listItem: ListItemData(
         mainContent: .text(.custom("Option 1 of 2")),
         leadingContent: .radioButton(isSelected: isSelected)
+      ),
+      minHeight: false,
+      action: action
+    )
+  }
+
+  /// The row at the top of a document's card when the user chooses among several: its title and a checkbox at its
+  /// start.
+  @MainActor
+  func documentChoiceRow(isSelected: Bool, isEnabled: Bool, action: (() -> Void)? = {}) -> WrapListItemView {
+    WrapListItemView(
+      listItem: ListItemData(
+        mainContent: .text(.custom("Share this document")),
+        leadingContent: .checkbox(isSelected: isSelected, isEnabled: isEnabled)
       ),
       minHeight: false,
       action: action

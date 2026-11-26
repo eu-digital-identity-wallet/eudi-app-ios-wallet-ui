@@ -49,7 +49,10 @@ public protocol PresentationInteractor: Sendable {
   func getSessionStatePublisher() async -> RemotePublisherPartialState
   func getCoordinator() async -> PresentationCoordinatorPartialState
   func onDeviceEngagement() async -> PresentationRequestPartialState
-  func onResponsePrepare(combinationIndex: Int) async -> Result<RequestItemConvertible, Error>
+  func onResponsePrepare(
+    combinationIndex: Int,
+    chosenDocumentIds: Set<String>
+  ) async -> Result<RequestItemConvertible, Error>
   func onRequestReceived() async -> PresentationRequestPartialState
   func onSendResponse() async -> RemoteSentResponsePartialState
   func onDeclineRequest() async
@@ -67,6 +70,11 @@ private struct RequestCombination {
   let requestName: String?
   /// `PresentationInteractorImpl.canShowTransactionData` for this option's own transaction data.
   let showsTransactionData: Bool
+  /// The option's DCQL queries.
+  let credentialQueries: PresentationCredentialQueriesDomain
+  /// The documents the user picks among two or more matches of a `multiple: true` query; every other document of
+  /// `elements` is sent with the option.
+  let choosableDocumentIds: Set<String>
 }
 
 /// Works on the session its route carries, never on another one started later.
@@ -76,8 +84,7 @@ final actor PresentationInteractorImpl: PresentationInteractor {
   private let walletKitController: WalletKitController
   private let configUiLogic: ConfigUiLogic
 
-  private var requestedItemSets: [[DocElements]] = []
-  private var requestedRequestNames: [String?] = []
+  private var requestedCombinations: [RequestCombination] = []
 
   init(
     with presentationCoordinator: RemoteSessionCoordinator,
@@ -102,8 +109,13 @@ final actor PresentationInteractorImpl: PresentationInteractor {
     return await onRequestReceived()
   }
 
-  /// Offers only the options whose documents are all unblocked, each as WalletKit built it. An option that holds a
-  /// revoked, suspended or unrecognised document is left out whole, not offered without that document.
+  /// Offers the options as WalletKit built them, without their revoked, suspended or unrecognised documents. A blocked
+  /// document is left out of its option only when it answers only `multiple: true` queries, each of which keeps a match
+  /// that is not blocked, and it carries no transaction data; otherwise the whole option is left out, never offered
+  /// without that document. So is an option that gives a query accepting one document two of them, or leaves a query
+  /// without a document the screen can show, which WalletKit would refuse to send. Where a `multiple: true` query has
+  /// two or more matches in an option, the user chooses which to share (none at first), except a document that carries
+  /// transaction data, which is always sent.
   public func onRequestReceived() async -> PresentationRequestPartialState {
     do {
       let coordinator = presentationCoordinator
@@ -113,12 +125,22 @@ final actor PresentationInteractorImpl: PresentationInteractor {
       let overaskedClaims = response.overaskedClaims
       let transactionDataSets = response.transactionDataSets
       let requestNames = response.requestNames
+      let credentialQuerySets = response.credentialQueries
       let presentable = response.itemSets
         .enumerated()
-        .filter { _, documentSet in
-          documentSet.allSatisfy { item in blockedDocuments[item.docId] == nil }
+        .compactMap { index, documentSet -> (Int, [DocElements])? in
+          let blockedDocumentIds = Set(documentSet.map(\.docId).filter { blockedDocuments[$0] != nil })
+          guard !blockedDocumentIds.isEmpty else { return (index, documentSet) }
+          let credentialQueries = credentialQuerySets.indices.contains(index) ? credentialQuerySets[index] : .init()
+          let transactionData = transactionDataSets.indices.contains(index) ? transactionDataSets[index] : [:]
+          guard credentialQueries.canLeaveOut(
+            blockedDocumentIds,
+            among: documentSet.map(\.docId),
+            transactionDocumentIds: Self.transactionDocumentIds(in: transactionData)
+          ) else { return nil }
+          return (index, documentSet.filter { !blockedDocumentIds.contains($0.docId) })
         }
-        .map { index, documentSet in
+        .compactMap { index, documentSet -> RequestCombination? in
           let uiModels = documentSet.toUiModels(
             with: self.walletKitController,
             claimsAreSelectable: false,
@@ -129,22 +151,37 @@ final actor PresentationInteractorImpl: PresentationInteractor {
           let transactions = uiModels.flatMap { transactionData[$0.section.id] ?? [] }
           let shownDocumentIds = Set(uiModels.map(\.section.id))
           let shownDocuments = documentSet.filter { shownDocumentIds.contains($0.docId) }
+          let credentialQueries = credentialQuerySets.indices.contains(index) ? credentialQuerySets[index] : .init()
+          guard credentialQueries.keepsEveryQuery(of: documentSet.map(\.docId), sharing: shownDocumentIds) else {
+            return nil
+          }
+          let choosableDocumentIds = credentialQueries.choosableDocumentIds(
+            among: shownDocuments.map(\.docId),
+            excluding: Self.transactionDocumentIds(in: transactionData)
+          )
           return RequestCombination(
             elements: shownDocuments,
-            uiModels: uiModels,
+            uiModels: uiModels.map { model in
+              model.copy(
+                queryIds: credentialQueries.queryIds(of: model.section.id),
+                isChosen: choosableDocumentIds.contains(model.section.id) ? false : nil
+              )
+            },
             transactionData: transactions.toRequestTransactionDataUiModel(sectionId: "transaction-data:\(index)"),
             requestName: requestNames.indices.contains(index) ? requestNames[index] : nil,
-            showsTransactionData: Self.canShowTransactionData(transactionData, shownDocuments: shownDocuments)
+            showsTransactionData: Self.canShowTransactionData(transactionData, shownDocuments: shownDocuments),
+            credentialQueries: credentialQueries,
+            choosableDocumentIds: choosableDocumentIds
           )
         }
         .filter { !$0.uiModels.isEmpty }
+        .filter { !$0.credentialQueries.hasSingleQueryWithManyDocuments(among: $0.elements.map(\.docId)) }
 
       guard presentable.allSatisfy(\.showsTransactionData) else {
         return .failure(WalletCoreError.transactionDataNotShown)
       }
 
-      self.requestedItemSets = presentable.map(\.elements)
-      self.requestedRequestNames = presentable.map(\.requestName)
+      self.requestedCombinations = presentable
       let combinations = presentable.map {
         RequestCombinationUiModel(documents: $0.uiModels, transactionData: $0.transactionData)
       }
@@ -171,6 +208,11 @@ final actor PresentationInteractorImpl: PresentationInteractor {
     }
   }
 
+  /// The documents that carry transaction data in an option.
+  static func transactionDocumentIds(in transactionData: [String: [PresentationTransactionDataDomain]]) -> Set<String> {
+    Set(transactionData.filter { !$0.value.isEmpty }.keys)
+  }
+
   /// True when every transaction-data entry can be shown as it will be signed: readable, and bound to a document on
   /// the consent screen. Otherwise the request is declined rather than shown in part.
   static func canShowTransactionData(
@@ -184,17 +226,33 @@ final actor PresentationInteractorImpl: PresentationInteractor {
     }
   }
 
-  public func onResponsePrepare(combinationIndex: Int) async -> Result<RequestItemConvertible, Error> {
+  /// Prepares the response of the option at `combinationIndex`: every document of the option except the ones the user
+  /// could choose and left out of `chosenDocumentIds`. It fails when a DCQL query of the option would be left without a
+  /// document.
+  public func onResponsePrepare(
+    combinationIndex: Int,
+    chosenDocumentIds: Set<String>
+  ) async -> Result<RequestItemConvertible, Error> {
 
-    guard requestedItemSets.indices.contains(combinationIndex) else {
+    guard requestedCombinations.indices.contains(combinationIndex) else {
+      return .failure(PresentationSessionError.conversionToRequestItemModel)
+    }
+
+    let combination = requestedCombinations[combinationIndex]
+    let sharedDocuments = combination.elements.filter {
+      !combination.choosableDocumentIds.contains($0.docId) || chosenDocumentIds.contains($0.docId)
+    }
+
+    guard combination.credentialQueries.keepsEveryQuery(
+      of: combination.elements.map(\.docId),
+      sharing: Set(sharedDocuments.map(\.docId))
+    ) else {
       return .failure(PresentationSessionError.conversionToRequestItemModel)
     }
 
     let requestConvertible = RequestItemsWrapper(
-      dictionary: requestedItemSets[combinationIndex].items,
-      requestName: requestedRequestNames.indices.contains(combinationIndex)
-        ? requestedRequestNames[combinationIndex]
-        : nil
+      dictionary: sharedDocuments.items,
+      requestName: combination.requestName
     )
 
     guard requestConvertible.items.isEmpty == false else {

@@ -61,16 +61,21 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
     }
   }
 
+  /// Prepares the response from the screen as it is when Share is tapped, and shows the same documents on the
+  /// success screen.
   override func onShare() {
+    let items = viewState.items
+    let combinationIndex = viewState.selectedCombinationIndex
     Task {
 
       let result = await interactor.onResponsePrepare(
-        combinationIndex: self.viewState.selectedCombinationIndex
+        combinationIndex: combinationIndex,
+        chosenDocumentIds: items.chosenDocumentIds()
       )
 
       switch result {
       case .success:
-        if let route = self.getSuccessRoute() {
+        if let route = self.getSuccessRoute(sharing: items) {
           self.router.push(with: route)
         } else {
           self.router.popTo(
@@ -84,31 +89,7 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
   }
 
   override func getSuccessRoute() -> AppRoute? {
-    guard let coordinator = self.coordinator else { return nil }
-    return .featureCommonModule(
-      .biometry(
-        config: UIConfig.Biometry(
-          navigationTitle: .biometryConfirmRequest,
-          caption: .requestDataShareBiometryCaption,
-          quickPinOnlyCaption: .requestDataShareQuickPinCaption,
-          pinTextFieldTitle: .enterYourPin,
-          navigationSuccessType: .push(
-            .featurePresentationModule(
-              .presentationLoader(
-                relyingParty: getRelyingParty().toString,
-                relyingPartyisTrusted: getRelyingPartyIsTrusted(),
-                presentationCoordinator: coordinator,
-                originator: getOriginator(),
-                items: viewState.items.filterSelectedRows()
-              )
-            )
-          ),
-          navigationBackType: .pop,
-          isPreAuthorization: false,
-          shouldInitializeBiometricOnCreate: true
-        )
-      )
-    )
+    getSuccessRoute(sharing: viewState.items)
   }
 
   override func getPopRoute() -> AppRoute? {
@@ -125,6 +106,35 @@ final class PresentationRequestViewModel<Router: RouterHost>: BaseRequestViewMod
 
   override func getRelyingParty() -> LocalizableStringKey {
     viewState.relyingParty
+  }
+
+  /// The biometry route that shares `items`: the success screen lists only the documents they share.
+  private func getSuccessRoute(sharing items: [RequestDataUiModel]) -> AppRoute? {
+    guard let coordinator = self.coordinator else { return nil }
+    return .featureCommonModule(
+      .biometry(
+        config: UIConfig.Biometry(
+          navigationTitle: .biometryConfirmRequest,
+          caption: .requestDataShareBiometryCaption,
+          quickPinOnlyCaption: .requestDataShareQuickPinCaption,
+          pinTextFieldTitle: .enterYourPin,
+          navigationSuccessType: .push(
+            .featurePresentationModule(
+              .presentationLoader(
+                relyingParty: getRelyingParty().toString,
+                relyingPartyisTrusted: getRelyingPartyIsTrusted(),
+                presentationCoordinator: coordinator,
+                originator: getOriginator(),
+                items: items.sharedDocuments().filterSelectedRows()
+              )
+            )
+          ),
+          navigationBackType: .pop,
+          isPreAuthorization: false,
+          shouldInitializeBiometricOnCreate: true
+        )
+      )
+    )
   }
 
   private func getCoordinator() async {

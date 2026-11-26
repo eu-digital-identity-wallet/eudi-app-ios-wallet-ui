@@ -76,6 +76,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedStringWithArguments(forKey: "request_data_share_title", arguments: args)
     case .requestCombinationTitle(let args):
       bundle.localizedStringWithArguments(forKey: "request_combination_title", arguments: args)
+    case .requestCredentialChoiceTitle:
+      bundle.localizedString(forKey: "request_credential_choice_title")
     case .requestRequestedDataTitle:
       bundle.localizedString(forKey: "request_requested_data_title")
     case .requestTransactionDataSectionTitle:

@@ -2372,6 +2372,17 @@
         }
       }
     },
+    "request_credential_choice_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share this document"
+          }
+        }
+      }
+    },
     "request_credential_offer_no_document" : {
       "extractionState" : "manual",
       "localizations" : {

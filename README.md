@@ -196,14 +196,17 @@ To delete a document, navigate to the 'Documents' tab within the 'Dashboard' scr
    turned it on, and shows the request after that.
 7. You will be redirected to the app's "Request" screen, which shows the attributes the Verifier
    requested. These are disclosed as requested; this flow has no per-attribute selection. If the
-   request can be satisfied in more than one way, choose the option you prefer.
+   request can be satisfied in more than one way, choose the option you prefer. If the Verifier accepts
+   more than one document of a kind and you hold several, tick "Share this document" on each one you
+   want to share. None of them is ticked at first, and "Share" stays disabled until each such kind has
+   one ticked; a document that is always shared shows a ticked checkbox you cannot change.
    The screen also shows who is asking. With "Check Registration Certificates" enabled in Settings
    that identity comes from the Verifier's registration certificate, and if that certificate is
    missing or cannot be validated, or if the request reaches beyond what the Verifier registered
    for, a warning appears and "Share" stays disabled until you acknowledge it. With the setting off
    — its default — no registration is evaluated and the Verifier is named by its access certificate.
    If the request includes your portrait, a notice says that it can be used as biometric data.
-8. Tap "Share". If the request includes your portrait, confirm that you want to share it.
+8. Tap "Share". If a document you share includes your portrait, confirm that you want to share it.
 9. Enter the PIN you set up during the initial steps, or use Face ID or Touch ID if you turned it on
    in Settings. If the biometric check fails, enter the PIN.
 10. Upon successful submission, tap "Done".

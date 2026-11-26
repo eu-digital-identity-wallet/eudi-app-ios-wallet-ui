@@ -12019,6 +12019,33 @@ import EudiWalletKit
 
 
 
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/PresentationCredentialQueries+Domain.swift'
+
+import Cuckoo
+import EudiWalletKit
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/PresentationCredentialQueriesDomain+Extensions.swift'
+
+import Cuckoo
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
 // MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Extension/PresentationPolicyViolation+Overasking.swift'
 
 import Cuckoo
@@ -12384,6 +12411,19 @@ import Foundation
 import Cuckoo
 import Foundation
 import OpenID4VCI
+@testable import logic_core
+@testable import logic_business
+@testable import logic_analytics
+@testable import logic_ui
+@testable import logic_api
+@testable import logic_authentication
+@testable import feature_common
+
+
+
+// MARK: - Mocks generated from file: '../Modules/logic-core/Sources/Model/PresentationCredentialQueriesDomain.swift'
+
+import Cuckoo
 @testable import logic_core
 @testable import logic_business
 @testable import logic_analytics

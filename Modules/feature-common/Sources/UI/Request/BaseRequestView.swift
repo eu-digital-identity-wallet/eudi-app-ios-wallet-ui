@@ -50,6 +50,9 @@ public struct BaseRequestView<Router: RouterHost>: View {
           Task {
             await viewModel.onCombinationItemClick(combinationIndex: index, id: id)
           }
+        },
+        onCredentialChoiceToggled: { index, documentId in
+          viewModel.onCredentialChoiceToggled(combinationIndex: index, documentId: documentId)
         }
       )
     }
@@ -99,6 +102,7 @@ private struct BaseRequestViewContainer: View {
   let onSelectionChanged: (String) -> Void
   var onCombinationSelected: (Int) -> Void = { _ in }
   var onCombinationItemClick: (Int, String) -> Void = { _, _ in }
+  var onCredentialChoiceToggled: (Int, String) -> Void = { _, _ in }
 
   @State private var scrollAreaHeight: CGFloat = .zero
 
@@ -202,7 +206,13 @@ private struct BaseRequestViewContainer: View {
         viewState.items[index],
         scrollId: viewState.items[index].section.id,
         proxy: proxy,
-        onItemClick: { onSelectionChanged($0) }
+        onItemClick: { onSelectionChanged($0) },
+        choiceLocator: .credentialChoice("\(viewState.selectedCombinationIndex)_\(index)"),
+        offersChoice: viewState.items.offersChoice(),
+        isSelectedOption: true,
+        onChoiceToggled: {
+          onCredentialChoiceToggled(viewState.selectedCombinationIndex, viewState.items[index].section.id)
+        }
       )
       .containChildrenAccessibility(
         locator: BaseRequestLocators.requestedDocument(index.string)
@@ -229,7 +239,13 @@ private struct BaseRequestViewContainer: View {
                 viewState.combinations[index].documents[sectionIndex],
                 scrollId: "\(index):\(viewState.combinations[index].documents[sectionIndex].section.id)",
                 proxy: proxy,
-                onItemClick: { onCombinationItemClick(index, $0) }
+                onItemClick: { onCombinationItemClick(index, $0) },
+                choiceLocator: .credentialChoice("\(index)_\(sectionIndex)"),
+                offersChoice: viewState.combinations[index].documents.offersChoice(),
+                isSelectedOption: index == viewState.selectedCombinationIndex,
+                onChoiceToggled: {
+                  onCredentialChoiceToggled(index, viewState.combinations[index].documents[sectionIndex].section.id)
+                }
               )
             }
 
@@ -245,9 +261,47 @@ private struct BaseRequestViewContainer: View {
     }
   }
 
+  /// A document's card, inside a checkbox card when its option offers a choice: the user's choice, disabled outside the
+  /// selected option so that a choice always belongs to the option Share sends, or for a document the option always
+  /// shares a ticked checkbox the user cannot change.
   @MainActor
   @ViewBuilder
   private func documentSection(
+    _ section: RequestDataUiModel,
+    scrollId: String,
+    proxy: ScrollViewProxy,
+    onItemClick: @escaping (String) -> Void,
+    choiceLocator: BaseRequestLocators,
+    offersChoice: Bool,
+    isSelectedOption: Bool,
+    onChoiceToggled: @escaping () -> Void
+  ) -> some View {
+    Group {
+      if offersChoice {
+        WrapSelectableCardView(
+          title: .requestCredentialChoiceTitle,
+          isSelected: section.isShared,
+          allowsMultipleSelection: true,
+          isEnabled: section.canChangeChoice(isInSelectedOption: isSelectedOption),
+          isLoading: viewState.isLoading,
+          accessibilityName: section.section.title,
+          headerLocator: choiceLocator,
+          onSelected: onChoiceToggled,
+          content: {
+            documentCard(section, scrollId: scrollId, proxy: proxy, onItemClick: onItemClick)
+          }
+        )
+      } else {
+        documentCard(section, scrollId: scrollId, proxy: proxy, onItemClick: onItemClick)
+      }
+    }
+    .id(scrollId)
+  }
+
+  /// A document's card: its title, "View details" and, once opened, its claims.
+  @MainActor
+  @ViewBuilder
+  private func documentCard(
     _ section: RequestDataUiModel,
     scrollId: String,
     proxy: ScrollViewProxy,
@@ -267,7 +321,6 @@ private struct BaseRequestViewContainer: View {
         showOpened(headerId ?? scrollId, height: height, with: proxy)
       }
     )
-    .id(scrollId)
   }
 
   @MainActor

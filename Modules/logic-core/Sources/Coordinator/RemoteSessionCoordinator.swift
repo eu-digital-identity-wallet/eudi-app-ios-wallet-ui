@@ -147,7 +147,8 @@ final class RemoteSessionCoordinatorImpl: RemoteSessionCoordinator {
       isTrusted: isTrusted,
       overaskedClaims: overaskedClaims,
       transactionDataSets: session.disclosedDocumentSets.map { $0.transactionDataDomains() },
-      requestNames: session.disclosedDocumentSets.map(\.requestName)
+      requestNames: session.disclosedDocumentSets.map(\.requestName),
+      credentialQueries: session.disclosedDocumentSets.map { $0.credentialQueriesDomain() }
     )
   }
 }

@@ -30,6 +30,11 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
   public let section: PresentationListItemSection
   /// The ids of the claims that hold a picture of the holder (`ConfigUiLogic.userImageClaimKeys`).
   public let userImageItemIds: Set<String>
+  /// The DCQL credential queries this document answers in its option; empty for proximity.
+  public let queryIds: [String]
+  /// Whether the user chose to share this document, for a document that the user picks among two or more matches of
+  /// a `multiple: true` query (none is chosen at first); nil for every other document, which is shared with its option.
+  public let isChosen: Bool?
 
   public var log: String {
     "id: \(section.id), title: \(section.title)"
@@ -38,11 +43,15 @@ public struct RequestDataUiModel: Identifiable, Equatable, Sendable, Routable {
   public init(
     id: String = UUID().uuidString,
     section: PresentationListItemSection,
-    userImageItemIds: Set<String> = []
+    userImageItemIds: Set<String> = [],
+    queryIds: [String] = [],
+    isChosen: Bool? = nil
   ) {
     self.id = id
     self.section = section
     self.userImageItemIds = userImageItemIds
+    self.queryIds = queryIds
+    self.isChosen = isChosen
   }
 }
 
@@ -61,6 +70,23 @@ public struct RequestCombinationUiModel: Equatable, Sendable {
 }
 
 extension RequestDataUiModel {
+
+  /// True when Share sends this document: unless the user can choose it and has not.
+  var isShared: Bool {
+    isChosen != false
+  }
+
+  /// True when the user chooses whether to share this document: `isChosen` is set, for a document the user picks among
+  /// two or more matches of a `multiple: true` query.
+  var isChoosable: Bool {
+    isChosen != nil
+  }
+
+  /// True when the user can change this document's checkbox: a choosable document in the selected option.
+  func canChangeChoice(isInSelectedOption: Bool) -> Bool {
+    isChoosable && isInSelectedOption
+  }
+
   mutating func toggleSelection(id: String) {
 
     func findSelection(id: String, listItems: inout [PresentationExpandableListItem]) {
@@ -313,6 +339,40 @@ public extension Array where Element == RequestDataUiModel {
     return listItems.contains { item in
       if case .checkbox = item.collapsed.trailingContent { return true }
       return false
+    }
+  }
+
+  /// The documents Share sends: every document except those the user can choose and has not chosen.
+  func sharedDocuments() -> [RequestDataUiModel] {
+    filter(\.isShared)
+  }
+
+  /// True when the user chooses whether to share at least one of these documents, so the screen shows a checkbox for
+  /// each of them.
+  func offersChoice() -> Bool {
+    contains(where: \.isChoosable)
+  }
+
+  /// The ids of the documents the user has chosen to share among the matches of a `multiple: true` query.
+  func chosenDocumentIds() -> Set<String> {
+    Set(filter { $0.isChosen == true }.map(\.section.id))
+  }
+
+  /// True when every DCQL query whose documents the user chooses keeps a shared document: a chosen one, or one that
+  /// is shared with its option.
+  func keepsEveryChoosableQuery() -> Bool {
+    let sharedQueryIds = Set(sharedDocuments().flatMap(\.queryIds))
+    return filter(\.isChoosable)
+      .flatMap(\.queryIds)
+      .allSatisfy(sharedQueryIds.contains)
+  }
+
+  /// These documents with the choice of the document with `documentId` reversed; a document the user cannot choose
+  /// is left as it is.
+  func toggleChoice(id documentId: String) -> [RequestDataUiModel] {
+    map { model in
+      guard model.section.id == documentId, let isChosen = model.isChosen else { return model }
+      return model.copy(isChosen: !isChosen)
     }
   }
 
