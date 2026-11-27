@@ -284,6 +284,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "ble_disabled_modal_button")
     case .requestDataNoDocument:
       bundle.localizedString(forKey: "request_data_no_document")
+    case .requestDataNoDetailsShared:
+      bundle.localizedString(forKey: "request_data_no_details_shared")
     case .issuanceDetailsDeletionTitle(let args):
       bundle.localizedStringWithArguments(forKey: "issuance_details_doc_deletion_title", arguments: args)
     case .deleteDocument:

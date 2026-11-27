@@ -159,6 +159,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case bleDisabledModalCaption
   case bleDisabledModalButton
   case requestDataNoDocument
+  case requestDataNoDetailsShared
   case issuanceDetailsDeletionTitle([String])
   case deleteDocument
   case removeFromWallet

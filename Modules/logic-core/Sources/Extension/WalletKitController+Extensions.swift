@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import logic_business
+import logic_resources
 import SwiftUI
 
 public extension WalletKitController {
@@ -48,6 +49,9 @@ extension WalletKitController {
     }
   }
 
+  /// The rows that show `docClaim` on the request and success screens. An object or array whose parts were all
+  /// withheld comes from WalletKit with an empty `children` (not `nil`), and its row reads
+  /// `requestDataNoDetailsShared` instead of its empty value.
   public func parseDocClaim(
     docId: String,
     groupId: String,
@@ -121,6 +125,8 @@ extension WalletKitController {
     var value: DocumentElementValue {
       if let image = docClaim.dataValue.boundedImage {
         return .image(Image(uiImage: image))
+      } else if docClaim.children?.isEmpty == true {
+        return .string(LocalizableStringKey.requestDataNoDetailsShared.toString)
       } else {
         let claim = docClaim
           .parseDate(parser: parser)

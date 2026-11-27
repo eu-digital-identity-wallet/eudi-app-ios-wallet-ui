@@ -16,6 +16,7 @@
 
 import XCTest
 import Cuckoo
+import logic_resources
 @testable import logic_core
 @testable import logic_test
 
@@ -69,5 +70,98 @@ final class TestWalletKitControllerExtensions: EudiTest {
     } catch {
       XCTAssertEqual(error as? WalletCoreError, .unableFetchDocuments)
     }
+  }
+
+  func testParseDocClaim_WhenAnObjectSharesNoPart_ThenItsRowSaysNoDetailsShared() {
+    // Given
+    let claim = DocClaim(
+      name: "place_of_birth",
+      path: ["place_of_birth"],
+      dataValue: .dictionary,
+      stringValue: "{}",
+      children: []
+    )
+
+    // When
+    let rows = parseDocClaim(claim)
+
+    // Then
+    XCTAssertEqual(rows, [row(for: claim, value: LocalizableStringKey.requestDataNoDetailsShared.toString)])
+    XCTAssertEqual(LocalizableStringKey.requestDataNoDetailsShared.toString, "No details shared")
+  }
+
+  func testParseDocClaim_WhenAnArraySharesNoElement_ThenItsRowSaysNoDetailsShared() {
+    // Given
+    let claim = DocClaim(
+      name: "nationalities",
+      path: ["nationalities"],
+      dataValue: .array,
+      stringValue: "",
+      children: []
+    )
+
+    // When
+    let rows = parseDocClaim(claim)
+
+    // Then
+    XCTAssertEqual(rows, [row(for: claim, value: LocalizableStringKey.requestDataNoDetailsShared.toString)])
+  }
+
+  func testParseDocClaim_WhenTheClaimIsAPlainValue_ThenItsRowShowsTheValue() {
+    // Given
+    let claim = DocClaim(
+      name: "family_name",
+      path: ["family_name"],
+      dataValue: .string("Reset"),
+      stringValue: "Reset"
+    )
+
+    // When
+    let rows = parseDocClaim(claim)
+
+    // Then
+    XCTAssertEqual(rows, [row(for: claim, value: "Reset")])
+  }
+
+  func testParseDocClaim_WhenAWildcardArrayIsShownAsOneRow_ThenItsRowShowsTheElements() {
+    // Given
+    let claim = DocClaim(
+      name: "nationalities",
+      path: ["nationalities", ""],
+      dataValue: .array,
+      stringValue: "EU"
+    )
+
+    // When
+    let rows = parseDocClaim(claim)
+
+    // Then
+    XCTAssertEqual(rows, [row(for: claim, value: "EU")])
+  }
+}
+
+private extension TestWalletKitControllerExtensions {
+
+  func parseDocClaim(_ claim: DocClaim) -> [DocumentElementClaim] {
+    MockWalletKitController().parseDocClaim(
+      docId: "pid",
+      groupId: "group",
+      docClaim: claim,
+      type: .sdjwt,
+      parser: { $0 }
+    )
+  }
+
+  func row(for claim: DocClaim, value: String) -> DocumentElementClaim {
+    .primitive(
+      id: "group",
+      title: claim.name,
+      documentId: "pid",
+      nameSpace: nil,
+      path: claim.path,
+      type: .sdjwt,
+      value: .string(value),
+      status: .available(isRequired: false)
+    )
   }
 }
