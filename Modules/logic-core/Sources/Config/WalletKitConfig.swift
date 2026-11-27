@@ -388,7 +388,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
         .other(formatType: "eu.europa.ec.eudi.hiid.1"),
         .other(formatType: "urn:eu.europa.ec.eudi:hiid:1"),
         .other(formatType: "eu.europa.ec.eudi.ehic.1"),
-        .other(formatType: "urn:eu.europa.ec.eudi:ehic:1")
+        .other(formatType: "urn:eu.europa.ec.eudi:ehic:1"),
+        .other(formatType: "urn:eudi:ehic:1")
       ],
       .SocialSecurity: [
         .other(formatType: "eu.europa.ec.eudi.pda1.1"),

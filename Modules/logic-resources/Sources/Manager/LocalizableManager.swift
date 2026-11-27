@@ -456,8 +456,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "filters")
     case .sortByIssuedDateSectionTitle:
       bundle.localizedString(forKey: "sort_by_issued_date")
-    case .showResults:
-      bundle.localizedString(forKey: "show_results")
+    case .applyButton:
+      bundle.localizedString(forKey: "apply_button")
     case .reset:
       bundle.localizedString(forKey: "reset")
     case .all:

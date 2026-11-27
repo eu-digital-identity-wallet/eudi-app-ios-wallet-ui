@@ -111,6 +111,17 @@
         }
       }
     },
+    "apply_button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apply"
+          }
+        }
+      }
+    },
     "ascending" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1341,7 +1352,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This issuance request has been blocked because the provider could not be verified by your Wallet.\n\nYour personal information or other data has not been shared with this provider."
+            "value" : "This issuance request has been blocked because the provider could not be verified by your wallet.\n\nYour personal information or other data has not been shared with this provider."
           }
         }
       }
@@ -1429,7 +1440,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This issuance request has been blocked because the provider is not registered for it.\n\nNo document has been added to your Wallet."
+            "value" : "This issuance request has been blocked because the provider is not registered for it.\n\nNo document has been added to your wallet."
           }
         }
       }
@@ -1751,7 +1762,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No documents found. Try changing your search or filters."
+            "value" : "No documents match your search. Try changing your search query or filters."
           }
         }
       }
@@ -2059,7 +2070,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your Wallet is ready for use."
+            "value" : "Your wallet is ready for use."
           }
         }
       }
@@ -2334,7 +2345,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This presentation request has been blocked because the relying party could not be verified by your Wallet.\n\nYour personal information or other data has not been shared with this relying party."
+            "value" : "This presentation request has been blocked because the relying party could not be verified by your wallet.\n\nYour personal information or other data has not been shared with this relying party."
           }
         }
       }
@@ -3479,17 +3490,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Share"
-          }
-        }
-      }
-    },
-    "show_results" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Results"
           }
         }
       }
@@ -4644,7 +4644,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Data deletion requests are completed outside the Wallet; therefore their final outcome cannot be tracked."
+            "value" : "Data deletion requests are completed outside the wallet; therefore their final outcome cannot be tracked."
           }
         }
       }
@@ -4677,7 +4677,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Transaction reports are completed outside the Wallet; therefore their final outcome cannot be tracked."
+            "value" : "Transaction reports are completed outside the wallet; therefore their final outcome cannot be tracked."
           }
         }
       }

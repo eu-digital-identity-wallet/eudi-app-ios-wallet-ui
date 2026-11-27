@@ -99,7 +99,7 @@ struct FiltersListView: View {
           }
           .buttonStyle(.borderedProminent)
           .tint(Theme.shared.color.accent)
-          .accessibilityLabel(Text(.showResults))
+          .accessibilityLabel(Text(.applyButton))
         }
       }
       .onDisappear {
