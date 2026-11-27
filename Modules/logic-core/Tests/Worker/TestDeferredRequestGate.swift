@@ -181,6 +181,7 @@ final class TestDeferredRequestGate: EudiTest {
     XCTAssertTrue(startedAfter)
   }
 
+  /// `early` is inverted: it fails if the issuance starts before the second request has ended.
   func testBeginIssuance_WhenRequestsAreUnderWay_ThenWaitsForAllOfThem() async {
     // Given
     _ = await gate.beginRequest(for: "a")

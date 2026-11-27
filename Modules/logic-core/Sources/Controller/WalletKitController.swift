@@ -371,7 +371,9 @@ final actor WalletKitControllerImpl: WalletKitController {
         offerLink = try await checkedOfferLink(for: offerUri)
       }
       let docTypes = docTypes.map { docType in
-        let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(for: docType.documentTypeIdentifier)
+        let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(
+          for: docType.documentTypeIdentifier
+        )
         return docType.copy(
           credentialOptions: credentialOptions,
           keyOptions: walletKitConfig.keyOptions

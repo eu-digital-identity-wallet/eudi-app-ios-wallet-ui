@@ -1685,7 +1685,8 @@ How a failed request is handled (`DeferredRequestFailure`):
   clock says it has expired.
 * While an issuance runs (adding a document, an offer, a resumed or a re-issued document), no deferred request
   starts, and the issuance waits for the one under way: WalletKit keeps one issuance request per issuer
-  (`DeferredRequestGate`). A held document is asked again after `failureRetryDelaySeconds`.
+  (`DeferredRequestGate`). A held document is asked again after `failureRetryDelaySeconds`, a wait kept in memory
+  for this run of the app.
 * A failure of the wallet itself (missing document metadata, an entry that cannot be read or written around the
   request, an issued credential that cannot be read back) leaves the entry as it was, does not show the document as
   failed, and asks again after `failureRetryDelaySeconds` while the app runs.

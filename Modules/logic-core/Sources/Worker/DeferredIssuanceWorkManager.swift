@@ -181,7 +181,7 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
           didIssue = true
         }
       } catch is DeferredDocumentDeletedError, is DeferredRequestHeldError {
-        postponeAfterLocalFailure(of: entry.identifier)
+        postponeInMemory(of: entry.identifier)
         continue
       } catch {
         guard !Task.isCancelled else { break }
@@ -191,10 +191,10 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
         do {
           try await storageController.update(next)
         } catch {
-          postponeAfterLocalFailure(of: entry.identifier)
+          postponeInMemory(of: entry.identifier)
         }
         if failure == .local {
-          postponeAfterLocalFailure(of: entry.identifier)
+          postponeInMemory(of: entry.identifier)
         }
         if next.state != .pending {
           didChangeState = true
@@ -217,8 +217,8 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
 
   /// Never less than `minimumWait` and never more than `maximumWait`. nil when no deferred document is pending, or
   /// the wallet is locked or in the background. After the last check couldn't read or sync the entries, or this read
-  /// fails, waits `failureWait`. A document the wallet itself failed on waits its `localRetryAt` too. An
-  /// entry kept without its document (see `reconcile`) is never due, so it is left out.
+  /// fails, waits `failureWait`. A document the wallet itself failed on, or whose request was held back, waits its
+  /// `localRetryAt` too. An entry kept without its document (see `reconcile`) is never due, so it is left out.
   func delayUntilNextCheck() async -> TimeInterval? {
     guard sessionStatusProvider.isActive else { return nil }
     guard !didLastCheckFailLocally else { return min(schedule.failureWait, Self.maximumWait) }
@@ -248,7 +248,9 @@ private extension DeferredIssuanceWorkManagerImpl {
     max(entry.nextAttemptAt, localRetryAt[entry.identifier] ?? .distantPast)
   }
 
-  func postponeAfterLocalFailure(of id: String) {
+  /// Waits `failureWait` in this run of the app before the document is asked again: after a failure of the wallet
+  /// itself, or a request that an issuance or a deletion held back.
+  func postponeInMemory(of id: String) {
     localRetryAt[id] = now().addingTimeInterval(schedule.failureWait)
   }
 
