@@ -20,6 +20,8 @@ import Foundation
 /// document the user had just removed.
 /// A deletion waits for the request under way for its document; no request starts while it runs, and one
 /// that ends meanwhile sees it with `isDeleting(_:)`. Clearing all documents does the same for every document.
+/// An issuance waits for every request under way, and no request starts while it runs (`isIssuing`): WalletKit keeps
+/// one issuance request per issuer, which two calls running at once would share.
 actor DeferredRequestGate {
 
   /// Documents with a request under way, and the deletions waiting for it.
@@ -27,10 +29,17 @@ actor DeferredRequestGate {
   /// Deletions under way per document; two can overlap.
   private var deletions: [String: Int] = [:]
   private var clearings = 0
+  private var issuances = 0
 
-  /// False when the document is being deleted or already has a request under way; then none may start.
+  /// True while an issuance holds the requests back.
+  var isIssuing: Bool {
+    issuances > 0
+  }
+
+  /// False when the document is being deleted, an issuance is under way, or the document already has a request
+  /// under way; then none may start.
   func beginRequest(for id: String) -> Bool {
-    guard !isDeleting(id), requests[id] == nil else { return false }
+    guard !isDeleting(id), !isIssuing, requests[id] == nil else { return false }
     requests[id] = []
     return true
   }
@@ -64,6 +73,18 @@ actor DeferredRequestGate {
 
   func endClearing() {
     clearings = max(clearings - 1, 0)
+  }
+
+  /// Returns once every request under way has ended. Issuances can overlap one another.
+  func beginIssuance() async {
+    issuances += 1
+    for id in Array(requests.keys) {
+      await waitForRequest(for: id)
+    }
+  }
+
+  func endIssuance() {
+    issuances = max(issuances - 1, 0)
   }
 
   /// True while a request is under way for the document. Used by tests.

@@ -83,7 +83,8 @@ final class TestDeferredRequestFailure: EudiTest {
     }
   }
 
-  func testInit_WhenTheIssuerRejectsTheAccessToken_ThenTheTransactionHasExpired() {
+  /// WalletKit renews the access token once its own clock says it has expired, so the next request can succeed.
+  func testInit_WhenTheIssuerRejectsTheAccessToken_ThenItIsAskedAgain() {
     // Given
     let errors: [Error] = [
       CredentialIssuanceError.invalidToken,
@@ -92,7 +93,7 @@ final class TestDeferredRequestFailure: EudiTest {
 
     // Then
     for error in errors {
-      XCTAssertEqual(DeferredRequestFailure(error), .expired, "\(error)")
+      XCTAssertEqual(DeferredRequestFailure(error), .transient, "\(error)")
     }
   }
 

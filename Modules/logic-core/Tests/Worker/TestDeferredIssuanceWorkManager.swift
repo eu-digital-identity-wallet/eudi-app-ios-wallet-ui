@@ -181,26 +181,54 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     verify(walletKitController, never()).deleteDocument(with: any(), status: any())
   }
 
-  func testCheck_WhenTheIssuerRejectsTheAccessToken_ThenMarksTheEntryFailedKeepsTheDocumentAndRefreshesTheList() async {
+  func testCheck_WhenTheIssuerRejectsTheAccessToken_ThenAsksAgainAfterTheFailureRetryDelay() async {
     // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw CredentialIssuanceError.invalidToken }
-    let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
 
     // When
     await workManager.checkDeferredDocuments()
 
     // Then
     let stored = await storage.entries["a"]
-    XCTAssertEqual(stored?.state, .failed)
+    XCTAssertEqual(stored?.state, .pending)
+    XCTAssertEqual(stored?.nextAttemptAt, startDate.addingTimeInterval(30))
     verify(walletKitController, never()).deleteDocument(with: any(), status: any())
-    await fulfillment(of: [refreshed], timeout: 2)
+  }
+
+  func testCheck_WhenAnIssuanceHoldsTheRequestBack_ThenAsksAgainAfterTheFailureRetryDelayWithoutAFailure() async {
+    // Given
+    let original = entry("a", dueIn: -10)
+    await givenDeferred(["a"], entries: [original])
+    stubRequest { _ in throw DeferredRequestHeldError() }
+
+    // When
+    await workManager.checkDeferredDocuments()
+    let delay = await workManager.delayUntilNextCheck()
+
+    // Then
+    let stored = await storage.entries["a"]
+    XCTAssertEqual(stored, original)
+    XCTAssertEqual(delay, 30)
+  }
+
+  func testCheck_WhenADeletionHoldsTheRequestBack_ThenWaitsTheFailureRetryDelayInsteadOfAskingAtOnce() async {
+    // Given
+    await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
+    stubRequest { _ in throw DeferredDocumentDeletedError() }
+
+    // When
+    await workManager.checkDeferredDocuments()
+    let delay = await workManager.delayUntilNextCheck()
+
+    // Then
+    XCTAssertEqual(delay, 30)
   }
 
   func testCheck_WhenTheTransactionHasExpired_ThenItIsNotAskedAgain() async {
     // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
-    stubRequest { _ in throw CredentialIssuanceError.invalidToken }
+    stubRequest { _ in throw CredentialIssuanceError.invalidTransactionId }
     await workManager.checkDeferredDocuments()
     clock.advance(by: 3600)
 

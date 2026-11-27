@@ -91,8 +91,8 @@ struct DeferredIssuanceSchedule: Sendable {
       }
   }
 
-  /// An issuer that can't be trusted marks the entry untrusted, a rejected access token or an unknown transaction marks
-  /// it failed; neither is asked again. Any other failure asks again after `failureWait` or the issuer's last interval,
+  /// An issuer that can't be trusted marks the entry untrusted, a transaction the issuer no longer knows marks it
+  /// failed; neither is asked again. Any other failure asks again after `failureWait` or the issuer's last interval,
   /// whichever is longer, and keeps that interval for the answers to come. A failure of the wallet itself restores the
   /// entry as it was before the request, and the caller waits `failureWait` in memory.
   func after(_ failure: DeferredRequestFailure, of entry: DeferredIssuance, at date: Date) -> DeferredIssuance {

@@ -139,10 +139,12 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
 
   /// Syncs the entries with WalletKit's deferred documents, then requests the due ones, oldest first.
   /// Documents deferred before entries existed get one based on their last modification date.
-  /// If the check is cancelled, or the document is deleted meanwhile, no failure is recorded for the request.
+  /// If the check is cancelled, or the document is deleted meanwhile, no failure is recorded for the request and its
+  /// entry isn't written back. A request that an issuance or a deletion under way holds back is asked again after
+  /// `failureWait` in this run of the app.
   /// The documents list is refreshed when a document is issued, deleted, or starts or stops showing as failed.
   /// A request that ends with a verdict (untrusted, expired) stops asking for that document; the document stays,
-  /// listed as failed, until the user deletes it. If the user deletes it meanwhile, its entry isn't written back.
+  /// listed as failed, until the user deletes it.
   /// Does nothing while the wallet is locked or in the background, and stops before the next request if it locks.
   func checkDeferredDocuments() async {
 
@@ -178,7 +180,8 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
         if !(result is DeferrredDocument) {
           didIssue = true
         }
-      } catch is DeferredDocumentDeletedError {
+      } catch is DeferredDocumentDeletedError, is DeferredRequestHeldError {
+        postponeAfterLocalFailure(of: entry.identifier)
         continue
       } catch {
         guard !Task.isCancelled else { break }

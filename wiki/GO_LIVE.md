@@ -1614,8 +1614,8 @@ The rules are the Android wallet's (`RevocationRecordUpdate`, Android's `revocat
 * A renewed document, manual or background, keeps the original's bookmark, as on Android.
 * Deleting a document deletes its revocation record, refresh failure, bookmark, failed re-issuance record and deferred
   issuance entry (`WalletKitControllerImpl.deleteRecords(of:)`; Android's `deleteDocumentRecords` deletes the records
-  it keeps); its history stays. A re-issued or deferred original loses its records too, but a re-issued original keeps its revocation record
-  until the check after the re-issue has read it.
+  it keeps); its history stays. A re-issued or deferred original loses its records too, but a re-issued original
+  keeps its revocation record until the check after the re-issue has read it.
 * A background re-issuance that cannot renew a document leaves a failed re-issuance record
   (`FailedReIssuedDocument`): the document's issuer card opens by itself and says "The wallet could not
   renew this document automatically. Use Reissue document to try again." Each background round replaces
@@ -1649,18 +1649,19 @@ var deferredIssuanceConfig: DeferredIssuanceConfig {
 When an issuer defers a credential, WalletKit stores the document as deferred and the wallet keeps an entry for it
 in the app's SwiftData store (`SDDeferredIssuance`): when to ask next, the issuer's last interval and the entry's
 state. The deferred issuance work manager (`DeferredIssuanceWorkManager`) asks for each document when its entry is
-due, one at a time and the longest due first. It starts with the other workers when the dashboard first opens after
-login, and asks only while the wallet is unlocked and in front (`WalletSessionStatusProvider`, kept up to date by
-`SessionLockController`); a request already sent when the wallet locks finishes, and the next one waits until the
-wallet is active again. Nothing is requested while the app is closed: documents that fell due meanwhile are asked
-for when the wallet is next unlocked. Only the factory reset stops it (`WalletWorkScheduler.stop()`).
+due, one at a time and the one that fell due earliest first. It starts with the other workers when the dashboard
+first opens after login, and asks only while the wallet is unlocked and in front (`WalletSessionStatusProvider`, kept
+up to date by `SessionLockController`); a request already sent when the wallet locks finishes, and the next one waits
+until the wallet is active again. Nothing is requested while the app is closed: documents that fell due meanwhile are
+asked for when the wallet is next unlocked. Only the factory reset stops it (`WalletWorkScheduler.stop()`).
 
 Timing (`DeferredIssuanceSchedule`):
 
 * The interval the issuer sends, when it defers a credential or answers that it is still pending, is waited in full
   plus one second, so an issuer that rounds the time left down is not asked a moment too early.
-* When the issuer sends no interval, or 0, the last valid interval is waited, or `initialPollingDelaySeconds` if there is
-  none. There is no lower or upper limit; a long wait is slept an hour at a time, which only reads the entries again.
+* When the issuer sends no interval, or 0, the last valid interval is waited, or `initialPollingDelaySeconds` if
+  there is none. There is no lower or upper limit; a long wait is slept an hour at a time, which only reads the
+  entries again.
 * The next attempt is written before each request, so an app closed before the answer arrives does not ask again at
   once when it opens. If it cannot be written, nothing is asked.
 
@@ -1678,9 +1679,13 @@ How a failed request is handled (`DeferredRequestFailure`):
   error WalletKit raises on the credential, an invalid or refused registration certificate) stops the requests. The
   wallet never deletes the document itself: it stays in the documents tab as "Issuance failed", also after a new
   launch, until the user deletes it.
-* An access token the issuer rejects (`invalid_token`), or a transaction the issuer no longer knows
-  (`invalid_transaction_id`), is stored as failed and no longer asked for; the document stays as "Issuance failed"
-  until the user deletes it.
+* A transaction the issuer no longer knows (`invalid_transaction_id`: never issued, or already used) is stored as
+  failed and no longer asked for; the document stays as "Issuance failed" until the user deletes it. An access token
+  the issuer rejects (`invalid_token`) is asked again like any other failure: WalletKit renews the token once its own
+  clock says it has expired.
+* While an issuance runs (adding a document, an offer, a resumed or a re-issued document), no deferred request
+  starts, and the issuance waits for the one under way: WalletKit keeps one issuance request per issuer
+  (`DeferredRequestGate`). A held document is asked again after `failureRetryDelaySeconds`.
 * A failure of the wallet itself (missing document metadata, an entry that cannot be read or written around the
   request, an issued credential that cannot be read back) leaves the entry as it was, does not show the document as
   failed, and asks again after `failureRetryDelaySeconds` while the app runs.

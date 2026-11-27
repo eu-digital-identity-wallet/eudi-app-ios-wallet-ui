@@ -158,6 +158,29 @@ final class TestWalletKitControllerDeferredIssuance: EudiTest {
     await fulfillment(of: [cleared], timeout: 2)
   }
 
+  func testResumePendingIssuance_WhenTheIssuanceFails_ThenNoLongerHoldsTheDeferredRequests() async {
+    // Given
+    let pending = WalletStorage.Document(
+      id: "pending",
+      docType: "",
+      docDataFormat: .cbor,
+      data: Data(),
+      docKeyInfo: nil,
+      createdAt: nil,
+      metadata: nil,
+      displayName: "",
+      status: .pending
+    )
+
+    // When
+    let result = try? await controller.resumePendingIssuance(pendingDoc: pending, webUrl: nil)
+
+    // Then
+    let isIssuing = await controller.deferredRequestGate.isIssuing
+    XCTAssertNil(result)
+    XCTAssertFalse(isIssuing)
+  }
+
   func testMarkIssuedDeferredDocumentsSeen_WhenNoneWasIssued_ThenReturnsNone() async {
     // When
     let ids = await controller.markIssuedDeferredDocumentsSeen(["a"])

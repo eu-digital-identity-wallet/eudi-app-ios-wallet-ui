@@ -44,8 +44,8 @@ public struct DeferredIssuance: Sendable, Equatable {
 
   public enum State: String, Sendable {
     case pending
-    /// Can't be completed: the issuer rejected the access token or no longer knows the transaction. Not requested
-    /// again; the document is listed as failed until the user deletes it.
+    /// Can't be completed: the issuer no longer knows the transaction. Not requested again; the document is listed
+    /// as failed until the user deletes it.
     case failed
     /// The issuer, its registration or the credential that arrived couldn't be trusted, so the wallet refused it. Not
     /// requested again; the document is listed as failed until the user deletes it.

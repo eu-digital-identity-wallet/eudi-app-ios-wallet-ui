@@ -164,4 +164,60 @@ final class TestDeferredRequestGate: EudiTest {
     // Then
     await fulfillment(of: [cleared], timeout: 2)
   }
+
+  func testBeginRequest_WhenAnIssuanceIsUnderWay_ThenDoesNotStartUntilItEnds() async {
+    // Given
+    await gate.beginIssuance()
+
+    // When
+    let startedDuring = await gate.beginRequest(for: "a")
+    let isIssuing = await gate.isIssuing
+    await gate.endIssuance()
+    let startedAfter = await gate.beginRequest(for: "a")
+
+    // Then
+    XCTAssertFalse(startedDuring)
+    XCTAssertTrue(isIssuing)
+    XCTAssertTrue(startedAfter)
+  }
+
+  func testBeginIssuance_WhenRequestsAreUnderWay_ThenWaitsForAllOfThem() async {
+    // Given
+    _ = await gate.beginRequest(for: "a")
+    _ = await gate.beginRequest(for: "b")
+    let gate = gate!
+    let issuance = Task { await gate.beginIssuance() }
+    let early = expectation(description: "early")
+    early.isInverted = true
+    let started = expectation(description: "started")
+    Task {
+      await issuance.value
+      early.fulfill()
+      started.fulfill()
+    }
+
+    // When
+    await gate.endRequest(for: "a")
+    await fulfillment(of: [early], timeout: 0.3)
+    await gate.endRequest(for: "b")
+
+    // Then
+    await fulfillment(of: [started], timeout: 2)
+  }
+
+  func testEndIssuance_WhenTwoIssuancesOverlap_ThenRequestsWaitForTheLastOne() async {
+    // Given
+    await gate.beginIssuance()
+    await gate.beginIssuance()
+
+    // When
+    await gate.endIssuance()
+    let startedAfterOne = await gate.beginRequest(for: "a")
+    await gate.endIssuance()
+    let startedAfterBoth = await gate.beginRequest(for: "a")
+
+    // Then
+    XCTAssertFalse(startedAfterOne)
+    XCTAssertTrue(startedAfterBoth)
+  }
 }
