@@ -69,6 +69,9 @@ protocol WalletKitConfig: Sendable {
    * `revocationPolicy` is set on both trust sources, so that a library default does not change it:
    * `.disabled` for the development trust lists, `.ocspOnly` for the static fallback. Choose a
    * policy for production; see GO_LIVE Trust Store.
+   *
+   * The ETSI source's `loteSignerTrustAnchors` authenticate the lists' signer: a list whose signing
+   * certificate does not chain to one of them is rejected, and with none every list is rejected.
    */
   var trustConfiguration: TrustConfiguration { get }
 
@@ -298,6 +301,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
       trustSource: .etsi(
         EtsiTrustSource(
           loteLocations: loteLocations,
+          loteSignerTrustAnchors: loteSignerTrustAnchors,
           contextTypeMappings: classifications,
           revocationPolicy: .disabled
         )
@@ -332,6 +336,13 @@ struct WalletKitConfigImpl: WalletKitConfig {
       "pidissuerca02_ut",
       "r45_staging"
     ].compactMap { loadCertificate($0) }
+  }
+
+  /// The certificates that authenticate the signer of the trusted lists in `loteLocations`. The
+  /// development lists are signed under `pidissuerca02_eu`; use your list operator's certificate in
+  /// production (see GO_LIVE Trust Store).
+  var loteSignerTrustAnchors: [Data] {
+    ["pidissuerca02_eu"].compactMap { loadCertificate($0) }
   }
 
   var logFileName: String? {
