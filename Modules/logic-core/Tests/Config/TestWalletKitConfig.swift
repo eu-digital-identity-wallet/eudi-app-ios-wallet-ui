@@ -20,6 +20,26 @@ import logic_business
 
 final class TestWalletKitConfig: EudiTest {
 
+  private actor StubTransactionLogger: TransactionLogger {
+    func log(transaction: TransactionEntry) async throws {}
+  }
+
+  func testDocumentsCategories_WhenTheEhicIsAnSdJwtVc_ThenItIsInHealth() {
+    // Given
+    let config = WalletKitConfigImpl(
+      configLogic: MockConfigLogic(),
+      transactionLogger: StubTransactionLogger(),
+      walletKitAttestationProvider: MockWalletKitAttestationProvider(),
+      prefsController: MockPrefsController()
+    )
+
+    // When
+    let health = config.documentsCategories[.Health] ?? []
+
+    // Then
+    XCTAssertTrue(health.contains(.other(formatType: "urn:eudi:ehic:1")))
+  }
+
   func testLogFileName_WhenTheBuildIsDebug_ThenWritesTheLogFile() {
     // When
     let fileName = WalletKitConfigImpl.logFileName(for: .DEBUG)
