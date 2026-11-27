@@ -130,7 +130,7 @@ Use this checklist before the first production release.
 | Signing | Distribution certificates, provisioning profiles, App Groups, Keychain Sharing, and required entitlements are controlled and documented. |
 | Issuers | All OpenID4VCI issuer URLs point to production issuer services controlled or approved by the implementer. |
 | Wallet provider | `walletProviderAttestationUrl` points to the production Wallet Provider service and supports the expected attestation endpoints. |
-| Trust anchors | Demo and development certificates are replaced by production IACA, reader, verifier, or trust-framework anchors. |
+| Trust anchors | Demo and development certificates are replaced by production IACA, reader, verifier, or trust-framework anchors, and the trusted lists' signer is anchored to the production list-signing certificate or a CA that issues only list-signing certificates (`loteSignerTrustAnchors`). |
 | Registration certificates | `wrprcProviders` points at the production registration trusted list, `validateIssuerRegistrationCertificate` is enabled, every production issuer and verifier presents a registration certificate that validates against it, and every issuer's registered scope covers the documents it offers. Issuance is refused otherwise. |
 | RQES | QTSP, TSA, client ID, redirect URI, and signing policy are production values. No QTSP client secret is hardcoded in the app. |
 | Secrets | No production secret is hardcoded in Swift, plist files, xcconfig files, or build settings. |
@@ -621,7 +621,7 @@ Production meaning:
 | `serviceName` | Keychain service name used by WalletKit storage. | Must be stable across app updates and match extension access needs. |
 | `accessGroup` | Keychain access group. | Must match signed entitlements and extension sharing requirements. |
 | `userAuthenticationRequired` | Whether WalletKit secure storage requires local user authentication. | For LoA High PID and other high-assurance EAA/QEAA credentials, set this to `true` unless an approved remote high-assurance hardware-backed key protection design replaces local key use. Test all issuance, presentation, extension, and background behavior. |
-| `trustConfig` | Trust configuration (`TrustConfiguration`) for reader / issuer validation: ETSI LoTE trust sources, verification-context mappings, static fallback anchors, and trust policies. Passed as a separate `EudiWallet` argument, not inside `EudiWalletConfiguration`. | Replace demo LoTE endpoints and fallback anchors with production trust anchors, and review `defaultPolicy` / `statusTrustPolicy` before go-live. |
+| `trustConfig` | Trust configuration (`TrustConfiguration`) for reader / issuer validation: ETSI LoTE trust sources and the anchors of their signer, verification-context mappings, static fallback anchors, and trust policies. Passed as a separate `EudiWallet` argument, not inside `EudiWalletConfiguration`. | Replace demo LoTE endpoints, the list-signer anchors and the fallback anchors with production trust anchors, and review `defaultPolicy` / `statusTrustPolicy` before go-live. |
 | `deviceAuthMethod` | Device authentication method used by WalletKit. | Current value is `.deviceSignature`; confirm with WalletKit and assurance policy. |
 | `uiCulture` | Locale passed to WalletKit. | Confirm supported locales and fallback behavior. |
 | `logFileName` | WalletKit log file name; `nil` outside debug builds (`WalletKitConfigImpl.logFileName(for:)`), so release builds write no file, delete one an earlier build left, and Settings offers no "Retrieve logs". wallet-kit logs issuance and presentation details to the file at `.info`: authorization request URLs, deferred-issuance transaction identifiers, each presentation's session transcript and nonce, and the proximity QR payload. | Keep it off in production unless support policy requires a controlled log export, as on Android. |
@@ -1114,6 +1114,27 @@ var staticRootCertificates: [Data] {
 }
 ```
 
+The trusted lists are authenticated by their signer. `EtsiTrustSource` requires
+`loteSignerTrustAnchors`, and WalletKit accepts a list only when the first certificate of its `x5c`
+header is valid now, is one of those anchors or chains to one of them, and verifies the list's JWS
+signature. The signer's chain is evaluated offline and without a revocation check, whatever
+`revocationPolicy` is set to. With no anchor, or with any anchor that is not a readable DER
+certificate, even beside valid ones, every list is rejected. The checks of issued documents and
+status lists then fall back to the static list, while reader trust, signed issuer metadata and
+registration certificates have no fallback and fail. Issuance (with `requireSignedMetadata: true`)
+and every presentation whose relying party authenticates are then refused; a proximity reader that
+sends no reader authentication still reaches the request screen behind its warning. The reference
+app passes `pidissuerca02_eu`, the CA that issues the development lists' signing certificate, loaded
+by name like the fallback certificates:
+
+```swift
+var loteSignerTrustAnchors: [Data] {
+  ["pidissuerca02_eu"].compactMap { loadCertificate($0) }
+}
+```
+
+A `customJwtSignatureVerifier` on `EtsiTrustSource` replaces this check; the reference app sets none.
+
 `trustConfiguration` also decides how each check applies:
 
 * `defaultPolicy` governs the certificate that signs each issued document, validated against the
@@ -1156,6 +1177,12 @@ var staticRootCertificates: [Data] {
 Production guidance:
 
 * Replace the demo LoTE endpoints in `trustConfiguration` with your production trusted-list locations.
+* Set `loteSignerTrustAnchors` to your scheme operator's list-signing certificate, or to a CA that issues
+  only such certificates. A CA that also issues other certificates, as `pidissuerca02_eu` does for the
+  development lists, lets any certificate it issues sign a list. Ship the anchor with the app and test
+  that the lists load, since a missing anchor rejects every list. Plan the anchor's rotation: the list
+  signer must be valid when a list is checked, so ship a new anchor before the operator signs with a
+  new certificate.
 * Set a `revocationPolicy` other than `.disabled` on the production `EtsiTrustSource`. `.disabled` suits only the
   development trust lists. Choose the method your PKI serves: with `.ocspOnly`, every certificate below a
   list entry, in every chain the wallet validates, must name an OCSP responder that answers for it; `.crlOnly`,
@@ -1169,6 +1196,8 @@ Production guidance:
 * Keep `requireSignedMetadata` at `true`. Set `statusTrustPolicy` to `.enforce` once every doc type
   that carries a status list is classified in a trust source and its status-list signers
   validate against its status context; until then, the status check of an unclassified type fails.
+* Have your status-list issuers set `exp`. The wallet refuses a status list past its `exp`, but does not
+  compare a list's age with `iat` plus `ttl`, so a list that carries only `ttl` is accepted however old it is.
 * Keep `readerTrustPolicy` at `.enforce`, so that a request whose reader authentication fails is refused: an
   OpenID4VP request whose reader access certificate chain is not trusted and a BLE reader
   whose signature or certificate chain does not validate. `.warning` lets such a signed OpenID4VP request proceed
@@ -1521,7 +1550,8 @@ opened before login is kept without starting its session (see
 [Deep Links And Redirect URIs](#deep-links-and-redirect-uris)). The first revocation check
 runs 30 seconds after the workers start, and later checks follow every `revocationIntervalSeconds`.
 WalletKit keeps each status list it has verified, per address, doc type and trust configuration and while the
-app runs, until the list's `ttl` or `exp` ends. A check within that time reads the kept list, so a change of status shows once the list
+app runs, until `ttl` after the fetch or the list's `exp`, whichever comes first; a list with neither is fetched at
+every check. A check within that time reads the kept list, so a change of status shows once the list
 is fetched again, not at the next check. A list that cannot be fetched or verified is not kept.
 Only the factory reset calls `WalletWorkScheduler.stop()`; otherwise the workers run until the process ends. A
 failed reset starts them again at once, and after a reset they start with the dashboard, after the next login. The

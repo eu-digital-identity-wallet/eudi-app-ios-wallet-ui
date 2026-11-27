@@ -2416,6 +2416,17 @@
         }
       }
     },
+    "request_data_no_details_shared" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No details shared"
+          }
+        }
+      }
+    },
     "request_data_no_document" : {
       "extractionState" : "manual",
       "localizations" : {

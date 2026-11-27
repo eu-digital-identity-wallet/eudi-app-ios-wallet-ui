@@ -190,6 +190,14 @@ protocol WalletKitConfig: Sendable {
   /**
    * Trust configuration: ETSI LoTE (List of Trusted Entities) trust sources,
    * verification-context mappings and trust policies used for reader / issuer validation.
+   *
+   * `revocationPolicy` is set on both trust sources, so that a library default does not change it:
+   * `.disabled` for the development trust lists, `.ocspOnly` for the static fallback. Choose a
+   * policy for production; see GO_LIVE Trust Store.
+   *
+   * The ETSI source's `loteSignerTrustAnchors` authenticate the lists' signer: a list whose signing
+   * certificate is not one of them and does not chain to one of them is rejected, and with none every
+   * list is rejected.
    */
   var trustConfiguration: TrustConfiguration { get }
 }
@@ -197,7 +205,7 @@ protocol WalletKitConfig: Sendable {
 
 The *WalletKitConfigImpl* implementation of the *WalletKitConfig* protocol can be located inside the logic-core module. The resulting `TrustConfiguration` is passed to `EudiWallet` as the `trustConfig` argument in `WalletKitController`.
 
-The primary trust source is an ETSI LoTE (List of Trusted Entities) source that fetches signed trusted lists (PID / WRPAC / PubEAA providers) at runtime. A static list of bundled root certificates is configured as the `fallbackTrustSource`. These fallback certificates ship with this repo as DER files in [`Wallet/Certificate`](../Wallet/Certificate) (e.g. `pidissuerca02_eu.der`, `r45_staging.der`). The file names — without the `.der` extension — must match the array in `WalletKitConfigImpl.staticRootCertificates`, which loads each via `loadCertificate(_:)`. Replace the LoTE endpoints and the fallback anchors with your production values before go-live.
+The primary trust source is an ETSI LoTE (List of Trusted Entities) source that fetches signed trusted lists (PID / WRPAC / WRPRC / PubEAA providers) at runtime. A static list of bundled root certificates is configured as the `fallbackTrustSource`. These fallback certificates ship with this repo as DER files in [`Wallet/Certificate`](../Wallet/Certificate) (e.g. `pidissuerca02_eu.der`, `r45_staging.der`). The file names — without the `.der` extension — must match the arrays in `WalletKitConfigImpl.staticRootCertificates` and `WalletKitConfigImpl.loteSignerTrustAnchors`, which load each via `loadCertificate(_:)`. A trusted list is accepted only when its signing certificate is one of `loteSignerTrustAnchors` or chains to one of them; with none (for example when a file name does not match), every list is rejected. The signer's chain is checked offline, without a revocation check, whatever `revocationPolicy` says. The reference app passes `pidissuerca02_eu`, the CA that issues the development lists' signing certificate. Replace the LoTE endpoints, the list-signer anchors and the fallback anchors with your production values before go-live.
 
 ```swift
   var trustConfiguration: TrustConfiguration {
@@ -220,6 +228,7 @@ The primary trust source is an ETSI LoTE (List of Trusted Entities) source that 
       trustSource: .etsi(
         EtsiTrustSource(
           loteLocations: loteLocations,
+          loteSignerTrustAnchors: loteSignerTrustAnchors,
           contextTypeMappings: classifications,
           revocationPolicy: .disabled
         )
@@ -254,6 +263,10 @@ The primary trust source is an ETSI LoTE (List of Trusted Entities) source that 
       "pidissuerca02_ut",
       "r45_staging"
     ].compactMap { loadCertificate($0) }
+  }
+
+  var loteSignerTrustAnchors: [Data] {
+    ["pidissuerca02_eu"].compactMap { loadCertificate($0) }
   }
 ```
 
@@ -519,7 +532,7 @@ production values for every config surface listed below.
 | Build variant/type | `Wallet/Config/*.xcconfig`, `ConfigLogic.swift` | `BUILD_VARIANT = PROD`, `BUILD_TYPE = RELEASE` for production archives. |
 | Issuers | `WalletKitConfig.swift` | Production OpenID4VCI issuer URLs, client IDs, redirect URIs, PAR/DPoP policy, proof-type policy (`allowPlainJwtProof`), signed-metadata policy (`issuerMetadataPolicy`), registration check (`validateRegistrationCertificate`), credential encryption policy (`encryptionSupportConfig`), PoP key options (`popKeyOptions`), logo origins (`logoOrigins`), sign-in presentation (`authorizationFlowHandler`, optional) and display order. |
 | Wallet provider attestation | `WalletProviderAttestationConfig.swift` | Production Wallet Provider host used for wallet/key attestation. |
-| Reader trust anchors | `WalletKitConfig.swift`, certificate resources | Production IACA/reader/verifier trust anchors only, and a `revocationPolicy` other than `.disabled` on both trust sources; see GO_LIVE [Trust Store](GO_LIVE.md#trust-store). |
+| Trust anchors | `WalletKitConfig.swift`, certificate resources | Production IACA/reader/verifier trust anchors only, `loteSignerTrustAnchors` set to your scheme operator's list-signing certificate or a CA that issues only list-signing certificates, and a `revocationPolicy` other than `.disabled` on both trust sources; see GO_LIVE [Trust Store](GO_LIVE.md#trust-store). |
 | OpenID4VP | `WalletKitConfig.swift` | Approved client ID schemes, preregistered verifier entries where needed, the accepted transaction data types (`supportedTransactionDataTypes`), and the registration check (`validateRegistrationCertificate`). |
 | WalletKit storage/auth | `WalletKitConfig.swift`, `ConfigLogic.swift`, `EudiWallet.entitlements` | Production Keychain service (derived from the main app's bundle identifier) and access group (the first `keychain-access-groups` entry in `EudiWallet.entitlements`, read at launch by `Bundle.getKeychainAccessGroup()` into `ConfigLogic.keyChainConfig`), and the `userAuthenticationRequired` decision (`WalletKitConfig.swift`). For LoA High PID and other high-assurance EAA/QEAA credentials, require strong local authentication and Keychain/Secure Enclave-backed protection unless an approved remote high-assurance key protection design replaces local key use. |
 | WalletKit attestation key options | `WalletKitConfig.swift` (`keyOptions`) | Curve, secure area, access protection, access control, and key purposes used when creating attestation/proof keys during issuance, reissuance, deferred issuance, and resume. For LoA High PID and other high-assurance EAA/QEAA credentials, require Secure Enclave (with `.P256`) plus appropriate `accessProtection`/`accessControl`, or an approved remote high-assurance key protection design. |
