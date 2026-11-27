@@ -71,7 +71,7 @@ public extension Array where Element == DocElements {
       } else {
         Set(
           leafPaths.filter { leafPath in
-            let claimPath = ClaimPath(leafPath.map { .claim(name: $0) })
+            let claimPath = ClaimPath(rowPath: leafPath)
             return applicable.contains { overasked in
               guard let path = overasked.path else { return false }
               return path.contains2(claimPath) || claimPath.contains2(path)
@@ -89,5 +89,23 @@ private extension DocClaim {
   func leafPaths() -> [[String]] {
     guard let children, !children.isEmpty else { return [path] }
     return children.flatMap { $0.leafPaths() }
+  }
+}
+
+private extension ClaimPath {
+  /// A row's path read as WalletKit writes it (`RequestItem.claimPath`): an empty component selects every element
+  /// of an array, a number selects one element, and any other component names a claim.
+  init(rowPath: [String]) {
+    self.init(
+      rowPath.map { component in
+        if let index = Int(component) {
+          .arrayElement(index: index)
+        } else if component.isEmpty {
+          .allArrayElements
+        } else {
+          .claim(name: component)
+        }
+      }
+    )
   }
 }

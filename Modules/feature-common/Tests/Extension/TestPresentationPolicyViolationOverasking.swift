@@ -216,6 +216,45 @@ final class TestPresentationPolicyViolationOverasking: EudiTest {
     XCTAssertEqual(overasked, ["doc-1": [["nationalities"]]])
   }
 
+  func testOveraskedPaths_WhenTheRowShowsEveryArrayElement_ThenTheOverAskedArrayMarksIt() {
+    // Given
+    let documents = [sdJwtElements(docId: "doc-1", claim: leafClaim(["nationalities", ""]))]
+
+    // When
+    let overasked = documents.overaskedPaths(
+      from: [
+        OveraskedClaim(
+          attestationType: vct,
+          path: ClaimPath([.claim(name: "nationalities"), .allArrayElements])
+        )
+      ]
+    )
+
+    // Then
+    XCTAssertEqual(overasked, ["doc-1": [["nationalities", ""]]])
+  }
+
+  func testOveraskedPaths_WhenTheRowShowsOneArrayElement_ThenOnlyThatOverAskedElementMarksIt() {
+    // Given
+    let documents = [
+      sdJwtElements(docId: "doc-1", claim: leafClaim(["nationalities", "0"])),
+      sdJwtElements(docId: "doc-2", claim: leafClaim(["nationalities", "1"]))
+    ]
+
+    // When
+    let overasked = documents.overaskedPaths(
+      from: [
+        OveraskedClaim(
+          attestationType: vct,
+          path: ClaimPath([.claim(name: "nationalities"), .arrayElement(index: 0)])
+        )
+      ]
+    )
+
+    // Then
+    XCTAssertEqual(overasked, ["doc-1": [["nationalities", "0"]]])
+  }
+
   func testOveraskedPaths_WhenTheOveraskedPathIsASibling_ThenTheRowIsNotMarked() {
     // Given
     let documents = [
