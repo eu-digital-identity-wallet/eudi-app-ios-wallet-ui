@@ -80,10 +80,10 @@ To support proximity, the EUDI Verifier App is available [here](https://github.c
 
 The issuer and the verifier service are authenticated against the EUDIW development trusted lists
 (LoTE) named in `WalletKitConfig`, as is a proximity reader that sends reader authentication. The
-certificates in
-[`Wallet/Certificate`](Wallet/Certificate) are a fallback for the signers of issued documents and
-status lists only, not for readers or verifiers; `pidissuerca02_eu` also anchors the signer of the
-development trusted lists (`loteSignerTrustAnchors`; see [wiki/CONFIGURATION.md](wiki/CONFIGURATION.md)).
+certificates in [`Wallet/Certificate`](Wallet/Certificate) are a fallback for the signers of issued
+documents and status lists only; reader, verifier, issuer-metadata and registration-certificate
+checks have no fallback. `pidissuerca02_eu` also anchors the signer of the development trusted lists
+(`loteSignerTrustAnchors`; see [wiki/CONFIGURATION.md](wiki/CONFIGURATION.md)).
 
 ## Important things to know
 

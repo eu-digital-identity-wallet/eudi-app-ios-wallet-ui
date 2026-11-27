@@ -340,8 +340,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   /// The certificates that authenticate the signer of the trusted lists that `trustConfiguration` fetches.
-  /// The development lists are signed under `pidissuerca02_eu`; use your scheme operator's certificate in
-  /// production (see GO_LIVE Trust Store).
+  /// The development lists are signed under `pidissuerca02_eu`; use your scheme operator's list-signing
+  /// certificate in production (see GO_LIVE Trust Store).
   var loteSignerTrustAnchors: [Data] {
     ["pidissuerca02_eu"].compactMap { loadCertificate($0) }
   }
