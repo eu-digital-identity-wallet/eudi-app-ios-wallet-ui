@@ -104,7 +104,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case addDoc
   case filters
   case sortByIssuedDateSectionTitle
-  case showResults
+  case applyButton
   case welcomeBack([String])
   case pleaseWait
   case requestDataShareQuickPinCaption
