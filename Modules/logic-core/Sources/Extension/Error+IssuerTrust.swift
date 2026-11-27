@@ -46,13 +46,8 @@ public extension Error {
   }
 }
 
-private extension Error {
-  var isRegistrationPolicyRejection: Bool {
-    guard let validationError = self as? ValidationError else { return false }
-    if case .authorizationPolicyNotMet = validationError { return true }
-    return false
-  }
-
+extension Error {
+  /// The issuer's metadata isn't signed as required or its signer isn't trusted.
   var isIssuerMetadataTrustFailure: Bool {
     guard let metadataError = self as? CredentialIssuerMetadataError else { return false }
     switch metadataError {
@@ -69,6 +64,15 @@ private extension Error {
     default:
       return false
     }
+  }
+}
+
+extension Error {
+  /// The issuer's registration doesn't meet the issuance policy (`authorizationPolicyNotMet`).
+  var isRegistrationPolicyRejection: Bool {
+    guard let validationError = self as? ValidationError else { return false }
+    if case .authorizationPolicyNotMet = validationError { return true }
+    return false
   }
 }
 

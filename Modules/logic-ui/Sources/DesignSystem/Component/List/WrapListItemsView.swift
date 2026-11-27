@@ -17,20 +17,28 @@ import SwiftUI
 import logic_resources
 
 public struct WrapListItemsView: View {
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
   private let listItems: [ListItemData]
   private let action: ((ListItemData) -> Void)?
   private let mainTextVerticalPadding: CGFloat?
   private let isLoading: Bool
+  private let highlightedItemIds: Set<String>
 
+  /// - Parameter highlightedItemIds: rows drawn over a light success background, e.g. to point out a row that just
+  ///   changed. Only the background is animated: it fades in quickly and out slowly, or just changes with Reduce
+  ///   Motion.
   public init(
     listItems: [ListItemData],
     mainTextVerticalPadding: CGFloat? = nil,
     isLoading: Bool = false,
+    highlightedItemIds: Set<String> = [],
     action: ((ListItemData) -> Void)? = nil
   ) {
     self.listItems = listItems
     self.mainTextVerticalPadding = mainTextVerticalPadding
     self.isLoading = isLoading
+    self.highlightedItemIds = highlightedItemIds
     self.action = action
   }
 
@@ -46,10 +54,21 @@ public struct WrapListItemsView: View {
           }
         }
       )
+      .background {
+        let isHighlighted = highlightedItemIds.contains(item.id)
+        Theme.shared.color.success
+          .opacity(isHighlighted ? 0.2 : 0)
+          .animation(highlightAnimation(isHighlighted: isHighlighted), value: isHighlighted)
+      }
       if index < listItems.count - 1 {
         ListDividerView()
       }
     }
+  }
+
+  private func highlightAnimation(isHighlighted: Bool) -> Animation? {
+    guard !reduceMotion else { return nil }
+    return isHighlighted ? .easeOut(duration: 0.25) : .easeInOut(duration: 0.7)
   }
 }
 

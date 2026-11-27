@@ -53,6 +53,7 @@ public final class LogicCoreAssembly: Assembly {
         revokedDocumentStorageController: r.force((any RevokedDocumentStorageController).self),
         failedReIssuedDocStorageController: r.force((any FailedReIssuedDocStorageController).self),
         statusRefreshFailureStorageController: r.force((any StatusRefreshFailureStorageController).self),
+        deferredIssuanceStorageController: r.force((any DeferredIssuanceStorageController).self),
         storageEraseController: r.force(StorageEraseController.self),
         networkSessionProvider: r.force((any NetworkSessionProvider).self),
         documentRegistrationManager: r.force((any DocumentRegistrationManager).self),
@@ -106,8 +107,24 @@ public final class LogicCoreAssembly: Assembly {
     }
     .inObjectScope(ObjectScope.container)
 
+    container.register(DeferredIssuanceWorkManager.self) { r in
+      DeferredIssuanceWorkManagerImpl(
+        walletKitController: r.force(WalletKitController.self),
+        storageController: r.force((any DeferredIssuanceStorageController).self),
+        revocationWorkManager: r.force(RevocationWorkManager.self),
+        schedule: DeferredIssuanceSchedule(config: r.force(WalletKitConfig.self).deferredIssuanceConfig),
+        sessionStatusProvider: r.force(WalletSessionStatusProvider.self)
+      )
+    }
+    .inObjectScope(ObjectScope.container)
+
     container.register(WalletResetStatusProvider.self) { _ in
       WalletResetStatusProviderImpl()
+    }
+    .inObjectScope(ObjectScope.container)
+
+    container.register(WalletSessionStatusProvider.self) { _ in
+      WalletSessionStatusProviderImpl()
     }
     .inObjectScope(ObjectScope.container)
 
@@ -115,6 +132,7 @@ public final class LogicCoreAssembly: Assembly {
       WalletWorkSchedulerImpl(
         revocationWorkManager: r.force(RevocationWorkManager.self),
         reIssuanceWorkManager: r.force(ReIssuanceWorkManager.self),
+        deferredIssuanceWorkManager: r.force(DeferredIssuanceWorkManager.self),
         stopTimeout: r.force(WalletKitConfig.self).workerStopTimeoutSeconds,
         resetStatusProvider: r.force(WalletResetStatusProvider.self)
       )

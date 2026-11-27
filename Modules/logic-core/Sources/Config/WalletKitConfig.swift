@@ -110,6 +110,9 @@ protocol WalletKitConfig: Sendable {
   /// deleting anything, as the Android wallet's `workerStopTimeout`.
   var workerStopTimeoutSeconds: TimeInterval { get }
 
+  /// When deferred credentials are requested again.
+  var deferredIssuanceConfig: DeferredIssuanceConfig { get }
+
   /**
    * Configuration for document issuance, including default rules and specific overrides.
    */
@@ -414,6 +417,10 @@ struct WalletKitConfigImpl: WalletKitConfig {
 
   var workerStopTimeoutSeconds: TimeInterval {
     30
+  }
+
+  var deferredIssuanceConfig: DeferredIssuanceConfig {
+    DeferredIssuanceConfig(initialPollingDelaySeconds: 5, failureRetryDelaySeconds: 30)
   }
 
   var documentIssuanceConfig: DocumentIssuanceConfig {

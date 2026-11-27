@@ -29,4 +29,12 @@ final class TestStorageConfig: EudiTest {
     // Then
     XCTAssertEqual(values.isExcludedFromBackup, true)
   }
+
+  func testSchemas_WhenTheStoreIsSetUp_ThenHoldTheDeferredIssuances() {
+    // When
+    let names = StorageConfigImpl().schemas.entities.map(\.name)
+
+    // Then
+    XCTAssertTrue(names.contains("SDDeferredIssuance"))
+  }
 }

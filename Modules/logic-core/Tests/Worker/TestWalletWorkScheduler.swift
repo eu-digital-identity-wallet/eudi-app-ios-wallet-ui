@@ -22,11 +22,13 @@ final class TestWalletWorkScheduler: EudiTest {
 
   var revocationWorkManager: MockRevocationWorkManager!
   var reIssuanceWorkManager: MockReIssuanceWorkManager!
+  var deferredIssuanceWorkManager: MockDeferredIssuanceWorkManager!
   var scheduler: WalletWorkSchedulerImpl!
 
   override func setUp() {
     revocationWorkManager = MockRevocationWorkManager()
     reIssuanceWorkManager = MockReIssuanceWorkManager()
+    deferredIssuanceWorkManager = MockDeferredIssuanceWorkManager()
     stub(revocationWorkManager) { mock in
       when(mock.start()).thenDoNothing()
       when(mock.stop()).thenDoNothing()
@@ -35,9 +37,14 @@ final class TestWalletWorkScheduler: EudiTest {
       when(mock.start()).thenDoNothing()
       when(mock.stop()).thenDoNothing()
     }
+    stub(deferredIssuanceWorkManager) { mock in
+      when(mock.start()).thenDoNothing()
+      when(mock.stop()).thenDoNothing()
+    }
     scheduler = WalletWorkSchedulerImpl(
       revocationWorkManager: revocationWorkManager,
       reIssuanceWorkManager: reIssuanceWorkManager,
+      deferredIssuanceWorkManager: deferredIssuanceWorkManager,
       stopTimeout: 5,
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
@@ -46,16 +53,18 @@ final class TestWalletWorkScheduler: EudiTest {
   override func tearDown() {
     revocationWorkManager = nil
     reIssuanceWorkManager = nil
+    deferredIssuanceWorkManager = nil
     scheduler = nil
   }
 
-  func testSchedule_WhenCalled_ThenStartsBothChecks() async {
+  func testSchedule_WhenCalled_ThenStartsTheChecksAndTheDeferredRequests() async {
     // When
     await scheduler.schedule()
 
     // Then
     verify(revocationWorkManager).start()
     verify(reIssuanceWorkManager).start()
+    verify(deferredIssuanceWorkManager).start()
   }
 
   func testSchedule_WhenAResetRuns_ThenStartsNothing() async {
@@ -65,6 +74,7 @@ final class TestWalletWorkScheduler: EudiTest {
     let resettingScheduler = WalletWorkSchedulerImpl(
       revocationWorkManager: revocationWorkManager,
       reIssuanceWorkManager: reIssuanceWorkManager,
+      deferredIssuanceWorkManager: deferredIssuanceWorkManager,
       stopTimeout: 5,
       resetStatusProvider: resetStatusProvider
     )
@@ -75,9 +85,10 @@ final class TestWalletWorkScheduler: EudiTest {
     // Then
     verify(revocationWorkManager, never()).start()
     verify(reIssuanceWorkManager, never()).start()
+    verify(deferredIssuanceWorkManager, never()).start()
   }
 
-  func testStop_WhenCalled_ThenStopsBothChecks() async {
+  func testStop_WhenCalled_ThenStopsTheChecksAndTheDeferredRequests() async {
     // When
     let stopped = await scheduler.stop()
 
@@ -85,6 +96,26 @@ final class TestWalletWorkScheduler: EudiTest {
     XCTAssertTrue(stopped)
     verify(revocationWorkManager).stop()
     verify(reIssuanceWorkManager).stop()
+    verify(deferredIssuanceWorkManager).stop()
+  }
+
+  func testStop_WhenADeferredRequestOutlastsTheTimeout_ThenReportsItStillRunning() async {
+    // Given
+    let gate = AsyncGate()
+    let blockedScheduler = WalletWorkSchedulerImpl(
+      revocationWorkManager: revocationWorkManager,
+      reIssuanceWorkManager: reIssuanceWorkManager,
+      deferredIssuanceWorkManager: StubDeferredIssuanceWorkManager(gate: gate),
+      stopTimeout: 0.2,
+      resetStatusProvider: WalletResetStatusProviderImpl()
+    )
+
+    // When
+    let stopped = await blockedScheduler.stop()
+    await gate.open()
+
+    // Then
+    XCTAssertFalse(stopped)
   }
 
   func testStop_WhenACheckOutlastsTheTimeout_ThenReportsItStillRunning() async {
@@ -93,6 +124,7 @@ final class TestWalletWorkScheduler: EudiTest {
     let blockedScheduler = WalletWorkSchedulerImpl(
       revocationWorkManager: revocationWorkManager,
       reIssuanceWorkManager: StubReIssuanceWorkManager(gate: gate),
+      deferredIssuanceWorkManager: deferredIssuanceWorkManager,
       stopTimeout: 0.2,
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
@@ -113,6 +145,7 @@ final class TestWalletWorkScheduler: EudiTest {
     let gatedScheduler = WalletWorkSchedulerImpl(
       revocationWorkManager: revocationWorkManager,
       reIssuanceWorkManager: reIssuanceWorkManager,
+      deferredIssuanceWorkManager: deferredIssuanceWorkManager,
       stopTimeout: 5,
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
@@ -140,6 +173,7 @@ final class TestWalletWorkScheduler: EudiTest {
     let startingScheduler = WalletWorkSchedulerImpl(
       revocationWorkManager: StubRevocationWorkManager(gates: [gate], entered: entered),
       reIssuanceWorkManager: reIssuance,
+      deferredIssuanceWorkManager: deferredIssuanceWorkManager,
       stopTimeout: 5,
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
@@ -168,6 +202,7 @@ final class TestWalletWorkScheduler: EudiTest {
     let startingScheduler = WalletWorkSchedulerImpl(
       revocationWorkManager: StubRevocationWorkManager(gates: [first, second], entered: entered),
       reIssuanceWorkManager: reIssuance,
+      deferredIssuanceWorkManager: deferredIssuanceWorkManager,
       stopTimeout: 5,
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
@@ -202,6 +237,7 @@ final class TestWalletWorkScheduler: EudiTest {
     let stoppedScheduler = WalletWorkSchedulerImpl(
       revocationWorkManager: recorder,
       reIssuanceWorkManager: reIssuanceWorkManager,
+      deferredIssuanceWorkManager: deferredIssuanceWorkManager,
       stopTimeout: 5,
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
@@ -224,6 +260,7 @@ final class TestWalletWorkScheduler: EudiTest {
     let gatedScheduler = WalletWorkSchedulerImpl(
       revocationWorkManager: RecordingRevocationWorkManager(gate: gate, finished: checked),
       reIssuanceWorkManager: reIssuanceWorkManager,
+      deferredIssuanceWorkManager: deferredIssuanceWorkManager,
       stopTimeout: 5,
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
@@ -271,6 +308,23 @@ private actor StubReIssuanceWorkManager: ReIssuanceWorkManager {
   func stop() async {
     await gate.wait()
   }
+}
+
+/// Holds `stop()` until its gate opens.
+private actor StubDeferredIssuanceWorkManager: DeferredIssuanceWorkManager {
+  private let gate: AsyncGate
+
+  init(gate: AsyncGate) {
+    self.gate = gate
+  }
+
+  func start() async {}
+
+  func stop() async {
+    await gate.wait()
+  }
+
+  func wake() async {}
 }
 
 /// Holds the n-th `start()` until its gate in `gates` opens, and fulfils `entered` when the first begins.

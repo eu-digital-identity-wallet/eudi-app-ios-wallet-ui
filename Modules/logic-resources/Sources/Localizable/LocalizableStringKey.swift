@@ -189,8 +189,7 @@ public enum LocalizableStringKey: Equatable, Sendable {
   case issuanceSuccessDeferredCaption([String])
   case pending
   case issuanceFailed
-  case deferredDocumentsIssuedModalTitle
-  case defferedDocumentsIssuedModalCaption
+  case deferredDocumentsIssuedAnnouncement([String])
   case retrieveLogs
   case qrScanInformativeText
   case unableToPresentAndShare

@@ -70,6 +70,10 @@ public protocol WalletKitController: Sendable {
     isBackgroundOperation: Bool
   ) async throws -> WalletStorage.Document
   func getDocumentCredentialOptions(with id: String) async -> CredentialOptions?
+  /// Throws `DeferredDocumentDeletedError` when the document is deleted before or while it is requested; the deletion
+  /// then removes the document's entry. Before asking, moves the entry's next attempt one wait ahead, so an app closed
+  /// before the answer arrives doesn't ask again at once when it opens. Throws `DeferredEntryStorageError` when the
+  /// entry can't be read or written; nothing is asked then.
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable
   func resolveOfferUrlDocTypes(offerUri: String) async throws -> OfferedIssuanceModel
   func issueDocumentsByOfferUrl(
@@ -138,6 +142,16 @@ public protocol WalletKitController: Sendable {
   func removeAllFailedReIssuedDocuments() async throws
   /// Whether the last background re-issuance could not renew the document.
   func hasReIssuanceFailure(with id: String) async -> Bool
+  /// Deferred documents whose last request in this run of the app failed and that are still asked again, and those no
+  /// longer requested: expired or untrusted, until the user deletes them. A request that is still pending or issued
+  /// clears the first; they aren't stored, so a new launch shows them pending until a request fails again. Stored ones
+  /// are left out if the entries can't be read.
+  func fetchFailedDeferredDocumentIds() async -> Set<String>
+  /// Marks the documents the list shows as issued as seen, and returns those whose deferred credential arrived in this
+  /// run of the app and that the list hadn't pointed out yet, so it points each out once. Kept here, not in a screen,
+  /// so none is lost while the list isn't on screen or is built again after a lock. Not stored: a new launch points
+  /// out nothing.
+  func markIssuedDeferredDocumentsSeen(_ ids: Set<String>) async -> Set<String>
 
   func refreshUsageCounters() async throws
   func getIssuerRegistration(for offer: OfferedIssuanceModel) async -> IssuerRegistration?
@@ -177,9 +191,12 @@ final actor WalletKitControllerImpl: WalletKitController {
   private let revokedDocumentStorageController: any RevokedDocumentStorageController
   private let failedReIssuedDocStorageController: any FailedReIssuedDocStorageController
   private let statusRefreshFailureStorageController: any StatusRefreshFailureStorageController
+  private let deferredIssuanceStorageController: any DeferredIssuanceStorageController
   private let storageEraseController: StorageEraseController
   private let documentRegistrationManager: DocumentRegistrationManager
   private let prefsController: PrefsController
+  /// Internal so tests can hold a deferred request open.
+  let deferredRequestGate = DeferredRequestGate()
   private let registrationCheckProvider: RegistrationCheckProvider
   private let registrationRunner = SerialCheckRunner()
   /// "Check Registration Certificates" as WalletKit was configured with it at launch; the setting applies after a
@@ -193,6 +210,10 @@ final actor WalletKitControllerImpl: WalletKitController {
   /// The link WalletKit got for each offer resolved, by the link the wallet received, so the issuance that follows
   /// uses the offer that was checked, also when another offer was opened in between.
   private var resolvedOfferLinks: [String: String] = [:]
+  /// See `markIssuedDeferredDocumentsSeen(_:)`. Leaves with the document when it is deleted.
+  private var unseenIssuedDeferredDocumentIds: Set<String> = []
+  /// See `fetchFailedDeferredDocumentIds()`. Leaves with the document when it is deleted.
+  private var failedDeferredRequestIds: Set<String> = []
 
   init(
     walletKitConfig: WalletKitConfig,
@@ -204,6 +225,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     revokedDocumentStorageController: any RevokedDocumentStorageController,
     failedReIssuedDocStorageController: any FailedReIssuedDocStorageController,
     statusRefreshFailureStorageController: any StatusRefreshFailureStorageController,
+    deferredIssuanceStorageController: any DeferredIssuanceStorageController,
     storageEraseController: StorageEraseController,
     networkSessionProvider: NetworkSessionProvider,
     documentRegistrationManager: DocumentRegistrationManager,
@@ -219,6 +241,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     self.revokedDocumentStorageController = revokedDocumentStorageController
     self.failedReIssuedDocStorageController = failedReIssuedDocStorageController
     self.statusRefreshFailureStorageController = statusRefreshFailureStorageController
+    self.deferredIssuanceStorageController = deferredIssuanceStorageController
     self.storageEraseController = storageEraseController
     self.documentRegistrationManager = documentRegistrationManager
     self.prefsController = prefsController
@@ -340,54 +363,88 @@ final actor WalletKitControllerImpl: WalletKitController {
     docTypes: [OfferedDocModel],
     txCodeValue: String?
   ) async throws -> IssuanceResult {
-    let offerLink: String
-    if let resolvedOfferLink = resolvedOfferLinks[offerUri] {
-      offerLink = resolvedOfferLink
-    } else {
-      offerLink = try await checkedOfferLink(for: offerUri)
-    }
-    let docTypes = docTypes.map { docType in
-      let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(for: docType.documentTypeIdentifier)
-      return docType.copy(
-        credentialOptions: credentialOptions,
-        keyOptions: walletKitConfig.keyOptions
-      )
-    }
+    try await duringIssuance {
+      let offerLink: String
+      if let resolvedOfferLink = resolvedOfferLinks[offerUri] {
+        offerLink = resolvedOfferLink
+      } else {
+        offerLink = try await checkedOfferLink(for: offerUri)
+      }
+      let docTypes = docTypes.map { docType in
+        let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(
+          for: docType.documentTypeIdentifier
+        )
+        return docType.copy(
+          credentialOptions: credentialOptions,
+          keyOptions: walletKitConfig.keyOptions
+        )
+      }
 
-    let response = try await wallet.issueDocumentsByOfferUrl(
-      offerUri: offerLink,
-      docTypes: docTypes,
-      txCodeValue: txCodeValue
-    )
-    await reconcileRegistrations()
-    return IssuanceResult(
-      documents: response.documents,
-      issuerRegistration: makeIssuerRegistration(
-        policy: response.wrpIssuerPolicy,
-        warnings: response.wrpIssuerWarnings
+      let response = try await wallet.issueDocumentsByOfferUrl(
+        offerUri: offerLink,
+        docTypes: docTypes,
+        txCodeValue: txCodeValue
       )
-    )
+      await scheduleDeferredRequests(for: response.documents)
+      await reconcileRegistrations()
+      return IssuanceResult(
+        documents: response.documents,
+        issuerRegistration: makeIssuerRegistration(
+          policy: response.wrpIssuerPolicy,
+          warnings: response.wrpIssuerWarnings
+        )
+      )
+    }
   }
 
   /// Deletes every document and updates the Digital Credential API registrations, also when the deletion fails
   /// part way, so a document that is gone is no longer offered.
   /// With the documents go every document's records (`deleteRecords(of:)`); the history stays.
+  /// Waits for any deferred request under way first, so no credential arrives after the documents are gone.
   func clearAllDocuments() async throws {
+    await deferredRequestGate.beginClearing()
+    do {
+      try await clearAllStoredDocuments()
+      await deferredRequestGate.endClearing()
+    } catch {
+      await deferredRequestGate.endClearing()
+      throw error
+    }
+  }
+
+  /// Waits for a deferred request under way for the document first, so its credential can't bring it back.
+  func deleteDocument(with id: String, status: DocumentStatus) async throws {
+    await deferredRequestGate.beginDeletion(of: id)
+    do {
+      try await deleteStoredDocument(with: id, status: statusToDelete(id: id, requested: status))
+      await deferredRequestGate.endDeletion(of: id)
+    } catch {
+      await deferredRequestGate.endDeletion(of: id)
+      throw error
+    }
+  }
+
+  private func clearAllStoredDocuments() async throws {
     do {
       try await wallet.deleteAllDocuments()
     } catch {
       await reconcileRegistrations()
       throw error
     }
+    unseenIssuedDeferredDocumentIds.removeAll()
+    failedDeferredRequestIds.removeAll()
     try? await revokedDocumentStorageController.deleteAll()
     try? await statusRefreshFailureStorageController.deleteAll()
     try? await bookmarkStorageController.deleteAll()
     try? await failedReIssuedDocStorageController.deleteAll()
+    try? await deferredIssuanceStorageController.deleteAll()
     await reconcileRegistrations()
   }
 
-  func deleteDocument(with id: String, status: DocumentStatus) async throws {
+  private func deleteStoredDocument(with id: String, status: DocumentStatus) async throws {
     try await wallet.deleteDocument(id: id, status: status)
+    unseenIssuedDeferredDocumentIds.remove(id)
+    failedDeferredRequestIds.remove(id)
     do {
       try await deleteRecords(of: id)
     } catch {
@@ -395,6 +452,18 @@ final actor WalletKitControllerImpl: WalletKitController {
       throw error
     }
     await reconcileRegistrations()
+  }
+
+  /// A deferred document whose credential arrived while its deletion waited is now issued, under the same id.
+  private func statusToDelete(id: String, requested: DocumentStatus) -> DocumentStatus {
+    guard
+      requested == .deferred,
+      !fetchDeferredDocuments().contains(where: { $0.id == id }),
+      fetchDocument(with: id) != nil
+    else {
+      return requested
+    }
+    return .issued
   }
 
   func loadDocuments() async throws {
@@ -484,26 +553,29 @@ final actor WalletKitControllerImpl: WalletKitController {
     identifiers: [String],
     docTypeIdentifier: DocumentTypeIdentifier
   ) async throws -> IssuanceResult {
-    let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(for: docTypeIdentifier)
+    try await duringIssuance {
+      let credentialOptions = walletKitConfig.documentIssuanceConfig.credentialOptions(for: docTypeIdentifier)
 
-    let response = try await wallet.issueDocuments(
-      issuerName: issuerId,
-      configuration: identifiers.map {
-        DocumentIssuanceConfiguration(
-          docTypeIdentifier: .identifier($0),
-          credentialOptions: credentialOptions,
-          keyOptions: walletKitConfig.keyOptions
-        )
-      }
-    )
-    await reconcileRegistrations()
-    return IssuanceResult(
-      documents: response.documents,
-      issuerRegistration: makeIssuerRegistration(
-        policy: response.wrpIssuerPolicy,
-        warnings: response.wrpIssuerWarnings
+      let response = try await wallet.issueDocuments(
+        issuerName: issuerId,
+        configuration: identifiers.map {
+          DocumentIssuanceConfiguration(
+            docTypeIdentifier: .identifier($0),
+            credentialOptions: credentialOptions,
+            keyOptions: walletKitConfig.keyOptions
+          )
+        }
       )
-    )
+      await scheduleDeferredRequests(for: response.documents)
+      await reconcileRegistrations()
+      return IssuanceResult(
+        documents: response.documents,
+        issuerRegistration: makeIssuerRegistration(
+          policy: response.wrpIssuerPolicy,
+          warnings: response.wrpIssuerWarnings
+        )
+      )
+    }
   }
 
   private func makeIssuerRegistration(
@@ -550,62 +622,131 @@ final actor WalletKitControllerImpl: WalletKitController {
   /// A renewed document keeps the original's bookmark, as on Android. A bookmark that cannot be copied
   /// does not fail the renewal.
   func reIssueDocument(identifier: String, isBackgroundOperation: Bool) async throws -> WalletStorage.Document {
-    try await refuseReIssueIfBlocked(identifier)
-    let document = fetchDocument(with: identifier)
-    let isBookmarked = await isDocumentBookmarked(with: identifier)
+    try await duringIssuance {
+      try await refuseReIssueIfBlocked(identifier)
+      let document = fetchDocument(with: identifier)
+      let isBookmarked = await isDocumentBookmarked(with: identifier)
 
-    if isRegistrationChecked {
-      guard
-        let issuerId = document?.credentialIssuerIdentifier,
-        let configId = document?.configurationIdentifier
-      else {
-        throw RegistrationRefusedError()
+      if isRegistrationChecked {
+        guard
+          let issuerId = document?.credentialIssuerIdentifier,
+          let configId = document?.configurationIdentifier
+        else {
+          throw RegistrationRefusedError()
+        }
+        if case .blocked = try await getIssuerRegistration(issuerId: issuerId, configIds: [configId]) {
+          throw RegistrationRefusedError()
+        }
       }
-      if case .blocked = try await getIssuerRegistration(issuerId: issuerId, configIds: [configId]) {
-        throw RegistrationRefusedError()
-      }
-    }
 
-    let credentialOptions = await resolveCredentialOptions(
-      documentId: identifier,
-      documentTypeIdentifier: document?.documentTypeIdentifier
-    )
-    let response = try await wallet.reissueDocument(
-      documentId: identifier,
-      credentialOptions: credentialOptions,
-      keyOptions: walletKitConfig.keyOptions,
-      backgroundOnly: isBackgroundOperation
-    )
-    guard let document = response.documents.first else {
-      throw WalletCoreError.unableToIssueAndStore
+      let credentialOptions = await resolveCredentialOptions(
+        documentId: identifier,
+        documentTypeIdentifier: document?.documentTypeIdentifier
+      )
+      let response = try await wallet.reissueDocument(
+        documentId: identifier,
+        credentialOptions: credentialOptions,
+        keyOptions: walletKitConfig.keyOptions,
+        backgroundOnly: isBackgroundOperation
+      )
+      guard let document = response.documents.first else {
+        throw WalletCoreError.unableToIssueAndStore
+      }
+      await bookmarkStorageController.carryBookmark(wasBookmarked: isBookmarked, to: response.documents.map(\.id))
+      if !response.documents.contains(where: { $0.id == identifier }) {
+        try? await deleteRecords(of: identifier, keepingRevocationRecord: true)
+      }
+      await scheduleDeferredRequests(for: response.documents)
+      await reconcileRegistrations()
+      return document
     }
-    await bookmarkStorageController.carryBookmark(wasBookmarked: isBookmarked, to: response.documents.map(\.id))
-    if !response.documents.contains(where: { $0.id == identifier }) {
-      try? await deleteRecords(of: identifier, keepingRevocationRecord: true)
-    }
-    await reconcileRegistrations()
-    return document
   }
 
+  /// Records whether the request failed (`fetchFailedDeferredDocumentIds()`). A deletion, an issuance holding the
+  /// request back, a cancelled check or a failure of the wallet itself (`DeferredRequestFailure.local`) isn't a failed
+  /// request.
   func requestDeferredIssuance(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable {
+    do {
+      let document = try await requestDeferredIssuanceInGate(with: doc)
+      failedDeferredRequestIds.remove(doc.id)
+      return document
+    } catch {
+      if !(error is DeferredDocumentDeletedError), !(error is DeferredRequestHeldError), !Task.isCancelled,
+         DeferredRequestFailure(error) != .local {
+        failedDeferredRequestIds.insert(doc.id)
+      }
+      throw error
+    }
+  }
+
+  private func requestDeferredIssuanceInGate(with doc: WalletStorage.Document) async throws -> any DocClaimsDecodable {
+    guard fetchDeferredDocuments().contains(where: { $0.id == doc.id }) else {
+      throw DeferredDocumentDeletedError()
+    }
     guard
       let metadata = DocMetadata(from: doc.metadata)
     else {
       throw WalletCoreError.missingMetadata
     }
+    guard await deferredRequestGate.beginRequest(for: doc.id) else {
+      if await deferredRequestGate.isIssuing {
+        throw DeferredRequestHeldError()
+      }
+      throw DeferredDocumentDeletedError()
+    }
+    guard fetchDeferredDocuments().contains(where: { $0.id == doc.id }) else {
+      await deferredRequestGate.endRequest(for: doc.id)
+      throw DeferredDocumentDeletedError()
+    }
+    do {
+      let document = try await requestDeferredCredential(for: doc, metadata: metadata)
+      await deferredRequestGate.endRequest(for: doc.id)
+      return document
+    } catch {
+      await deferredRequestGate.endRequest(for: doc.id)
+      throw error
+    }
+  }
+
+  /// Runs while the gate holds a deletion of the document back. A deletion that started meanwhile wins: the
+  /// answer is dropped, and the deletion then removes the document, issued or not.
+  private func requestDeferredCredential(
+    for doc: WalletStorage.Document,
+    metadata: DocMetadata
+  ) async throws -> any DocClaimsDecodable {
+    let lastInterval = try await lastDeferredInterval(of: doc)
+    try await postponeNextDeferredRequest(for: doc.id, lastInterval: lastInterval)
     let credentialOptions = await resolveCredentialOptions(
       documentId: doc.id,
       documentTypeIdentifier: doc.documentTypeIdentifier
     )
-    let result = try await wallet.requestDeferredIssuance(
-      issuerName: metadata.credentialIssuerIdentifier,
-      deferredDoc: doc,
-      credentialOptions: credentialOptions,
-      keyOptions: walletKitConfig.keyOptions
-    )
+    let result: WalletStorage.Document
+    do {
+      result = try await wallet.requestDeferredIssuance(
+        issuerName: metadata.credentialIssuerIdentifier,
+        deferredDoc: doc,
+        credentialOptions: credentialOptions,
+        keyOptions: walletKitConfig.keyOptions
+      )
+    } catch {
+      if await deferredRequestGate.isDeleting(doc.id) {
+        throw DeferredDocumentDeletedError()
+      }
+      throw error
+    }
+    if await deferredRequestGate.isDeleting(doc.id) {
+      throw DeferredDocumentDeletedError()
+    }
     if result.isDeferred {
+      try await scheduleNextDeferredRequest(
+        for: doc.id,
+        interval: result.deferredIssuanceInterval,
+        lastInterval: lastInterval
+      )
       return result.transformToDeferredDecodable()
     } else if let issued = fetchDocument(with: result.id) {
+      try? await deferredIssuanceStorageController.delete(doc.id)
+      recordUnseenIssuedDeferredDocument(result.id)
       if result.id != doc.id {
         try? await deleteRecords(of: doc.id)
       }
@@ -616,10 +757,84 @@ final actor WalletKitControllerImpl: WalletKitController {
     }
   }
 
-  /// Deletes the records the wallet keeps for a document: its revocation record, refresh failure, bookmark and failed
-  /// re-issue, as Android's `deleteDocumentRecords`; its history stays, a legal record. After a re-issue the
-  /// original's revocation record stays until the check after the re-issue has read it.
+  /// Adds an entry for each deferred document WalletKit returned. A failed write doesn't fail
+  /// the issuance; the document is already stored.
+  /// Also wakes the deferred work manager, which adds the entry itself if the write failed.
+  private func scheduleDeferredRequests(for documents: [WalletStorage.Document]) async {
+    let entries = deferredIssuanceSchedule.entries(for: documents, at: Date())
+    guard !entries.isEmpty else { return }
+    try? await deferredIssuanceStorageController.store(entries)
+    NotificationCenter.default.post(name: .deferredIssuanceEntered, object: nil)
+  }
+
+  /// The entry's last interval, or the document's own when the entry has none or there is no entry yet. Any other read
+  /// error throws `DeferredEntryStorageError`.
+  private func lastDeferredInterval(of doc: WalletStorage.Document) async throws -> TimeInterval? {
+    let entry: DeferredIssuance?
+    do {
+      entry = try await deferredIssuanceStorageController.retrieve(doc.id)
+    } catch logic_storage.StorageError.itemNotFound {
+      entry = nil
+    } catch {
+      throw DeferredEntryStorageError()
+    }
+    return entry?.interval ?? doc.deferredIssuanceInterval
+  }
+
+  /// Runs inside the request gate, so a deletion waiting for this request removes the entry afterwards and none is
+  /// left without its document. The answer then replaces the entry, or its deletion removes it. Nothing is asked if
+  /// it can't be written.
+  private func postponeNextDeferredRequest(for id: String, lastInterval: TimeInterval?) async throws {
+    try await writeDeferredEntry(
+      deferredIssuanceSchedule.beforeRequest(identifier: id, lastInterval: lastInterval, at: Date())
+    )
+  }
+
+  /// WalletKit doesn't persist the interval of a "still pending" response, so the wallet keeps it in its own entry.
+  /// When the answer has none, `lastInterval` is waited.
+  private func scheduleNextDeferredRequest(
+    for id: String,
+    interval: TimeInterval?,
+    lastInterval: TimeInterval?
+  ) async throws {
+    try await writeDeferredEntry(
+      deferredIssuanceSchedule.stillPending(identifier: id, interval: interval, lastInterval: lastInterval, at: Date())
+    )
+  }
+
+  private func writeDeferredEntry(_ entry: DeferredIssuance) async throws {
+    do {
+      try await deferredIssuanceStorageController.update(entry)
+    } catch {
+      throw DeferredEntryStorageError()
+    }
+  }
+
+  /// Holds the deferred requests back while `work` runs, once the one under way has ended
+  /// (`DeferredRequestGate.beginIssuance()`): WalletKit keeps one issuance request per issuer, which a deferred
+  /// request running at the same time would share.
+  private func duringIssuance<T>(_ work: () async throws -> T) async throws -> T {
+    await deferredRequestGate.beginIssuance()
+    do {
+      let result = try await work()
+      await deferredRequestGate.endIssuance()
+      return result
+    } catch {
+      await deferredRequestGate.endIssuance()
+      throw error
+    }
+  }
+
+  private var deferredIssuanceSchedule: DeferredIssuanceSchedule {
+    DeferredIssuanceSchedule(config: walletKitConfig.deferredIssuanceConfig)
+  }
+
+  /// Deletes the records the wallet keeps for a document: its deferred request, revocation record, refresh failure,
+  /// bookmark and failed re-issue, as Android's `deleteDocumentRecords` does for the records it keeps; its history
+  /// stays, a legal record. The deferred request goes first, so no request entry outlives a deletion that fails part
+  /// way. After a re-issue the original's revocation record stays until the check after the re-issue has read it.
   private func deleteRecords(of id: String, keepingRevocationRecord: Bool = false) async throws {
+    try await deferredIssuanceStorageController.delete(id)
     if !keepingRevocationRecord {
       try await revokedDocumentStorageController.delete(id)
     }
@@ -652,24 +867,27 @@ final actor WalletKitControllerImpl: WalletKitController {
   }
 
   func resumePendingIssuance(pendingDoc: WalletStorage.Document, webUrl: URL?) async throws -> WalletStorage.Document {
-    guard
-      let metadata = DocMetadata(from: pendingDoc.metadata)
-    else {
-      throw WalletCoreError.missingMetadata
+    try await duringIssuance {
+      guard
+        let metadata = DocMetadata(from: pendingDoc.metadata)
+      else {
+        throw WalletCoreError.missingMetadata
+      }
+      let credentialOptions = await resolveCredentialOptions(
+        documentId: pendingDoc.id,
+        documentTypeIdentifier: pendingDoc.documentTypeIdentifier
+      )
+      let document = try await wallet.resumePendingIssuance(
+        issuerName: metadata.credentialIssuerIdentifier,
+        pendingDoc: pendingDoc,
+        webUrl: webUrl,
+        credentialOptions: credentialOptions,
+        keyOptions: walletKitConfig.keyOptions
+      )
+      await scheduleDeferredRequests(for: [document])
+      await reconcileRegistrations()
+      return document
     }
-    let credentialOptions = await resolveCredentialOptions(
-      documentId: pendingDoc.id,
-      documentTypeIdentifier: pendingDoc.documentTypeIdentifier
-    )
-    let document = try await wallet.resumePendingIssuance(
-      issuerName: metadata.credentialIssuerIdentifier,
-      pendingDoc: pendingDoc,
-      webUrl: webUrl,
-      credentialOptions: credentialOptions,
-      keyOptions: walletKitConfig.keyOptions
-    )
-    await reconcileRegistrations()
-    return document
   }
 
   func storeDynamicIssuancePendingUrl(with url: URL) {
@@ -925,6 +1143,7 @@ final actor WalletKitControllerImpl: WalletKitController {
     try await revokedDocumentStorageController.deleteAll()
     try await failedReIssuedDocStorageController.deleteAll()
     try await statusRefreshFailureStorageController.deleteAll()
+    try await deferredIssuanceStorageController.deleteAll()
     try await storageEraseController.eraseStore()
   }
 
@@ -1065,6 +1284,23 @@ final actor WalletKitControllerImpl: WalletKitController {
 
   func hasReIssuanceFailure(with id: String) async -> Bool {
     (try? await failedReIssuedDocStorageController.retrieve(id)) != nil
+  }
+
+  func fetchFailedDeferredDocumentIds() async -> Set<String> {
+    let entries = (try? await deferredIssuanceStorageController.retrieveAllEntries()) ?? []
+    let stoppedIds = entries.filter { $0.state == .failed || $0.state == .untrusted }.map(\.identifier)
+    return Set(stoppedIds).union(failedDeferredRequestIds)
+  }
+
+  func markIssuedDeferredDocumentsSeen(_ ids: Set<String>) async -> Set<String> {
+    let unseen = unseenIssuedDeferredDocumentIds.intersection(ids)
+    unseenIssuedDeferredDocumentIds.subtract(unseen)
+    return unseen
+  }
+
+  /// Internal so tests can add one without a deferred request.
+  func recordUnseenIssuedDeferredDocument(_ id: String) {
+    unseenIssuedDeferredDocumentIds.insert(id)
   }
 
   func refreshUsageCounters() async throws {

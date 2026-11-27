@@ -156,20 +156,6 @@ private extension TestTransactionLogStorageController {
   }
 }
 
-private struct StubStorageConfig: StorageConfig {
-  let databaseName = "test"
-  let databaseFolder = "Test"
-  let databaseExtension = "store"
-  var folder: URL?
-  var schemas: Schema { StorageConfigImpl().schemas }
-  var storeURL: URL {
-    (folder ?? FileManager.default.temporaryDirectory).appendingPathComponent("wallet.store")
-  }
-  var modelConfiguration: ModelConfiguration {
-    folder == nil ? ModelConfiguration(isStoredInMemoryOnly: true) : ModelConfiguration(url: storeURL)
-  }
-}
-
 private final class StubPrefsController: PrefsController {
   private let values = OSAllocatedUnfairLock<[String: String]>(initialState: [:])
 

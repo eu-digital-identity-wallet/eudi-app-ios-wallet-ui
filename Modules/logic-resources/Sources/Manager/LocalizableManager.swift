@@ -336,10 +336,8 @@ final class LocalizableManager: LocalizableManagerType {
       bundle.localizedString(forKey: "issuance_failed")
     case .pending:
       bundle.localizedString(forKey: "pending")
-    case .deferredDocumentsIssuedModalTitle:
-      bundle.localizedString(forKey: "deferred_document_issued_modal_title")
-    case .defferedDocumentsIssuedModalCaption:
-      bundle.localizedString(forKey: "deferred_document_issued_modal_caption")
+    case .deferredDocumentsIssuedAnnouncement(let args):
+      bundle.localizedStringWithArguments(forKey: "deferred_documents_issued_announcement", arguments: args)
     case .retrieveLogs:
       bundle.localizedString(forKey: "retrieve_logs")
     case .qrScanInformativeText:

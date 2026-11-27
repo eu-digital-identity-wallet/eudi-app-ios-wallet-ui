@@ -573,24 +573,13 @@
         }
       }
     },
-    "deferred_document_issued_modal_caption" : {
+    "deferred_documents_issued_announcement" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New documents have been added to your wallet."
-          }
-        }
-      }
-    },
-    "deferred_document_issued_modal_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Documents issued"
+            "value" : "Issued to your wallet: %@"
           }
         }
       }

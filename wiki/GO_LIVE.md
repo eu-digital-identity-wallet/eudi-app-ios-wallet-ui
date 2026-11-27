@@ -40,6 +40,7 @@ certification or a replacement for a full security assessment.
 * [Document Issuance Rules](#document-issuance-rules)
 * [Document Categories](#document-categories)
 * [Revocation And Status Checking](#revocation-and-status-checking)
+* [Deferred Issuance](#deferred-issuance)
 * [RQES Configuration](#rqes-configuration)
 * [Trust Mark Deployment](#trust-mark-deployment)
 * [ConfigLogic](#configlogic)
@@ -583,6 +584,7 @@ protocol WalletKitConfig: Sendable {
   var transactionLogger: TransactionLogger { get }
   var revocationIntervalSeconds: TimeInterval { get }
   var workerStopTimeoutSeconds: TimeInterval { get }
+  var deferredIssuanceConfig: DeferredIssuanceConfig { get }
   var documentIssuanceConfig: DocumentIssuanceConfig { get }
   var trustMarkSource: TrustMarkSource { get }
 }
@@ -1494,8 +1496,9 @@ Current code configures `documentIssuanceConfig` with:
 * Background reissuance rule (`reIssuanceBackgroundRule`):
   * `backgroundIntervalSeconds: 300`
 
-The revocation and re-issuance workers start when the dashboard first opens, after login or PIN
-creation, never at launch; see [Revocation And Status Checking](#revocation-and-status-checking).
+The revocation, re-issuance and deferred issuance workers start when the dashboard first opens, after login or PIN
+creation, never at launch; see [Revocation And Status Checking](#revocation-and-status-checking) and
+[Deferred Issuance](#deferred-issuance).
 
 `.rotateUse` with `batchSize: 1`, the default for every document type other than the PID, gives a document one
 credential and one device key for its whole validity. Every presentation of it, to every verifier, carries the same
@@ -1548,7 +1551,8 @@ The revocation and re-issuance workers start when the dashboard first opens, aft
 creation, and the documents are loaded at the same point. Start-up loads none, and a presentation link
 opened before login is kept without starting its session (see
 [Deep Links And Redirect URIs](#deep-links-and-redirect-uris)). The first revocation check
-runs 30 seconds after the workers start, and later checks follow every `revocationIntervalSeconds`.
+runs 30 seconds after the workers start, and later checks follow every `revocationIntervalSeconds`. The deferred
+issuance work manager starts with them (see [Deferred Issuance](#deferred-issuance)).
 WalletKit keeps each status list it has verified, per address, doc type and trust configuration and while the
 app runs, until `ttl` after the fetch or the list's `exp`, whichever comes first; a list with neither is fetched at
 every check. A check within that time reads the kept list, so a change of status shows once the list
@@ -1604,14 +1608,14 @@ The rules are the Android wallet's (`RevocationRecordUpdate`, Android's `revocat
   block. If the original is blocked while a re-issue is already under way (the issuer's sign-in), the
   re-issue still completes, as the issuer chose to issue; the revocation check then runs at once
   (`WalletWorkScheduler.scheduleRevocationCheck(afterReIssueOf:)`), so the new copy's own status is read without waiting
-  for the interval. The background worker does the same after each renewal, and so does the documents tab when a
-  deferred re-issuance delivers its credential. The check runs only if the original had a record, and not while the
-  checks are stopped. The Android wallet applies the same rules.
+  for the interval. The background worker does the same after each renewal, and so does the deferred issuance work
+  manager when a deferred re-issuance delivers its credential. The check runs only if the original had a record, and
+  not while the checks are stopped. The Android wallet applies the same rules.
 * A renewed document, manual or background, keeps the original's bookmark, as on Android.
-* Deleting a document deletes its revocation record, refresh failure, bookmark and failed re-issuance record
-  (`WalletKitControllerImpl.deleteRecords(of:)`, as Android's `deleteDocumentRecords`); its history stays. A
-  re-issued or deferred original loses its records too, but a re-issued original keeps its revocation record until
-  the check after the re-issue has read it.
+* Deleting a document deletes its revocation record, refresh failure, bookmark, failed re-issuance record and deferred
+  issuance entry (`WalletKitControllerImpl.deleteRecords(of:)`; Android's `deleteDocumentRecords` deletes the records
+  it keeps); its history stays. A re-issued or deferred original loses its records too, but a re-issued original
+  keeps its revocation record until the check after the re-issue has read it.
 * A background re-issuance that cannot renew a document leaves a failed re-issuance record
   (`FailedReIssuedDocument`): the document's issuer card opens by itself and says "The wallet could not
   renew this document automatically. Use Reissue document to try again." Each background round replaces
@@ -1631,6 +1635,82 @@ Production decisions:
 * Define behavior when status endpoints are unavailable.
 * Define UX for revoked, suspended, expired, or unknown-status documents.
 * Include revocation and status checking in test plans.
+
+## Deferred Issuance
+
+Current code:
+
+```swift
+var deferredIssuanceConfig: DeferredIssuanceConfig {
+  DeferredIssuanceConfig(initialPollingDelaySeconds: 5, failureRetryDelaySeconds: 30)
+}
+```
+
+When an issuer defers a credential, WalletKit stores the document as deferred and the wallet keeps an entry for it
+in the app's SwiftData store (`SDDeferredIssuance`): when to ask next, the issuer's last interval and the entry's
+state. The deferred issuance work manager (`DeferredIssuanceWorkManager`) asks for each document when its entry is
+due, one at a time and the one that fell due earliest first. It starts with the other workers when the dashboard
+first opens after login, and asks only while the wallet is unlocked and in front (`WalletSessionStatusProvider`, kept
+up to date by `SessionLockController`); a request already sent when the wallet locks finishes, and the next one waits
+until the wallet is active again. Nothing is requested while the app is closed: documents that fell due meanwhile are
+asked for when the wallet is next unlocked. Only the factory reset stops it (`WalletWorkScheduler.stop()`).
+
+Timing (`DeferredIssuanceSchedule`):
+
+* The interval the issuer sends, when it defers a credential or answers that it is still pending, is waited in full
+  plus one second, so an issuer that rounds the time left down is not asked a moment too early.
+* When the issuer sends no interval, or 0, the last valid interval is waited, or `initialPollingDelaySeconds` if
+  there is none. There is no lower or upper limit; a long wait is slept an hour at a time, which only reads the
+  entries again.
+* The next attempt is written before each request, so an app closed before the answer arrives does not ask again at
+  once when it opens. If it cannot be written, nothing is asked.
+
+How a failed request is handled (`DeferredRequestFailure`):
+
+* A failed request, a refusal by the issuer, an HTTP error, a lost connection or an answer WalletKit cannot read, is
+  asked again after `failureRetryDelaySeconds` or the issuer's last interval, whichever is longer, with no limit,
+  unless one of the cases below applies. The documents tab shows the document as "Issuance failed" until an answer
+  that it is still pending, or the credential, clears it. This is kept in memory only: after a new launch the document
+  shows as pending until a request fails again.
+* Issuer metadata that cannot be verified (unsigned or untrusted signed metadata) is asked again in the same way. It
+  fails before the issuer is asked, and an unreachable trust list, a wrong device clock or stale signed metadata
+  fail the same way as an untrusted issuer.
+* An issuer, registration or credential the wallet cannot trust (an untrusted mdoc chain or SD-JWT `x5c`, a trust
+  error WalletKit raises on the credential, an invalid or refused registration certificate) stops the requests. The
+  wallet never deletes the document itself: it stays in the documents tab as "Issuance failed", also after a new
+  launch, until the user deletes it.
+* A transaction the issuer no longer knows (`invalid_transaction_id`: never issued, or already used) is stored as
+  failed and no longer asked for; the document stays as "Issuance failed" until the user deletes it. An access token
+  the issuer rejects (`invalid_token`) is asked again like any other failure: WalletKit renews the token once its own
+  clock says it has expired.
+* While an issuance runs (adding a document, an offer, a resumed or a re-issued document), no deferred request
+  starts, and the issuance waits for the one under way: WalletKit keeps one issuance request per issuer
+  (`DeferredRequestGate`). A held document is asked again after `failureRetryDelaySeconds`, a wait kept in memory
+  for this run of the app.
+* A failure of the wallet itself (missing document metadata, an entry that cannot be read or written around the
+  request, an issued credential that cannot be read back) leaves the entry as it was, does not show the document as
+  failed, and asks again after `failureRetryDelaySeconds` while the app runs.
+
+Deleting a deferred document waits for the request under way for it (`DeferredRequestGate`): a credential that
+arrives meanwhile is dropped and the document is removed. Deleting a document removes its entry. When a deferred
+re-issue delivers its credential, the revocation check runs at once (see
+[Revocation And Status Checking](#revocation-and-status-checking)).
+
+The documents tab highlights a document whose deferred credential arrived, and announces it to VoiceOver ("Issued
+to your wallet: …"), the first time the list shows it, also when the tab was not open, after a lock or while a filter
+hid it (`WalletKitController.markIssuedDeferredDocumentsSeen`); nothing is pointed out while the tab is hidden. The
+deletion dialog of a deferred document closes once the document is issued, and the list is not reloaded while the
+filters are open.
+
+Production decisions:
+
+* Agree `initialPollingDelaySeconds` and `failureRetryDelaySeconds` with the issuers' capacity; both must be above 0,
+  and short values increase the load on the deferred credential endpoint.
+* Confirm the issuers send an `interval` with deferred and pending answers.
+* Decide how users are told about a deferred document that can no longer be issued; the reference app shows it as
+  failed and leaves its deletion to the user.
+* Include deferred issuance in test plans: pending answers, issuance, failures, an untrusted issuer, an expired
+  access token, and deletion while a request is under way.
 
 ## RQES Configuration
 
@@ -2144,17 +2224,18 @@ Production rules:
 Settings offer "Reset wallet", as on Android. A confirmation lists what will be deleted, the PIN or biometrics
 confirm it, and a screen runs the reset (`WalletResetControllerImpl`, `logic-authentication`). In this order:
 
-1. The background checks stop (`WalletWorkScheduler.stop()`). A start of the checks already under way finishes
-   first and the checks are then stopped, as on Android. The reset waits for that start and for a check under way
-   for at most `WalletKitConfig.workerStopTimeoutSeconds` (30 s) in all, and fails without deleting anything if a
-   check is still running then, so a re-issuance cannot store a document halfway through. Once the stop has begun
-   no extra revocation check runs, and the checks cannot be scheduled again while the reset runs.
+1. The background checks and the deferred credential requests stop (`WalletWorkScheduler.stop()`). A start of the
+   checks already under way finishes first and the checks are then stopped, as on Android. The reset waits for that
+   start and for a check under way for at most `WalletKitConfig.workerStopTimeoutSeconds` (30 s) in all, and fails
+   without deleting anything if a check is still running then, so a re-issuance cannot store a document halfway
+   through. Once the stop has begun no extra revocation check runs, and the checks cannot be scheduled again while the
+   reset runs.
 2. WalletKit deletes every document, issued, deferred and pending, in up to two passes, and logs each deletion
    before it returns; the Digital Credential API registrations are updated with it, also when a deletion
    fails. The reset fails if the keychain still holds a document afterwards.
-3. The transaction history, then the bookmarks, revocation records, re-issuance failures and status refresh
-   failures; then the SwiftData store is erased and opened empty, so no deleted row stays readable in its
-   write-ahead log.
+3. The transaction history, then the bookmarks, revocation records, re-issuance failures, status refresh failures
+   and deferred issuance entries; then the SwiftData store is erased and opened empty, so no deleted row stays
+   readable in its write-ahead log.
 4. The keychain: the app's keychain service, with the PIN salt, hash and lockout state and the biometric key, and
    every generic-password and key item in the wallet's access group: document storage, the documents' keys that
    WalletKit's secure areas keep there (`KeyChainSecureKeyStorage`), those of deferred documents included, and

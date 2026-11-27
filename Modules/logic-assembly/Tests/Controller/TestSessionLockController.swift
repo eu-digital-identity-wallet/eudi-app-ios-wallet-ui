@@ -17,6 +17,7 @@ import XCTest
 import os
 import logic_business
 @testable import logic_assembly
+@testable import logic_core
 @testable import logic_authentication
 @testable import logic_ui
 @testable import logic_test
@@ -27,7 +28,9 @@ final class TestSessionLockController: EudiTest {
   private var routerHost: MockRouterHost!
   private var userInteractionController: MockUserInteractionController!
   private var walletKitController: MockWalletKitController!
+  private var sessionStatusProvider: MockWalletSessionStatusProvider!
   private var calls: RecordingCallLog!
+  private var statusUpdates: RecordingCallLog!
 
   override func setUp() {
     super.setUp()
@@ -35,8 +38,11 @@ final class TestSessionLockController: EudiTest {
     routerHost = MockRouterHost()
     userInteractionController = MockUserInteractionController()
     walletKitController = MockWalletKitController()
+    sessionStatusProvider = MockWalletSessionStatusProvider()
     calls = RecordingCallLog()
+    statusUpdates = RecordingCallLog()
     let calls = calls!
+    let statusUpdates = statusUpdates!
     stub(sessionController) { mock in
       when(mock.setCovered(any())).then { calls.record("setCovered(\($0))") }
       when(mock.recordBackground(isProtectedFlow: any())).then { calls.record("recordBackground(\($0))") }
@@ -54,6 +60,11 @@ final class TestSessionLockController: EudiTest {
     stub(walletKitController) { mock in
       when(mock.stopPresentation()).thenDoNothing()
     }
+    stub(sessionStatusProvider) { mock in
+      when(mock.update(isUnlocked: any(), isInForeground: any())).then {
+        statusUpdates.record("update(\($0), \($1))")
+      }
+    }
   }
 
   override func tearDown() {
@@ -61,6 +72,8 @@ final class TestSessionLockController: EudiTest {
     routerHost = nil
     userInteractionController = nil
     walletKitController = nil
+    sessionStatusProvider = nil
+    statusUpdates = nil
     calls = nil
     super.tearDown()
   }
@@ -102,6 +115,80 @@ final class TestSessionLockController: EudiTest {
 
     // Then
     XCTAssertEqual(calls.entries, ["lockIfExpired", "requireLoginIfLocked"])
+  }
+
+  @MainActor
+  func testSceneDidEnterBackground_WhenTheWalletIsUnlocked_ThenItIsNoLongerActive() {
+    // Given
+    stub(sessionController) { mock in
+      when(mock.isUnlocked.get).thenReturn(true)
+    }
+    let controller = makeController()
+
+    // When
+    controller.sceneDidEnterBackground()
+
+    // Then
+    XCTAssertEqual(statusUpdates.entries, ["update(true, false)"])
+  }
+
+  @MainActor
+  func testSceneDidBecomeActive_WhenTheWalletIsUnlocked_ThenItIsInFrontOnlyOnceTheTimeoutIsApplied() {
+    // Given
+    let calls = calls!
+    stub(sessionController) { mock in
+      when(mock.isUnlocked.get).thenReturn(true)
+    }
+    stub(sessionStatusProvider) { mock in
+      when(mock.update(isUnlocked: any(), isInForeground: any())).then { calls.record("update(\($0), \($1))") }
+    }
+    let controller = makeController()
+    controller.sceneDidEnterBackground()
+
+    // When
+    controller.sceneDidBecomeActive()
+
+    // Then
+    XCTAssertEqual(
+      calls.entries,
+      [
+        "setCovered(false)",
+        "recordBackground(true)",
+        "update(true, false)",
+        "lockIfExpired",
+        "update(true, false)",
+        "requireLoginIfLocked",
+        "update(true, true)"
+      ]
+    )
+  }
+
+  @MainActor
+  func testSceneDidBecomeActive_WhenTheTimeoutLockedTheWallet_ThenItStaysInactive() {
+    // Given
+    let controller = makeController()
+    controller.sceneDidEnterBackground()
+
+    // When
+    controller.sceneDidBecomeActive()
+
+    // Then
+    XCTAssertEqual(statusUpdates.entries.last, "update(false, true)")
+  }
+
+  @MainActor
+  func testCheckIdle_WhenTheUserHasLoggedIn_ThenTheWalletIsActive() {
+    // Given
+    stub(sessionController) { mock in
+      when(mock.isUnlocked.get).thenReturn(true)
+    }
+    let controller = makeController()
+
+    // When
+    controller.checkIdle()
+
+    // Then
+    XCTAssertEqual(statusUpdates.entries, ["update(true, true)"])
   }
 
   @MainActor
@@ -292,6 +379,7 @@ private extension TestSessionLockController {
       routerHost: routerHost,
       userInteractionController: userInteractionController,
       walletKitController: walletKitController,
+      sessionStatusProvider: sessionStatusProvider,
       isCovered: { isCovered },
       idleCheckInterval: idleCheckInterval
     )

@@ -60,6 +60,15 @@ public extension DocumentTabUIModel.Value {
     case failed
     case revoked
     case suspended
+
+    public var isDeferred: Bool {
+      switch self {
+      case .pending, .failed:
+        true
+      case .issued, .revoked, .suspended:
+        false
+      }
+    }
   }
 }
 

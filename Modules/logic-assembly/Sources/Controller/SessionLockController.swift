@@ -19,7 +19,9 @@ import logic_authentication
 
 /// Drives the session lock from the app's scene, as the Android wallet's host activity does: it records
 /// the background, applies the timeout when the app returns and before a link is handled, checks the idle
-/// limit every second while the app is in front, and sends a locked wallet to login each time.
+/// limit every second while the app is in front, and sends a locked wallet to login each time. After each of these
+/// it tells `WalletSessionStatusProvider` whether the wallet is unlocked and in front, so the deferred requests run
+/// only then.
 public protocol SessionLockController {
   /// Starts counting interaction and the idle check. Call it when the app's window appears.
   @MainActor func start()
@@ -39,16 +41,20 @@ final class SessionLockControllerImpl: SessionLockController {
   private let routerHost: RouterHost
   private let userInteractionController: UserInteractionController
   private let walletKitController: WalletKitController
+  private let sessionStatusProvider: WalletSessionStatusProvider
   private let isCovered: @MainActor () -> Bool
   private let idleCheckInterval: TimeInterval
   @MainActor private var idleCheck: Task<Void, Never>?
   @MainActor private var wasUnlocked = false
+  /// The app starts in front; the scene reports a change only.
+  @MainActor private var isInForeground = true
 
   init(
     sessionController: SessionController,
     routerHost: RouterHost,
     userInteractionController: UserInteractionController,
     walletKitController: WalletKitController,
+    sessionStatusProvider: WalletSessionStatusProvider,
     isCovered: @escaping @MainActor () -> Bool,
     idleCheckInterval: TimeInterval = Constants.idleCheckInterval
   ) {
@@ -56,6 +62,7 @@ final class SessionLockControllerImpl: SessionLockController {
     self.routerHost = routerHost
     self.userInteractionController = userInteractionController
     self.walletKitController = walletKitController
+    self.sessionStatusProvider = sessionStatusProvider
     self.isCovered = isCovered
     self.idleCheckInterval = idleCheckInterval
   }
@@ -73,11 +80,16 @@ final class SessionLockControllerImpl: SessionLockController {
     idleCheck = nil
     sessionController.setCovered(isCovered())
     sessionController.recordBackground(isProtectedFlow: routerHost.isInProtectedFlow())
+    isInForeground = false
+    publishSessionStatus()
   }
 
+  /// The timeout is applied before the wallet counts as in front again.
   @MainActor
   func sceneDidBecomeActive() {
     applyTimeout()
+    isInForeground = true
+    publishSessionStatus()
     startIdleCheck()
   }
 
@@ -104,7 +116,15 @@ final class SessionLockControllerImpl: SessionLockController {
       Task { [walletKitController] in await walletKitController.stopPresentation() }
     }
     wasUnlocked = isUnlocked
+    publishSessionStatus()
     routerHost.requireLoginIfLocked()
+  }
+
+  /// Tells `WalletSessionStatusProvider` whether the wallet is unlocked and in front, once the lock timeouts are
+  /// applied, so deferred requests run only then.
+  @MainActor
+  private func publishSessionStatus() {
+    sessionStatusProvider.update(isUnlocked: sessionController.isUnlocked, isInForeground: isInForeground)
   }
 
   /// Checks the idle limit every `idleCheckInterval` while the app is active; the check is cancelled in the
