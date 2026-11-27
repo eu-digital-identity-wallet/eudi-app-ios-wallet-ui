@@ -36,6 +36,7 @@ public final class LogicAssemblyModule: Assembly {
         routerHost: r.force(RouterHost.self),
         userInteractionController: r.force(UserInteractionController.self),
         walletKitController: r.force(WalletKitController.self),
+        sessionStatusProvider: r.force(WalletSessionStatusProvider.self),
         isCovered: { UIApplication.shared.isWalletCovered(byModules: coveringScreenModules) }
       )
     }

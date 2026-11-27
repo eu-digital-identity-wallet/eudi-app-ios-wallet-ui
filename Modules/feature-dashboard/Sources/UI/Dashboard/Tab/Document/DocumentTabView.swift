@@ -33,7 +33,6 @@ struct DocumentTabView<Router: RouterHost>: View {
       searchQuery: $viewModel.searchQuery,
       isFilterModalShowing: $viewModel.isFilterModalShowing,
       isDeleteDeferredModalShowing: $viewModel.isDeleteDeferredModalShowing,
-      isSuccededDocumentsModalShowing: $viewModel.isSuccededDocumentsModalShowing,
       onAction: { item in
         switch item.value.state {
         case .issued, .revoked, .suspended:
@@ -42,10 +41,10 @@ struct DocumentTabView<Router: RouterHost>: View {
           viewModel.onDeleteDeferredDocument(with: item)
         }
       },
-      onDocumentDetails: { viewModel.onDocumentDetails(documentId: $0) },
       onResetFilters: viewModel.resetFilters,
-      onApplyFilters: viewModel.fetch,
+      onApplyFilters: viewModel.applyFilters,
       onRevertFilters: viewModel.revertFilters,
+      onFiltersDismissed: viewModel.onFiltersDismissed,
       onUpdateFilters: { sectionID, filterID in
         viewModel.updateFilters(sectionID: sectionID, filterID: filterID)
       },
@@ -72,18 +71,17 @@ private struct DocumentTabViewContainer: View {
   @Binding var searchQuery: String
   @Binding var isFilterModalShowing: Bool
   @Binding var isDeleteDeferredModalShowing: Bool
-  @Binding var isSuccededDocumentsModalShowing: Bool
   let onAction: (DocumentTabUIModel) -> Void
-  let onDocumentDetails: (String) -> Void
   let onResetFilters: () -> Void
   let onApplyFilters: () -> Void
   let onRevertFilters: () -> Void
+  let onFiltersDismissed: () -> Void
   let onUpdateFilters: (String, String) -> Void
   let onDeleteDeferredDocument: () -> Void
 
   var body: some View {
     content()
-      .sheet(isPresented: $isFilterModalShowing) {
+      .sheet(isPresented: $isFilterModalShowing, onDismiss: onFiltersDismissed) {
         FiltersListView(sections: state.filterUIModel) {
           onResetFilters()
         } applyFiltersAction: {
@@ -108,17 +106,6 @@ private struct DocumentTabViewContainer: View {
           Text(.issuanceDetailsDeletionCaption([state.pendingDocumentTitle]))
         }
       )
-      .sheetDialog(isPresented: $isSuccededDocumentsModalShowing) {
-        VStack(spacing: .zero) {
-
-          ContentTitleView(
-            title: .deferredDocumentsIssuedModalTitle,
-            caption: .defferedDocumentsIssuedModalCaption
-          )
-
-          deferredSuccessList()
-        }
-      }
   }
 
   @MainActor
@@ -155,7 +142,8 @@ private struct DocumentTabViewContainer: View {
                   VStack(spacing: .zero) {
                     let categoryDocuments = state.documents[category] ?? []
                     WrapListItemsView(
-                      listItems: categoryDocuments.map(\.listItem)
+                      listItems: categoryDocuments.map(\.listItem),
+                      highlightedItemIds: state.highlightedDocumentIds
                     ) { listItem in
                       if let item = categoryDocuments.first(where: { $0.listItem.id == listItem.id }) {
                         onAction(item)
@@ -189,34 +177,6 @@ private struct DocumentTabViewContainer: View {
     )
     .background(Theme.shared.color.background)
   }
-
-  @MainActor
-  @ViewBuilder
-  private func deferredSuccessList() -> some View {
-    VStack(spacing: SPACING_SMALL) {
-      ForEach(state.succededIssuedDocuments) { item in
-
-        HStack {
-          Text(.custom(item.value.title))
-            .typography(Theme.shared.font.bodyLarge)
-            .foregroundColor(Theme.shared.color.primaryLabel)
-
-          Spacer()
-
-          Theme.shared.image.chevronRight
-            .renderingMode(.template)
-            .foregroundStyle(Theme.shared.color.accent)
-        }
-        .padding()
-        .background(Theme.shared.color.groupedBackground)
-        .clipShape(.rect(cornerRadius: 8))
-        .onTapGesture {
-          onDocumentDetails(item.value.id)
-        }
-      }
-    }
-    .padding(.vertical)
-  }
 }
 
 #Preview {
@@ -226,8 +186,7 @@ private struct DocumentTabViewContainer: View {
     filterUIModel: [],
     lifecycle: .active,
     pendingDeletionDocument: nil,
-    succededIssuedDocuments: [],
-    failedDocuments: [],
+    highlightedDocumentIds: [],
     hasDefaultFilters: false
   )
   DocumentTabViewContainer(
@@ -235,12 +194,11 @@ private struct DocumentTabViewContainer: View {
     searchQuery: .constant(""),
     isFilterModalShowing: .constant(false),
     isDeleteDeferredModalShowing: .constant(false),
-    isSuccededDocumentsModalShowing: .constant(false),
     onAction: { _ in },
-    onDocumentDetails: { _ in },
     onResetFilters: {},
     onApplyFilters: {},
     onRevertFilters: {},
+    onFiltersDismissed: {},
     onUpdateFilters: { _, _ in },
     onDeleteDeferredDocument: {}
   )

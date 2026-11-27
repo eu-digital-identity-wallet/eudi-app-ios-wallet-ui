@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
+import EudiWalletKit
 import logic_business
 @testable import logic_core
 @testable import logic_test
@@ -35,4 +36,19 @@ final class TestWalletKitConfig: EudiTest {
     // Then
     XCTAssertNil(fileName)
   }
+
+  func testDeferredIssuanceConfig_ThenKeepsTheTimingTheWalletHadBeforeItWasConfigurable() {
+    let config = WalletKitConfigImpl(
+      configLogic: MockConfigLogic(),
+      transactionLogger: StubTransactionLogger(),
+      walletKitAttestationProvider: MockWalletKitAttestationProvider(),
+      prefsController: MockPrefsController()
+    )
+
+    XCTAssertEqual(config.deferredIssuanceConfig, DeferredIssuanceConfig(initialPollingDelay: 5, failureRetryDelay: 30))
+  }
+}
+
+private actor StubTransactionLogger: TransactionLogger {
+  func log(transaction: TransactionEntry) async throws {}
 }

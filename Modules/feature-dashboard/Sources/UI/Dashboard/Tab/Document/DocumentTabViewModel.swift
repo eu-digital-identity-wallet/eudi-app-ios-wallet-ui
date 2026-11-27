@@ -18,6 +18,7 @@ import logic_ui
 import logic_core
 import feature_common
 import Observation
+import SwiftUI
 
 @Copyable
 struct DocumentTabState: ViewState {
@@ -26,8 +27,7 @@ struct DocumentTabState: ViewState {
   let filterUIModel: [FilterUISection]
   let lifecycle: Lifecycle
   let pendingDeletionDocument: DocumentTabUIModel?
-  let succededIssuedDocuments: [DocumentTabUIModel]
-  let failedDocuments: [String]
+  let highlightedDocumentIds: Set<String>
   let hasDefaultFilters: Bool
 
   var pendingDocumentTitle: String {
@@ -51,15 +51,14 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   @ObservationIgnored
   private let SEARCH_INPUT_DEBOUNCE = 250
   @ObservationIgnored
+  private let HIGHLIGHT_DELAY: TimeInterval = 0.15
+  @ObservationIgnored
+  private let HIGHLIGHT_DURATION: TimeInterval = 1.25
+  @ObservationIgnored
   private let onUpdateToolbar: (ToolBarContent, LocalizableStringKey) -> Void
 
   var isFilterModalShowing: Bool = false
   var isDeleteDeferredModalShowing: Bool = false
-  var isSuccededDocumentsModalShowing: Bool = false {
-    didSet {
-      debouncedSucceededModal.send(isSuccededDocumentsModalShowing)
-    }
-  }
   var searchQuery: String = "" {
     didSet {
       debouncedSearchQuery.send(searchQuery)
@@ -69,10 +68,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   @ObservationIgnored
   private var debouncedSearchQuery = CurrentValueSubject<String, Never>("")
   @ObservationIgnored
-  private var debouncedSucceededModal = CurrentValueSubject<Bool, Never>(false)
-
-  @ObservationIgnored
-  private var deferredTask: Task<DeferredPartialState, Error>?
+  private var didApplyFilters = false
 
   init(
     router: Router,
@@ -89,13 +85,11 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
         filterUIModel: [],
         lifecycle: .tabNotActivePaused,
         pendingDeletionDocument: nil,
-        succededIssuedDocuments: [],
-        failedDocuments: [],
+        highlightedDocumentIds: [],
         hasDefaultFilters: true
       )
     )
 
-    listenForSuccededIssuedModalChanges()
     subscribeToSearch()
     onFiltersChangeState()
   }
@@ -106,17 +100,14 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   }
 
   func onDisappear() {
-    self.deferredTask?.cancel()
     self.setState { $0.copy(lifecycle: .tabNotActivePaused) }
   }
 
   func fetch() {
+    guard !isFilterModalShowing else { return }
     Task {
 
-      let failedDocuments = viewState.failedDocuments
-
       let state = await interactor.fetchDocuments(
-        failedDocuments: failedDocuments,
         shouldRefreshCounters: viewState.lifecycle != .active
       )
 
@@ -136,7 +127,6 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
             lifecycle: .active
           )
         }
-        await onDocumentsRetrievedPostActions()
       case .failure:
         setState {
           $0.copy(
@@ -177,14 +167,10 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   }
 
   private func onbackground() {
-    self.deferredTask?.cancel()
     self.setState { $0.copy(lifecycle: .tabActivePaused) }
   }
 
   func onDocumentDetails(documentId: String) {
-
-    isSuccededDocumentsModalShowing = false
-
     router.push(
       with: .featureDashboardModule(
         .documentDetails(id: documentId)
@@ -239,22 +225,24 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
     onbackground()
   }
 
-  func handleRefreshotification() {
-    if viewState.lifecycle == .active {
+  func applyFilters() {
+    didApplyFilters = true
+    isFilterModalShowing = false
+    fetch()
+  }
+
+  func onFiltersDismissed() {
+    if didApplyFilters {
+      didApplyFilters = false
+    } else {
       fetch()
     }
   }
 
-  private func listenForSuccededIssuedModalChanges() {
-    debouncedSucceededModal
-      .dropFirst()
-      .removeDuplicates()
-      .sink { [weak self] value in
-        guard let self = self else { return }
-        if !value {
-          self.setState { $0.copy(succededIssuedDocuments: []) }
-        }
-      }.store(in: &cancellables)
+  func handleRefreshotification() {
+    if viewState.lifecycle == .active {
+      fetch()
+    }
   }
 
   private func subscribeToSearch() {
@@ -283,6 +271,8 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
               hasDefaultFilters: hasDefaultFilters
             )
           }
+          closeDeletionDialogIfNoLongerDeferred(in: documents)
+          highlightIssuedDocuments(in: documents)
           updateToolBar()
         case .filterUpdateResult(let filterSections):
           setState {
@@ -296,44 +286,38 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
     }
   }
 
-  private func onDocumentsRetrievedPostActions() async {
-    if await interactor.hasDeferredDocuments() && (self.deferredTask == nil || self.deferredTask?.isCancelled == true) {
-      self.deferredTask = Task {
-        try? await Task.sleep(seconds: 5)
-        return await interactor.requestDeferredIssuance()
-      }
-      Task {
-        guard let task = self.deferredTask else { return }
-        let partialState = try? await task.value
-        switch partialState {
-        case .completion(let issued, let failed):
-          self.deferredTask?.cancel()
-          self.setState {
-            $0.copy(
-              succededIssuedDocuments: !isSuccededDocumentsModalShowing
-              ? issued
-              : $0.succededIssuedDocuments,
-              failedDocuments: failed
-            )
-          }
-          fetch()
-        case .cancelled, .none: break
-        }
-      }
-    }
-    checkForSuccededIssuedDocuments()
-  }
-
-  private func checkForSuccededIssuedDocuments() {
+  private func closeDeletionDialogIfNoLongerDeferred(in documents: [DocumentCategory: [DocumentTabUIModel]]) {
     guard
-      !viewState.succededIssuedDocuments.isEmpty,
-      !isSuccededDocumentsModalShowing
+      isDeleteDeferredModalShowing,
+      let pendingDeletionId = viewState.pendingDeletionDocument?.id
     else {
       return
     }
+    let isStillDeferred = documents.values.joined().contains {
+      $0.id == pendingDeletionId && $0.value.state.isDeferred
+    }
+    guard !isStillDeferred else { return }
     isDeleteDeferredModalShowing = false
-    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-      self.isSuccededDocumentsModalShowing = true
+    setState { $0.copy(pendingDeletionDocument: nil) }
+  }
+
+  private func highlightIssuedDocuments(in documents: [DocumentCategory: [DocumentTabUIModel]]) {
+    guard !isFilterModalShowing else { return }
+    let issued = documents.values.joined().filter { !$0.value.state.isDeferred }
+    guard !issued.isEmpty else { return }
+
+    Task {
+      let ids = await interactor.markIssuedDocumentsSeen(Set(issued.map(\.id)))
+      guard !ids.isEmpty else { return }
+      let announcement = LocalizableStringKey.deferredDocumentsIssuedAnnouncement(
+        [issued.filter { ids.contains($0.id) }.map(\.value.title).joined(separator: ", ")]
+      ).toString
+
+      try? await Task.sleep(seconds: HIGHLIGHT_DELAY)
+      setState { $0.copy(highlightedDocumentIds: $0.highlightedDocumentIds.union(ids)) }
+      AccessibilityNotification.Announcement(announcement).post()
+      try? await Task.sleep(seconds: HIGHLIGHT_DURATION)
+      setState { $0.copy(highlightedDocumentIds: $0.highlightedDocumentIds.subtracting(ids)) }
     }
   }
 

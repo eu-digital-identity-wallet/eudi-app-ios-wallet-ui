@@ -40,7 +40,8 @@ final class StorageConfigImpl: StorageConfig {
         SDTransactionLog.self,
         SDRevokedDocument.self,
         SDFailedReIssuedDocument.self,
-        SDStatusRefreshFailure.self
+        SDStatusRefreshFailure.self,
+        SDDeferredIssuance.self
       ]
     )
   }

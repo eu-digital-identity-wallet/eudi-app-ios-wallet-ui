@@ -164,9 +164,23 @@ private extension TestWalletKitControllerOffer {
     }
   }
 
+  func makeController() -> WalletKitControllerImpl {
+    Self.makeController(
+      issuer: issuer,
+      deferredIssuanceStorageController: StubStorageController<DeferredIssuance>()
+    )
+  }
+}
+
+// Other tests of the controller build it here too.
+extension TestWalletKitControllerOffer {
+
   /// The controller with a real WalletKit, configured for `issuer` alone, whose requests all go through
   /// `RecordingURLProtocol`.
-  func makeController() -> WalletKitControllerImpl {
+  static func makeController(
+    issuer: String,
+    deferredIssuanceStorageController: any DeferredIssuanceStorageController
+  ) -> WalletKitControllerImpl {
     let walletKitConfig = MockWalletKitConfig()
     stub(walletKitConfig) { mock in
       when(mock.logFileName.get).thenReturn(nil)
@@ -180,6 +194,7 @@ private extension TestWalletKitControllerOffer {
         ["issuer": VciConfig(config: OpenId4VciConfiguration(credentialIssuerURL: issuer), order: 1)]
       )
       when(mock.transactionLogger.get).thenReturn(StubTransactionLogger())
+      when(mock.deferredIssuanceConfig.get).thenReturn(.stub)
       when(mock.trustMarkSource.get).thenReturn(
         .static(
           information: TrustMarkInformation(
@@ -196,6 +211,15 @@ private extension TestWalletKitControllerOffer {
         KeyChainConfig(documentStorageServiceName: "offer-tests", keychainAccessGroup: "offer-tests")
       )
     }
+    // Clearing or deleting documents updates the Digital Credential API registrations; none are offered here.
+    let prefsController = MockPrefsController()
+    stub(prefsController) { mock in
+      when(mock.getBool(forKey: any())).thenReturn(false)
+    }
+    let documentRegistrationManager = MockDocumentRegistrationManager()
+    stub(documentRegistrationManager) { mock in
+      when(mock.reconcile(desired: any())).thenDoNothing()
+    }
     let configuration = URLSessionConfiguration.ephemeral
     configuration.protocolClasses = [RecordingURLProtocol.self]
 
@@ -209,13 +233,17 @@ private extension TestWalletKitControllerOffer {
       revokedDocumentStorageController: StubStorageController<RevokedDocument>(),
       failedReIssuedDocStorageController: StubStorageController<FailedReIssuedDocument>(),
       statusRefreshFailureStorageController: StubStorageController<StatusRefreshFailure>(),
+      deferredIssuanceStorageController: deferredIssuanceStorageController,
       storageEraseController: StubStorageEraseController(),
       networkSessionProvider: StubNetworkSessionProvider(urlSession: URLSession(configuration: configuration)),
-      documentRegistrationManager: MockDocumentRegistrationManager(),
-      prefsController: MockPrefsController(),
+      documentRegistrationManager: documentRegistrationManager,
+      prefsController: prefsController,
       registrationCheckProvider: MockRegistrationCheckProvider()
     )
   }
+}
+
+private extension TestWalletKitControllerOffer {
 
   /// Answers every request of a session it is installed in with the body `serve(_:at:)` set for its address, or
   /// with 404, and records the addresses asked for.
@@ -312,6 +340,7 @@ extension TestWalletKitControllerOffer.StubStorageController: BookmarkStorageCon
 extension TestWalletKitControllerOffer.StubStorageController: RevokedDocumentStorageController where Value == RevokedDocument {}
 extension TestWalletKitControllerOffer.StubStorageController: FailedReIssuedDocStorageController where Value == FailedReIssuedDocument {}
 extension TestWalletKitControllerOffer.StubStorageController: StatusRefreshFailureStorageController where Value == StatusRefreshFailure {}
+extension TestWalletKitControllerOffer.StubStorageController: DeferredIssuanceStorageController where Value == DeferredIssuance {}
 
 extension TestWalletKitControllerOffer.StubStorageController: TransactionLogStorageController where Value == TransactionLog {
 

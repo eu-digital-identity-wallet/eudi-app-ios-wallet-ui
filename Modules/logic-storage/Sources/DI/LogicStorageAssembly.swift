@@ -64,5 +64,10 @@ public final class LogicStorageAssembly: Assembly {
       StatusRefreshFailureStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
     }
     .inObjectScope(ObjectScope.transient)
+
+    container.register((any DeferredIssuanceStorageController).self) { r in
+      DeferredIssuanceStorageControllerImpl(swiftDataService: r.force(SwiftDataService.self))
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }
