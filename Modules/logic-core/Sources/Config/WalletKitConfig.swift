@@ -71,7 +71,8 @@ protocol WalletKitConfig: Sendable {
    * policy for production; see GO_LIVE Trust Store.
    *
    * The ETSI source's `loteSignerTrustAnchors` authenticate the lists' signer: a list whose signing
-   * certificate does not chain to one of them is rejected, and with none every list is rejected.
+   * certificate is not one of them and does not chain to one of them is rejected, and with none every
+   * list is rejected.
    */
   var trustConfiguration: TrustConfiguration { get }
 
@@ -338,8 +339,8 @@ struct WalletKitConfigImpl: WalletKitConfig {
     ].compactMap { loadCertificate($0) }
   }
 
-  /// The certificates that authenticate the signer of the trusted lists in `loteLocations`. The
-  /// development lists are signed under `pidissuerca02_eu`; use your list operator's certificate in
+  /// The certificates that authenticate the signer of the trusted lists that `trustConfiguration` fetches.
+  /// The development lists are signed under `pidissuerca02_eu`; use your scheme operator's certificate in
   /// production (see GO_LIVE Trust Store).
   var loteSignerTrustAnchors: [Data] {
     ["pidissuerca02_eu"].compactMap { loadCertificate($0) }

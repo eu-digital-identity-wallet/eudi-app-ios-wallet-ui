@@ -1117,10 +1117,13 @@ var staticRootCertificates: [Data] {
 The trusted lists are authenticated by their signer. `EtsiTrustSource` requires
 `loteSignerTrustAnchors`, and WalletKit accepts a list only when the first certificate of its `x5c`
 header is valid now, is one of those anchors or chains to one of them, and verifies the list's JWS
-signature. The chain is checked without network access, so the list signer's revocation is not
-checked. With no anchor, or with an anchor that is not a readable certificate, every list is
-rejected. The reference app passes `pidissuerca02_eu`, the CA that issues the development lists'
-signing certificate, loaded by name like the fallback certificates:
+signature. The signer's chain is evaluated offline and without a revocation check, whatever
+`revocationPolicy` is set to. With no anchor, or with an anchor that is not a readable certificate,
+every list is rejected. The checks of issued documents and status lists then fall back to the static
+list, while reader trust, signed issuer metadata and registration certificates have no fallback and
+fail, so issuance and presentation are refused. The reference app passes `pidissuerca02_eu`, the CA
+that issues the development lists' signing certificate, loaded by name like the fallback
+certificates:
 
 ```swift
 var loteSignerTrustAnchors: [Data] {
