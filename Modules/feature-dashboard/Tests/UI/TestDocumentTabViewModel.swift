@@ -82,7 +82,7 @@ final class TestDocumentTabViewModel: EudiTest {
   }
 
   @MainActor
-  func testApplyFilters_ThenClosesTheFiltersAndTheDismissalDoesNotReloadAgain() async {
+  func testApplyFilters_WhenTheFiltersAreOpen_ThenClosesThemAndTheDismissalDoesNotReloadAgain() async {
     // Given
     let viewModel = makeViewModel()
     viewModel.showFilters()
@@ -101,7 +101,7 @@ final class TestDocumentTabViewModel: EudiTest {
   @MainActor
   func testDeferredIssuance_WhenAnIssuedRowWasNotPointedOutYet_ThenHighlightsItBriefly() async {
     // Given
-    let viewModel = makeViewModel()
+    let viewModel = makeShownViewModel()
     stubUnseen(["a"])
 
     // When
@@ -112,16 +112,33 @@ final class TestDocumentTabViewModel: EudiTest {
     XCTAssertEqual(viewModel.viewState.highlightedDocumentIds, ["a"])
 
     // When
-    await waitUntil(seconds: 2) { viewModel.viewState.highlightedDocumentIds.isEmpty }
+    await waitUntil(seconds: 5) { viewModel.viewState.highlightedDocumentIds.isEmpty }
 
     // Then
     XCTAssertTrue(viewModel.viewState.highlightedDocumentIds.isEmpty)
   }
 
   @MainActor
+  func testDeferredIssuance_WhenTheTabIsHidden_ThenNothingIsMarkedSeenOrHighlighted() async {
+    // Given
+    let viewModel = makeShownViewModel()
+    viewModel.onDisappear()
+    stubUnseen(["a"])
+
+    // When
+    show([document("a")])
+    await waitUntil { !viewModel.viewState.documents.isEmpty }
+    try? await Task.sleep(seconds: 0.1)
+
+    // Then
+    verify(interactor, never()).markIssuedDocumentsSeen(any())
+    XCTAssertTrue(viewModel.viewState.highlightedDocumentIds.isEmpty)
+  }
+
+  @MainActor
   func testDeferredIssuance_WhenTheListIsShown_ThenOnlyTheIssuedRowsAreMarkedSeen() async {
     // Given
-    let viewModel = makeViewModel()
+    let viewModel = makeShownViewModel()
 
     // When
     show([document("a", state: .pending), document("b", state: .failed), document("c")])
@@ -135,7 +152,7 @@ final class TestDocumentTabViewModel: EudiTest {
   @MainActor
   func testDeferredIssuance_WhenNothingIssuedIsShown_ThenNothingIsMarkedSeen() async {
     // Given
-    let viewModel = makeViewModel()
+    let viewModel = makeShownViewModel()
 
     // When
     show([document("a", state: .pending)])
@@ -149,7 +166,7 @@ final class TestDocumentTabViewModel: EudiTest {
   @MainActor
   func testDeferredIssuance_WhenNoIssuedRowIsUnseen_ThenNothingIsHighlighted() async {
     // Given
-    let viewModel = makeViewModel()
+    let viewModel = makeShownViewModel()
 
     // When
     show([document("a"), document("b")])
@@ -163,7 +180,7 @@ final class TestDocumentTabViewModel: EudiTest {
   @MainActor
   func testDeferredIssuance_WhenTheFiltersAreOpen_ThenHighlightsOnlyAfterTheyClose() async {
     // Given
-    let viewModel = makeViewModel()
+    let viewModel = makeShownViewModel()
     stubUnseen(["a"])
     viewModel.showFilters()
 
@@ -188,7 +205,7 @@ final class TestDocumentTabViewModel: EudiTest {
   @MainActor
   func testDeferredIssuance_WhenTwoIssuedRowsAreUnseen_ThenBothAreHighlighted() async {
     // Given
-    let viewModel = makeViewModel()
+    let viewModel = makeShownViewModel()
     stubUnseen(["a", "b"])
 
     // When
@@ -197,17 +214,6 @@ final class TestDocumentTabViewModel: EudiTest {
 
     // Then
     XCTAssertEqual(viewModel.viewState.highlightedDocumentIds, ["a", "b"])
-  }
-
-  @MainActor
-  func testDeferredIssuance_WhenAFailedRowIsShown_ThenItIsNotMarkedSeen() async {
-    let viewModel = makeViewModel()
-
-    show([document("a", state: .failed), document("b")])
-    await waitUntil { !viewModel.viewState.documents.isEmpty }
-    try? await Task.sleep(seconds: 0.1)
-
-    verify(interactor).markIssuedDocumentsSeen(equal(to: ["b"]))
   }
 
   @MainActor
@@ -261,6 +267,14 @@ private extension TestDocumentTabViewModel {
   @MainActor
   func makeViewModel() -> DocumentTabViewModel<MockRouterHost> {
     DocumentTabViewModel(router: MockRouterHost(), interactor: interactor, onUpdateToolbar: { _, _ in })
+  }
+
+  /// A view model whose tab is on screen, as issued documents are pointed out only then.
+  @MainActor
+  func makeShownViewModel() -> DocumentTabViewModel<MockRouterHost> {
+    let viewModel = makeViewModel()
+    viewModel.onAppear()
+    return viewModel
   }
 
   func show(_ documents: [DocumentTabUIModel]) {

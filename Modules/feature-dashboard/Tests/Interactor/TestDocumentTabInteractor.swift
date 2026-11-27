@@ -188,6 +188,7 @@ final class TestDocumentTabInteractor: EudiTest {
   }
 
   func testFetchDocuments_WhenTheIssuerRefusedADeferredDocument_ThenItShowsAsFailedAndTheOthersAsBefore() async {
+    // Given
     let pid = Constants.createEuPidModel()
     let refused = deferredDocument(id: "refused")
     let pending = deferredDocument(id: "pending")
@@ -196,20 +197,25 @@ final class TestDocumentTabInteractor: EudiTest {
       when(mock.fetchFailedDeferredDocumentIds()).thenReturn(["refused"])
     }
 
+    // When
     let states = await fetchedStates()
 
+    // Then
     XCTAssertEqual(states, [pid.id: .issued, "refused": .failed, "pending": .pending])
   }
 
   func testFetchDocuments_WhenAnIssuedDocumentKeepsARefusedEntry_ThenItShowsAsIssued() async {
+    // Given
     let pid = Constants.createEuPidModel()
     stubFetchDocumentsForTheList([pid])
     stub(walletKitController) { mock in
       when(mock.fetchFailedDeferredDocumentIds()).thenReturn([pid.id])
     }
 
+    // When
     let states = await fetchedStates()
 
+    // Then
     XCTAssertEqual(states, [pid.id: .issued])
   }
 
@@ -305,7 +311,7 @@ final class TestDocumentTabInteractor: EudiTest {
     XCTAssertEqual(result, .success)
   }
 
-  func testMarkIssuedDocumentsSeen_ThenReturnsThoseTheControllerHadNotPointedOut() async {
+  func testMarkIssuedDocumentsSeen_WhenOnlySomeWereStillUnseen_ThenReturnsThoseTheControllerHadNotPointedOut() async {
     // Given
     stub(walletKitController) { mock in
       when(mock.markIssuedDeferredDocumentsSeen(equal(to: ["a", "b"]))).thenReturn(["a"])

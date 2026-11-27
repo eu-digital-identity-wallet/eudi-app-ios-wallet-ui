@@ -20,17 +20,26 @@ import XCTest
 final class TestWalletSessionStatusProvider: EudiTest {
 
   func testIsActive_WhenNothingWasReported_ThenIsInactiveAsTheWalletStartsLocked() {
+    // Then
     XCTAssertFalse(WalletSessionStatusProviderImpl().isActive)
   }
 
-  func testIsActive_ThenNeedsTheWalletUnlockedAndInFront() {
+  func testIsActive_WhenEachStateIsReported_ThenIsTrueOnlyWhenUnlockedAndInFront() {
+    // Given
+    struct Report {
+      let isUnlocked: Bool
+      let isInForeground: Bool
+      let isActive: Bool
+    }
     let provider = WalletSessionStatusProviderImpl()
-    let cases: [(isUnlocked: Bool, isInForeground: Bool, isActive: Bool)] = [
-      (true, true, true),
-      (true, false, false),
-      (false, true, false),
-      (false, false, false)
+    let cases = [
+      Report(isUnlocked: true, isInForeground: true, isActive: true),
+      Report(isUnlocked: true, isInForeground: false, isActive: false),
+      Report(isUnlocked: false, isInForeground: true, isActive: false),
+      Report(isUnlocked: false, isInForeground: false, isActive: false)
     ]
+
+    // Then
     for item in cases {
       provider.update(isUnlocked: item.isUnlocked, isInForeground: item.isInForeground)
       XCTAssertEqual(provider.isActive, item.isActive, "\(item)")
@@ -38,44 +47,56 @@ final class TestWalletSessionStatusProvider: EudiTest {
   }
 
   func testUpdate_WhenTheWalletTurnsActive_ThenAnnouncesIt() async {
+    // Given
     let provider = WalletSessionStatusProviderImpl()
     let announced = expectation(forNotification: .walletSessionBecameActive, object: nil)
 
+    // When
     provider.update(isUnlocked: true, isInForeground: true)
 
+    // Then
     await fulfillment(of: [announced], timeout: 1)
   }
 
   func testUpdate_WhenTheWalletStaysActive_ThenAnnouncesNothingMore() async {
+    // Given
     let provider = WalletSessionStatusProviderImpl()
     provider.update(isUnlocked: true, isInForeground: true)
     let announced = expectation(forNotification: .walletSessionBecameActive, object: nil)
     announced.isInverted = true
 
+    // When
     provider.update(isUnlocked: true, isInForeground: true)
 
+    // Then
     await fulfillment(of: [announced], timeout: 0.3)
   }
 
   func testUpdate_WhenTheWalletStaysInactive_ThenAnnouncesNothing() async {
+    // Given
     let provider = WalletSessionStatusProviderImpl()
     let announced = expectation(forNotification: .walletSessionBecameActive, object: nil)
     announced.isInverted = true
 
+    // When
     provider.update(isUnlocked: true, isInForeground: false)
     provider.update(isUnlocked: false, isInForeground: true)
 
+    // Then
     await fulfillment(of: [announced], timeout: 0.3)
   }
 
   func testUpdate_WhenTheWalletIsActiveAgainAfterALock_ThenAnnouncesItAgain() async {
+    // Given
     let provider = WalletSessionStatusProviderImpl()
     provider.update(isUnlocked: true, isInForeground: true)
     provider.update(isUnlocked: false, isInForeground: true)
     let announced = expectation(forNotification: .walletSessionBecameActive, object: nil)
 
+    // When
     provider.update(isUnlocked: true, isInForeground: true)
 
+    // Then
     await fulfillment(of: [announced], timeout: 1)
   }
 }

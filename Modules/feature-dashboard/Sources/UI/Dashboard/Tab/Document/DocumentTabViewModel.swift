@@ -18,7 +18,6 @@ import logic_ui
 import logic_core
 import feature_common
 import Observation
-import SwiftUI
 
 @Copyable
 struct DocumentTabState: ViewState {
@@ -69,6 +68,9 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   private var debouncedSearchQuery = CurrentValueSubject<String, Never>("")
   @ObservationIgnored
   private var didApplyFilters = false
+  /// Between `onAppear()` and `onDisappear()`, so an issued document isn't pointed out while the tab is hidden.
+  @ObservationIgnored
+  private var isOnScreen = false
 
   init(
     router: Router,
@@ -95,11 +97,13 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   }
 
   func onAppear() {
+    isOnScreen = true
     updateToolBar()
     fetch()
   }
 
   func onDisappear() {
+    isOnScreen = false
     self.setState { $0.copy(lifecycle: .tabNotActivePaused) }
   }
 
@@ -302,7 +306,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
   }
 
   private func highlightIssuedDocuments(in documents: [DocumentCategory: [DocumentTabUIModel]]) {
-    guard !isFilterModalShowing else { return }
+    guard isOnScreen, !isFilterModalShowing else { return }
     let issued = documents.values.joined().filter { !$0.value.state.isDeferred }
     guard !issued.isEmpty else { return }
 
@@ -310,7 +314,7 @@ final class DocumentTabViewModel<Router: RouterHost>: ViewModel<Router, Document
       let ids = await interactor.markIssuedDocumentsSeen(Set(issued.map(\.id)))
       guard !ids.isEmpty else { return }
       let announcement = LocalizableStringKey.deferredDocumentsIssuedAnnouncement(
-        [issued.filter { ids.contains($0.id) }.map(\.value.title).joined(separator: ", ")]
+        [issued.filter { ids.contains($0.id) }.map(\.value.title).formatted(.list(type: .and))]
       ).toString
 
       try? await Task.sleep(seconds: HIGHLIGHT_DELAY)

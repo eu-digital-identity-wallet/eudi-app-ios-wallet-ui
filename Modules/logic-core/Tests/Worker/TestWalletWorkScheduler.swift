@@ -100,6 +100,7 @@ final class TestWalletWorkScheduler: EudiTest {
   }
 
   func testStop_WhenADeferredRequestOutlastsTheTimeout_ThenReportsItStillRunning() async {
+    // Given
     let gate = AsyncGate()
     let blockedScheduler = WalletWorkSchedulerImpl(
       revocationWorkManager: revocationWorkManager,
@@ -109,9 +110,11 @@ final class TestWalletWorkScheduler: EudiTest {
       resetStatusProvider: WalletResetStatusProviderImpl()
     )
 
+    // When
     let stopped = await blockedScheduler.stop()
     await gate.open()
 
+    // Then
     XCTAssertFalse(stopped)
   }
 

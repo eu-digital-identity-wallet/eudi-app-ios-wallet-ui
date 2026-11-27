@@ -15,10 +15,6 @@
  */
 import Foundation
 
-/// Thrown instead of the result of a deferred request whose document is deleted, or being deleted.
-/// Nothing was written for it, and it isn't a failure of the request.
-struct DeferredDocumentDeletedError: Error, Equatable {}
-
 /// Keeps a deletion and a deferred request for the same document from overlapping. WalletKit keeps a deferred
 /// document's keys when it deletes it, so a credential arriving after the deletion would be stored as an issued
 /// document the user had just removed.

@@ -20,14 +20,14 @@ import Foundation
 struct DeferredIssuanceConfig: Sendable, Equatable {
 
   /// Wait before the next request when the issuer sends no interval.
-  let initialPollingDelay: TimeInterval
-  /// Wait after a request that failed, whatever the issuer's interval.
-  let failureRetryDelay: TimeInterval
+  let initialPollingDelaySeconds: TimeInterval
+  /// Shortest wait after a request that failed; the issuer's last interval is waited when it is longer.
+  let failureRetryDelaySeconds: TimeInterval
 
-  init(initialPollingDelay: TimeInterval, failureRetryDelay: TimeInterval) {
-    precondition(initialPollingDelay.isFinite && initialPollingDelay > 0)
-    precondition(failureRetryDelay.isFinite && failureRetryDelay > 0)
-    self.initialPollingDelay = initialPollingDelay
-    self.failureRetryDelay = failureRetryDelay
+  init(initialPollingDelaySeconds: TimeInterval, failureRetryDelaySeconds: TimeInterval) {
+    precondition(initialPollingDelaySeconds.isFinite && initialPollingDelaySeconds > 0)
+    precondition(failureRetryDelaySeconds.isFinite && failureRetryDelaySeconds > 0)
+    self.initialPollingDelaySeconds = initialPollingDelaySeconds
+    self.failureRetryDelaySeconds = failureRetryDelaySeconds
   }
 }

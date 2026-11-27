@@ -67,7 +67,8 @@ extension Error {
   }
 }
 
-private extension Error {
+extension Error {
+  /// The issuer's registration doesn't meet the issuance policy (`authorizationPolicyNotMet`).
   var isRegistrationPolicyRejection: Bool {
     guard let validationError = self as? ValidationError else { return false }
     if case .authorizationPolicyNotMet = validationError { return true }

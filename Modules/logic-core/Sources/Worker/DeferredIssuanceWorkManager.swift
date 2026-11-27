@@ -18,11 +18,6 @@ import WalletStorage
 import logic_business
 import logic_storage
 
-extension Notification.Name {
-  /// Posted by WalletKitController after adding an entry, so an idle deferred work manager picks it up.
-  static let deferredIssuanceEntered = Notification.Name("DeferredIssuanceEntered")
-}
-
 protocol DeferredIssuanceWorkManager: Sendable {
   /// Starts the loop. Entries that fell due while the app was closed are requested right away.
   func start() async
@@ -38,8 +33,8 @@ protocol DeferredIssuanceWorkManager: Sendable {
 /// is locked or in the background, until `wake()`. Also woken by `wakingNotifications` while running.
 final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
 
-  // Task.sleep doesn't advance while the device sleeps, so the wallet turning active again, which includes its
-  // return to the front, re-checks.
+  /// `Task.sleep` doesn't advance while the device sleeps, so the wallet turning active again, which includes its
+  /// return to the front, re-checks.
   static let wakingNotifications: [Notification.Name] = [
     .deferredIssuanceEntered,
     .walletSessionBecameActive
@@ -49,8 +44,8 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
   /// can't make a tight loop.
   static let minimumWait: TimeInterval = 0.001
 
-  // A longer wait is split into pieces: the issuer's interval has no upper limit and Task.sleep traps
-  // past UInt64 nanoseconds. Each wake-up only reads the entries; nothing is requested before it's due.
+  /// A longer wait is split into pieces: the issuer's interval has no upper limit and `Task.sleep` traps
+  /// past UInt64 nanoseconds. Each wake-up only reads the entries; nothing is requested before it's due.
   static let maximumWait: TimeInterval = 60 * 60
 
   private let walletKitController: WalletKitController
@@ -73,9 +68,6 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
   private var isWakeRequested = false
   /// Registered in start(), removed in stop().
   private var wakingObservers: [any NSObjectProtocol] = []
-  /// Untrusted documents this run of the app has already tried to delete, so a deletion that fails is tried again
-  /// only when the app is opened next.
-  private var removalAttemptIds: Set<String> = []
   /// When a document may be asked again after the wallet itself failed (a write, its metadata). Kept in memory only:
   /// a new launch asks when the entry says.
   private var localRetryAt: [String: Date] = [:]
@@ -149,8 +141,8 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
   /// Documents deferred before entries existed get one based on their last modification date.
   /// If the check is cancelled, or the document is deleted meanwhile, no failure is recorded for the request.
   /// The documents list is refreshed when a document is issued, deleted, or starts or stops showing as failed.
-  /// A document whose issuer can't be verified is deleted once its untrusted state is stored; if the deletion fails
-  /// it stays listed as failed until the app is opened next.
+  /// A request that ends with a verdict (untrusted, expired) stops asking for that document; the document stays,
+  /// listed as failed, until the user deletes it. If the user deletes it meanwhile, its entry isn't written back.
   /// Does nothing while the wallet is locked or in the background, and stops before the next request if it locks.
   func checkDeferredDocuments() async {
 
@@ -173,7 +165,6 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
 
     var didIssue = false
     var didChangeState = false
-    var untrustedIds = current.filter { $0.state == .untrusted }.map(\.identifier)
     let failedBefore = due.isEmpty ? [] : await walletKitController.fetchFailedDeferredDocumentIds()
 
     for entry in due {
@@ -188,10 +179,10 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
           didIssue = true
         }
       } catch is DeferredDocumentDeletedError {
-        // The user deleted it meanwhile; its entry went with it.
         continue
       } catch {
         guard !Task.isCancelled else { break }
+        guard await isStillDeferred(entry.identifier) else { continue }
         let failure = DeferredRequestFailure(error)
         let next = schedule.after(failure, of: entry, at: now())
         do {
@@ -205,14 +196,7 @@ final actor DeferredIssuanceWorkManagerImpl: DeferredIssuanceWorkManager {
         if next.state != .pending {
           didChangeState = true
         }
-        if next.state == .untrusted {
-          untrustedIds.append(next.identifier)
-        }
       }
-    }
-
-    if await removeUntrustedDocuments(untrustedIds) {
-      didChangeState = true
     }
 
     if !due.isEmpty, await walletKitController.fetchFailedDeferredDocumentIds() != failedBefore {
@@ -265,17 +249,9 @@ private extension DeferredIssuanceWorkManagerImpl {
     localRetryAt[id] = now().addingTimeInterval(schedule.failureWait)
   }
 
-  /// True when a deletion was tried, so the list is refreshed. A document that's gone already makes the deletion
-  /// throw, which is ignored.
-  func removeUntrustedDocuments(_ ids: [String]) async -> Bool {
-    var didTry = false
-    for id in ids where !removalAttemptIds.contains(id) {
-      guard !Task.isCancelled, sessionStatusProvider.isActive else { break }
-      removalAttemptIds.insert(id)
-      try? await walletKitController.deleteDocument(with: id, status: .deferred)
-      didTry = true
-    }
-    return didTry
+  /// False once the user has deleted the document or it was issued, so a failed request doesn't write its entry back.
+  func isStillDeferred(_ id: String) async -> Bool {
+    await walletKitController.fetchDeferredDocuments().contains { $0.id == id }
   }
 
   func startLoopIfIdle() {
@@ -287,20 +263,20 @@ private extension DeferredIssuanceWorkManagerImpl {
     }
   }
 
+  /// Checks again after `stop()` has come during the read of the next delay, since a wait started then would outlive
+  /// it. After `stop()` and `start()`, `waitTask` may already be the next loop's wait, so only its own is cleared.
   func runLoop(generation: Int) async {
     while isRunning, !Task.isCancelled {
       isWakeRequested = false
       await runCheck()
       guard isRunning, !Task.isCancelled else { break }
       let delay = await delayUntilNextCheck()
-      // stop() may have come during the read; a wait started now would outlive it.
       guard isRunning, !Task.isCancelled else { break }
       if isWakeRequested { continue }
       guard let delay else { break }
       let wait = Task { [sleep] in try await sleep(delay) }
       waitTask = wait
       _ = try? await wait.value
-      // After stop() and start() this may already be the next loop's wait.
       if waitTask == wait {
         waitTask = nil
       }
@@ -310,7 +286,7 @@ private extension DeferredIssuanceWorkManagerImpl {
     }
   }
 
-  // Goes through checkRunner so stop() can wait for it.
+  /// Goes through `checkRunner` so `stop()` can wait for it.
   func runCheck() async {
     await checkRunner.run { [weak self] in
       guard let self, await self.isRunning else { return }
@@ -350,9 +326,9 @@ private extension DeferredIssuanceWorkManagerImpl {
     return entries.filter { deferredIds.contains($0.identifier) } + missing
   }
 
-  // When a re-issue comes back deferred, WalletKit deletes the original right away but the wallet keeps its
-  // revocation record. Once the credential arrives, such a leftover record means the new copy's status should
-  // be read now instead of on the next revocation check.
+  /// When a re-issue comes back deferred, WalletKit deletes the original right away but the wallet keeps its
+  /// revocation record. Once the credential arrives, such a leftover record means the new copy's status should
+  /// be read now instead of on the next revocation check.
   func checkRevocationAfterDeferredReIssue() async {
     guard let revocationStatuses = try? await walletKitController.fetchRevokedDocumentStatuses() else { return }
     let remainingIds = Set(await walletKitController.fetchAllDocuments().map(\.id))

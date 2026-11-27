@@ -118,19 +118,23 @@ final class TestSessionLockController: EudiTest {
   }
 
   @MainActor
-  func testSceneDidEnterBackground_ThenTheWalletIsNoLongerActive() {
+  func testSceneDidEnterBackground_WhenTheWalletIsUnlocked_ThenItIsNoLongerActive() {
+    // Given
     stub(sessionController) { mock in
       when(mock.isUnlocked.get).thenReturn(true)
     }
     let controller = makeController()
 
+    // When
     controller.sceneDidEnterBackground()
 
+    // Then
     XCTAssertEqual(statusUpdates.entries, ["update(true, false)"])
   }
 
   @MainActor
   func testSceneDidBecomeActive_WhenTheWalletIsUnlocked_ThenItIsInFrontOnlyOnceTheTimeoutIsApplied() {
+    // Given
     let calls = calls!
     stub(sessionController) { mock in
       when(mock.isUnlocked.get).thenReturn(true)
@@ -141,8 +145,10 @@ final class TestSessionLockController: EudiTest {
     let controller = makeController()
     controller.sceneDidEnterBackground()
 
+    // When
     controller.sceneDidBecomeActive()
 
+    // Then
     XCTAssertEqual(
       calls.entries,
       [
@@ -159,23 +165,29 @@ final class TestSessionLockController: EudiTest {
 
   @MainActor
   func testSceneDidBecomeActive_WhenTheTimeoutLockedTheWallet_ThenItStaysInactive() {
+    // Given
     let controller = makeController()
     controller.sceneDidEnterBackground()
 
+    // When
     controller.sceneDidBecomeActive()
 
+    // Then
     XCTAssertEqual(statusUpdates.entries.last, "update(false, true)")
   }
 
   @MainActor
   func testCheckIdle_WhenTheUserHasLoggedIn_ThenTheWalletIsActive() {
+    // Given
     stub(sessionController) { mock in
       when(mock.isUnlocked.get).thenReturn(true)
     }
     let controller = makeController()
 
+    // When
     controller.checkIdle()
 
+    // Then
     XCTAssertEqual(statusUpdates.entries, ["update(true, true)"])
   }
 

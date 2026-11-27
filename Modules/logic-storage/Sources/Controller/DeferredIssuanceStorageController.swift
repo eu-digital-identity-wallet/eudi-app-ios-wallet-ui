@@ -18,7 +18,8 @@ import Foundation
 /// Persists the deferred issuance schedule, one entry per document.
 public protocol DeferredIssuanceStorageController: StorageController where Value == DeferredIssuance {}
 
-// `identifier` is unique, so storing an existing entry replaces it.
+/// The `DeferredIssuanceStorageController` of the app, on SwiftData. `identifier` is unique, so storing an existing
+/// entry replaces it.
 final actor DeferredIssuanceStorageControllerImpl: DeferredIssuanceStorageController {
 
   private let swiftDataService: SwiftDataService

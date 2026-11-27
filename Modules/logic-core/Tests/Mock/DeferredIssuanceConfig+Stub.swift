@@ -17,5 +17,5 @@
 
 extension DeferredIssuanceConfig {
   /// The wallet's own timing: 5 s when the issuer sends no interval, 30 s after a failed request.
-  static let stub = DeferredIssuanceConfig(initialPollingDelay: 5, failureRetryDelay: 30)
+  static let stub = DeferredIssuanceConfig(initialPollingDelaySeconds: 5, failureRetryDelaySeconds: 30)
 }

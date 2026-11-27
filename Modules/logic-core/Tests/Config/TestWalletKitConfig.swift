@@ -57,7 +57,8 @@ final class TestWalletKitConfig: EudiTest {
     XCTAssertNil(fileName)
   }
 
-  func testDeferredIssuanceConfig_ThenKeepsTheTimingTheWalletHadBeforeItWasConfigurable() {
+  func testDeferredIssuanceConfig_WhenNotOverridden_ThenWaitsFiveSecondsAndRetriesAfterThirty() {
+    // Given
     let config = WalletKitConfigImpl(
       configLogic: MockConfigLogic(),
       transactionLogger: StubTransactionLogger(),
@@ -65,6 +66,10 @@ final class TestWalletKitConfig: EudiTest {
       prefsController: MockPrefsController()
     )
 
-    XCTAssertEqual(config.deferredIssuanceConfig, DeferredIssuanceConfig(initialPollingDelay: 5, failureRetryDelay: 30))
+    // When
+    let deferredIssuanceConfig = config.deferredIssuanceConfig
+
+    // Then
+    XCTAssertEqual(deferredIssuanceConfig, DeferredIssuanceConfig(initialPollingDelaySeconds: 5, failureRetryDelaySeconds: 30))
   }
 }

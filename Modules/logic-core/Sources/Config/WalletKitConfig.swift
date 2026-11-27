@@ -420,7 +420,7 @@ struct WalletKitConfigImpl: WalletKitConfig {
   }
 
   var deferredIssuanceConfig: DeferredIssuanceConfig {
-    DeferredIssuanceConfig(initialPollingDelay: 5, failureRetryDelay: 30)
+    DeferredIssuanceConfig(initialPollingDelaySeconds: 5, failureRetryDelaySeconds: 30)
   }
 
   var documentIssuanceConfig: DocumentIssuanceConfig {

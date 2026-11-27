@@ -172,11 +172,11 @@ private extension TestWalletKitControllerOffer {
   }
 }
 
-// Other tests of the controller build it here too.
 extension TestWalletKitControllerOffer {
 
   /// The controller with a real WalletKit, configured for `issuer` alone, whose requests all go through
-  /// `RecordingURLProtocol`.
+  /// `RecordingURLProtocol`. Other tests of the controller build it here too, so this extension is not private.
+  /// Clearing or deleting documents updates the Digital Credential API registrations; none are offered here.
   static func makeController(
     issuer: String,
     deferredIssuanceStorageController: any DeferredIssuanceStorageController
@@ -211,7 +211,6 @@ extension TestWalletKitControllerOffer {
         KeyChainConfig(documentStorageServiceName: "offer-tests", keychainAccessGroup: "offer-tests")
       )
     }
-    // Clearing or deleting documents updates the Digital Credential API registrations; none are offered here.
     let prefsController = MockPrefsController()
     stub(prefsController) { mock in
       when(mock.getBool(forKey: any())).thenReturn(false)

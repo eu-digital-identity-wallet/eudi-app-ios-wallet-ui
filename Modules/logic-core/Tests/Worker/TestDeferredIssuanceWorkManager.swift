@@ -19,6 +19,7 @@ import UIKit
 import WalletStorage
 import logic_storage
 import enum OpenID4VCI.CredentialIssuanceError
+import enum OpenID4VCI.CredentialIssuerMetadataError
 import enum OpenID4VCI.PostError
 @testable import logic_business
 @testable import logic_core
@@ -31,7 +32,7 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
   private var walletKitController: MockWalletKitController!
   private var revocationWorkManager: MockRevocationWorkManager!
   private var storage: StubDeferredIssuanceStorageController!
-  private var clock: TestClock!
+  private var clock: StubClock!
   private var sessionStatus: WalletSessionStatusProviderImpl!
   private var workManager: DeferredIssuanceWorkManagerImpl!
 
@@ -40,7 +41,7 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     walletKitController = MockWalletKitController()
     revocationWorkManager = MockRevocationWorkManager()
     storage = StubDeferredIssuanceStorageController()
-    clock = TestClock(startDate)
+    clock = StubClock(startDate)
     sessionStatus = WalletSessionStatusProviderImpl()
     sessionStatus.update(isUnlocked: true, isInForeground: true)
     workManager = makeManager()
@@ -70,53 +71,68 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
   // MARK: - A check
 
   func testCheck_WhenAnEntryIsDue_ThenAsksItsIssuerOnce() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
-    stubRequest { document in deferredDocument(document.id) }
+    stubRequest { document in Self.deferredDocument(document.id) }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(walletKitController, times(1)).requestDeferredIssuance(with: document("a"))
   }
 
   func testCheck_WhenAnEntryIsNotDueYet_ThenDoesNotAsk() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: 60)])
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(walletKitController, never()).requestDeferredIssuance(with: any())
   }
 
   func testCheck_WhenAnEntryFailed_ThenDoesNotAskAgain() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10, state: .failed)])
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(walletKitController, never()).requestDeferredIssuance(with: any())
   }
 
   func testCheck_WhenTheIssuerIsNotReady_ThenLeavesTheEntryToTheController() async {
+    // Given
     let due = entry("a", dueIn: -10, interval: 60)
     await givenDeferred(["a"], entries: [due])
-    stubRequest { document in deferredDocument(document.id) }
+    stubRequest { document in Self.deferredDocument(document.id) }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(stored, due)
   }
 
-  func testCheck_WhenTheRequestFails_ThenAsksAgainAfterTheFailureRetryDelayAndKeepsTheInterval() async {
+  func testCheck_WhenTheRequestFailsAndTheIntervalIsLonger_ThenAsksAgainAfterTheIntervalAndKeepsIt() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10, interval: 42)])
     stubRequest { _ in throw URLError(.timedOut) }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(
       stored,
       DeferredIssuance(
         identifier: "a",
-        nextAttemptAt: startDate.addingTimeInterval(30),
+        nextAttemptAt: startDate.addingTimeInterval(42),
         interval: 42,
         state: .pending
       )
@@ -124,34 +140,57 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
   }
 
   func testCheck_WhenTheRequestFails_ThenAsksAgainAfterTheConfiguredFailureRetryDelay() async {
-    workManager = makeManager(config: DeferredIssuanceConfig(initialPollingDelay: 5, failureRetryDelay: 45))
+    // Given
+    workManager = makeManager(config: DeferredIssuanceConfig(initialPollingDelaySeconds: 5, failureRetryDelaySeconds: 45))
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw URLError(.timedOut) }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(stored?.nextAttemptAt, startDate.addingTimeInterval(45))
   }
 
   func testCheck_WhenTheIssuerRefuses_ThenKeepsAskingAfterTheFailureRetryDelay() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
-    stubRequest { _ in throw CredentialIssuanceError.invalidTransactionId }
+    stubRequest { _ in throw CredentialIssuanceError.unsupportedCredentialType }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(stored?.state, .pending)
     XCTAssertEqual(stored?.nextAttemptAt, startDate.addingTimeInterval(30))
   }
 
+  func testCheck_WhenTheIssuerNoLongerKnowsTheTransaction_ThenMarksTheEntryFailedAndKeepsTheDocument() async {
+    // Given
+    await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
+    stubRequest { _ in throw CredentialIssuanceError.invalidTransactionId }
+
+    // When
+    await workManager.checkDeferredDocuments()
+
+    // Then
+    let stored = await storage.entries["a"]
+    XCTAssertEqual(stored?.state, .failed)
+    verify(walletKitController, never()).deleteDocument(with: any(), status: any())
+  }
+
   func testCheck_WhenTheIssuerRejectsTheAccessToken_ThenMarksTheEntryFailedKeepsTheDocumentAndRefreshesTheList() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw CredentialIssuanceError.invalidToken }
     let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(stored?.state, .failed)
     verify(walletKitController, never()).deleteDocument(with: any(), status: any())
@@ -159,17 +198,21 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
   }
 
   func testCheck_WhenTheTransactionHasExpired_ThenItIsNotAskedAgain() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw CredentialIssuanceError.invalidToken }
     await workManager.checkDeferredDocuments()
     clock.advance(by: 3600)
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(walletKitController, times(1)).requestDeferredIssuance(with: any())
   }
 
   func testCheck_WhenAFailureMakesADocumentShowAsFailed_ThenRefreshesTheList() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw URLError(.timedOut) }
     stub(walletKitController) { mock in
@@ -177,25 +220,31 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     }
     let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     await fulfillment(of: [refreshed], timeout: 2)
   }
 
   func testCheck_WhenAStillPendingAnswerClearsTheFailure_ThenRefreshesTheList() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
-    stubRequest { document in deferredDocument(document.id) }
+    stubRequest { document in Self.deferredDocument(document.id) }
     stub(walletKitController) { mock in
       when(mock.fetchFailedDeferredDocumentIds()).thenReturn(["a"], [])
     }
     let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     await fulfillment(of: [refreshed], timeout: 2)
   }
 
   func testCheck_WhenADocumentAlreadyShowsAsFailedAndFailsAgain_ThenLeavesTheListAlone() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw URLError(.timedOut) }
     stub(walletKitController) { mock in
@@ -204,149 +253,178 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
     refreshed.isInverted = true
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     await fulfillment(of: [refreshed], timeout: 0.5)
   }
 
   func testCheck_WhenTheIssuerCannotBeVerified_ThenMarksTheEntryUntrustedAndRefreshesTheList() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw WalletError(description: "not trusted", code: .trustError) }
     let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(stored?.state, .untrusted)
     await fulfillment(of: [refreshed], timeout: 2)
   }
 
-  func testCheck_WhenTheIssuerCannotBeVerified_ThenDeletesTheDocument() async {
+  func testCheck_WhenTheIssuerCannotBeVerified_ThenKeepsTheDocumentForTheUserToDelete() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw WalletError(description: "not trusted", code: .trustError) }
 
+    // When
     await workManager.checkDeferredDocuments()
 
-    verify(walletKitController, times(1)).deleteDocument(with: "a", status: equal(to: .deferred))
-  }
-
-  func testCheck_WhenTheIssuerRefuses_ThenKeepsTheDocument() async {
-    await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
-    stubRequest { _ in throw CredentialIssuanceError.invalidTransactionId }
-
-    await workManager.checkDeferredDocuments()
-
+    // Then
     verify(walletKitController, never()).deleteDocument(with: any(), status: any())
   }
 
-  func testCheck_WhenDeletingAnUntrustedDocumentFails_ThenKeepsItUntrustedAndDoesNotTryAgainThisRun() async {
+  func testCheck_WhenTheIssuerMetadataCannotBeVerified_ThenAsksAgainAndKeepsTheDocument() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
-    stubRequest { _ in throw WalletError(description: "not trusted", code: .trustError) }
-    stub(walletKitController) { mock in
-      when(mock.deleteDocument(with: any(), status: any())).thenThrow(RuntimeError.genericError)
+    stubRequest { _ in throw CredentialIssuerMetadataError.invalidSignedMetadata("chain could not be checked") }
+
+    // When
+    await workManager.checkDeferredDocuments()
+
+    // Then
+    let stored = await storage.entries["a"]
+    XCTAssertEqual(stored?.state, .pending)
+    XCTAssertEqual(stored?.nextAttemptAt, startDate.addingTimeInterval(30))
+    verify(walletKitController, never()).deleteDocument(with: any(), status: any())
+  }
+
+  func testCheck_WhenTheUserDeletesTheDocumentWhileItsRequestFails_ThenItsEntryIsNotWrittenBack() async {
+    // Given
+    let original = entry("a", dueIn: -10)
+    await givenDeferred(["a"], entries: [original])
+    let controller = walletKitController!
+    stubRequest { _ in
+      stub(controller) { mock in
+        when(mock.fetchDeferredDocuments()).thenReturn([])
+      }
+      throw CredentialIssuanceError.unsupportedCredentialType
     }
 
-    await workManager.checkDeferredDocuments()
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
-    XCTAssertEqual(stored?.state, .untrusted)
-    verify(walletKitController, times(1)).deleteDocument(with: "a", status: equal(to: .deferred))
+    XCTAssertEqual(stored, original)
   }
 
-  func testCheck_WhenTheAppOpensWithAnUntrustedDocumentLeft_ThenTriesToDeleteItOnceAndRefreshesTheList() async {
+  func testCheck_WhenTheAppOpensWithAnUntrustedDocumentLeft_ThenNeitherAsksForItNorDeletesIt() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10, state: .untrusted)])
-    let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
 
-    await workManager.checkDeferredDocuments()
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(walletKitController, never()).requestDeferredIssuance(with: any())
-    verify(walletKitController, times(1)).deleteDocument(with: "a", status: equal(to: .deferred))
-    await fulfillment(of: [refreshed], timeout: 2)
-  }
-
-  func testCheck_WhenTheWalletIsLocked_ThenDoesNotDeleteAnUntrustedDocument() async {
-    await givenDeferred(["a"], entries: [entry("a", dueIn: -10, state: .untrusted)])
-    sessionStatus.update(isUnlocked: false, isInForeground: true)
-
-    await workManager.checkDeferredDocuments()
-
     verify(walletKitController, never()).deleteDocument(with: any(), status: any())
   }
 
   func testCheck_WhenAnEntryIsUntrusted_ThenItIsNotAskedAgain() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw WalletError(description: "not trusted", code: .trustError) }
     await workManager.checkDeferredDocuments()
     clock.advance(by: 3600)
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(walletKitController, times(1)).requestDeferredIssuance(with: any())
   }
 
   func testCheck_WhenTheRequestKeepsFailing_ThenKeepsAskingEveryFailureRetryDelay() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10, interval: 10)])
     stubRequest { _ in throw URLError(.timedOut) }
 
+    // When
     for _ in 0..<10 {
       await workManager.checkDeferredDocuments()
       clock.advance(by: 30)
     }
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(stored?.state, .pending)
     verify(walletKitController, times(10)).requestDeferredIssuance(with: any())
   }
 
   func testCheck_WhenTheDeviceIsOffline_ThenKeepsAskingAfterTheFailureRetryDelay() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10, interval: 10)])
     stubRequest { _ in throw PostError.networkError(URLError(.notConnectedToInternet)) }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(stored?.state, .pending)
     XCTAssertEqual(stored?.nextAttemptAt, startDate.addingTimeInterval(30))
   }
 
   func testCheck_WhenTheDocumentIsDeletedWhileItIsRequested_ThenRecordsNoFailureAndLeavesTheListAlone() async {
+    // Given
     let due = entry("a", dueIn: -10)
     await givenDeferred(["a"], entries: [due])
     stubRequest { _ in throw DeferredDocumentDeletedError() }
     let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
     refreshed.isInverted = true
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(stored, due)
     await fulfillment(of: [refreshed], timeout: 0.5)
   }
 
   func testCheck_WhenTheCredentialIsIssued_ThenRefreshesTheList() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in StubDocument.make(id: "issued-a", displayName: "PID") }
     let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     await fulfillment(of: [refreshed], timeout: 2)
   }
 
   func testCheck_WhenNothingIsSettled_ThenLeavesTheListAlone() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
-    stubRequest { document in deferredDocument(document.id) }
+    stubRequest { document in Self.deferredDocument(document.id) }
     let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
     refreshed.isInverted = true
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     await fulfillment(of: [refreshed], timeout: 0.5)
   }
 
   func testCheck_WhenSeveralAreDue_ThenAsksTheLongestDueFirst() async {
+    // Given
     await givenDeferred(
       ["a", "b", "c"],
       entries: [entry("a", dueIn: -10), entry("b", dueIn: -300), entry("c", dueIn: -60)]
@@ -354,25 +432,30 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     let asked = OSAllocatedUnfairLock<[String]>(initialState: [])
     stubRequest { document in
       asked.withLock { $0.append(document.id) }
-      return deferredDocument(document.id)
+      return Self.deferredDocument(document.id)
     }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     XCTAssertEqual(asked.withLock { $0 }, ["b", "c", "a"])
   }
 
   func testCheck_WhenADeferredDocumentHasNoEntry_ThenGivesItOneFromWhenItWasDeferred() async {
+    // Given
     stub(walletKitController) { mock in
       when(mock.fetchDeferredDocuments()).thenReturn([
         storedDocument("old", modifiedAt: startDate.addingTimeInterval(-3_600)),
         storedDocument("new", modifiedAt: startDate)
       ])
     }
-    stubRequest { document in deferredDocument(document.id) }
+    stubRequest { document in Self.deferredDocument(document.id) }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let entries = await storage.entries
     XCTAssertEqual(entries["old"]?.nextAttemptAt, startDate.addingTimeInterval(-3_595))
     XCTAssertEqual(entries["new"]?.nextAttemptAt, startDate.addingTimeInterval(5))
@@ -381,24 +464,30 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
   }
 
   func testCheck_WhenAnEntrysDocumentIsIssued_ThenRemovesTheEntry() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: 60), entry("issued", dueIn: -10)])
     stub(walletKitController) { mock in
       when(mock.fetchDocument(with: "issued")).thenReturn(StubDocument.make(id: "issued"))
     }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let entries = await storage.entries
     XCTAssertEqual(Set(entries.keys), ["a"])
     verify(walletKitController, never()).requestDeferredIssuance(with: any())
   }
 
   func testCheck_WhenAnEntrysDocumentIsMissing_ThenKeepsTheEntryAndAsksNothing() async {
+    // Given
     let kept = entry("missing", dueIn: -10, interval: 600)
     await givenDeferred(["a"], entries: [entry("a", dueIn: 60), kept])
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let entries = await storage.entries
     XCTAssertEqual(Set(entries.keys), ["a", "missing"])
     XCTAssertEqual(entries["missing"], kept)
@@ -406,12 +495,15 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
   }
 
   func testCheck_WhenNoDocumentHasLoaded_ThenKeepsEveryEntry() async {
+    // Given
     let pending = entry("a", dueIn: -10, interval: 600)
     let failed = entry("b", dueIn: -10, state: .failed)
     await givenDeferred([], entries: [pending, failed])
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let entries = await storage.entries
     XCTAssertEqual(entries["a"], pending)
     XCTAssertEqual(entries["b"], failed)
@@ -419,6 +511,7 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
   }
 
   func testCheck_WhenAMissingDocumentHasLoadedAgain_ThenAsksWithItsKeptEntry() async {
+    // Given
     let kept = entry("a", dueIn: -10, interval: 600)
     await givenDeferred([], entries: [kept])
     await workManager.checkDeferredDocuments()
@@ -428,23 +521,29 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     }
     stubRequest { _ in throw URLError(.timedOut) }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
-    XCTAssertEqual(stored?.nextAttemptAt, startDate.addingTimeInterval(30))
+    XCTAssertEqual(stored?.nextAttemptAt, startDate.addingTimeInterval(600))
     XCTAssertEqual(stored?.interval, 600)
   }
 
   func testCheck_WhenTheEntriesCannotBeRead_ThenAsksNothing() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     await storage.setFailsReads(true)
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(walletKitController, never()).requestDeferredIssuance(with: any())
   }
 
   func testCheck_WhenTheReIssuedOriginalWasRevoked_ThenRunsTheRevocationCheckOnceIssued() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenReturn(["original": .revoked])
@@ -452,25 +551,31 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     }
     stubRequest { _ in StubDocument.make(id: "a") }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(revocationWorkManager).checkAfterReIssue(of: equal(to: "original"))
   }
 
   func testCheck_WhenTheReIssuedOriginalWasRevokedButTheIssuerIsNotReady_ThenRunsNoRevocationCheck() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenReturn(["original": .revoked])
-      when(mock.fetchAllDocuments()).thenReturn([deferredDocument("a")])
+      when(mock.fetchAllDocuments()).thenReturn([Self.deferredDocument("a")])
     }
-    stubRequest { document in deferredDocument(document.id) }
+    stubRequest { document in Self.deferredDocument(document.id) }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(revocationWorkManager, never()).checkAfterReIssue(of: any())
   }
 
   func testCheck_WhenEveryRevokedDocumentIsStillThere_ThenRunsNoRevocationCheck() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenReturn(["kept": .revoked])
@@ -478,12 +583,15 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     }
     stubRequest { _ in StubDocument.make(id: "a") }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(revocationWorkManager, never()).checkAfterReIssue(of: any())
   }
 
   func testCheck_WhenTheRevocationRecordsCannotBeRead_ThenStillRefreshesTheList() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stub(walletKitController) { mock in
       when(mock.fetchRevokedDocumentStatuses()).thenThrow(RuntimeError.genericError)
@@ -491,13 +599,16 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     stubRequest { _ in StubDocument.make(id: "a", displayName: "PID") }
     let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     await fulfillment(of: [refreshed], timeout: 2)
     verify(revocationWorkManager, never()).checkAfterReIssue(of: any())
   }
 
   func testCheck_WhenTheCheckIsCancelled_ThenRecordsNoFailure() async {
+    // Given
     let due = entry("a", dueIn: -10)
     await givenDeferred(["a", "b"], entries: [due, entry("b", dueIn: -5)])
     stubRequest { _ in
@@ -506,8 +617,10 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     }
     let manager = workManager!
 
+    // When
     await Task { await manager.checkDeferredDocuments() }.value
 
+    // Then
     let entries = await storage.entries
     XCTAssertEqual(entries["a"], due)
     verify(walletKitController, times(1)).requestDeferredIssuance(with: any())
@@ -515,128 +628,165 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
 
   // MARK: - The wait
 
-  func testDelayUntilNextCheck_ThenWaitsForTheEarliestPendingEntry() async {
+  func testDelayUntilNextCheck_WhenSeveralEntriesAreWaiting_ThenWaitsForTheEarliestPendingOne() async {
+    // Given
     await givenDeferred(["a", "b", "c"], entries: [
       entry("a", dueIn: 100),
       entry("b", dueIn: 40),
       entry("c", dueIn: 1, state: .failed)
     ])
 
+    // When
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertEqual(delay, 40)
   }
 
   func testDelayUntilNextCheck_WhenAnEntryIsOverdue_ThenChecksAgainAtOnce() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -100)])
 
+    // When
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertEqual(delay, DeferredIssuanceWorkManagerImpl.minimumWait)
   }
 
   func testDelayUntilNextCheck_WhenTheNextEntryIsDueInMoreThanAnHour_ThenWaitsAnHour() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: 3 * 24 * 3_600)])
 
+    // When
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertEqual(delay, 3_600)
   }
 
   func testDelayUntilNextCheck_WhenAnOverdueEntryHasNoDocument_ThenWaitsOnlyForTheDeferredOnes() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: 100), entry("missing", dueIn: -100)])
 
+    // When
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertEqual(delay, 100)
   }
 
   func testDelayUntilNextCheck_WhenNoEntryHasADocument_ThenThereIsNoNextCheck() async {
+    // Given
     await givenDeferred([], entries: [entry("a", dueIn: -100)])
 
+    // When
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertNil(delay)
   }
 
   func testDelayUntilNextCheck_WhenNoEntryIsPending_ThenThereIsNoNextCheck() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: 10, state: .failed)])
 
+    // When
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertNil(delay)
   }
 
   func testDelayUntilNextCheck_WhenTheEntriesCannotBeRead_ThenReadsAgainAfterTheFailureRetryDelay() async {
+    // Given
     await storage.setFailsReads(true)
 
+    // When
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertEqual(delay, 30)
   }
 
   func testDelayUntilNextCheck_WhenTheEntriesCannotBeRead_ThenReadsAgainAfterTheConfiguredFailureRetryDelay() async {
-    workManager = makeManager(config: DeferredIssuanceConfig(initialPollingDelay: 5, failureRetryDelay: 45))
+    // Given
+    workManager = makeManager(config: DeferredIssuanceConfig(initialPollingDelaySeconds: 5, failureRetryDelaySeconds: 45))
     await storage.setFailsReads(true)
 
+    // When
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertEqual(delay, 45)
   }
 
   func testDelayUntilNextCheck_WhenTheLastCheckCouldNotSyncTheEntries_ThenWaitsTheFailureRetryDelay() async {
+    // Given
     await givenDeferred(["a"], entries: [])
     await storage.setFailsWrites(true)
     await workManager.checkDeferredDocuments()
     await storage.setFailsWrites(false)
 
+    // When
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertEqual(delay, 30)
     verify(walletKitController, never()).requestDeferredIssuance(with: any())
   }
 
   func testCheck_WhenTheWalletItselfFails_ThenLeavesTheEntryAndDoesNotShowItFailed() async {
+    // Given
     let due = entry("a", dueIn: -10, interval: 60)
     await givenDeferred(["a"], entries: [due])
     stubRequest { _ in throw WalletCoreError.missingMetadata }
     let refreshed = expectation(forNotification: NSNotification.DocumentTabRefresh, object: nil)
     refreshed.isInverted = true
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(stored, due)
     await fulfillment(of: [refreshed], timeout: 0.5)
   }
 
   func testCheck_WhenTheWalletItselfFails_ThenAsksAgainOnlyAfterTheFailureRetryDelayInThisRun() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw WalletCoreError.missingMetadata }
     await workManager.checkDeferredDocuments()
 
+    // When
     clock.advance(by: 29)
     await workManager.checkDeferredDocuments()
     let delay = await workManager.delayUntilNextCheck()
     clock.advance(by: 1)
     await workManager.checkDeferredDocuments()
 
+    // Then
     XCTAssertEqual(delay, 1)
     verify(walletKitController, times(2)).requestDeferredIssuance(with: any())
   }
 
   func testCheck_WhenTheAppOpensAfterTheWalletItselfFailed_ThenAsksWhenTheEntrySays() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in throw WalletCoreError.missingMetadata }
     await workManager.checkDeferredDocuments()
     workManager = makeManager()
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     verify(walletKitController, times(2)).requestDeferredIssuance(with: any())
   }
 
   func testCheck_WhenTheFailureCannotBeStored_ThenAsksAgainOnlyAfterTheFailureRetryDelayInThisRun() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in
       throw URLError(.timedOut)
@@ -644,16 +794,18 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     await storage.setFailsWrites(true)
     await workManager.checkDeferredDocuments()
 
+    // When
     clock.advance(by: 10)
     await workManager.checkDeferredDocuments()
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertEqual(delay, 20)
     verify(walletKitController, times(1)).requestDeferredIssuance(with: any())
   }
 
-
   func testCheck_WhenTheWalletIsLocked_ThenAsksNothing() async {
+    // Given
     sessionStatus.update(isUnlocked: false, isInForeground: true)
     let due = entry("a", dueIn: -10)
     await givenDeferred(["a"], entries: [due])
@@ -662,13 +814,16 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
       throw URLError(.timedOut)
     }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     let stored = await storage.entries["a"]
     XCTAssertEqual(stored, due)
   }
 
   func testCheck_WhenTheAppIsInTheBackground_ThenAsksNothing() async {
+    // Given
     sessionStatus.update(isUnlocked: true, isInForeground: false)
     await givenDeferred(["a"], entries: [entry("a", dueIn: -10)])
     stubRequest { _ in
@@ -676,10 +831,12 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
       throw URLError(.timedOut)
     }
 
+    // Then
     await workManager.checkDeferredDocuments()
   }
 
   func testCheck_WhenTheWalletLocksDuringARequest_ThenFinishesItButAsksForNoOtherDocument() async {
+    // Given
     await givenDeferred(["a", "b"], entries: [entry("a", dueIn: -20), entry("b", dueIn: -10)])
     let sessionStatus = sessionStatus!
     let asked = OSAllocatedUnfairLock<[String]>(initialState: [])
@@ -689,25 +846,31 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
       throw URLError(.timedOut)
     }
 
+    // When
     await workManager.checkDeferredDocuments()
 
+    // Then
     XCTAssertEqual(asked.withLock { $0 }, ["a"])
     let first = await storage.entries["a"]
     XCTAssertEqual(first?.nextAttemptAt, startDate.addingTimeInterval(30))
   }
 
   func testDelayUntilNextCheck_WhenTheWalletIsLocked_ThenThereIsNoNextCheck() async {
+    // Given
     sessionStatus.update(isUnlocked: false, isInForeground: true)
     await givenDeferred(["a"], entries: [entry("a", dueIn: 60)])
 
+    // When
     let delay = await workManager.delayUntilNextCheck()
 
+    // Then
     XCTAssertNil(delay)
   }
 
   // MARK: - Starting, waking and stopping
 
   func testStart_WhenAnEntryIsOverdue_ThenAsksAtOnce() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: -3_600)])
     let asked = expectation(description: "asked")
     stubRequest { _ in
@@ -715,13 +878,16 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
       throw URLError(.timedOut)
     }
 
+    // When
     await workManager.start()
 
+    // Then
     await fulfillment(of: [asked], timeout: 2)
     await workManager.stop()
   }
 
   func testStart_WhenTheIssuerAsksForMoreThanAnHour_ThenAsksOnlyOnceItIsDue() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: 5_400)])
     let delays = OSAllocatedUnfairLock<[TimeInterval]>(initialState: [])
     let blocked = expectation(description: "blocked")
@@ -733,27 +899,32 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
       throw URLError(.timedOut)
     }
 
+    // When
     await workManager.start()
     await fulfillment(of: [blocked], timeout: 2)
     await workManager.stop()
 
+    // Then
     XCTAssertEqual(delays.withLock { $0 }, [3_600, 1_800, 30])
     XCTAssertEqual(askedAt.withLock { $0 }, startDate.addingTimeInterval(5_400))
     verify(walletKitController, times(1)).requestDeferredIssuance(with: any())
   }
 
   func testStart_WhenTheIssuerSentAHugeInterval_ThenWaitsAnHourAtATimeWithoutAsking() async {
+    // Given
     let farOff = DeferredIssuanceSchedule(config: .stub).pending(identifier: "a", interval: 1e12, at: startDate)
     await givenDeferred(["a"], entries: [farOff])
     let delays = OSAllocatedUnfairLock<[TimeInterval]>(initialState: [])
     let blocked = expectation(description: "blocked")
     workManager = makeManager(passingWaits: 2, recordingIn: delays, blocked: blocked)
-    stubRequest { document in deferredDocument(document.id) }
+    stubRequest { document in Self.deferredDocument(document.id) }
 
+    // When
     await workManager.start()
     await fulfillment(of: [blocked], timeout: 2)
     await workManager.stop()
 
+    // Then
     XCTAssertEqual(delays.withLock { $0 }, [3_600, 3_600, 3_600])
     verify(walletKitController, never()).requestDeferredIssuance(with: any())
     let entries = await storage.entries
@@ -761,6 +932,7 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
   }
 
   func testWake_WhenIdle_ThenChecksTheEntryAddedMeanwhile() async {
+    // Given
     await workManager.start()
     await waitUntilIdle()
     await givenDeferred(["a"], entries: [entry("a", dueIn: -1)])
@@ -770,13 +942,16 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
       throw URLError(.timedOut)
     }
 
+    // When
     await workManager.wake()
 
+    // Then
     await fulfillment(of: [asked], timeout: 2)
     await workManager.stop()
   }
 
   func testWake_WhenWaitingForALaterEntry_ThenChecksAgainAtOnce() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: 3_600)])
     let waiting = expectation(description: "waiting")
     waiting.assertForOverFulfill = false
@@ -792,14 +967,17 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     await workManager.start()
     await fulfillment(of: [waiting], timeout: 2)
 
+    // When
     clock.advance(by: 3_600)
     await workManager.wake()
 
+    // Then
     await fulfillment(of: [asked], timeout: 2)
     await workManager.stop()
   }
 
   func testStart_WhenADocumentIsEnteredLater_ThenChecksIt() async {
+    // Given
     await workManager.start()
     await waitUntilIdle()
     await givenDeferred(["a"], entries: [entry("a", dueIn: -1)])
@@ -809,13 +987,16 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
       throw URLError(.timedOut)
     }
 
+    // When
     NotificationCenter.default.post(name: .deferredIssuanceEntered, object: nil)
 
+    // Then
     await fulfillment(of: [asked], timeout: 2)
     await workManager.stop()
   }
 
-  func testStop_ThenAnEnteredDocumentAsksNothing() async {
+  func testStop_WhenADocumentIsEnteredAfterwards_ThenAsksNothing() async {
+    // Given
     await workManager.start()
     await workManager.stop()
     await givenDeferred(["a"], entries: [entry("a", dueIn: -1)])
@@ -826,12 +1007,15 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
       throw URLError(.timedOut)
     }
 
+    // When
     NotificationCenter.default.post(name: .deferredIssuanceEntered, object: nil)
 
+    // Then
     await fulfillment(of: [asked], timeout: 0.5)
   }
 
   func testStart_WhenTheWalletIsActiveAgainAfterAnEntryFellDue_ThenChecksAtOnce() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: 3_600)])
     let waiting = expectation(description: "waiting")
     waiting.assertForOverFulfill = false
@@ -847,15 +1031,18 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     await workManager.start()
     await fulfillment(of: [waiting], timeout: 2)
 
+    // When
     sessionStatus.update(isUnlocked: true, isInForeground: false)
     clock.advance(by: 3_600)
     sessionStatus.update(isUnlocked: true, isInForeground: true)
 
+    // Then
     await fulfillment(of: [asked], timeout: 2)
     await workManager.stop()
   }
 
-  func testStop_ThenTheWalletTurningActiveAsksNothing() async {
+  func testStop_WhenTheWalletTurnsActiveAfterwards_ThenAsksNothing() async {
+    // Given
     await workManager.start()
     await workManager.stop()
     await givenDeferred(["a"], entries: [entry("a", dueIn: -1)])
@@ -866,13 +1053,16 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
       throw URLError(.timedOut)
     }
 
+    // When
     sessionStatus.update(isUnlocked: false, isInForeground: true)
     sessionStatus.update(isUnlocked: true, isInForeground: true)
 
+    // Then
     await fulfillment(of: [asked], timeout: 0.5)
   }
 
   func testStart_WhenTheWalletIsUnlockedLater_ThenChecksAtOnce() async {
+    // Given
     sessionStatus.update(isUnlocked: false, isInForeground: true)
     await givenDeferred(["a"], entries: [entry("a", dueIn: -1)])
     let asked = expectation(description: "asked")
@@ -883,13 +1073,16 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     await workManager.start()
     await waitUntilIdle()
 
+    // When
     sessionStatus.update(isUnlocked: true, isInForeground: true)
 
+    // Then
     await fulfillment(of: [asked], timeout: 2)
     await workManager.stop()
   }
 
-  func testStop_ThenWakeAsksNothing() async {
+  func testStop_WhenWokenAfterwards_ThenAsksNothing() async {
+    // Given
     await workManager.start()
     await workManager.stop()
     await givenDeferred(["a"], entries: [entry("a", dueIn: -1)])
@@ -900,12 +1093,15 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
       throw URLError(.timedOut)
     }
 
+    // When
     await workManager.wake()
 
+    // Then
     await fulfillment(of: [asked], timeout: 0.5)
   }
 
   func testStop_WhenACheckIsUnderWay_ThenReturnsOnceItHasFinished() async {
+    // Given
     let runner = SerialCheckRunner()
     let manager = makeManager(checkRunner: runner)
     let gate = AsyncGate()
@@ -920,22 +1116,25 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     let stoppedEarly = expectation(description: "stopped while it ran")
     stoppedEarly.isInverted = true
 
+    // When
     let stopping = Task {
       await manager.stop()
       stoppedEarly.fulfill()
     }
 
+    // Then
     await fulfillment(of: [stoppedEarly], timeout: 0.5)
     await gate.open()
     await stopping.value
     await underWay.value
   }
 
+  /// The check reads the entries first; the second read is the one for the wait.
   func testStop_WhenTheLoopIsReadingTheEntries_ThenStartsNoWait() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: 3_600)])
     let gate = AsyncGate()
     let reading = expectation(description: "reading the entries for the wait")
-    // The check reads the entries first; the second read is the one for the wait.
     await storage.hold(read: 2, until: gate) { reading.fulfill() }
     let waited = expectation(description: "waited")
     waited.isInverted = true
@@ -946,13 +1145,19 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     await workManager.start()
     await fulfillment(of: [reading], timeout: 2)
 
+    // When
     await workManager.stop()
     await gate.open()
 
+    // Then
     await fulfillment(of: [waited], timeout: 0.5)
   }
 
+  /// The first loop's wait outlasts stop(), so that loop gets back to the manager only after start().
+  /// Nothing tells when the first loop is back on the manager. If it's later than the short sleep, the test passes
+  /// without having checked anything, but it never fails wrongly.
   func testStart_WhenTheStoppedLoopWakesLate_ThenTheNewLoopCanStillBeWoken() async {
+    // Given
     await givenDeferred(["a"], entries: [entry("a", dueIn: 3_600)])
     let gate = AsyncGate()
     let firstWaiting = expectation(description: "the first loop waits")
@@ -960,7 +1165,6 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     let secondWaiting = expectation(description: "the second loop waits")
     secondWaiting.assertForOverFulfill = false
     let waits = OSAllocatedUnfairLock(initialState: 0)
-    // The first loop's wait outlasts stop(), so that loop gets back to the manager only after start().
     workManager = makeManager(sleep: { _ in
       let number = waits.withLock { count in
         count += 1
@@ -987,13 +1191,13 @@ final class TestDeferredIssuanceWorkManager: EudiTest {
     await fulfillment(of: [secondWaiting], timeout: 2)
     await gate.open()
     await fulfillment(of: [firstWaitEnded], timeout: 2)
-    // Nothing tells when the first loop is back on the manager. If it's later than this, the test passes
-    // without having checked anything, but it never fails wrongly.
     try? await Task.sleep(nanoseconds: 200_000_000)
 
+    // When
     clock.advance(by: 3_600)
     await workManager.wake()
 
+    // Then
     await fulfillment(of: [asked], timeout: 2)
     await workManager.stop()
   }
@@ -1100,25 +1304,25 @@ private extension TestDeferredIssuanceWorkManager {
   func document(_ id: String) -> ParameterMatcher<WalletStorage.Document> {
     ParameterMatcher { $0.id == id }
   }
-}
 
-/// What WalletKit returns while the credential isn't ready.
-private func deferredDocument(_ id: String) -> any DocClaimsDecodable {
-  WalletStorage.Document(
-    id: id,
-    docType: "eu.europa.ec.eudi.pid.1",
-    docDataFormat: .cbor,
-    data: Data(),
-    docKeyInfo: nil,
-    createdAt: nil,
-    metadata: nil,
-    displayName: "Document \(id)",
-    status: .deferred
-  ).transformToDeferredDecodable()
+  /// What WalletKit returns while the credential isn't ready.
+  static func deferredDocument(_ id: String) -> any DocClaimsDecodable {
+    WalletStorage.Document(
+      id: id,
+      docType: "eu.europa.ec.eudi.pid.1",
+      docDataFormat: .cbor,
+      data: Data(),
+      docKeyInfo: nil,
+      createdAt: nil,
+      metadata: nil,
+      displayName: "Document \(id)",
+      status: .deferred
+    ).transformToDeferredDecodable()
+  }
 }
 
 /// Clock that tests can advance.
-private final class TestClock: Sendable {
+private final class StubClock: Sendable {
 
   private let date: OSAllocatedUnfairLock<Date>
 

@@ -16,13 +16,14 @@
 import Foundation
 import SwiftData
 
+/// The stored form of a `DeferredIssuance`. A new model, so the store change is additive.
 @Model
 final class SDDeferredIssuance: IdentifiableObject {
 
   @Attribute(.unique) var identifier: String
   var nextAttemptAt: Date
   var interval: TimeInterval?
-  // DeferredIssuance.State raw value
+  /// The raw value of `DeferredIssuance.State`.
   var state: String
 
   init(
@@ -43,11 +44,11 @@ public struct DeferredIssuance: Sendable, Equatable {
 
   public enum State: String, Sendable {
     case pending
-    /// Can't be completed: the issuer's access token expired and couldn't be refreshed. Not requested again; the
-    /// user can delete the document.
+    /// Can't be completed: the issuer rejected the access token or no longer knows the transaction. Not requested
+    /// again; the document is listed as failed until the user deletes it.
     case failed
-    /// The credential arrived but its issuer couldn't be verified, so the wallet refused it. Not requested again;
-    /// the document is deleted, or listed until the next launch tries again if the deletion fails.
+    /// The issuer, its registration or the credential that arrived couldn't be trusted, so the wallet refused it. Not
+    /// requested again; the document is listed as failed until the user deletes it.
     case untrusted
   }
 
@@ -71,7 +72,7 @@ public struct DeferredIssuance: Sendable, Equatable {
 }
 
 extension SDDeferredIssuance {
-  // An unknown state (e.g. written by a newer version) falls back to pending.
+  /// An unknown state (e.g. written by a newer version) falls back to pending.
   func toDeferredIssuance() -> DeferredIssuance {
     DeferredIssuance(
       identifier: identifier,

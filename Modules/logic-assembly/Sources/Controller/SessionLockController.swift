@@ -120,6 +120,8 @@ final class SessionLockControllerImpl: SessionLockController {
     routerHost.requireLoginIfLocked()
   }
 
+  /// Tells `WalletSessionStatusProvider` whether the wallet is unlocked and in front, once the lock timeouts are
+  /// applied, so deferred requests run only then.
   @MainActor
   private func publishSessionStatus() {
     sessionStatusProvider.update(isUnlocked: sessionController.isUnlocked, isInForeground: isInForeground)

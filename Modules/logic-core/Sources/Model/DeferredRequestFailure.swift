@@ -17,29 +17,27 @@ import Foundation
 import EudiWalletKit
 import enum OpenID4VCI.CredentialIssuanceError
 
-/// Thrown when the deferred entry of a document can't be read or written around its request: nothing is asked if it
-/// happens before the request, and the document waits `failureRetryDelay` in memory either way
-/// (`DeferredRequestFailure.local`).
-struct DeferredEntryStorageError: Error, Equatable {}
-
-/// Classifies a failed deferred request: only an issuer the wallet can't verify and an access token that can no
-/// longer be used are permanent; any other failure, a refusal or a lost network alike, is asked again after
-/// `failureRetryDelay` for as long as the document is deferred. `issuance_pending` never ends up here: OpenID4VCI maps
-/// it to a pending response.
-/// An issuer that can't be verified is recognised as the issuance flow recognises it (`isTrustBlocked`).
+/// Classifies a failed deferred request. Only a definite verdict is permanent: an issuer, registration or credential
+/// the wallet can't trust, an access token the issuer rejects (`invalid_token`), or a transaction the issuer no longer
+/// knows (`invalid_transaction_id`). They stop the requests, and the document stays, shown as failed, until the user
+/// deletes it; the wallet never deletes it itself. Any other failure, a lost network alike, is asked again after
+/// `failureRetryDelaySeconds` or the issuer's last interval, whichever is longer, for as long as the document is
+/// deferred. `issuance_pending` never ends up here: OpenID4VCI maps it to a pending response.
+/// Issuer metadata that can't be verified is asked again: an unreachable trust list, a wrong device clock or stale
+/// signed metadata fail the same way as an untrusted issuer, before the issuer is asked.
 enum DeferredRequestFailure: Equatable {
 
-  /// The credential arrived but its issuer, its metadata or its registration couldn't be verified. Stop asking; the
-  /// document is deleted.
+  /// The issuer, its registration or the credential that arrived couldn't be trusted. Stop asking; the document stays,
+  /// shown as failed, for the user to delete.
   case untrusted
-  /// The issuer rejected the access token (`invalid_token`) and WalletKit had no refresh token to renew it first: the
-  /// transaction has expired. Stop asking; the user can delete the document.
+  /// The issuer rejected the access token (`invalid_token`) or no longer knows the transaction
+  /// (`invalid_transaction_id`). Stop asking; the document stays, shown as failed, for the user to delete.
   case expired
   /// The wallet itself failed, not the request: the document's metadata is missing, its deferred entry can't be read or
   /// written, or an issued credential couldn't be read back. The entry is left as it was, the document isn't shown as
-  /// failed, and it is asked again after `failureRetryDelay` in this run of the app.
+  /// failed, and it is asked again after `failureRetryDelaySeconds` in this run of the app.
   case local
-  /// Asked again after `failureRetryDelay`, with no limit.
+  /// Asked again after `failureRetryDelaySeconds` or the issuer's last interval, whichever is longer, with no limit.
   case transient
 
   init(_ error: Error) {
@@ -49,16 +47,19 @@ enum DeferredRequestFailure: Equatable {
 
 private extension DeferredRequestFailure {
 
-  // A WalletError is left to classify(_: WalletError), so the error it wraps decides first.
+  /// A `WalletError` is left to `classify(_: WalletError)`, so the error it wraps decides first.
   static func classify(_ error: Error) -> DeferredRequestFailure {
     if let error = error as? WalletError {
       return classify(error)
     }
-    if error.isTrustBlocked || error.isIssuerMetadataTrustFailure {
+    if error.isIssuerMetadataTrustFailure {
+      return .transient
+    }
+    if error.isTrustBlocked || error.isRegistrationPolicyRejection {
       return .untrusted
     }
     switch error {
-    case CredentialIssuanceError.invalidToken:
+    case CredentialIssuanceError.invalidToken, CredentialIssuanceError.invalidTransactionId:
       return .expired
     case WalletCoreError.missingMetadata, WalletCoreError.unableFetchDocument, is DeferredEntryStorageError:
       return .local
@@ -67,11 +68,11 @@ private extension DeferredRequestFailure {
     }
   }
 
-  // WalletKit may wrap the underlying error; if so, classify that one instead, so a trust error caused by a lost
-  // connection is asked again.
+  /// WalletKit may wrap the underlying error. A registration that fails the issuance policy is a verdict; any other
+  /// wrapped error is classified itself, so a trust error caused by a lost connection is asked again.
   static func classify(_ error: WalletError) -> DeferredRequestFailure {
     if let innerError = error.innerError {
-      return classify(innerError)
+      return innerError.isRegistrationPolicyRejection ? .untrusted : classify(innerError)
     }
     switch error.code {
     case .trustError,

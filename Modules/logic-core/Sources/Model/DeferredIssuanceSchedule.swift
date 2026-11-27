@@ -18,10 +18,11 @@ import WalletStorage
 import logic_storage
 
 /// Timing of deferred credential requests, from `config`: wait the interval sent by the issuer, or
-/// `initialPollingDelay` when it sends none, with no lower or upper limit. An interval of 0 or less counts as none:
+/// `initialPollingDelaySeconds` when it sends none, with no lower or upper limit. An interval of 0 or less counts as none:
 /// OpenID4VCI reports a "still pending" answer without one as 0. An interval the issuer has just sent is waited with
 /// `issuerIntervalMargin` on top; a fallback is waited as it is.
-/// A failed request is asked again after `failureRetryDelay`, for as long as the document is deferred.
+/// A failed request is asked again after `failureRetryDelaySeconds` or the issuer's last interval, whichever is longer,
+/// for as long as the document is deferred.
 struct DeferredIssuanceSchedule: Sendable {
 
   /// Added to an interval the issuer has just sent: an issuer that rounds the time left down would
@@ -37,12 +38,12 @@ struct DeferredIssuanceSchedule: Sendable {
   }
 
   func wait(interval: TimeInterval?) -> TimeInterval {
-    Self.validInterval(interval) ?? config.initialPollingDelay
+    Self.validInterval(interval) ?? config.initialPollingDelaySeconds
   }
 
   /// The wait after a failed request.
   var failureWait: TimeInterval {
-    config.failureRetryDelay
+    config.failureRetryDelaySeconds
   }
 
   func nextAttempt(after date: Date, interval: TimeInterval?) -> Date {
@@ -90,10 +91,10 @@ struct DeferredIssuanceSchedule: Sendable {
       }
   }
 
-  /// An issuer that can't be verified marks the entry untrusted, an access token that can no longer be used marks it
-  /// failed. Any other failure asks again after `failureRetryDelay`, whatever the issuer's interval, and keeps that
-  /// interval for the answers to come. A failure of the wallet itself restores the entry as it was before the request,
-  /// and the caller waits `failureWait` in memory.
+  /// An issuer that can't be trusted marks the entry untrusted, a rejected access token or an unknown transaction marks
+  /// it failed; neither is asked again. Any other failure asks again after `failureWait` or the issuer's last interval,
+  /// whichever is longer, and keeps that interval for the answers to come. A failure of the wallet itself restores the
+  /// entry as it was before the request, and the caller waits `failureWait` in memory.
   func after(_ failure: DeferredRequestFailure, of entry: DeferredIssuance, at date: Date) -> DeferredIssuance {
     switch failure {
     case .untrusted:
@@ -115,7 +116,7 @@ struct DeferredIssuanceSchedule: Sendable {
     case .transient:
       DeferredIssuance(
         identifier: entry.identifier,
-        nextAttemptAt: date.addingTimeInterval(failureWait),
+        nextAttemptAt: date.addingTimeInterval(max(failureWait, Self.validInterval(entry.interval) ?? 0)),
         interval: entry.interval
       )
     }

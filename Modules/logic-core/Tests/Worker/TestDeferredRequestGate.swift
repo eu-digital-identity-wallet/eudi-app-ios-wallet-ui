@@ -32,47 +32,62 @@ final class TestDeferredRequestGate: EudiTest {
   }
 
   func testBeginRequest_WhenNothingElseRuns_ThenStarts() async {
+    // When
     let started = await gate.beginRequest(for: "a")
 
+    // Then
     XCTAssertTrue(started)
   }
 
   func testBeginRequest_WhenTheDocumentIsBeingDeleted_ThenDoesNotStart() async {
+    // Given
     await gate.beginDeletion(of: "a")
 
+    // When
     let started = await gate.beginRequest(for: "a")
     let otherStarted = await gate.beginRequest(for: "b")
 
+    // Then
     XCTAssertFalse(started)
     XCTAssertTrue(otherStarted)
   }
 
   func testBeginRequest_WhenAllDocumentsAreBeingCleared_ThenDoesNotStart() async {
+    // Given
     await gate.beginClearing()
 
+    // When
     let started = await gate.beginRequest(for: "a")
 
+    // Then
     XCTAssertFalse(started)
   }
 
   func testBeginRequest_WhenTheDocumentAlreadyHasARequest_ThenDoesNotStartAnother() async {
+    // Given
     _ = await gate.beginRequest(for: "a")
 
+    // When
     let started = await gate.beginRequest(for: "a")
 
+    // Then
     XCTAssertFalse(started)
   }
 
   func testBeginRequest_WhenTheDeletionEnded_ThenStartsAgain() async {
+    // Given
     await gate.beginDeletion(of: "a")
     await gate.endDeletion(of: "a")
 
+    // When
     let started = await gate.beginRequest(for: "a")
 
+    // Then
     XCTAssertTrue(started)
   }
 
   func testBeginDeletion_WhenARequestIsUnderWay_ThenWaitsForItToEnd() async {
+    // Given
     _ = await gate.beginRequest(for: "a")
     let deleting = expectation(description: "deleting")
     let gate = gate!
@@ -88,36 +103,46 @@ final class TestDeferredRequestGate: EudiTest {
     }
     await fulfillment(of: [early], timeout: 0.3)
 
+    // When
     let seenWhileWaiting = await gate.isDeleting("a")
     await gate.endRequest(for: "a")
 
+    // Then
     await fulfillment(of: [deleting], timeout: 2)
     XCTAssertTrue(seenWhileWaiting)
   }
 
   func testBeginDeletion_WhenTheRequestIsForAnotherDocument_ThenDoesNotWait() async {
+    // Given
     _ = await gate.beginRequest(for: "b")
 
+    // When
     await gate.beginDeletion(of: "a")
 
+    // Then
     let isRequesting = await gate.isRequesting("b")
     XCTAssertTrue(isRequesting)
   }
 
   func testEndDeletion_WhenTwoDeletionsOverlap_ThenTheDocumentStaysDeletingUntilBothEnd() async {
+    // Given
     await gate.beginDeletion(of: "a")
     await gate.beginDeletion(of: "a")
 
+    // When
     await gate.endDeletion(of: "a")
     let afterFirst = await gate.isDeleting("a")
     await gate.endDeletion(of: "a")
     let afterSecond = await gate.isDeleting("a")
 
+    // Then
     XCTAssertTrue(afterFirst)
     XCTAssertFalse(afterSecond)
   }
 
+  /// Once "a" ends, the clearing still waits for "b".
   func testBeginClearing_WhenRequestsAreUnderWay_ThenWaitsForAllOfThem() async {
+    // Given
     _ = await gate.beginRequest(for: "a")
     _ = await gate.beginRequest(for: "b")
     let gate = gate!
@@ -131,11 +156,12 @@ final class TestDeferredRequestGate: EudiTest {
       cleared.fulfill()
     }
 
+    // When
     await gate.endRequest(for: "a")
-    // Still waiting for "b".
     await fulfillment(of: [early], timeout: 0.3)
     await gate.endRequest(for: "b")
 
+    // Then
     await fulfillment(of: [cleared], timeout: 2)
   }
 }

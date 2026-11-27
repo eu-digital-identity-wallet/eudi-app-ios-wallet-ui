@@ -16,11 +16,6 @@
 import Foundation
 import os
 
-extension Notification.Name {
-  /// Posted when the wallet is unlocked and in front again, so the deferred requests go on.
-  static let walletSessionBecameActive = Notification.Name("WalletSessionBecameActive")
-}
-
 /// Whether the wallet is unlocked and its scene in front: deferred credentials are requested only then. The session
 /// lock keeps it up to date, after it has applied the lock timeouts, so a wallet that returns to the front already
 /// timed out is never seen as active.

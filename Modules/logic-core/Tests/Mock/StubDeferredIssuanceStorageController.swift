@@ -27,7 +27,7 @@ actor StubDeferredIssuanceStorageController: DeferredIssuanceStorageController {
   private var failsReads = false
   private var failsWrites = false
   private var readCount = 0
-  private var heldRead: (number: Int, gate: AsyncGate, reached: @Sendable () -> Void)?
+  private var heldRead: HeldRead?
 
   init(_ entries: [DeferredIssuance] = []) {
     self.entries = Dictionary(uniqueKeysWithValues: entries.map { ($0.identifier, $0) })
@@ -47,7 +47,7 @@ actor StubDeferredIssuanceStorageController: DeferredIssuanceStorageController {
 
   /// Holds the `number`th call to `retrieveAll()`, counting from 1, until `gate` opens. Calls `reached` when it gets there.
   func hold(read number: Int, until gate: AsyncGate, reached: @escaping @Sendable () -> Void) {
-    heldRead = (number, gate, reached)
+    heldRead = HeldRead(number: number, gate: gate, reached: reached)
   }
 
   func store(_ value: DeferredIssuance) async throws {
@@ -88,5 +88,15 @@ actor StubDeferredIssuanceStorageController: DeferredIssuanceStorageController {
 
   func deleteAll() async throws {
     entries = [:]
+  }
+}
+
+private extension StubDeferredIssuanceStorageController {
+
+  /// The read that `hold(read:until:reached:)` keeps waiting, and how it reports that it was reached.
+  struct HeldRead {
+    let number: Int
+    let gate: AsyncGate
+    let reached: @Sendable () -> Void
   }
 }

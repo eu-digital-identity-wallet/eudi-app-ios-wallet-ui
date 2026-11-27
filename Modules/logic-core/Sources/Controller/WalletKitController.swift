@@ -143,9 +143,9 @@ public protocol WalletKitController: Sendable {
   /// Whether the last background re-issuance could not renew the document.
   func hasReIssuanceFailure(with id: String) async -> Bool
   /// Deferred documents whose last request in this run of the app failed and that are still asked again, and those no
-  /// longer requested: expired, or untrusted and not deleted yet. A request
-  /// that is still pending or issued clears the first; they aren't stored, so a new launch shows them pending until a
-  /// request fails again. Stored ones are left out if the entries can't be read.
+  /// longer requested: expired or untrusted, until the user deletes them. A request that is still pending or issued
+  /// clears the first; they aren't stored, so a new launch shows them pending until a request fails again. Stored ones
+  /// are left out if the entries can't be read.
   func fetchFailedDeferredDocumentIds() async -> Set<String>
   /// Marks the documents the list shows as issued as seen, and returns those whose deferred credential arrived in this
   /// run of the app and that the list hadn't pointed out yet, so it points each out once. Kept here, not in a screen,
@@ -196,7 +196,7 @@ final actor WalletKitControllerImpl: WalletKitController {
   private let documentRegistrationManager: DocumentRegistrationManager
   private let prefsController: PrefsController
   /// Internal so tests can hold a deferred request open.
-  nonisolated let deferredRequestGate = DeferredRequestGate()
+  let deferredRequestGate = DeferredRequestGate()
   private let registrationCheckProvider: RegistrationCheckProvider
   private let registrationRunner = SerialCheckRunner()
   /// "Check Registration Certificates" as WalletKit was configured with it at launch; the setting applies after a
@@ -681,6 +681,10 @@ final actor WalletKitControllerImpl: WalletKitController {
     guard await deferredRequestGate.beginRequest(for: doc.id) else {
       throw DeferredDocumentDeletedError()
     }
+    guard fetchDeferredDocuments().contains(where: { $0.id == doc.id }) else {
+      await deferredRequestGate.endRequest(for: doc.id)
+      throw DeferredDocumentDeletedError()
+    }
     do {
       let document = try await requestDeferredCredential(for: doc, metadata: metadata)
       await deferredRequestGate.endRequest(for: doc.id)
@@ -773,8 +777,8 @@ final actor WalletKitControllerImpl: WalletKitController {
     )
   }
 
-  /// WalletKit doesn't persist the interval of a "still pending" response, so we keep it in our own entry. When the
-  /// answer has none, `lastInterval` is waited.
+  /// WalletKit doesn't persist the interval of a "still pending" response, so the wallet keeps it in its own entry.
+  /// When the answer has none, `lastInterval` is waited.
   private func scheduleNextDeferredRequest(
     for id: String,
     interval: TimeInterval?,
@@ -797,17 +801,18 @@ final actor WalletKitControllerImpl: WalletKitController {
     DeferredIssuanceSchedule(config: walletKitConfig.deferredIssuanceConfig)
   }
 
-  /// Deletes the records the wallet keeps for a document: its revocation record, refresh failure, bookmark, failed
-  /// re-issue and deferred request, as Android's `deleteDocumentRecords`; its history stays, a legal record. After a
-  /// re-issue the original's revocation record stays until the check after the re-issue has read it.
+  /// Deletes the records the wallet keeps for a document: its deferred request, revocation record, refresh failure,
+  /// bookmark and failed re-issue, as Android's `deleteDocumentRecords` does for the records it keeps; its history
+  /// stays, a legal record. The deferred request goes first, so no request entry outlives a deletion that fails part
+  /// way. After a re-issue the original's revocation record stays until the check after the re-issue has read it.
   private func deleteRecords(of id: String, keepingRevocationRecord: Bool = false) async throws {
+    try await deferredIssuanceStorageController.delete(id)
     if !keepingRevocationRecord {
       try await revokedDocumentStorageController.delete(id)
     }
     try await statusRefreshFailureStorageController.delete(id)
     try await bookmarkStorageController.delete(id)
     try await failedReIssuedDocStorageController.delete(id)
-    try await deferredIssuanceStorageController.delete(id)
   }
 
   /// Nil in builds that write no log file, so Settings offers no "Retrieve logs".
