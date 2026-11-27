@@ -1762,7 +1762,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No documents found. Try changing your search or filters."
+            "value" : "No documents match your search. Try changing your search query or filters."
           }
         }
       }
