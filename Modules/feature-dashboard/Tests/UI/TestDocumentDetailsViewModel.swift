@@ -96,6 +96,26 @@ final class TestDocumentDetailsViewModel: EudiTest {
     XCTAssertTrue(viewModel.isVisible)
     XCTAssertEqual(Set(blurFlags(of: viewModel.viewState.document.documentFields)), [true])
   }
+
+  @MainActor
+  func testFetchDocumentDetails_WhenTheDataIsShownAndTheDocumentReloads_ThenItStaysShown() async {
+    // Given
+    let viewModel = await viewModelShowingHiddenData()
+    viewModel.toggleIsVisible()
+
+    // When
+    await viewModel.fetchDocumentDetails()
+
+    // Then
+    XCTAssertFalse(viewModel.isVisible)
+    XCTAssertEqual(Set(blurFlags(of: viewModel.viewState.document.documentFields)), [false])
+
+    // When
+    viewModel.toggleIsVisible()
+
+    // Then
+    XCTAssertEqual(Set(blurFlags(of: viewModel.viewState.document.documentFields)), [true])
+  }
 }
 
 private extension TestDocumentDetailsViewModel {
